@@ -18,10 +18,37 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'slug',
         'email',
         'password',
+        'phone',
+        'linkedin_url',
+        'x_url',
+        'instagram_url',
+        'facebook_url',
+        'address',
+        'country',
+        'state',
+        'city',
+        'county',
+        'zip_code',
+        'industry_to_connect',
+        'sub_category_to_connect',
+        'community_interest',
+        'status'
     ];
+
+    public function company()
+    {
+        return $this->hasOne(Company::class);
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
