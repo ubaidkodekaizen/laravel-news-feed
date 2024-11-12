@@ -15,6 +15,17 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
+Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
+Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
+
+Route::get('user/company/details', [UserController::class, 'showUserCompanyForm'])->name('user.company.details');
+Route::post('/user/company/update', [UserController::class, 'storeCompanyDetails'])->name('user.company.update');
+
+Route::get('/search', action: function () {
+    return view('user.search');
+})->name('search');
+
+
 // User Registration
 Route::get('/register', [UserController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('/register', [UserController::class, 'register'])->name('register');
