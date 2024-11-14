@@ -379,7 +379,6 @@ class DropDownHelper
             '1B+' => '$1B+',
         ];
 
-        // Generate the HTML for revenue dropdown
         $html = '<select name="company_revenue" id="company_revenue" class="form-select">';
         $html .= '<option value="">Select Revenue</option>';
         

@@ -1,38 +1,53 @@
 <?php
 
 
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
+
 
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
 
-Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
-Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
 
-Route::get('user/company/details', [UserController::class, 'showUserCompanyForm'])->name('user.company.details');
-Route::post('/user/company/update', [UserController::class, 'storeCompanyDetails'])->name('user.company.update');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::get('/search', action: function () {
-    return view('user.search');
-})->name('search');
+    Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
+    Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
+
+    Route::get('user/company/details', [UserController::class, 'showUserCompanyForm'])->name('user.company.details');
+    Route::post('/user/company/update', [UserController::class, 'storeCompanyDetails'])->name('user.company.update');
+
+    Route::get('search', [SearchController::class, 'SearchUserCompany'])->name('search');
+    Route::get('/user/profile/{slug}', [SearchController::class, 'showUserBySlug'])->name('user.profile');
+    Route::get('/user/company/{companySlug}', [SearchController::class, 'showCompanyBySlug'])->name('company.profile');
+});
+
+
+
 
 
 // User Registration
-Route::get('/register', [UserController::class, 'showRegistrationForm'])->name('register.form');
+Route::get('/sign-up', [UserController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('/register', [UserController::class, 'register'])->name('register');
 
 // User Login
-Route::get('/login', [UserController::class, 'showLoginForm'])->name('login.form');
+Route::get('/sign-in', [UserController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [UserController::class, 'login'])->name('login');
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout');
 
 // Forgot Password
 Route::get('/forgot-password', [UserController::class, 'showForgotPasswordForm'])->name('forgotPassword.form');
