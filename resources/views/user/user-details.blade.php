@@ -16,7 +16,8 @@
                             <label for="imageUpload"></label>
                         </div>
                         <div class="avatar-preview">
-                            <div id="imagePreview" style="background-image: url('{{ $user->photo ? Storage::url($user->photo) : 'http://i.pravatar.cc/500?img=7' }}');">
+                            <div id="imagePreview">
+                                <img src="{{ $user->photo ? Storage::url($user->photo) : 'http://i.pravatar.cc/500?img=7' }}" alt="">
                             </div>
                         </div>
                         <label for="" class="text-center w-100">Upload Profile</label>

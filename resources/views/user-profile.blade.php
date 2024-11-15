@@ -1,11 +1,15 @@
 @extends('user.layouts.main')
 @section('content')
 <div class="details_card">
+    <div class="company_link">
+        <a href="{{ route('company.profile', ['companySlug' => $user->company->company_slug]) }}">Company Details</a>
+    </div>
     <div class="user_profile_flex">
         <div class="profile_square">
             <img src="{{ $user->photo ? Storage::url($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="User Image">
         </div>
         <div class="basic_details">
+            
             <div class="row">
                 <div class="col-lg-6">
                     <label class="details_label">
@@ -45,8 +49,9 @@
         </div>
     </div>
     <div class="all_details">
+        <h3>Social</h3>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <label class="details_label">
                     Linkedin URL
                 </label>
@@ -54,7 +59,7 @@
                     <a href="{{ $user->linkedin_url ?? 'javascript:void(0)' }}" target="_blank">{{ $user->linkedin_url ?? 'none' }}</a>
                 </p>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <label class="details_label">
                     X URL
                 </label>
@@ -62,7 +67,7 @@
                     <a href="{{ $user->x_url ?? 'javascript:void(0)' }}">{{ $user->x_url ?? 'none' }}</a>
                 </p>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <label class="details_label">
                     Instagram URL
                 </label>
@@ -70,8 +75,8 @@
                     <a href="{{ $user->instagram_url ?? 'javascript:void(0)' }}">{{ $user->instagram_url ?? 'none' }}</a>
                 </p>
             </div>
-
-            <div class="col-lg-4">
+    
+            <div class="col-lg-6">
                 <label class="details_label">
                     Facebook URL
                 </label>
@@ -79,6 +84,12 @@
                     <a href="{{ $user->facebook_url ?? 'javascript:void(0)' }}">{{ $user->facebook_url ?? 'none' }}</a>
                 </p>
             </div>
+        </div>
+    </div>
+    <div class="all_details">
+        <h3>Location</h3>
+        <div class="row">
+            
             <div class="col-lg-4">
                 <label class="details_label">
                     Address
@@ -95,7 +106,7 @@
                     {{ $user->country ?? 'Not provided' }}
                 </p>
             </div>
-
+    
             <div class="col-lg-4">
                 <label class="details_label">
                     State
@@ -112,7 +123,7 @@
                     {{ $user->city ?? 'Not provided' }}
                 </p>
             </div>
-
+    
             <div class="col-lg-4">
                 <label class="details_label">
                     County
@@ -129,8 +140,12 @@
                     {{ $user->zip_code ?? 'Not provided' }}
                 </p>
             </div>
-
-            <div class="col-lg-4">
+        </div>
+    </div>
+    <div class="all_details">
+        <h3>Industry</h3>
+        <div class="row">
+             <div class="col-lg-4">
                 <label class="details_label">
                     Industry Interested In
                 </label>

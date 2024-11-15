@@ -1,40 +1,4 @@
-function addFilter(category, value, targetId) {
-    const targetElement = document.getElementById(targetId);
-    
-    // Check if the filter already exists
-    if (!document.getElementById(`${category}-${value}`)) {
-        // Create the filter element
-        const filter = document.createElement('div');
-        filter.className = 'selected-filter';
-        filter.id = `${category}-${value}`;
-        filter.innerHTML = `${value} <i class="fa fa-times" onclick="removeFilter('${category}', '${value}', '${targetId}')"></i>`;
-        targetElement.appendChild(filter);
-    }
-}
 
-function removeFilter(category, value, targetId) {
-    // Remove the selected filter from the specific filter group
-    const filter = document.getElementById(`${category}-${value}`);
-    if (filter) document.getElementById(targetId).removeChild(filter);
-}
-
-function filterOptions(input, optionsContainerId) {
-    const filter = input.value.toLowerCase();
-    const options = document.getElementById(optionsContainerId).getElementsByClassName('filter-option');
-    
-    for (let option of options) {
-        const optionText = option.textContent.toLowerCase();
-        option.style.display = optionText.includes(filter) ? '' : 'none';
-    }
-}
-
-// Toggle icon change on collapse
-document.querySelectorAll('.filter-header').forEach(header => {
-    header.addEventListener('click', function () {
-        const icon = this.querySelector('.toggle-icon');
-        icon.textContent = icon.textContent === '+' ? '-' : '+';
-    });
-});
 
 
 $(document).ready(function () {  

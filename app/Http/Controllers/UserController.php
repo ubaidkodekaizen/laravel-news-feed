@@ -37,6 +37,9 @@ class UserController extends Controller
 
     public function showRegistrationForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('user.details.show');
+        }
         return view('auth.register');
     }
 
@@ -64,6 +67,9 @@ class UserController extends Controller
 
     public function showLoginForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('user.details.show');
+        }
         return view('auth.login');
     }
 
@@ -77,13 +83,21 @@ class UserController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();
 
-            return redirect()->route('user.details.show');
+            $user = Auth::user();
+            
+            // Check if both user and their associated company's status are "complete"
+            if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
+                return redirect()->route('search');  // Redirect to 'search' route
+            } else {
+                return redirect()->route('user.details.show');  // Redirect to 'user.details.show' route
+            }
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
+
 
     public function showUserDetailsForm()
     {

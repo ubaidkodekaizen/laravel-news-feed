@@ -37,17 +37,18 @@ Route::middleware('auth')->group(function () {
 
 
 // User Registration
-Route::get('/sign-up', [UserController::class, 'showRegistrationForm'])->name('register.form');
-Route::post('/register', [UserController::class, 'register'])->name('register');
+Route::middleware('guest')->group(function () {
+    Route::get('/sign-up', [UserController::class, 'showRegistrationForm'])->name('register.form');
+    Route::post('/register', [UserController::class, 'register'])->name('register');
+});
 
 // User Login
-Route::get('/sign-in', [UserController::class, 'showLoginForm'])->name('login.form');
-Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [UserController::class, 'showLoginForm'])->name('login.form');
+    Route::post('/login', [UserController::class, 'login'])->name('login');
+});
 
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect('/login');
-})->name('logout');
+
 
 // Forgot Password
 Route::get('/forgot-password', [UserController::class, 'showForgotPasswordForm'])->name('forgotPassword.form');
@@ -57,4 +58,9 @@ Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequest
 Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout');
 

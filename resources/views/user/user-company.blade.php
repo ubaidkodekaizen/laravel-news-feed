@@ -16,7 +16,8 @@
                             <label for="imageUpload"></label>
                         </div>
                         <div class="avatar-preview">
-                            <div id="imagePreview" style="background-image: url('{{ isset($company) && $company->company_logo ? Storage::url($company->company_logo) : 'http://i.pravatar.cc/500?img=7' }}');">
+                            <div id="imagePreview">
+                                <img src="{{ isset($company) && $company->company_logo ? Storage::url($company->company_logo) : 'http://i.pravatar.cc/500?img=7' }}" alt="">
                             </div>
                         </div>
                         <label class="text-center w-100">Upload Logo</label>

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muslim Linker</title>
+    <title>Muslim Link</title>
+    <link rel="icon" href="{{asset('assets/images/logo_bg.png')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
@@ -15,7 +16,9 @@
             <div class="header_flex">
                 <div class="header_left">
                     <div class="logo">
-                        MUSLIM LINK
+                        <a href="javascript:void(0);">
+                            <img src="{{asset('assets/images/logo_bg.png')}}" alt="" class="img-fluid">
+                        </a>
                     </div>
                     <div class="left-nav">
                         <ul class="nav">
