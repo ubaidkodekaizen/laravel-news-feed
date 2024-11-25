@@ -42,29 +42,29 @@
             <div class="header_flex">
                 <div class="header_left">
                     <div class="logo">
-                        <a href="javascript:void(0);">
+                        <a href="{{ route('search') }}">
                             <img src="{{asset('assets/images/logo_bg.png')}}" alt="" class="img-fluid">
                         </a>
                     </div>
                     <div class="header-mid">
-                        <div class="search_area">
-
                         <form method="GET" action="{{ route('search') }}" id="search_form">
-                            <div class="suggestion_search w-50">
-                                <input type="text" id="header_search" placeholder="Product, Service or Industry" class="form-control">
-                                <div id="suggestion_box" class="suggestion-box" style="display: none;">
+                            <div class="search_area">
+                                <div class="suggestion_search w-50">
+                                    <input type="text" id="header_search" placeholder="Product, Service or Industry" class="form-control">
+                                    <div id="suggestion_box" class="suggestion-box" style="display: none;">
+                                    </div>
                                 </div>
+                                
+                                {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
+
+                                <input type="hidden" name="product_service_name" id="product_service_name1">
+                                <input type="hidden" name="company_industry" id="company_industry1">
+                                <input type="hidden" name="company_sub_category" id="company_sub_category1">
+
+                                <button class="btn btn-primary search_btn">Search</button>
+                        
                             </div>
-                            
-                            {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
-
-                            <input type="hidden" name="product_service_name" id="product_service_name1">
-                            <input type="hidden" name="company_industry" id="company_industry1">
-                            <input type="hidden" name="company_sub_category" id="company_sub_category1">
-
-                            <button class="btn btn-primary search_btn">Search</button>
                         </form>
-                        </div>
                     </div>
                     
                 </div> 

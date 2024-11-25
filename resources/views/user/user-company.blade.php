@@ -1,4 +1,4 @@
-@extends('user.layouts.main')
+@extends('layouts.main')
 @section('content')
 <section class="stepper_form">
     <div class="container">
@@ -17,7 +17,7 @@
                         </div>
                         <div class="avatar-preview">
                             <div id="imagePreview">
-                                <img src="{{ isset($company) && $company->company_logo ? Storage::url($company->company_logo) : 'http://i.pravatar.cc/500?img=7' }}" alt="">
+                                <img src="{{ isset($company) && $company->company_logo ? Storage::url($company->company_logo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="">
                             </div>
                         </div>
                         <label class="text-center w-100">Upload Logo</label>
@@ -91,19 +91,22 @@
         
                 <div class="col-lg-6">
                     <label for="company_country">Company Country</label>
-                    {!! \App\Helpers\DropDownHelper::renderCountryDropdown($company->company_country ?? '') !!}
+                    <input type="text" name="company_country" id="company_country" class="form-control" value="{{ old('company_country', $company->company_country ?? '') }}" required>
+                    {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdown($company->company_country ?? '') !!} --}}
                 </div>
                 
                
                 <div class="col-lg-6">
                     <label for="company_state">Company State</label>
-                    {!! \App\Helpers\DropDownHelper::renderStateDropdown($company->company_country ?? '', $company->company_state ?? '') !!}
+                    <input type="text" name="company_state" id="company_state" class="form-control" value="{{ old('company_state', $company->company_state ?? '') }}" required>
+                    {{-- {!! \App\Helpers\DropDownHelper::renderStateDropdown($company->company_country ?? '', $company->company_state ?? '') !!} --}}
                 </div>
         
                 <!-- Company City -->
                 <div class="col-lg-6">
                     <label for="company_city">Company City</label>
-                    {!! \App\Helpers\DropDownHelper::renderCityDropdown($company->company_state ?? '', $company->company_city ?? '') !!}
+                    <input type="text" name="company_city" id="company_city" class="form-control" value="{{ old('company_city', $company->company_city ?? '') }}" required>
+                    {{-- {!! \App\Helpers\DropDownHelper::renderCityDropdown($company->company_state ?? '', $company->company_city ?? '') !!} --}}
                 </div>
         
                 <!-- Company County -->
@@ -214,17 +217,17 @@
     </div>
 </section>
 
+
+
 <script>
-    // On form submit, combine the static and user-entered parts for the company LinkedIn URL
-    document.querySelector('form').addEventListener('submit', function () {
+
+     document.querySelector('form').addEventListener('submit', function () {
         const companyInput = document.getElementById('company_linkedin_user').value.trim();
         const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
         document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
     });
-</script>
 
 
-<script>
     let accreditationCount = 1;
 
     document.getElementById('add-accreditation').addEventListener('click', function () {
@@ -272,10 +275,7 @@
         // Add new row to container
         rowContainer.appendChild(newRow);
     });
-</script>
 
-
-<script>
     let count = 1;
 
     document.getElementById('add-product-service').addEventListener('click', function () {

@@ -9,8 +9,21 @@ class DropDownHelper
 {
    
 
+    public static function countryDropdown()
+    {
+        $countries = User::whereNotNull('country')->where('country', '!=', '')
+        ->distinct()->pluck('country', 'country')->sort();
+        $dropdown = '<select name="country" id="header_location" class="form-select select2">';
+        $dropdown .= '<option value="">Select Location</option>';
+        foreach ($countries as $country) {
+            $dropdown .= '<option value="' . $country . '">' . ucfirst($country) . '</option>';
+        }
+        $dropdown .= '</select>';
+
+        return $dropdown;
+    }
     public static function searchFilter(){
-        // Get and sort the values in ascending order
+        
         $company_positions = Company::pluck('company_position')->unique()->sort();
         $company_industries = Company::pluck('company_industry')->unique()->sort();
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
@@ -201,7 +214,8 @@ class DropDownHelper
                 'Artificial Intelligence & Machine Learning',
                 'Cloud Computing',
                 'Data Analytics',
-                'Blockchain'
+                'Blockchain',
+                'Others'
             ],
             'Healthcare' => [
                 'Pharmaceuticals',
@@ -210,7 +224,8 @@ class DropDownHelper
                 'Health Insurance',
                 'Hospitals & Clinics',
                 'Mental Health Services',
-                'Telemedicine'
+                'Telemedicine',
+                'Others'
             ],
             'Finance' => [
                 'Investment Banking',
@@ -219,7 +234,8 @@ class DropDownHelper
                 'Accounting & Auditing',
                 'Financial Services',
                 'Risk Management',
-                'Corporate Finance'
+                'Corporate Finance',
+                'Others'
             ],
             'Retail' => [
                 'E-Commerce',
@@ -228,7 +244,12 @@ class DropDownHelper
                 'Consumer Electronics',
                 'Home Goods',
                 'Luxury Goods',
-                'Supermarkets & Grocery Stores'
+                'Supermarkets & Grocery Stores',
+                'Others'
+            ],
+            'Others'=>[
+
+                'Others'
             ],
             // Add other industries and subcategories here...
         ];
@@ -403,13 +424,11 @@ class DropDownHelper
     public static function renderRevenueDropdown($selectedRevenue = null)
     {
         $revenue_ranges = [
-            '1-5M' => '$1M - $5M',
-            '5-10M' => '$5M - $10M',
-            '10-50M' => '$10M - $50M',
-            '50-100M' => '$50M - $100M',
-            '100-500M' => '$100M - $500M',
-            '500M-1B' => '$500M - $1B',
-            '1B+' => '$1B+',
+            '< 1M' => '< $1M',
+            '1-5M' => '$1M -$5M',
+            '5-25M' => '$5M - $25M',
+            '25-100M' => '$25M - $100M',
+            '100M +' => '$100M+',
         ];
 
         $html = '<select name="company_revenue" id="company_revenue" class="form-select">';
@@ -446,7 +465,8 @@ class DropDownHelper
                 'Artificial Intelligence & Machine Learning',
                 'Cloud Computing',
                 'Data Analytics',
-                'Blockchain'
+                'Blockchain',
+                'Others'
             ],
             'Healthcare' => [
                 'Pharmaceuticals',
@@ -455,7 +475,8 @@ class DropDownHelper
                 'Health Insurance',
                 'Hospitals & Clinics',
                 'Mental Health Services',
-                'Telemedicine'
+                'Telemedicine',
+                'Others'
             ],
             'Finance' => [
                 'Investment Banking',
@@ -464,7 +485,8 @@ class DropDownHelper
                 'Accounting & Auditing',
                 'Financial Services',
                 'Risk Management',
-                'Corporate Finance'
+                'Corporate Finance',
+                'Others'
             ],
             'Retail' => [
                 'E-Commerce',
@@ -473,7 +495,12 @@ class DropDownHelper
                 'Consumer Electronics',
                 'Home Goods',
                 'Luxury Goods',
-                'Supermarkets & Grocery Stores'
+                'Supermarkets & Grocery Stores',
+                'Others'
+            ],
+            'Others'=>[
+
+                'Others'
             ],
             // Add other industries and subcategories here...
         ];
@@ -538,7 +565,8 @@ class DropDownHelper
         $communityInterests = [
             'Supporting Muslim-owned businesses',
             'Mentoring',
-            'Social causes'
+            'Social causes',
+            'Others'
         ];
 
         $html = '<select name="community_interest" id="community_interest" class="form-select">';
@@ -706,6 +734,9 @@ class DropDownHelper
 
         return $html;
     }
+
+
+
 
     
     

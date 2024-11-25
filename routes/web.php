@@ -1,12 +1,13 @@
 <?php
 
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -17,54 +18,56 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
-    Route::get('/profile', function () {
-        return view('profile');
-    })->name('profile');
+    Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
+    Route::get('/user/profile/{slug}', [UserController::class, 'showUserBySlug'])->name('user.profile');
 
-    Route::get('user/company/details', [UserController::class, 'showUserCompanyForm'])->name('user.company.details');
-    Route::post('/user/company/update', [UserController::class, 'storeCompanyDetails'])->name('user.company.update');
+    Route::get('user/company/details', [CompanyController::class, 'showUserCompanyForm'])->name('user.company.details');
+    Route::post('/user/company/update', [CompanyController::class, 'storeCompanyDetails'])->name('user.company.update');
+    Route::get('/user/company/{companySlug}', [CompanyController::class, 'showCompanyBySlug'])->name('company.profile');
 
+    Route::get('/get-suggestions', [SearchController::class, 'getSuggestions'])->name('search.suggestion');
     Route::get('search', [SearchController::class, 'SearchUserCompany'])->name('search');
-    Route::get('/user/profile/{slug}', [SearchController::class, 'showUserBySlug'])->name('user.profile');
-    Route::get('/user/company/{companySlug}', [SearchController::class, 'showCompanyBySlug'])->name('company.profile');
+    
+    
 });
 
 
 
 
 
-// User Registration
+
 Route::middleware('guest')->group(function () {
+
+    // User Registration
     Route::get('/sign-up', [UserController::class, 'showRegistrationForm'])->name('register.form');
     Route::post('/register', [UserController::class, 'register'])->name('register');
-});
 
-// User Login
-Route::middleware('guest')->group(function () {
+    // User Login
     Route::get('/login', [UserController::class, 'showLoginForm'])->name('login.form');
     Route::post('/login', [UserController::class, 'login'])->name('login');
+
+    // Forgot Password Routes
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+
+    // Reset Password Routes
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
+
+
 });
 
 
 
-// Forgot Password
-Route::get('/forgot-password', [UserController::class, 'showForgotPasswordForm'])->name('forgotPassword.form');
-Route::post('/forgot-password', [UserController::class, 'forgotPassword'])->name('forgotPassword');
 
-Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
 
 Route::get('/logout', function () {
     Auth::logout();
-    return redirect('/login');
+    return redirect()->route('login.form');
 })->name('logout');
 

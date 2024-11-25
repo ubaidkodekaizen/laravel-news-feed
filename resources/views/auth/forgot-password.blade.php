@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | Muslim Link</title>
+    <title>Forgot Password | Muslim Link</title>
     <link rel="icon" href="{{asset('assets/images/logo_bg.png')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -21,10 +21,10 @@
             width: 100%;
             height: 50px;
             border-bottom: 2px solid #fff;
-            margin: 0px 0px 50px 0px;
+            margin: 30px 0;
         }
 
-        .input-box label:last-child {
+        .input-box label {
             position: absolute;
             top: 50%;
             left: 5px;
@@ -73,16 +73,17 @@
             height: 100svh;
         }
 
-        .form_container .row:first-child {
+        .form_container .row {
             align-items: stretch;
             /* height: 80vh; */
             border-radius: 50px;
             overflow: hidden;
         }
 
-        .form_container .row:first-child > .col-lg-6 {
+        .form_container .row .col-lg-6 {
             padding: 0;
             margin: 0;
+            position: relative;
         }
 
         .form-section {
@@ -97,7 +98,7 @@
         }
 
         .custom-btn {
-            width: 130px;
+            min-width: 130px;
             height: 40px;
             color: #fff;
             border-radius: 5px;
@@ -176,14 +177,16 @@
         }
 
         .img_side_width {
-            width: 530px;
+            min-width: 450px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #fff;
-            height: 100%;
+            min-height: 450px;
             position: relative;
-            max-width: 100%;
+            width: 100%;
+            height: 100%;
+
         }
         .img_side_width img {
             max-width: 200px;
@@ -211,6 +214,7 @@
         input:-webkit-autofill {
             -webkit-text-fill-color: #fff !important;
         }
+
         .error {
             width: 100%;
             text-align: start;
@@ -233,119 +237,41 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-section w-100">
-                        <h2 class="heading">Sign In</h2>
-                        <p class="subheading">Sign In to continue to your application. </p>
-                        <form action="{{ route('register') }}" method="POST" id="user_register" autocomplete="off" class="form">
-                            @csrf
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input type="text" name="first_name" id="first_name" autocomplete="off" required>
-                                        <label>First Name</label>
-                                    </div>
+                        <h2>Forgot Password</h2>
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input type="text" id="last_name" name="last_name" autocomplete="off" required>
-                                        <label>Last Name</label>
-                                    </div>
+                            @endif
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="input-box">
-                                <span class="icon"><i class='bx bx-envelope'></i></span>
-                                <input type="email" id="email" name="email" autocomplete="off" required>
-                                <label>Email</label>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-lock-alt'></i></span>
-                                        <input type="password" id="password" name="password" autocomplete="off" required>
-                                        <label>Password</label>
-                                    </div>
+                            @endif
+                            <form action="{{ route('password.email') }}" method="POST">
+                                @csrf
+                                <div class="input-box">
+                                    <span class="icon"><i class='bx bx-envelope'></i></span>
+                                    <input type="email" id="email" name="email" autocomplete="off" required>
+                                    <label>Email</label>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-lock-alt'></i></span>
-                                        <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="off" required>
-                                        <label>Confirm Password</label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                           
-                            <button type="submit" class="custom-btn btn-14">Register</button>
-                            <div class="account_signup">
-                                <a href="{{route('login.form')}}">Already have an account? <span class="theme-color">Sign
-                                        In</span> </a>
-                            </div>
-                        </form>
+
+                                <button type="submit" class="custom-btn btn-14">Send Reset Link</button>
+                            </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#user_register').validate({
-                rules: {
-                    first_name: {
-                        required: true,
-                        minlength: 2
-                    },
-                    last_name: {
-                        required: true,
-                        minlength: 2
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8
-                    },
-                    password_confirmation: {
-                        required: true,
-                        minlength: 8,
-                        equalTo: '[name="password"]' // Password confirmation must match the password field
-                    }
-                },
-                messages: {
-                    first_name: {
-                        required: "Please enter your first name",
-                        minlength: "First name must be at least 2 characters"
-                    },
-                    last_name: {
-                        required: "Please enter your last name",
-                        minlength: "Last name must be at least 2 characters"
-                    },
-                    email: {
-                        required: "Please enter your email",
-                        email: "Please enter a valid email address"
-                    },
-                    password: {
-                        required: "Please provide a password",
-                        minlength: "Password must be at least 8 characters"
-                    },
-                    password_confirmation: {
-                        required: "Please confirm your password",
-                        minlength: "Password confirmation must be at least 8 characters",
-                        equalTo: "Password confirmation does not match the password"
-                    }
-                },
-                // errorElement: "span",
-                // errorPlacement: function (error, element) {
-                //     error.addClass("text-danger");
-                //     element.closest(".form-floating").append(error);
-                // }
-            });
-        });
-    </script>
+
+
+
 </body>
 
-</html>
+</html>    
+
+

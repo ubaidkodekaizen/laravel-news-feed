@@ -1,4 +1,4 @@
-@extends('user.layouts.main')
+@extends('layouts.main')
 @section('content')
 
 <section class="user_company_profile">

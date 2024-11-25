@@ -12,6 +12,33 @@ class SearchController extends Controller
 {
 
 
+    
+    public function getSuggestions(Request $request)
+    {
+        $searchTerm = $request->input('term');
+
+        $product_services = ProductService::where('product_service_name', 'like', '%' . $searchTerm . '%')
+                                          ->get(['product_service_name']);
+
+        $companies = Company::where('company_sub_category', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('company_industry', 'like', '%' . $searchTerm . '%')
+                            ->get(['company_sub_category', 'company_industry']);
+
+        $users = User::where('first_name', 'like', '%' . $searchTerm . '%')   
+                            ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
+                            ->get(['first_name', 'last_name']);               
+
+        $suggestions = [
+            'product_services' => $product_services,
+            'company_sub_categories' => $companies->pluck('company_sub_category'),
+            'company_industries' => $companies->pluck('company_industry'),
+            // 'first_name' => $users->pluck('first_name'),
+            // 'last_name' => $users->pluck('last_name'),
+        ];
+
+        return response()->json($suggestions);
+    }
+    
     public function SearchUserCompany(Request $request)
     {
         $query = User::where('status', 'complete')
@@ -24,7 +51,7 @@ class SearchController extends Controller
                 }
             ]);
 
-        // Filter by Position
+            // Filter by Position in companies table
             if ($request->filled('company_position')) {
                 $positions = is_array($request->company_position) ? $request->company_position : [$request->company_position];
                 $query->whereHas('company', function ($query) use ($positions) {
@@ -32,7 +59,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Industry
+            // Filter by Industry in companies table
             if ($request->filled('company_industry')) {
                 $industries = is_array($request->company_industry) ? $request->company_industry : [$request->company_industry];
                 $query->whereHas('company', function ($query) use ($industries) {
@@ -40,7 +67,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Sub-Category
+            // Filter by Sub-Category in companies table
             if ($request->filled('company_sub_category')) {
                 $subCategories = is_array($request->company_sub_category) ? $request->company_sub_category : [$request->company_sub_category];
                 $query->whereHas('company', function ($query) use ($subCategories) {
@@ -48,7 +75,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Business Type
+            // Filter by Business Type in companies table
             if ($request->filled('company_business_type')) {
                 $businessTypes = is_array($request->company_business_type) ? $request->company_business_type : [$request->company_business_type];
                 $query->whereHas('company', function ($query) use ($businessTypes) {
@@ -56,7 +83,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Employee Count
+            // Filter by Employee Count in companies table
             if ($request->filled('company_no_of_employee')) {
                 $employeeCounts = is_array($request->company_no_of_employee) ? $request->company_no_of_employee : [$request->company_no_of_employee];
                 $query->whereHas('company', function ($query) use ($employeeCounts) {
@@ -64,7 +91,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Revenue
+            // Filter by Revenue in companies table
             if ($request->filled('company_revenue')) {
                 $revenues = is_array($request->company_revenue) ? $request->company_revenue : [$request->company_revenue];
                 $query->whereHas('company', function ($query) use ($revenues) {
@@ -72,28 +99,26 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Country
+            // Filter by Country in users table
             if ($request->filled('country')) {
-                $countries = is_array($request->company_country) ? $request->company_country : [$request->company_country];
+                $countries = is_array($request->country) ? $request->country : [$request->country];
                 $query->whereIn('country', $countries); // Assuming 'country' is in the users table
             }
 
-            // Filter by State
+            // Filter by State in users table
             if ($request->filled('state')) {
                 $states = is_array($request->state) ? $request->state : [$request->state];
                 $query->whereIn('state', $states); // Assuming 'state' is in the users table
             }
 
 
-            // Filter by Product/Service
+            // Filter by Product/Service in product_services table
             if ($request->filled('product_service_name')) {
                 $productServices = is_array($request->product_service_name) ? $request->product_service_name : [$request->product_service_name];
                 $query->whereHas('company.productServices', function ($query) use ($productServices) {
                     $query->whereIn('product_service_name', $productServices);
                 });
             }
-
-
 
         // Fetch filtered results
         $users = $query->orderBy('id', 'desc')->paginate(15);;
@@ -110,25 +135,10 @@ class SearchController extends Controller
 
 
 
-    public function showUserBySlug($slug)
-    {
-        $user = User::where('slug', $slug)
-            ->with('company')
-            ->firstOrFail();
-            
-
-        return view('user-profile', compact('user'));
-    }
+  
 
 
-    public function showCompanyBySlug($companySlug)
-    {
-        $company = Company::where('company_slug', $companySlug)
-            ->with(['productServices', 'accreditations'])
-            ->firstOrFail();
-
-        return view('company-profile', compact('company'));
-    }
+   
 
 
 

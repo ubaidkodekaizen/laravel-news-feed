@@ -1,4 +1,4 @@
-@extends('user.layouts.main')
+@extends('layouts.main')
 @section('content')
     <div class="details_card">
         <div class="user_profile_flex align-items-center">

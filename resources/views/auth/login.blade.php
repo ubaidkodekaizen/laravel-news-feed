@@ -83,6 +83,7 @@
         .form_container .row .col-lg-6 {
             padding: 0;
             margin: 0;
+            position: relative;
         }
 
         .form-section {
@@ -93,6 +94,7 @@
             padding: 20px;
             color: #fff;
             height: 100%;
+            min-width: 450px;
         }
 
         .custom-btn {
@@ -175,14 +177,16 @@
         }
 
         .img_side_width {
-            width: 450px;
+            min-width: 450px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #fff;
             min-height: 450px;
             position: relative;
-            max-width: 100%;
+            width: 100%;
+            height: 100%;
+
         }
         .img_side_width img {
             max-width: 200px;
@@ -210,6 +214,14 @@
         input:-webkit-autofill {
             -webkit-text-fill-color: #fff !important;
         }
+
+        .error {
+            width: 100%;
+            text-align: start;
+            display: block;
+            padding-top: 5px;
+            color: #b8c034;
+        }
     </style>
 </head>
 
@@ -226,7 +238,21 @@
                 <div class="col-lg-6">
                     <div class="form-section w-100">
                         <h2 class="heading">Sign In</h2>
-                        <p class="subheading">Sign In to continue to your application. </p>
+                        <p class="subheading">Sign In to continue. </p>
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <form action="{{route('login')}}" class="form" method="POST" autocomplete="off">
                             @csrf
                             <div class="input-box">
@@ -238,6 +264,9 @@
                                 <span class="icon"><i class='bx bx-lock-alt'></i></span>
                                 <input type="password" id="password" name="password" autocomplete="off" required>
                                 <label>Password</label>
+                            </div>
+                            <div class="account_signup text-end">
+                                <a href="{{route('password.request')}}"> <span class="theme-color">forget password?</span> </a>
                             </div>
                             <button type="submit" class="custom-btn btn-14">Login</button>
                             <div class="account_signup">

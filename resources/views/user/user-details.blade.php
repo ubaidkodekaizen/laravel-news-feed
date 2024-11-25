@@ -1,4 +1,4 @@
-@extends('user.layouts.main')
+@extends('layouts.main')
 @section('content')
 
     <section class="stepper_form">
@@ -18,7 +18,7 @@
                             </div>
                             <div class="avatar-preview">
                                 <div id="imagePreview">
-                                    <img src="{{ $user->photo ? Storage::url($user->photo) : 'http://i.pravatar.cc/500?img=7' }}"
+                                    <img src="{{ $user->photo ? Storage::url($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                         alt="">
                                 </div>
                             </div>
@@ -91,23 +91,29 @@
 
                     <div class="col-lg-6">
                         <label for="address">Address</label>
-                        <input type="text" name="address" id="address" class="form-control"
-                            value="{{ old('address', $user->address) }}">
+                        <input type="text" name="address" id="address" class="form-control" placeholder="Enter your address" value="{{ old('address', $user->address) }}">
+
                     </div>
 
                     <div class="col-lg-6">
                         <label for="country">Country</label>
-                        {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!}
+                        <input type="text" name="country" id="country" class="form-control"
+                            value="{{ old('country', $user->country) }}">
+                        {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!} --}}
                     </div>
 
                     <div class="col-lg-6">
                         <label for="state">State</label>
-                        {!! \App\Helpers\DropDownHelper::renderStateDropdownForUser($user->country, $user->state) !!}
+                        <input type="text" name="state" id="state" class="form-control"
+                            value="{{ old('state', $user->state) }}">
+                        {{-- {!! \App\Helpers\DropDownHelper::renderStateDropdownForUser($user->country, $user->state) !!} --}}
                     </div>
 
                     <div class="col-lg-6">
                         <label for="city">City</label>
-                        {!! \App\Helpers\DropDownHelper::renderCityDropdownForUser($user->state, $user->city) !!}
+                        <input type="text" name="city" id="city" class="form-control"
+                            value="{{ old('city', $user->city) }}">
+                        {{-- {!! \App\Helpers\DropDownHelper::renderCityDropdownForUser($user->state, $user->city) !!} --}}
                     </div>
 
 
@@ -154,8 +160,9 @@
         </div>
     </section>
 
+    
     <script>
-        // On form submit, combine the static and user-entered parts
+
         document.querySelector('form').addEventListener('submit', function() {
             const userInput = document.getElementById('linkedin_user').value.trim();
             const combinedUrl = `https://www.linkedin.com/in/${userInput}`;
@@ -163,38 +170,37 @@
         });
 
 
-        async function checkLinkedInUserExistence(linkedinUrl) {
-            try {
-                const response = await fetch(linkedinUrl, {
-                    method: 'HEAD', // Only fetch headers, no full page load
-                    mode: 'no-cors', // Prevent CORS issues (may result in limited status visibility)
-                });
+        // async function checkLinkedInUserExistence(linkedinUrl) {
+        //     try {
+        //         const response = await fetch(linkedinUrl, {
+        //             method: 'HEAD', 
+        //             mode: 'no-cors',
+        //         });
 
-                // Check if the user exists
-                if (response.ok) {
-                    console.log('LinkedIn user exists:', linkedinUrl);
-                    return true;
-                } else {
-                    console.log('LinkedIn user does not exist:', linkedinUrl);
-                    return false;
-                }
-            } catch (error) {
-                console.error('Error while checking LinkedIn user existence:', error);
-                return false;
-            }
-        }
+        //         if (response.ok) {
+        //             console.log('LinkedIn user exists:', linkedinUrl);
+        //             return true;
+        //         } else {
+        //             console.log('LinkedIn user does not exist:', linkedinUrl);
+        //             return false;
+        //         }
+        //     } catch (error) {
+        //         console.error('Error while checking LinkedIn user existence:', error);
+        //         return false;
+        //     }
+        // }
 
-        // Example Usage
-        document.querySelector('form').addEventListener('submit', async function(e) {
-            const staticUrl = "https://www.linkedin.com/in/";
-            const userInput = document.getElementById('linkedin_user').value.trim();
-            const fullUrl = `${staticUrl}${userInput}`;
+        // document.querySelector('form').addEventListener('submit', async function(e) {
+        //     const staticUrl = "https://www.linkedin.com/in/";
+        //     const userInput = document.getElementById('linkedin_user').value.trim();
+        //     const fullUrl = `${staticUrl}${userInput}`;
 
-            if (!(await checkLinkedInUserExistence(fullUrl))) {
-                e.preventDefault(); // Prevent form submission
-                alert('The LinkedIn user does not exist.');
-            }
-        });
+        //     if (!(await checkLinkedInUserExistence(fullUrl))) {
+        //         e.preventDefault();
+        //         alert('The LinkedIn user does not exist.');
+        //     }
+        // });
+        
     </script>
 
 
