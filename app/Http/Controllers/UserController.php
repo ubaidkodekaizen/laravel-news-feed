@@ -184,7 +184,7 @@ class UserController extends Controller
             'company_web_url' => 'nullable|url|max:255',
             'company_linkedin_url' => 'nullable|url|max:255',
             'company_position' => 'nullable|string|max:255',
-            'company_about' => 'nullable|string|max:500',
+            'company_about' => 'nullable|string|max:5000',
             'company_revenue' => 'nullable|string|max:255',
             'company_address' => 'nullable|string|max:255',
             'company_country' => 'nullable|string|max:255',
@@ -241,7 +241,7 @@ class UserController extends Controller
         $originalSlug = $companySlug;
         $counter = 1;
 
-        while (Company::where('company_slug', $companySlug)->exists()) {
+        while (Company::where('company_slug', $companySlug)->where('id', '!=', $company->id)->exists()) {
             $companySlug = $originalSlug . '-' . $counter;
             $counter++;
         }
@@ -287,7 +287,7 @@ class UserController extends Controller
             $company->save();
         }
     
-        return redirect()->route('user.company.details');
+        return redirect()->route('search');
     }
     
 

@@ -8,7 +8,7 @@
                     </div>
                     <div class="profile_details">
                         <a href="{{ route('user.profile', ['slug' => $user->slug]) }}" target="_blank" class="user_name">{{ $user->first_name }} {{ $user->last_name }}</a>
-                        <p class="user_position">{{ $user->company->company_position }} at <a href="{{ route('company.profile', ['companySlug' => $user->company->company_slug]) }}" class="user_company">{{ $user->company->company_name }}</a></p>
+                        <p class="user_position">{{ $user->company->company_position }} at {{ $user->company->company_name }}</p>
                         <p class="user_location">{{ $user->city }}, {{ $user->state }}, {{ $user->country }}</p>
                     </div>
                 </div>

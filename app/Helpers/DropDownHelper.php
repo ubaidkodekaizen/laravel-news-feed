@@ -624,6 +624,7 @@ class DropDownHelper
     public static function renderStateDropdownForUser($selectedCountry = null, $selectedState = null)
     {
         $selectedState = old('state', $selectedState);
+        $selectedCountry = old('country', $selectedCountry);
 
         $html = '<select name="state" id="state" class="form-select">';
         $html .= '<option value="">Select State</option>';
@@ -667,7 +668,9 @@ class DropDownHelper
 
     public static function renderCityDropdownForUser($selectedState = null, $selectedCity = null)
     {
+        $selectedState = old('state', $selectedState);
         $selectedCity = old('city', $selectedCity);
+        
 
         $html = '<select name="city" id="city" class="form-select">';
         $html .= '<option value="">Select City</option>';

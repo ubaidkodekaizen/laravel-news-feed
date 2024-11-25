@@ -54,8 +54,15 @@
         
                 <!-- Company Linkedin URL -->
                 <div class="col-lg-6">
-                    <label for="company_linkedin_url">Company Linkedin URL</label>
-                    <input type="text" name="company_linkedin_url" id="company_linkedin_url" class="form-control" value="{{ old('company_linkedin_url', $company->company_linkedin_url ?? '') }}" required>
+                    <label for="company_linkedin_user">Company LinkedIn URL</label>
+                    <div class="input-group">
+                        <div class="input-group-text">https://www.linkedin.com/company/</div>
+                        <input type="text" name="company_linkedin_user" id="company_linkedin_user" class="form-control" 
+                               value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}" 
+                               required>
+                    </div>
+                    <input type="hidden" name="company_linkedin_url" id="company_linkedin_url_hidden" value="">
+
                 </div>
         
                 <!-- Position/Designation -->
@@ -206,6 +213,17 @@
         
     </div>
 </section>
+
+<script>
+    // On form submit, combine the static and user-entered parts for the company LinkedIn URL
+    document.querySelector('form').addEventListener('submit', function () {
+        const companyInput = document.getElementById('company_linkedin_user').value.trim();
+        const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
+        document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
+    });
+</script>
+
+
 <script>
     let accreditationCount = 1;
 

@@ -208,7 +208,7 @@ $(document).ready(function () {
             },
             linkedin_url: {
                 required: true,
-                url: true
+                // url: true
             },
             x_url: {
                 url: true

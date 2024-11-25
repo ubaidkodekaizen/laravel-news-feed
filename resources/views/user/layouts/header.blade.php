@@ -20,13 +20,17 @@
                             <img src="{{asset('assets/images/logo_bg.png')}}" alt="" class="img-fluid">
                         </a>
                     </div>
-                    <div class="left-nav">
-                        <ul class="nav">
-                            {{-- <li><a href="javascript:void(0);">Dashboard</a></li> --}}
-                            <li><a href="{{route('search')}}">Search</a></li>
-                        </ul>
+                    <div class="header-mid">
+                        <div class="search_area">
+                            <input type="text" name="header_search" id="header_search" placeholder="Product, Service or Industry" class="form-control">
+                            <select name="header_location" id="header_location" class="form-select">
+                                <option value="">Select Location</option>
+                            </select>
+                            <button class="btn btn-primary search_btn">Search</button>
+                        </div>
                     </div>
                 </div>
+               
                 <div class="header_right">
                     <div class="profile">
                         <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="">

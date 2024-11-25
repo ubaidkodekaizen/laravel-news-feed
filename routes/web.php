@@ -21,6 +21,10 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('/profile', function () {
+        return view('profile');
+    })->name('profile');
+
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
 
