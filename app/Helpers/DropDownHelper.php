@@ -3,6 +3,7 @@
 namespace App\Helpers;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Plan;
 use App\Models\ProductService;
 
 class DropDownHelper
@@ -226,6 +227,23 @@ class DropDownHelper
         $html .= '</select>';
 
         return $html;
+    }
+
+    public static function getPlanDropdown()
+    {
+        $plans = Plan::all();
+        $options = '<option value="" disabled selected>Choose a Plan</option>';
+
+        foreach ($plans as $plan) {
+            $options .= sprintf(
+                '<option value="%s">%s / %s</option>',
+                htmlspecialchars($plan->id, ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($plan->plan_amount, ENT_QUOTES, 'UTF-8'),
+                htmlspecialchars($plan->plan_name, ENT_QUOTES, 'UTF-8')
+            );
+        }
+
+        return $options;
     }
 
 

@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\AuthorizeNetController;
+  
 
 
 
@@ -20,6 +21,9 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+
+
+
 
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
@@ -43,8 +47,11 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('guest')->group(function () {
 
+    Route::get('/sign-up', [AuthorizeNetController::class, 'index'])->name('register.form');
+    Route::post('/authorize/payment', [AuthorizeNetController::class, 'paymentPost'])->name('authorize.payment');
+
     // User Registration
-    Route::get('/sign-up', [UserController::class, 'showRegistrationForm'])->name('register.form');
+   //Route::get('/sign-up', [UserController::class, 'showRegistrationForm'])->name('register.form');
     Route::post('/register', [UserController::class, 'register'])->name('register');
 
     // User Login
