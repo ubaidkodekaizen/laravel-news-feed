@@ -23,7 +23,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="profile_pic">
-                                <img src="{{ $user->photo ? Storage::url($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="">
+                                <img src="{{ $user->photo ? asset('storage/' .$user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="">
                             </div>
                             <h1 class="profile_heading text-center">
                                 My Profile
@@ -61,7 +61,7 @@
             <div class="col-lg-6">
                 <div class="custom_card_profile">
                     <div class="company_logo profile_data mt-0">
-                        <img src="{{ isset($user->company) && $user->company->company_logo ? Storage::url($user->company->company_logo) : 'http://i.pravatar.cc/500?img=7' }}" alt="">
+                        <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' .$user->company->company_logo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="">
                     </div>
                     <p class="profile_data">
                         {{$user->company->company_name}}

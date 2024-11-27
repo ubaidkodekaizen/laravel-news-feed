@@ -21,7 +21,7 @@
                                             </div>
                                             <div class="avatar-preview">
                                                 <div id="imagePreview">
-                                                    <img src="{{ isset($company) && $company->company_logo ? Storage::url($company->company_logo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                                    <img src="{{ isset($company) && $company->company_logo ? asset('storage/' .$company->company_logo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                                         alt="">
                                                 </div>
                                             </div>
@@ -308,7 +308,7 @@
                 subCategoryDropdown.innerHTML = "<option value=\'\'>Select Company Sub Category</option>";
 
                 if (industryName) {
-                    fetch("/getSubcategories/" + industryName)
+                    "{{ route('get-category', ['industryId' => '__industryName__']) }}".replace('__industryName__', industryName)
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(function(subCategory) {

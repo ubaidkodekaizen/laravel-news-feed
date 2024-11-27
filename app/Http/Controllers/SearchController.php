@@ -137,8 +137,10 @@ class SearchController extends Controller
                 });
             }
 
+            $query->orderByRaw("CASE WHEN state IS NULL THEN 2 WHEN state = 'N/A' THEN 1 ELSE 0 END")
+            ->orderBy('state', 'asc');
         // Fetch filtered results
-        $users = $query->orderBy('id', 'desc')->paginate(15);;
+        $users = $query->paginate(15);
 
         // Return the updated user results
         if ($request->ajax()) {

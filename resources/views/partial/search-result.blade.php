@@ -4,7 +4,7 @@
             <div class="user-card-flex">
                 <div class="profile_name">
                     <div class="profile">
-                        <img src="{{ $user->photo ? Storage::url($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="User Image">
+                        <img src="{{ $user->photo ? asset('storage/' .$user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="User Image">
                     </div>
                     <div class="profile_details">
                         <a href="{{ route('user.profile', ['slug' => $user->slug]) }}" target="_blank" class="user_name">{{ $user->first_name }} {{ $user->last_name }}</a>

@@ -74,7 +74,7 @@
                         <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}" alt="">
                         <div class="dropdown">
                             <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{Auth::user()->first_name}}
+                                {{Auth::user()->first_name}} 
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{route('user.details.show')}}">User Profile</a></li>

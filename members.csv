@@ -1,297 +1,420 @@
-Sr.No,First Name,Last Name,Email Address
-1,Ghulam,Murtaza,alarshny@icloud.com
-2,Ghazi,Abdullah,Techworldstarzllc@gmail.com
-3,Zubair,Noman,zubairshams@gmail.com
-5,Sana,Hassan,syedsanahassan@gmail.com
-6,Aymen,Ali,Aymen@moniacap.com
-7,Hassan,Abbas,hassan@hqtax.com
-8,Usama,Makda,Umakda@premiumtaxaccounting.com
-9,Ameen,Sufyan,ameen.sufyan@yahoo.com
-10,Faizan,Mohiuddin,faizanmohammed635@gmail.com
-11,Aslam,Rawoof,aslam.rawoof@gmail.com
-12,Ahmed,Abdul Qadeer,aaqadeer@earthlink.net
-13,Muhammad,Fiaz,Fiaz@callbiz.net
-14,Abdul,Rauf,pioneerconsulting18@gmail.com
-15,Salah,Khan,iamsalahkhan@gmail.com
-16,Saif,Sultan,saif.sultan@volossoftware.com
-17,Omar,Khan,omar@boardwalkwealth.com
-18,Umer,Khan,drumerkhan@imedhealth.us 
-19,Iffat,Hussain,be.winner06@gmail.com
-20,Malek,Bendelhoum,malek@sahabainitiative.org
-21,Shazeen,Mufti,shazeenmufti@gmail.com
-22,Omar,Chaudhry,Mnc119@gmail.com
-23,Riffat,Lakhani,Seefr@msn.com
-24,Jawad,Arshad,ja@wowhealthsolutions.com
-25,Nadeem,Arif,nadeem.arif@c2caudiovisual.com
-26,Farah,Manawar,farahmanawar@gmail.com
-27,Zaid,Khan,Zaid.khan@manhattancrypto.capital
-28,Habib,J Mannasa,President @ Sispa Companies
-29,Shaheer,Khan,shaheerkhan@methodeasy.com
-30,Khazisyed,Ahmed Jeelani,ahmedjeelani@yahoo.com
-31,Hussain,Haideri,beandoc65@msn.com
-32,Muneeb,Qureshi,President @ Godwilling Incorporated
-33,Arooj,Sheikh,hi@arooj.me
-34,Syed Ali,Abbas,Syed.ali.abbas@live.com
-35,Said,Shefayee,said.m.shefayee@gmail.com
-36,Ahmed,AbouElezz,ahmed@fittfinder.com
-37,Imran,Firoz,imran@fdctech.com
-38,Ali,Elwakeel,aliwakil@gmail.com
-39,Syed,H Askari,syed.askari@gmail.com
-40,Humayun,Afzal,hafzal2000@yahoo.com
-41,Khalid,Helmi,khalid@socalpos.com
-42,Ali,Seif,Aliseif@gmail.com
-43,Akbar,Bhamani,akbar@ambitcd.com
-44,Saifullah,Shaikh,shsaif40@gmail.com
-45,Ali,Hajisattari,Alisattari@yahoo.com
-46,Tariq,Najee Ullah,tariq@patentinsider.co
-47,Hassan,Elsouri,hassan@elsourilaw.com
-48,Amr,Abuellil,amr.abuellil@gmail.com
-49,Adita,Arya,aditawarya@gmail.com
-50,Rafay,Chughtai,abdulrafay@gmail.com
-51,Rozmin,Merchant,rozmib@galaxypaymentsystems.com
-52,Naveed,Khan,kvpriority@gmail.com
-53,Waleed,Khan,Waleedtk721@gmail.com
-54,Sultan,Zahirsha,zahirsha@gmail.com
-55,Muhammad,Khalil,mkhalil@adamtravel.net
-56,Imran,Khan,imran@croxconsulting.com
-57,Aseem,Moazzamuddin,azeem@greenlymortgage.com 
-58,Muhammad Shakeel,Awaisi,msawaisi786@gmail.com 
-59,Moyez,Khan,moyezrehman@gmail.com
-60,Dr. Ali,Alhaschemy,ameridrugs@att.net
-61,Mansoor,Mirza,Mansoor1947@gmail.com
-62,Shazor,Khan,Shazorkhan@methodeasy.com
-63,Muneeb,Qureshi,muneeb.q@gmail.com
-64,Muhammad Salman, Khan,salman@creativecreation.io
-65,Hasan,Altuntas,haltuntas@cla.edu 
-66,Mustafa,Yalçin Sakalli,mustafa@catringodelivery.com 
-67,Ahmed,Dawood,adegypt@aol.com
-68,Armaghan,Rehman,armaghan@arkotechsoftware.com 
-69,Usman,Zaheer,Uz@onyxtec.co 
-70,Wohaib,Hasan,wohaibhasan1@gmail.com
-71,Mudassar,Mohsin,mohsin@erggt.com
-72,Rima,Nashashibi,rima@globalhope365.org
-73,Rasheed,Ahmed,rasheed.ahmedusa@gmail.com
-74,Dr. Shamsi,Ali,imamshamsiali@gmail.com 
-75,Khalid,Muaydh,km@knexa.io
-76,M. Khalid,Khan,khanmk@hotmail.com
-77,Mustafa,Shukri,Mustafa@caaelectric.com
-78,Abdul Basit,Latif	Khan,akhan@kmanntech.com
-79,Mansoor,Ahmed,mansoor@heritagekulfi.com
-80,Hammad,Malik,Hammadawanmalik@gmail.com 
-81,Khalid,Hakim,khalidh@itbmo.com
-82,Ashraf,Altahat,Ashraf@AshrafAltahat.com
-83,Nasir,Ahsan,nasir@abysssolutions.com.au
-84,Andre,Akbar McEntyr,akbarmcentyre663@gmail.com
-85,Malik,Subhan,asubhan342@gmail.com
-86,Usman,Raza,ozzy@equepay.com
-87,Nadeem,Akhtar,snakhtar@hotmail.com
-88,Rashid,Akhtar,rashid_akhtar@yahoo.com
-89,Oubab,Khalil,oubabkhalil@gmail.com
-90,Sayeed,Khan,smk5097@gmail.com
-91,Ali,Ali,messagealiali@gmail.com
-92,Sharf,Zafar,Sharf.zafar@insead.edu 
-93,Zakir,Sikder,zakir.sikder@histofi.com
-94,Nabeel,Ahmed,Nabeel.Ahmed@aspendental.com
-95,Saad,Patel,saad@greenmusk.com
-96,Basit,Adhami,Basitadhami@hotmail.com
-97,Salman,Muridi,Smuridi@advanceabacare.com 
-98,Tariq,Shaikh,tariq.shaikh@signspecialists.com
-99,Syed,Hussain,nifa55@gmail.com & sh@ionconic.com
-100,Shahzad,Nathani,shahzad@shardeum.org
-101,Mustafa,Mustafa,        mustafa@navierre.com
-102,Ali,Asghar,aliaries@hotmail.com
-103,Abdullah,Assaf,Projects@aboogroup.co
-104,Dr. Kaleem,Malik,kmalikmd@trilabhealth.com
-105,Sami,Khan,seekingedge@outlook.com
-106,James,Hasan,james@stackrelease.com
-107,Zain,Jafri,zjafri@thedatalinguist.com
-108,Abdul,Butt,arehmaan@gmail.com
-109,Sheeraz,Khan,sheeraz@kdldsp.com
-110,Rashique,Rahman,rashique.rahman@az-roc.com
-111,Muhammad,Rahman,muhammadrahmaan500@gmail.com
-112,Feroze,Hanif,Feroze.Hanif@ThinkNChange.com
-113,Mohammad Muaz,Siddiqui,muaz@golunos.com
-114,Zain,Jafri,zain@tdlanalytics.com
-115,Waqar,Khan,waqar.khan@tracstech.com
-116,Moiz,Husain,moizhussain101@gmail.com
-117,Taner,Salci,Taner@rigility.com
-118,Sabiha,Ijaz,Sabiha@ivyadmissions.co
-119,Waleed,Nasir,waleed@qult.ai
-120,Jamir,Shaikh,jamir.shaikh@oncoor.com
-121,Danish,Muhammad,danish050905@gmail.com
-122,Junaid,Ahmed,junaid@humblezone.com
-123,Salman,Pathan,Sal@globyz.com
-124,Rami,Albustami,rami.albustami@emanequity.com
-125,Yasser,Soliman,ysoliman@townli.com
-126,Mujahid,Khan,mujahidkkhan@gmail.com
-127,Abdul Latif,Saquib,saquibal@gmail.com
-128,Yahya,Sayed Ghazanfar,yahya@advantagebiomed.com
-129,Khalil,Tareen,khalil.tareen@mhsurgicals.com
-130,Ahmed,Fazil,afazil@stratdefcon.com
-131,Akbar Afzal,Jessani,akbar.afzal@raklogistics.com
-132,Dr. Mohammad,Munir,mmunir@noorassociates.net
-133,Omer,Tareen,omer@volgapartners.com
-134,Umair,Siyed,Umair.Siyed@Hull-Technologies.com
-135,Sohail,Azeem,sohail.w.azeem@gmail.com
-136,Nauman,Sheikh,nasheikh@gmail.com
-137,Ameeruzzaman,Mohammed,ameer@classitop.com
-138,Dr. Sayed,Ibrahim,s.ibrahim@sprinjene.com
-139,Shaz,Khan,shaz+amcob@tonomn.com
-140,Mohammed,Ibrahim,mohammed@ibrahimlawyer.com
-141,Shomail,Malik,shomail@investwithapex.com
-142,Ahmed,Mahmood,aj.mahmood@icloud.com
-143,Talal,Ali Ahmad,talal@predictivecare.ai
-144,Hamzah,Henshaw,hamzah.henshaw@gmail.com
-145,Tooba,Ahmed,tooba.ahmed@myadroit.com
-146,Khalid,Islam,khalid@spectrumlinens.com
-147,Mohammed,Ibrahim,Mohammed@ibrahimlaw.co
-148,Sharif,Nassr,sharifnassr@gmail.com
-149,Asad,Faizi,asad.faizi@enterprise64.com
-150,Ahmad Assad,Koshul,assadkoshul6@gmail.com
-151,Faisal,Masood,faisal.masood@softvative.com
-152,Faiz,Syed,faiz@dicecamp.com
-153,Waqas,Siddiqi,waqas@gomeat.io
-154,Arshad,Mahmood,arshad@xoftsystems.com
-155,Belal,El-Harazin,belharazin77@gmail.com
-156,Sajjad,Chowdhry,sajjad@triviumglobal.com
-157,Mohamed,Bakerywala,mohamed.bakerywala@asbresources.com
-158,Kamran,Adil,kamran@cloudtech.com
-159,Qasim,Shahbaz,qasim@sellerplex.com
-160,Asma,Hashmi,asma@jpclengineering.com
-161,Rashad,AbdulAzeem,techinetics@gmail.com
-162,Hasan,Brohi,hbrohi@habtechnologies.com
-163,Samina,Saleem,ssaleem@innovaconsultinc.com
-164,Anas,Ali,anas@fleekbiz.com
-165,Adil,Faisal,adil.faisal@8126.ventures
-166,Dr. Hayder,Rasheed,prof.hayderrasheed@gmail.com
-167,Touseef,Riaz,touseef.r@ucontrolbilling.com
-168,Dr. Javed,Siddiqi,javed@exombiopharma.com
-169,Junaid,Irshad,j.irshad@griptek.com
-170,Rashid,Naqvi,rashid@1stalliancemortgage.com
-171,Aasim,Ahmad,aasim@copilotnet.com
-172,Farhan,Khan,fkhan@heritage-communities.com
-173,David,Zaheer,david.zaheer@lw.com
-174,Yusuf,Bhabhrawala,yusuf@sleeksky.com
-175,Syed,Hussain,syed@shiza.ai
-176,Faizan,Ahmed,faizan@theheadstarter.com
-177,Bela,Khizer,belashoaib@ssbninc.com.mx
-178,Ammar,Alsarabi,ammar@unitedecm.com
-179,Kareem,Abukhadra,kareem@joinrelentless.com
-180,Omar,Memon,omar.memon@gatewayurdu.com
-181,Dr. Mahboob,Ali,mali@smartmedicalresearch.com
-182,Junaid,Noor,jn@albanyparkcapital.com
-183,Waseem,Kawaf,waseem@kawafllc.com
-184,Muhammad,Khan,mkhan@khanbuildersinc.com
-185,Akifa,Khattak,khattakakifa@gmail.com
-186,Ibrahim,Harun,iharun@ihconceptsonline.com
-187,Bela,Khizer,belashoaib@elitetechfusioninc.com.mx
-188,Jaffar,Hussain,jaffar.hussain@venturenox.com
-189,Bayan,Alturkestani,bayan.alturkestani@conanmedtech.com
-190,Adnan,Khawaja,ak@skyvistaconsulting.com
-191,Ahmed,Al-Attar,ahmed.al-attar@anadwc.com
-192,Atif,Sheikh,atifsheikhlaw@gmail.com
-193,Moonis,Mansoor,moonis@dos.support
-194,Ceylan,Rowe,ceylan@fihriinc.com
-195,Mohammed,Sayeed,mmsayeed2000@yahoo.com
-196,Salah,Elshanshory,salah@pcapitaltx.com
-197,Nayab Yusuf,Siddiqi,nayab.yusuf@zaynaventures.com
-198,Nida,Mehtab,nida@caryatid-space.com
-199,Shahid,Hayat,pakistanchild@gmail.com
-200,Muhammad,Abdullah,abdullahfromhfz@gmail.com
-201,Aisha,Hassine-Martinek,aisha.martinek@gmail.com
-202,Amir Ahmad,Nasr,drima@assertiveu.com
-203,Nasser,Khan,nasser.khan@controllayers.com
-204,Emran,Baha,emran@srgmn.com
-205,Ahmad,Khan,ahmad.khan@thzeal.com
-206,Asma,Chaudhry,asma@heartacuity.com
-207,Amin,Ghaffar,amin@onkorepro.com
-208,Yasser,Soliman,yasser@sabeelee.com
-209,Hashim,Siddiqui,hashim.robotics@gmail.com
-210,Tariq,Islam,tariq@sltaeronautics.com
-211,Aleem,Abid,aleem@alvayria.com
-212,Kamran,Azam,kamran.azam@integriti.io
-213,Dr. Sohail,Masood,sohailmasood@comcast.net
-214,Adnan,Qamar,aqamar8445@gmail.com
-215,Syed,Basha,syed.basha@hafman.ca
-216,Shakeel,Akhter,sakhter@salamcollections.com
-217,Saif,Khan,saif.khan@nuformat.com
-218,Raza,Khan,rkhan@gorevenueengine.com
-219,Abid,Bodla,abid.bodla@novizant.com
-221,Sarah,Ahmad,sarahx0923@gmail.com
-222,Qaiser,Kazmi,qkazmi@mac.com
-223,Shoaib,Chaudhary,shoaib@plumlogix.com
-224,Arsalan,Khalid,arsalan@csolutions.io
-225,Irfan,Qazi,irfan@raazsecurity.com
-226,Raja Raheel,Khanzada,Raja.khanzada@outlook.com
-227,Muhammad,Abdullah,Abdullah@thefreelancinghub.com
-228,Yusuf,Karbani,ykarbani@gmail.com
-229,Masood,Inayat,masood.inayat@exprealty.com
-230,Mohammed,Sayeed,mmsayeed6677@gmail.com
-231,Ali,Quadri,aquadri@waditek.com
-232,Hesham,ElHamahmy,hesham@haeinnovations.com
-233,Faris,Ghani,fghani@SahhaLLC.com
-234,Mouneeb,Shahid,mouneeb@2web.ca
-235,Fahad,Siddiqui,fahad@almabrook.io
-236,Usman,Ahmed,support@dreammotorz.com
-237,Maruf,Yusupov,maruf.yusupov@gmail.com
-238,Saqib,Dareshani,saqib.dareshani@gmail.com
-239,Ayesha,Qureshi,ayesha@qlinemedia.com
-240,Anas Akhtar,Ali,info@anasali.com
-241,Zoya,Mirza,chaplainzoya@gmail.com
-242,Ziad,Itani,ziad@barakah.agency
-243,Ihssane,Leckey,ihssane@unityfirstadvisors.com
-244,Mohammad,Kamran,info@3plfulfillmentprep.com
-245,Khurram,Hussain,khurramhussain@irvinei.com
-246,Saqib,Tariq,stariq@panelmarketing.ca
-247,Muhammad,Afaneh,mohammad@novelbits.io
-248,Adaam,Naseer,alambr23@yahoo.com
-249,Raza,Hasan,raza@neuralbanana.com
-250,Bridger,Ammar,wammar@holistic-intelligence.net
-251,Rizwan,Yunus,ryunus@itconnections.net
-252,Tariq,Alinur,tariq.alinur@braincx.com
-253,Parvez,Riaz,rparvez@servprosouthbronx.com
-254,Najam,Saqib,najam@intelligenes.net
-255,Hussain,Bandokwala,hussain@parwaazcc.com
-256,MD,Hossain,md@bestpracticify.co
-257,Brian,McElroy,bmcelroy@triproconsulting.com
-259,Dilshod,Jumaniyazov,dilshod.bek@musaffa.com
-260,Obada,Subai,os@brainandeye.org
-261,Humayun,Kabeer,humayun.kabeer@hhrd.us
-262,Kareem,Ibrahim,kareem@theexecutivehealthproject.com
-263,Noor,Hamid,contact@noorhamidinteriors.com
-264,Amna,Butt,amna.butt@wraab.com
-265,Abdul,Tayyab,abdulmtayyab@gmail.com
-266,Mohammed Najeeb,Ashraf,najeeb.ashraf@scivoc.com
-267,Faruk,Bagani,fb@menasabd.com
-268,Farooq,Cheema,farooq@ainvestmentsm.com
-269,Mohammed Adil,Khan,adil@icolorprinting.net
-270,Margari,Hill,margari@muslimarc.org
-271,Saad,Nadeem,saad.nadeem@rflwealth.ca
-272,Aisha,Hassine,aishahassine@gmail.com
-273,Tariq,Islam,tariq@mizanlabs.com
-274,Hammad,Rahman,hammad@metblinds.com
-275,Abdul,Tayyab,tayyabgroupinc@gmail.com
-276,Samira,Asfore,samira@nextedconsulting.com
-277,Umair,Shah,umair.shah@arbisoft.com
-278,Ali,Zreik,azreik@zreikventuregroup.com
-279,Saad,Rasheed,saad.rasheed@bpowizard.com
-280,Zulikha,Hussain,ladyz@z4ure.com
-281,Uzair,Afzal,uzaira@bluearcaccounting.com
-282,Ceylan,Rowe,ceylan@fihrifoundation.org
-283,Sohaib,Chaudhry,sohaib@fictionalfrontiers.com
-284,Rafeeq Anwar,Mohammad,rafeeqanwar2016@gmail.com
-285,Javed,Bagani,javed@biscaynehospitality.com
-286,Sami,Yabroudi,sami@flatirondata.ai
-287,Moshiur,Khondokar,moshi.bd@gmail.com
-288,Afzal,Syed,afzalusyed@gmail.com
-289,Taha,Kazmi,taha@wisebee.ai
-290,Sajjad,Ahmed,sajjad@gonovacloud.com
-291,Sam,Asra,sasra@fathersconnect.co
-292,Iftikhar Ali,Khan,iakhan@sbnhealthcaresolution.com
-293,Kamal,Solaiman,kamal@primarycapitalholdings.com
-294,Haider,Janjua,hjanjua1@gmail.com
-295,Mahmoud,Oriqat,moriqat@jceinc.us
-296,Mehmood,Ahmed,mahmedtx@gmail.com
-297,Reza,Ahmadi,reza@pandahub.com
-298,Nabeel,Zuberi,zuberi.nabeel@gmail.com
-299,Muhi,Khwaja,muhi@amuslimcf.org
+First Name,Last Name,Email,Company,Title,Industry,Person Linkedin Url,Website,Primary Phone,City,State,Country,Company Phone
+Ghulam,Murtaza,alarshny@icloud.com,,,,,,,,,,
+Ghazi,Abdullah,Techworldstarzllc@gmail.com,,,,,,,,,,
+Zubair,Noman,zubairshams@gmail.com,,,,,,,,,,
+Sana,Hassan,syedsanahassan@gmail.com,,,,,,,,,,
+Aymen,Ali,Aymen@moniacap.com,,,,,,,,,,
+Hassan,Abbas,hassan@hqtax.com,,,,,,,,,,
+Usama,Makda,Umakda@premiumtaxaccounting.com,,,,,,,,,,
+Ameen,Sufyan,ameen.sufyan@yahoo.com,,,,,,,,,,
+Faizan,Mohiuddin,faizanmohammed635@gmail.com,,,,,,,,,,
+Aslam,Rawoof,aslam.rawoof@gmail.com,,,,,,,,,,
+Ahmed,Abdul Qadeer,aaqadeer@earthlink.net,,,,,,,,,,
+Muhammad,Fiaz,Fiaz@callbiz.net,,,,,,,,,,
+Abdul,Rauf,pioneerconsulting18@gmail.com,,,,,,,,,,
+Salah,Khan,iamsalahkhan@gmail.com,,,,,,,,,,
+Saif,Sultan,saif.sultan@volossoftware.com,,,,,,,,,,
+Omar,Khan,omar@boardwalkwealth.com,,,,,,,,,,
+Umer,Khan,drumerkhan@imedhealth.us,,,,,,,,,,
+Iffat,Hussain,be.winner06@gmail.com,,,,,,,,,,
+Malek,Bendelhoum,malek@sahabainitiative.org,,,,,,,,,,
+Shazeen,Mufti,shazeenmufti@gmail.com,,,,,,,,,,
+Omar,Chaudhry,Mnc119@gmail.com,,,,,,,,,,
+Riffat,Lakhani,Seefr@msn.com,,,,,,,,,,
+Jawad,Arshad,ja@wowhealthsolutions.com,,,,,,,,,,
+Nadeem,Arif,nadeem.arif@c2caudiovisual.com,,,,,,,,,,
+Farah,Manawar,farahmanawar@gmail.com,,,,,,,,,,
+Zaid,Khan,Zaid.khan@manhattancrypto.capital,,,,,,,,,,
+Habib,J Mannasa,President @ Sispa Companies,,,,,,,,,,
+Shaheer,Khan,shaheerkhan@methodeasy.com,,,,,,,,,,
+Khazisyed,Ahmed Jeelani,ahmedjeelani@yahoo.com,,,,,,,,,,
+Hussain,Haideri,beandoc65@msn.com,,,,,,,,,,
+Muneeb,Qureshi,President @ Godwilling Incorporated,,,,,,,,,,
+Arooj,Sheikh,hi@arooj.me,,,,,,,,,,
+Syed Ali,Abbas,Syed.ali.abbas@live.com,,,,,,,,,,
+Said,Shefayee,said.m.shefayee@gmail.com,,,,,,,,,,
+Ahmed,AbouElezz,ahmed@fittfinder.com,,,,,,,,,,
+Imran,Firoz,imran@fdctech.com,,,,,,,,,,
+Ali,Elwakeel,aliwakil@gmail.com,,,,,,,,,,
+Syed,H Askari,syed.askari@gmail.com,,,,,,,,,,
+Humayun,Afzal,hafzal2000@yahoo.com,,,,,,,,,,
+Khalid,Helmi,khalid@socalpos.com,,,,,,,,,,
+Ali,Seif,Aliseif@gmail.com,,,,,,,,,,
+Akbar,Bhamani,akbar@ambitcd.com,,,,,,,,,,
+Saifullah,Shaikh,shsaif40@gmail.com,,,,,,,,,,
+Ali,Hajisattari,Alisattari@yahoo.com,,,,,,,,,,
+Tariq,Najee Ullah,tariq@patentinsider.co,,,,,,,,,,
+Hassan,Elsouri,hassan@elsourilaw.com,,,,,,,,,,
+Amr,Abuellil,amr.abuellil@gmail.com,,,,,,,,,,
+Adita,Arya,aditawarya@gmail.com,,,,,,,,,,
+Rafay,Chughtai,abdulrafay@gmail.com,,,,,,,,,,
+Rozmin,Merchant,rozmib@galaxypaymentsystems.com,,,,,,,,,,
+Naveed,Khan,kvpriority@gmail.com,,,,,,,,,,
+Waleed,Khan,Waleedtk721@gmail.com,,,,,,,,,,
+Sultan,Zahirsha,zahirsha@gmail.com,,,,,,,,,,
+Muhammad,Khalil,mkhalil@adamtravel.net,,,,,,,,,,
+Imran,Khan,imran@croxconsulting.com,,,,,,,,,,
+Aseem,Moazzamuddin,azeem@greenlymortgage.com,,,,,,,,,,
+Muhammad Shakeel,Awaisi,msawaisi786@gmail.com,,,,,,,,,,
+Moyez,Khan,moyezrehman@gmail.com,,,,,,,,,,
+Dr. Ali,Alhaschemy,ameridrugs@att.net,,,,,,,,,,
+Mansoor,Mirza,Mansoor1947@gmail.com,,,,,,,,,,
+Shazor,Khan,Shazorkhan@methodeasy.com,,,,,,,,,,
+Muneeb,Qureshi,muneeb.q@gmail.com,,,,,,,,,,
+Muhammad Salman,Khan,salman@creativecreation.io,,,,,,,,,,
+Hasan,Altuntas,haltuntas@cla.edu,,,,,,,,,,
+Mustafa,Yalçin Sakalli,mustafa@catringodelivery.com,,,,,,,,,,
+Ahmed,Dawood,adegypt@aol.com,,,,,,,,,,
+Armaghan,Rehman,armaghan@arkotechsoftware.com,,,,,,,,,,
+Usman,Zaheer,Uz@onyxtec.co,,,,,,,,,,
+Wohaib,Hasan,wohaibhasan1@gmail.com,,,,,,,,,,
+Mudassar,Mohsin,mohsin@erggt.com,,,,,,,,,,
+Rima,Nashashibi,rima@globalhope365.org,,,,,,,,,,
+Rasheed,Ahmed,rasheed.ahmedusa@gmail.com,,,,,,,,,,
+Dr. Shamsi,Ali,imamshamsiali@gmail.com,,,,,,,,,,
+Khalid,Muaydh,km@knexa.io,,,,,,,,,,
+M. Khalid,Khan,khanmk@hotmail.com,,,,,,,,,,
+Mustafa,Shukri,Mustafa@caaelectric.com,,,,,,,,,,
+Abdul Basit,Latif Khan,akhan@kmanntech.com,,,,,,,,,,
+Mansoor,Ahmed,mansoor@heritagekulfi.com,,,,,,,,,,
+Hammad,Malik,Hammadawanmalik@gmail.com,,,,,,,,,,
+Khalid,Hakim,khalidh@itbmo.com,,,,,,,,,,
+Ashraf,Altahat,Ashraf@AshrafAltahat.com,,,,,,,,,,
+Nasir,Ahsan,nasir@abysssolutions.com.au,,,,,,,,,,
+Andre,Akbar McEntyr,akbarmcentyre663@gmail.com,,,,,,,,,,
+Malik,Subhan,asubhan342@gmail.com,,,,,,,,,,
+Usman,Raza,ozzy@equepay.com,,,,,,,,,,
+Nadeem,Akhtar,snakhtar@hotmail.com,,,,,,,,,,
+Rashid,Akhtar,rashid_akhtar@yahoo.com,,,,,,,,,,
+Oubab,Khalil,oubabkhalil@gmail.com,,,,,,,,,,
+Sayeed,Khan,smk5097@gmail.com,,,,,,,,,,
+Ali,Ali,messagealiali@gmail.com,,,,,,,,,,
+Sharf,Zafar,Sharf.zafar@insead.edu,,,,,,,,,,
+Zakir,Sikder,zakir.sikder@histofi.com,,,,,,,,,,
+Nabeel,Ahmed,Nabeel.Ahmed@aspendental.com,,,,,,,,,,
+Saad,Patel,saad@greenmusk.com,,,,,,,,,,
+Basit,Adhami,Basitadhami@hotmail.com,,,,,,,,,,
+Salman,Muridi,Smuridi@advanceabacare.com,,,,,,,,,,
+Tariq,Shaikh,tariq.shaikh@signspecialists.com,,,,,,,,,,
+Syed,Hussain,nifa55@gmail.com & sh@ionconic.com,,,,,,,,,,
+Shahzad,Nathani,shahzad@shardeum.org,,,,,,,,,,
+Mustafa,Mustafa,mustafa@navierre.com,,,,,,,,,,
+Ali,Asghar,aliaries@hotmail.com,,,,,,,,,,
+Abdullah,Assaf,Projects@aboogroup.co,,,,,,,,,,
+Dr. Kaleem,Malik,kmalikmd@trilabhealth.com,,,,,,,,,,
+Sami,Khan,seekingedge@outlook.com,,,,,,,,,,
+James,Hasan,james@stackrelease.com,,,,,,,,,,
+Zain,Jafri,zjafri@thedatalinguist.com,,,,,,,,,,
+Abdul,Butt,arehmaan@gmail.com,,,,,,,,,,
+Sheeraz,Khan,sheeraz@kdldsp.com,,,,,,,,,,
+Rashique,Rahman,rashique.rahman@az-roc.com,,,,,,,,,,
+Muhammad,Rahman,muhammadrahmaan500@gmail.com,,,,,,,,,,
+Feroze,Hanif,Feroze.Hanif@ThinkNChange.com,,,,,,,,,,
+Mohammad Muaz,Siddiqui,muaz@golunos.com,,,,,,,,,,
+Zain,Jafri,zain@tdlanalytics.com,,,,,,,,,,
+Waqar,Khan,waqar.khan@tracstech.com,,,,,,,,,,
+Moiz,Husain,moizhussain101@gmail.com,,,,,,,,,,
+Taner,Salci,Taner@rigility.com,,,,,,,,,,
+Sabiha,Ijaz,Sabiha@ivyadmissions.co,,,,,,,,,,
+Waleed,Nasir,waleed@qult.ai,,,,,,,,,,
+Jamir,Shaikh,jamir.shaikh@oncoor.com,,,,,,,,,,
+Danish,Muhammad,danish050905@gmail.com,,,,,,,,,,
+Junaid,Ahmed,junaid@humblezone.com,,,,,,,,,,
+Salman,Pathan,Sal@globyz.com,,,,,,,,,,
+Rami,Albustami,rami.albustami@emanequity.com,,,,,,,,,,
+Yasser,Soliman,ysoliman@townli.com,,,,,,,,,,
+Mujahid,Khan,mujahidkkhan@gmail.com,,,,,,,,,,
+Abdul Latif,Saquib,saquibal@gmail.com,,,,,,,,,,
+Yahya,Sayed Ghazanfar,yahya@advantagebiomed.com,,,,,,,,,,
+Khalil,Tareen,khalil.tareen@mhsurgicals.com,,,,,,,,,,
+Ahmed,Fazil,afazil@stratdefcon.com,,,,,,,,,,
+Akbar Afzal,Jessani,akbar.afzal@raklogistics.com,,,,,,,,,,
+Dr. Mohammad,Munir,mmunir@noorassociates.net,,,,,,,,,,
+Omer,Tareen,omer@volgapartners.com,,,,,,,,,,
+Umair,Siyed,Umair.Siyed@Hull-Technologies.com,,,,,,,,,,
+Sohail,Azeem,sohail.w.azeem@gmail.com,,,,,,,,,,
+Nauman,Sheikh,nasheikh@gmail.com,,,,,,,,,,
+Ameeruzzaman,Mohammed,ameer@classitop.com,,,,,,,,,,
+Dr. Sayed,Ibrahim,s.ibrahim@sprinjene.com,,,,,,,,,,
+Shaz,Khan,shaz+amcob@tonomn.com,,,,,,,,,,
+Mohammed,Ibrahim,mohammed@ibrahimlawyer.com,,,,,,,,,,
+Shomail,Malik,shomail@investwithapex.com,,,,,,,,,,
+Ahmed,Mahmood,aj.mahmood@icloud.com,,,,,,,,,,
+Talal,Ali Ahmad,talal@predictivecare.ai,,,,,,,,,,
+Hamzah,Henshaw,hamzah.henshaw@gmail.com,,,,,,,,,,
+Tooba,Ahmed,tooba.ahmed@myadroit.com,,,,,,,,,,
+Khalid,Islam,khalid@spectrumlinens.com,,,,,,,,,,
+Mohammed,Ibrahim,Mohammed@ibrahimlaw.co,,,,,,,,,,
+Sharif,Nassr,sharifnassr@gmail.com,,,,,,,,,,
+Asad,Faizi,asad.faizi@enterprise64.com,,,,,,,,,,
+Ahmad Assad,Koshul,assadkoshul6@gmail.com,,,,,,,,,,
+Faisal,Masood,faisal.masood@softvative.com,,,,,,,,,,
+Faiz,Syed,faiz@dicecamp.com,,,,,,,,,,
+Waqas,Siddiqi,waqas@gomeat.io,,,,,,,,,,
+Arshad,Mahmood,arshad@xoftsystems.com,,,,,,,,,,
+Belal,El-Harazin,belharazin77@gmail.com,,,,,,,,,,
+Sajjad,Chowdhry,sajjad@triviumglobal.com,,,,,,,,,,
+Mohamed,Bakerywala,mohamed.bakerywala@asbresources.com,,,,,,,,,,
+Kamran,Adil,kamran@cloudtech.com,,,,,,,,,,
+Qasim,Shahbaz,qasim@sellerplex.com,,,,,,,,,,
+Asma,Hashmi,asma@jpclengineering.com,,,,,,,,,,
+Rashad,AbdulAzeem,techinetics@gmail.com,,,,,,,,,,
+Hasan,Brohi,hbrohi@habtechnologies.com,,,,,,,,,,
+Samina,Saleem,ssaleem@innovaconsultinc.com,,,,,,,,,,
+Anas,Ali,anas@fleekbiz.com,,,,,,,,,,
+Adil,Faisal,adil.faisal@8126.ventures,,,,,,,,,,
+Dr. Hayder,Rasheed,prof.hayderrasheed@gmail.com,,,,,,,,,,
+Touseef,Riaz,touseef.r@ucontrolbilling.com,,,,,,,,,,
+Dr. Javed,Siddiqi,javed@exombiopharma.com,,,,,,,,,,
+Junaid,Irshad,j.irshad@griptek.com,,,,,,,,,,
+Rashid,Naqvi,rashid@1stalliancemortgage.com,,,,,,,,,,
+Aasim,Ahmad,aasim@copilotnet.com,,,,,,,,,,
+Farhan,Khan,fkhan@heritage-communities.com,,,,,,,,,,
+David,Zaheer,david.zaheer@lw.com,,,,,,,,,,
+Yusuf,Bhabhrawala,yusuf@sleeksky.com,,,,,,,,,,
+Syed,Hussain,syed@shiza.ai,,,,,,,,,,
+Faizan,Ahmed,faizan@theheadstarter.com,,,,,,,,,,
+Bela,Khizer,belashoaib@ssbninc.com.mx,,,,,,,,,,
+Ammar,Alsarabi,ammar@unitedecm.com,,,,,,,,,,
+Kareem,Abukhadra,kareem@joinrelentless.com,,,,,,,,,,
+Omar,Memon,omar.memon@gatewayurdu.com,,,,,,,,,,
+Dr. Mahboob,Ali,mali@smartmedicalresearch.com,,,,,,,,,,
+Junaid,Noor,jn@albanyparkcapital.com,,,,,,,,,,
+Waseem,Kawaf,waseem@kawafllc.com,,,,,,,,,,
+Muhammad,Khan,mkhan@khanbuildersinc.com,,,,,,,,,,
+Akifa,Khattak,khattakakifa@gmail.com,,,,,,,,,,
+Ibrahim,Harun,iharun@ihconceptsonline.com,,,,,,,,,,
+Bela,Khizer,belashoaib@elitetechfusioninc.com.mx,,,,,,,,,,
+Jaffar,Hussain,jaffar.hussain@venturenox.com,,,,,,,,,,
+Bayan,Alturkestani,bayan.alturkestani@conanmedtech.com,,,,,,,,,,
+Adnan,Khawaja,ak@skyvistaconsulting.com,,,,,,,,,,
+Ahmed,Al-Attar,ahmed.al-attar@anadwc.com,,,,,,,,,,
+Atif,Sheikh,atifsheikhlaw@gmail.com,,,,,,,,,,
+Moonis,Mansoor,moonis@dos.support,,,,,,,,,,
+Ceylan,Rowe,ceylan@fihriinc.com,,,,,,,,,,
+Mohammed,Sayeed,mmsayeed2000@yahoo.com,,,,,,,,,,
+Salah,Elshanshory,salah@pcapitaltx.com,,,,,,,,,,
+Nayab Yusuf,Siddiqi,nayab.yusuf@zaynaventures.com,,,,,,,,,,
+Nida,Mehtab,nida@caryatid-space.com,,,,,,,,,,
+Shahid,Hayat,pakistanchild@gmail.com,,,,,,,,,,
+Muhammad,Abdullah,abdullahfromhfz@gmail.com,,,,,,,,,,
+Aisha,Hassine-Martinek,aisha.martinek@gmail.com,,,,,,,,,,
+Amir Ahmad,Nasr,drima@assertiveu.com,,,,,,,,,,
+Nasser,Khan,nasser.khan@controllayers.com,,,,,,,,,,
+Emran,Baha,emran@srgmn.com,,,,,,,,,,
+Ahmad,Khan,ahmad.khan@thzeal.com,,,,,,,,,,
+Asma,Chaudhry,asma@heartacuity.com,,,,,,,,,,
+Amin,Ghaffar,amin@onkorepro.com,,,,,,,,,,
+Yasser,Soliman,yasser@sabeelee.com,,,,,,,,,,
+Hashim,Siddiqui,hashim.robotics@gmail.com,,,,,,,,,,
+Tariq,Islam,tariq@sltaeronautics.com,,,,,,,,,,
+Aleem,Abid,aleem@alvayria.com,,,,,,,,,,
+Kamran,Azam,kamran.azam@integriti.io,,,,,,,,,,
+Dr. Sohail,Masood,sohailmasood@comcast.net,,,,,,,,,,
+Adnan,Qamar,aqamar8445@gmail.com,,,,,,,,,,
+Syed,Basha,syed.basha@hafman.ca,,,,,,,,,,
+Shakeel,Akhter,sakhter@salamcollections.com,,,,,,,,,,
+Saif,Khan,saif.khan@nuformat.com,,,,,,,,,,
+Raza,Khan,rkhan@gorevenueengine.com,,,,,,,,,,
+Abid,Bodla,abid.bodla@novizant.com,,,,,,,,,,
+Sarah,Ahmad,sarahx0923@gmail.com,,,,,,,,,,
+Qaiser,Kazmi,qkazmi@mac.com,,,,,,,,,,
+Shoaib,Chaudhary,shoaib@plumlogix.com,,,,,,,,,,
+Arsalan,Khalid,arsalan@csolutions.io,,,,,,,,,,
+Irfan,Qazi,irfan@raazsecurity.com,,,,,,,,,,
+Raja Raheel,Khanzada,Raja.khanzada@outlook.com,,,,,,,,,,
+Muhammad,Abdullah,Abdullah@thefreelancinghub.com,,,,,,,,,,
+Yusuf,Karbani,ykarbani@gmail.com,,,,,,,,,,
+Masood,Inayat,masood.inayat@exprealty.com,,,,,,,,,,
+Mohammed,Sayeed,mmsayeed6677@gmail.com,,,,,,,,,,
+Ali,Quadri,aquadri@waditek.com,,,,,,,,,,
+Hesham,ElHamahmy,hesham@haeinnovations.com,,,,,,,,,,
+Faris,Ghani,fghani@SahhaLLC.com,,,,,,,,,,
+Mouneeb,Shahid,mouneeb@2web.ca,,,,,,,,,,
+Fahad,Siddiqui,fahad@almabrook.io,,,,,,,,,,
+Usman,Ahmed,support@dreammotorz.com,,,,,,,,,,
+Maruf,Yusupov,maruf.yusupov@gmail.com,,,,,,,,,,
+Saqib,Dareshani,saqib.dareshani@gmail.com,,,,,,,,,,
+Ayesha,Qureshi,ayesha@qlinemedia.com,,,,,,,,,,
+Anas Akhtar,Ali,info@anasali.com,,,,,,,,,,
+Zoya,Mirza,chaplainzoya@gmail.com,,,,,,,,,,
+Ziad,Itani,ziad@barakah.agency,,,,,,,,,,
+Ihssane,Leckey,ihssane@unityfirstadvisors.com,,,,,,,,,,
+Mohammad,Kamran,info@3plfulfillmentprep.com,,,,,,,,,,
+Khurram,Hussain,khurramhussain@irvinei.com,,,,,,,,,,
+Saqib,Tariq,stariq@panelmarketing.ca,,,,,,,,,,
+Muhammad,Afaneh,mohammad@novelbits.io,,,,,,,,,,
+Adaam,Naseer,alambr23@yahoo.com,,,,,,,,,,
+Raza,Hasan,raza@neuralbanana.com,,,,,,,,,,
+Bridger,Ammar,wammar@holistic-intelligence.net,,,,,,,,,,
+Rizwan,Yunus,ryunus@itconnections.net,,,,,,,,,,
+Tariq,Alinur,tariq.alinur@braincx.com,,,,,,,,,,
+Parvez,Riaz,rparvez@servprosouthbronx.com,,,,,,,,,,
+Najam,Saqib,najam@intelligenes.net,,,,,,,,,,
+Hussain,Bandokwala,hussain@parwaazcc.com,,,,,,,,,,
+MD,Hossain,md@bestpracticify.co,,,,,,,,,,
+Brian,McElroy,bmcelroy@triproconsulting.com,,,,,,,,,,
+Dilshod,Jumaniyazov,dilshod.bek@musaffa.com,,,,,,,,,,
+Obada,Subai,os@brainandeye.org,,,,,,,,,,
+Humayun,Kabeer,humayun.kabeer@hhrd.us,,,,,,,,,,
+Kareem,Ibrahim,kareem@theexecutivehealthproject.com,,,,,,,,,,
+Noor,Hamid,contact@noorhamidinteriors.com,,,,,,,,,,
+Amna,Butt,amna.butt@wraab.com,,,,,,,,,,
+Abdul,Tayyab,abdulmtayyab@gmail.com,,,,,,,,,,
+Mohammed Najeeb,Ashraf,najeeb.ashraf@scivoc.com,,,,,,,,,,
+Faruk,Bagani,fb@menasabd.com,,,,,,,,,,
+Farooq,Cheema,farooq@ainvestmentsm.com,,,,,,,,,,
+Mohammed Adil,Khan,adil@icolorprinting.net,,,,,,,,,,
+Margari,Hill,margari@muslimarc.org,,,,,,,,,,
+Saad,Nadeem,saad.nadeem@rflwealth.ca,,,,,,,,,,
+Aisha,Hassine,aishahassine@gmail.com,,,,,,,,,,
+Tariq,Islam,tariq@mizanlabs.com,,,,,,,,,,
+Hammad,Rahman,hammad@metblinds.com,,,,,,,,,,
+Abdul,Tayyab,tayyabgroupinc@gmail.com,,,,,,,,,,
+Samira,Asfore,samira@nextedconsulting.com,,,,,,,,,,
+Umair,Shah,umair.shah@arbisoft.com,,,,,,,,,,
+Ali,Zreik,azreik@zreikventuregroup.com,,,,,,,,,,
+Saad,Rasheed,saad.rasheed@bpowizard.com,,,,,,,,,,
+Zulikha,Hussain,ladyz@z4ure.com,,,,,,,,,,
+Uzair,Afzal,uzaira@bluearcaccounting.com,,,,,,,,,,
+Ceylan,Rowe,ceylan@fihrifoundation.org,,,,,,,,,,
+Sohaib,Chaudhry,sohaib@fictionalfrontiers.com,,,,,,,,,,
+Rafeeq Anwar,Mohammad,rafeeqanwar2016@gmail.com,,,,,,,,,,
+Javed,Bagani,javed@biscaynehospitality.com,,,,,,,,,,
+Sami,Yabroudi,sami@flatirondata.ai,,,,,,,,,,
+Moshiur,Khondokar,moshi.bd@gmail.com,,,,,,,,,,
+Afzal,Syed,afzalusyed@gmail.com,,,,,,,,,,
+Taha,Kazmi,taha@wisebee.ai,,,,,,,,,,
+Sajjad,Ahmed,sajjad@gonovacloud.com,,,,,,,,,,
+Sam,Asra,sasra@fathersconnect.co,,,,,,,,,,
+Iftikhar Ali,Khan,iakhan@sbnhealthcaresolution.com,,,,,,,,,,
+Kamal,Solaiman,kamal@primarycapitalholdings.com,,,,,,,,,,
+Haider,Janjua,hjanjua1@gmail.com,,,,,,,,,,
+Mahmoud,Oriqat,moriqat@jceinc.us,,,,,,,,,,
+Mehmood,Ahmed,mahmedtx@gmail.com,,,,,,,,,,
+Reza,Ahmadi,reza@pandahub.com,,,,,,,,,,
+Nabeel,Zuberi,zuberi.nabeel@gmail.com,,,,,,,,,,
+Muhi,Khwaja,muhi@amuslimcf.org,,,,,,,,,,
+Aasim,Ahmad,aasim@copilotnet.com,Copilot Net LLC,Owner,Telecommunications,https://www.linkedin.com/in/aasim-ahmad-84947a4a/,https://www.copilotnet.com,630-254-9061,Allen,TX,,
+Abid,Bodla,abid.bodla@novizant.com,Novizant,CEO,Technology - IT Solutions,https://www.linkedin.com/in/abidbodla/,https://novizant.com/,949-351-2325,Irvine,CA,,
+Adaam,Naseer,alambr23@yahoo.com,Northwestern Mutual,Financial Rep,Financial Advisor,https://www.linkedin.com/in/adaam-naseer-5b0a2385/,,419-309-7860,Toledo,OH,,
+Adil,Faisal,adil.faisal@8126.ventures,8126 Ventures,Founder & CEO,Ideation,https://www.linkedin.com/in/adilfaisal/,https://8126.ventures/,425-256-0321,Silver Spring,MD,United States,425-256-0321
+Adil,Faisal,adil.faisal@8126.ventures,8126 Ventures,Founder & CEO,Ideation,https://www.linkedin.com/in/adilfaisal/,https://8126.ventures/,425-256-0321,Silver Spring,MD,,
+Ahmad,Khan,ahmad.khan@thzeal.com,The Zeal,Co-Founder/CEO,Islamic Finance,https://www.linkedin.com/in/ahmad-khan-zeal/,https://thzeal.com/,306-209-4079,Toronto,ON,,
+Ahmad,Assad Koshul,assadkoshul6@gmail.com,Game Changer Mindsets,Founder,Education,https://www.linkedin.com/in/ahmad-assad-koshul-cpa-csm-cptd-0397765/,https://gcmindsets.com/,630-433-6481,Wheaton,IL,,
+Ahmed,Fazil,afazil@stratdefcon.com,Strategic Defense Consulting,CEO,Engine Technology,https://www.linkedin.com/in/ahmednfazil/,,847-721-9572,Chicago,IL,,
+Aisha,Hassine-Martinek,aishahassine@gmail.com,The NoCo Box,Founder,Online and Mail Order Retail,https://www.linkedin.com/in/aisha-hassine-martinek-3bab0952/,http://www.nocobox.com,970-294-8940,Fort Collins,CO,,
+Akbar,Afzal Jessani,akbar.afzal@raklogistics.com,Universal Shipping Inc.,CEO,Logistics,https://www.linkedin.com/in/akbarjessani/,https://usiship.com,909-927-7401,Irvine,CA,,
+Akifa,Khattak,khattakakifa@gmail.com,Qodiva,CEO and Healthcare Attorney,FemTech,https://www.linkedin.com/in/akifa-k-558a041b/,https://www.linkedin.com/company/qodiva-llc/,407-338-0623,Orlando,FL,,
+Ali,Quadri,aquadri@waditek.com,WadiTek,Co-Founder & COO,IT Services and IT Consulting,https://www.linkedin.com/in/ali-quadri-41a53135/,https://waditek.com/,301-825-4342,McLean,VA,,
+Amin,Ghaffar,amin@onkorepro.com,Onkore Payment Solutions,Founder & CEO,Payment Solution,https://www.linkedin.com/in/amin-ghaffar-298489168/,https://www.onkorepro.com/,954-980-0590,Haddon Heights,NJ,,
+Ammar,Alsarabi,ammar@unitedecm.com,United ECM,CEO,Engineering,https://www.linkedin.com/in/ama86/,https://www.unitedecm.com/,603-557-7369,Pleasanton,CA,,
+Anas,Ali,anas@fleekbiz.com,Fleekbiz,CEO,Creative Design,https://www.linkedin.com/in/syedanas/,https://fleekbiz.com/,607-600-8700,Pearland,TX,United States,607-600-8700
+Anas,Akhtar Ali,info@anasali.com,A&K Tech,Founder,IT Services and IT Consulting,https://www.linkedin.com/in/anasakhtarali/,,847-532-3269,Bridgeview,IL,,
+Andre,McEntyre,akbarmcentyre663@gmail.com,,,,http://www.linkedin.com/in/akbar-mcentyre-337b7898,,,,,United States,
+Arsalan,Khalid,arsalan@csolutions.io,C.Solutions,Principal,Resource Augmentation,https://www.linkedin.com/in/arsalankhalid/,https://csolutions.io/,412-606-6076,Haymarket,VA,,
+Arshad,Mahmood,arshad@xoftsystems.com,Xoft Systems,CEO,Technology - MS Dynamics,https://www.linkedin.com/in/arshadmahmood/,https://www.xoftsystems.com/,714-786-8864,Westminster,CA,,
+Asad,Faizi,asad.faizi@enterprise64.com,Enterprise64,Partner & COO,Technology,https://www.linkedin.com/in/asad-faizi/,https://www.enterprise64.com,301-905-6836,Boyds,MD,,
+Asma,Hashmi,asma@jpclengineering.com,JPCL Engineering LLC,President,Engineering,https://www.linkedin.com/in/asmamhashmi/,https://jpclengineering.com/,908-905-0204,Neshanic Station,NJ,,
+Asma,Chaudhry,asma@heartacuity.com,Heart Acuity/GAMC,Founder,Coaching,https://www.linkedin.com/in/asmachaudhry/,https://heartacuity.com/,407-409-4867,Daytona Beach,FL,,
+Atif,Sheikh,atifsheikhlaw@gmail.com,"Law Offices of Atif Sheikh, PLLC",Attorney,Legal - Personal Injury,https://www.linkedin.com/in/atif-sheikh-attorney/,https://atifmsheikhlaw.com,702-579-5834,Henderson,NE,,
+Ayesha,Qureshi,ayesha@qlinemedia.com,Q line Media,Founder,Business Consulting and Services,https://www.linkedin.com/in/ayeshaschroeder/,https://qlinemedia.com,517-977-6558,Plymouth,MI,,
+Belal,El-Harazin,belharazin77@gmail.com,Media Monks ,Co-Founder,Advertising Services,https://www.linkedin.com/in/belharazin/,https://media.monks.com/,630-440-5909,Tampa,FL,United States,630-440-5909
+Brian,McElroy,bmcelroy@triproconsulting.com,TRIPRO Consulting LLC,Managing Partner,Cyber Security,https://www.linkedin.com/in/bdmcelroy/,https://www.triproconsulting.com,443-540-5052,Winter Park,FL,,
+Ceylan,Rowe,ceylan@fihrifoundation.org,Fihri,Founder,Non-profit,https://www.linkedin.com/in/ceylanrowe/,https://www.wearefihri.com/,508-353-3465,Northborough,MA,,
+David,Zaheer,david.zaheer@lw.com,Latham & Watkins,Partner,Law Practice,https://www.linkedin.com/in/david-zaheer-9736667/,https://www.lw.com/,213-509-0574,Los Angeles,CA,,
+Dilshod,Jumaniyazov,dilshod.bek@musaffa.com,Musaffa LLC,CEO,FinTech - Sharia Compliant Investment,https://www.linkedin.com/in/dilshodnyc/,https://musaffa.com/,212-920-4020,Lyndhurst,NJ,,
+Dr. Sohail,Masood,sohailmasood@comcast.net,KabaFusion,"Founder, Chairman, CEO",Healthcare,https://www.linkedin.com/in/dr-sohail-masood-b6608219/,https://www.kabafusion.com/,781-777-3630,Weston,MA,,
+Dr. Hayder,Rasheed,prof.hayderrasheed@gmail.com,AEDA LLC,Chief Executive Manager,Technology - Engineering Apps,https://www.linkedin.com/in/hayder-rasheed-ph-d-p-e-f-asce-f-aci-f-sei-f-emi-266211185/,https://www.aeda.app,785-341-6220,Manhattan,KS,United States,785-341-6220
+Dr. Javed,Siddiqi,javed@exombiopharma.com,Exom BioPharma Inc.,Founder & President,Pharmaceuticals,https://www.linkedin.com/in/javed-siddiqi-a9123a38/,https://www.exombiopharma.com/,301-820-5861,Germantown,MD,United States,301-820-5861
+Fahad,Siddiqui,fahad@almabrook.io,Al Mabrook,Founder,Sharia Compliant Financial Services,https://www.linkedin.com/in/fahad-islamictech/,https://almabrook.io/,647-248-1919,Mississuaga,ON,Canada,
+Faisal,Masood,faisal.masood@softvative.com,Softvative Inc,Founder and Principal Consultant,Technology,https://www.linkedin.com/in/faisalmasoodcom/,https://www.softvative.com,952-466-6048,Eden Prairie,MN,,
+Faizan,Ahmed,faizan@theheadstarter.com,Headstarter,CEO,Technology - AI,,https://theheadstarter.com,347-238-6332,Queens,NY,,
+Farhan,Khan,fkhan@heritage-communities.com,Heritage Communities,CEO,Healthcare/ Social Work,https://www.linkedin.com/in/farhankhan-hms/,https://www.heritage-communities.com/,402-659-7791,Omaha,NE,United States,
+Farooq,Cheema,farooq@ainvestmentsm.com,Alliance Investments Management,President,Private Equity,https://www.linkedin.com/in/farooqcheema/,https://www.ainvestmentsm.com,919-737-8969,Morrisville,NC,,
+Faruk,Bhagani,fb@menasabd.com,MENASA,Co-founder,Business Consulting and Services,https://www.linkedin.com/in/farukbhagani/,https://menasabd.com/,949-466-6506,Houston,TX,,
+Feroze,Hanif,Feroze.Hanif@ThinkNChange.com,ThinkNChange,CEO,Technology - IT Solutions,https://www.linkedin.com/in/ferozehanif/,https://www.ThinkNChange.com,847-875-1952,Libertyville,IL,,
+Ghazi,Abdullah,ghaziabdullah39@gmail.com,TECH WORLD STARZ LLC,CEO/OWNER,,http://linkedin.com/in/alex-ghazi-mcfadden-2a9274a1,,347-530-7327,New York,NY,United States,
+Ghulam,Murtaza,alarshny@icloud.com,Al-Arsh Construction Corp,President,Construction,http://linkedin.com/in/ghulam-murtaza-7aa68222,,,Ronkonkoma,NY,United States,
+Haider,Janjua,hjanjua1@gmail.com,,,,https://www.linkedin.com/in/haiderjanjua/,,7047059569,,,,
+Hamzah,Henshaw,hamzah.henshaw@gmail.com,Five Before College,Founder,Education,https://www.linkedin.com/in/hamzah-henshaw-a13a94215/,https://fivebeforecollege.com,617-610-7084,Mainsfield,MA,United States,
+Hasan,Brohi,hbrohi@habtechnologies.com,"HAB Technologies, LLC",President,Technology,https://www.linkedin.com/in/hbrohi/,https://www.habtechnologies.com/,215-240-2820,Reston,VA,,
+Hashim,Siddiqui,hashim.robotics@gmail.com,Autonomy3d,CEO,3D Printing,https://www.linkedin.com/in/hashimrobotics/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app,http://www.norix.com,224-595-0781,Schaumburg,IL,,
+Hesham,ElHamahmy,hesham@haeinnovations.com,QIKCONNEX LLC dba HAE Innovations,CEO,IoT,https://www.linkedin.com/in/hesham-elhamahmy-8882bb3/,https://www.haeinnovations.com/,732-245-9447,Skillman,NJ,,
+Humayun,Kabeer,humayun.kabeer@hhrd.us,Helping Hand for Relief and Development,"Senior Manager, Planned Giving and Capital Campaigns",Non-profit,https://www.linkedin.com/in/humayun-a-kabeer-0122/,https://www1.hhrd.org/,603-785-8234,Southfield,MI,,
+Hussain,Bandukwala,hussain@parwaazcc.com,Parwaaz Consulting Corporation,CEO,Business Consulting and Services,https://www.linkedin.com/in/hussainbandukwala/,http://www.parwaazcc.com/,647-571-5303,Toronto,ON,Canada,
+Iftikhar,Ali Khan,iakhan@sbnhealthcaresolution.com,Jasr al Sidiq FZCO,General Manager,,http://linkedin.com/in/iftikhar-ali-khan-916310226,,91 99583 76345,Sheridan,WY,,
+Ihssane,Leckey,ihssane@unityfirstadvisors.com,Unity First Advisors,Founder & CEO,,https://www.linkedin.com/in/ihssaneleckey/,,857-352-3893,Boston,MA,,
+Jaffar,Hussain,jaffar.hussain@venturenox.com,Venturenox,CEO,Digital Marketing,https://www.linkedin.com/in/stingerpk/,https://venturenox.com/,307-302-0030,Sheridan,WY,,
+Javed,Bhaghani,javed@biscaynehospitality.com,Biscayne Hospitality,President,mechanical or industrial engineering,http://www.linkedin.com/in/javed-bhaghani-a8478311,http://www.biscaynehospitality.com,,San Diego,CA,United States,1 858-674-4003
+Junaid,Irshad,j.irshad@griptek.com,GripTek Consulting,Founder & CEO,Resource Augmentation,https://www.linkedin.com/in/junaidirshad/,https://griptek.com/,216-704-0584,Cleveland,OH,United States,216-704-0584
+Junaid,Noor,jn@albanyparkcapital.com,Albany Park Capital,CEO,Private Equity,https://www.linkedin.com/in/junaidnoorcpa/,https://www.albanyparkcapital.com/,281-761-4266,Houston,TX,,
+Junaid,Irshad,j.irshad@griptek.com,GripTek Consulting,Founder & CEO,Resource Augmentation,https://www.linkedin.com/in/junaidirshad/,https://griptek.com/,216-704-0584,Cleveland,OH,,
+Kamal,Solaiman,kamal@primarycapitalholdings.com,Primary Capital Holdings,President,,https://www.linkedin.com/in/ksolaiman/,,,Rockvile,MD,,
+Kamran,Azam,kamran.azam@integriti.io,Integriti,Founder,IT Services and IT Consulting,https://www.linkedin.com/in/kamranpmp/,https://www.integriti.io,651-301-5191,Rosemount,MN,,
+Kareem,Abukhadra,kareem@joinrelentless.com,Relentless,Founder,Head Hunter,https://www.linkedin.com/in/kareem-abukhadra-982087135/,https://www.joinrelentless.com/,917-215-4509,San Francisco,CA,United States,917-215-4509
+Kareem,Ibrahim,kareem@theexecutivehealthproject.com,The Executive Health Project,Founder,,https://www.linkedin.com/in/kareem-ibrahim-b80317176/,kareem@theexecutivehealthproject.com,447584654936,London,LO,UK,
+Khurram,Hussain,khurramhussain@irvinei.com,Irvinei,Founder & CEO,"Technology, Information and Internet",https://www.linkedin.com/in/khurram-hussain-irvinei,https://irvinei.com/,973-337-3199,Irvine,CA,,
+Mansoor,Mirza,Mansoor1947@gmail.com,Travel Medicine Inc,CEO,,https://www.linkedin.com/in/mansoormirzamd,,,,,United States,551-998-1586
+Margari,Hill,margari@muslimarc.org,Muslim Anti-Racism Collaborative (MuslimARC),Executive Director,Non-profit,https://www.linkedin.com/in/margari-hill-36321763/,https://www.muslimarc.org/,408-829-2668,Alta Loma,CA,,
+Maruf,Yusupov,maruf.yusupov@gmail.com,Kashf,CEO,Islamic Finance,https://www.linkedin.com/in/marufyusuf/,https://kashf.com/,416-858-7811,Toronto,ON,Canada,
+Masood,Inayat,masood.inayat@exprealty.com,MERII,CEO,Real Estate,https://www.linkedin.com/in/inayatrshp786/,https://exprealty.com/,425-532-6740,Everett,PA,,
+MD,Hossain,md@bestpracticify.co,Best Practicify,Founder,IT Services and IT Consulting,https://www.linkedin.com/in/mdh001/,https://bestpracticify.co/,323-800-7217,Los Angeles,CA,,
+Mohamed,Bakerywala,mohamed.bakerywala@asbresources.com,ASB Resources,President,Resource Augmentation,https://www.linkedin.com/in/mohamedbakerywala/,https://asbresources.com,609-468-0664,Kendall Park,NJ,,
+Mohammad,Muaz Siddiqui,muaz@golunos.com,Cerevox,Co-founder,Financial Services,https://www.linkedin.com/in/muaz-siddiqui-71992320/,https://www.cerevox.ai,408-373-5687,San Jose,CA,,
+Mohammed,Najeeb Ashraf,najeeb.ashraf@scivoc.com,SciVoc™ Consulting Inc,Founder,Writing and Editing,https://www.linkedin.com/in/najeeb99/,,416-676-9330,Woodbridge,ON,Canada,
+Mohammed,Adil Khan,adil@icolorprinting.net,I Color Printing & Mailing,President,Printing,https://www.linkedin.com/in/adil-khan-5a228613/,https://icolorprinting,310-920-6060,Los Angeles,CA,,
+Mouneeb,Shahid,mouneeb@2web.ca,2Web Design Inc,CEO & President,"Technology, Information and Internet",https://www.linkedin.com/in/mouneeb/,https://2web.ca/,306-261-5152,"Saskatoon,",SK,Canada,
+Nayab,Yusuf Siddiqi,nayab.yusuf@zaynaventures.com,ZAYNA Ventures Inc.,Managing Director,Business Consulting,https://www.linkedin.com/in/nayabsiddiqi/,https://zaynaventures.com/,408-781-9441,San Jose,CA,,
+Noor,Hamid,contact@noorhamidinteriors.com,Noor Hamid Interiors,CEO,Interior design,https://www.linkedin.com/in/noorhamid,https://noorhamidinteriors.com/,770-401-8557,Tampa,FL,,
+Omar,Memon,omar.memon@gatewayurdu.com,Gateway Educators,Founder,Education - Language,https://www.linkedin.com/in/ojmemon/,https://www.gatewayurdu.com/,920-786-8738,St. Louis,MO,United States,920-786-8738
+Omar,Memon,omar.memon@gatewayurdu.com,Gateway Educators,Founder,Education - Language,https://www.linkedin.com/in/ojmemon/,https://www.gatewayurdu.com/,920-786-8738,St. Louis,MO,,
+Parvez,Riaz,rparvez@servprosouthbronx.com,SERVPRO of South Bronx,President,Cleaning Services,https://www.linkedin.com/in/parvez-riaz-b5a7b647/,https://www.servprosouthbronx.com,917-417-8619,Bronx,NY,,
+Rafeeq,Anwar Mohammad,rafeeqanwar2016@gmail.com,Test Prep Pundits,CEO,,https://www.linkedin.com/in/rafeeq-anwar-mohammad/,https://www.testpreppundits.com,713-452-0639,Katy,TX,,
+Rashad,AbdulAzeem,techinetics@gmail.com,Techninetics,CEO,Technology - Cyber Security,https://www.linkedin.com/in/techinetics/,https://www.techinetics.com,478-318-3252,Kathleen,GA,United States,478-318-3252
+Rashad,Ibn AbdulAzeem,techinetics@gmail.com,Techinetics,CEO,Technology - Cyber Security,https://www.linkedin.com/in/techinetics/,https://www.techinetics.com,478-318-3252,Kathleen,GA,,
+Rashid,Naqvi,rashid@1stalliancemortgage.com,"1st Alliance Mortgage, LLC",Branch Manager,Residential Mortgage,https://www.linkedin.com/in/rashid-naqvi-1626541a/,https://www.1stalliancemortgage.com,832-545-0667,Sugar Land,TX,United States,832-545-0667
+Rashique,Rahman,rashique.rahman@az-roc.com,AZ ROC,Principal,Financial Services,https://www.linkedin.com/in/rashique-rahman-4801a01/,https://az-roc.com/,646-286-5040,Greenwich,CT,,
+Raza,Hasan,raza@neuralbanana.com,TypeHero,CEO,Marketing ,https://www.linkedin.com/in/razaceo/,,651-270-4973,Inver Grove Heights,MN,,
+Raza,Khan,rkhan@gorevenueengine.com,Revenue Engine,Founder,Marketing Services,https://www.linkedin.com/in/raza-khan-21b2412b/,https://gorevenueengine.com/,689-234-1411,Altamonte Springs,FL,,
+Rizwan,Yunus,ryunus@itconnections.net,MidSouth HealthCare Management,CEO & Founder,Medical Practices,linkedin.com/in/rizwan-yunus-1b2716b1,https://mhmconsultants.net,901-237-7410,Memphis,TN,,
+Saad,Rasheed,saad.rasheed@bpowizard.com,BPO Wizard,CEO/Founder,Outsourcing and Offshoring Consulting,https://www.linkedin.com/in/saad-rasheed-bpowizard/,http://bpowizard.com/,239-376-1099,New York,NY,,
+Sajjad,Chowdhry,sajjad@triviumglobal.com,"Trivium Global, LLC",Principal,Finanial Services,https://www.linkedin.com/in/sajjadchowdhry/,https://triviumglobal.com,516-633-9915,North Jersey,NJ,United States,516-633-9915
+Sajjad,Ahmed,sajjad@gonovacloud.com,NOVA Cloud,Founder and CEO,IT Services and IT Consulting,https://www.linkedin.com/in/sajjad-ahmed-8621577/,http://www.gonovacloud.com,,Washington,DC,,
+Sajjad,Chowdhry,sajjad@triviumglobal.com,"Trivium Global, LLC",Principal,Finanial Services,https://www.linkedin.com/in/sajjadchowdhry/,https://triviumglobal.com,516-633-9915,North Jersey,NJ,,
+Salah,Elshanshory,salah@pcapitaltx.com,Progressive Capital LLC,Founder & CEO,Investment,https://www.linkedin.com/in/salah-e/,,469-912-0119,Dallas,TX,,
+Salman,Pathan,Sal@globyz.com,Globyz Biopharma Services,CEO,Biopharma,https://www.linkedin.com/in/salman-pathan/,https://www.globyz.com/,610-455-5125,Boothwyn,PA,,
+Sam,Asra,sasra@fathersconnect.co,Fathers Connect,Director,Non Profit,https://www.linkedin.com/in/sam-asra/,https://fathersconnect.co/,,Los Angeles,CA,,
+Sami,Yabroudi,sami@flatirondata.ai,Flatiron Data & AI,"Founder, Principal",information technology & services,http://www.linkedin.com/in/sami-yabroudi,http://www.flatirondata.ai,,New York,NY,United States,
+Samina,Saleem,ssaleem@innovaconsultinc.com,"InNova Consulting, Inc.",President,Engineering,https://www.linkedin.com/in/meraj-samina-saleem-a6a78129/,https://innovaconsultinc.com,773-963-6256,Lincolnwood,IL,United States,773-963-6256
+Samina,Saleem,ssaleem@innovaconsultinc.com,"InNova Consulting, Inc.",President,Engineering,https://www.linkedin.com/in/meraj-samina-saleem-a6a78129/,https://innovaconsultinc.com,773-963-6256,Lincolnwood,IL,,
+Samira,Asfour,samira@nextedconsulting.com,NextEd Consulting,Founder,Salesforce Consulting,https://www.linkedin.com/in/samira-asfour/,https://nextedconsulting.com,469-328-9774,Richardson,TX,,
+Saqib,Dareshani,saqib.dareshani@gmail.com,Dreams to Destiny Investments,Managing Director,Technology - AI Apps,https://www.linkedin.com/in/saqibdareshani/,https://www.clubify.com/,613-668-5200,Torronto,ON,Canada,
+Saqib,Tariq,stariq@panelmarketing.ca,Panel Marketing Inc,CEO,Advertising Services,https://www.linkedin.com/in/saqib-tariq-26878814/,,403-669-3253,Calgary,AB,Canada,
+Shahid,Hayat,pakistanchild@gmail.com,Pakistan Children Relief,Executive Director,Non-profit Organizations,https://www.linkedin.com/in/shahid-hayat-734a79193/,https://www.pakcr.org/,347-400-1899,Detroit,MI,,
+Sharif,Nassr,sharifnassr@gmail.com,Caterpillar Care,Founder & CEO,Children Nursery & Daycare,https://www.linkedin.com/in/sharifnassr/,http://caterpillarcare.com,312-550-8666,Chicago,IL,United States,312-550-8666
+Sharif,Nassr,sharifnassr@gmail.com,Caterpillar Care,Founder & CEO,Children Nursery & Daycare,https://www.linkedin.com/in/sharifnassr/,http://caterpillarcare.com,312-550-8666,Chicago,IL,,
+Shaz,Khan,shaz+amcob@tonomn.com,Tono,CEO,Restaurant,https://www.linkedin.com/in/shazkhanmn/,https://tonomn.com/,323-493-3028,Stillwater,MN,,
+Sheeraz,Khan,sheeraz@kdldsp.com,KDL - Delivery Service Partner,President,Logistics,https://www.linkedin.com/in/sheerazk/,http://www.kdldsp.com,630-247-7429,Chicago,IL,,
+Shoaib,Chaudhary,shoaib@plumlogix.com,Plumlogix Inc,CEO,Salesforce,https://www.linkedin.com/in/chaudharyshoaib/,https://plumlogix.com/,732-688-9552,Allentown,PA,,
+Shomail,Malik,shomail@investwithapex.com,APEX Capital Group,Managing Partner,Real Estate,https://www.linkedin.com/in/shomail-malik-mba-716b7462/,https://www.investwithapex.com,732-485-7237,Kendall Park,NJ,,
+Sohaib,Awan,sohaib@fictionalfrontiers.com,"Jabal Entertainment, LLC ",CEO/Founder,Media,https://www.linkedin.com/in/sohaib-awan-297a9b15/,,856-857-4101,Philadelphia,PA,,
+Syed,Hussain,syed@shiza.ai,SHIZA,Founder & CEO,Technology,https://www.linkedin.com/in/syedhuss/,https://shiza.ai/,908-377-8381,South River,NJ,,
+Syed,Basha,syed.basha@hafman.ca,Hafman Consulting Group,CEO,Staffing,https://www.linkedin.com/in/syedhafman/,https://hafman.ca/,416-414-1786,Toronto,ON,,
+Talal,Ali Ahmad,talal@predictivecare.ai,Predictive Healthcare,Founder & CEO,MedTech,https://www.linkedin.com/in/talalaliahmad/,https://predictivehealthcare.ai,617-877-4606,Bedford,MA,,
+Tariq,Islam,tariq@mizanlabs.com,Mizan Labs,CEO,Software Engineering,https://www.linkedin.com/in/tislammac/,https://www.sltaeronautics.com/,651-756-9527,Prior Lake,MN,,
+Tariq,Najee Ullah,tariq@patentinsider.co,Patent Insider,CEO,Legal - Patent,https://www.linkedin.com/in/tariq-najee-ullah/,http://www.patentinsider.co,301-646-6352,Baltimore,MD,,
+Tariq,Alinur,tariq.alinur@braincx.com,BrainCX,CEO,"Technology, Information and Internet",linkedin.com/in/tariqalinur,braincx.com,954-892-9101,Miami ,FL,,
+Touseef,Riaz,touseef.r@ucontrolbilling.com,U Control Billing,CEO,Medical Billing,https://www.linkedin.com/in/touseef-riaz-536a84119/,https://www.ucontrolbilling.com/,347-394-9149,Hauppauge,NY,United States,347-394-9149
+Umair,Siyed,Umair.Siyed@Hull-Technologies.com,Hull Technologies Inc,CEO,Technology: MS Dynamics,https://www.linkedin.com/in/fastianumair/,www.Hull-Technologies.com,224-392-9815,Naperville,IL,,
+Umair,Shah,umair.shah@arbisoft.com,Arbisoft Global LLC,Co-Founder,Software/Product Development,https://www.linkedin.com/in/umair-shah-a690197/,https://arbisoft.com,404-513-8624,McKinney,TX,,
+Usman,Zaheer,Uz@onyxtec.co,OnyxTec,CEO,Technology,https://www.linkedin.com/in/zaheerusman/,http://www.OnyxTec.co,805-391-7733,Dallas,TX,,
+Uzair,Afzal,uzaira@bluearcaccounting.com,Gateway Capital Growth,CFO,Financial Services,https://www.linkedin.com/in/uzairafzal/,https://gcgrowth.io/,9142223454,New York,NY,,
+Waqas,Siddiqi,waqas@gomeat.io,GoMeat Services Inc,Founder & CEO,Halal Meat,https://www.linkedin.com/in/waqas-n-siddiqi/,https://gomeat.io,908-991-6990,Belle Mead,NJ,United States,908-991-6990
+Waseem,Kawaf,waseem@kawafllc.com,Kawaf LLC,Founder,Marketing,https://www.linkedin.com/in/kawaf/,https://kawafllc.com/,617-312-0099,Cambridge,MA,,
+Yasser,Soliman,yasser@sabeelee.com,"Townli, Inc.",Founder & CVO,Technology ,https://www.linkedin.com/in/yassersoliman/,https://www.townli.com,949-732-8420,Laguna Hills,CA,,
+Yusuf,"Karbani",ykarbani@gmail.com,Karbanico Inc.,President and Owner,Accounting,https://www.linkedin.com/in/yusuf-karbani-92444a40/,,780-246-3352,Edmonton,AB,Canada,
+Zain,Jafri,zain@tdlanalytics.com,The Data Linguist,CEO,InsurTech,https://www.linkedin.com/in/zainjafri/,https://www.tdlanalytics.com/,224-522-8520,Chicago,IL,,
+Ziad,Itani,ziad@barakah.agency,Barakah Agency,Co-Founder,Advertising Services,https://www.linkedin.com/in/ziad-itani/,,310-528-1028,Torrance,CA,,
+Zoya,Mirza,chaplainzoya@gmail.com,EHealistic,Founder & CEO,Mental Health Therapist,https://www.linkedin.com/in/zoya-mirza-4768a3292/,,847-445-6608,Lake Forest,IL,,
+Zulikha,Hussain,ladyz@z4ure.com,WaZu Capital Partners,President,Real Estate,https://www.linkedin.com/in/ladyz/,https://wazucapital.com/,913-461-9697,Dallas,TX,,
