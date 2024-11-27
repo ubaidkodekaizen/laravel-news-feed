@@ -14,7 +14,7 @@
                 </div>
                 <div class="btn_flex">
                     <a href="{{ route('user.profile', ['slug' => $user->slug]) }}" target="_blank" class="btn btn-success btn-sm">View Profile</a>
-                    <a href="{{ $user->linkedin_url }}" target="_blank" class="btn btn-primary btn-sm">Connect on LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/{{$user->linkedin_url}}" target="_blank" class="btn btn-primary btn-sm">Connect on LinkedIn</a>
                 </div>
             </div>
             <div class="indus_member">

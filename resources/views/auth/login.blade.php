@@ -261,10 +261,13 @@
                                 <label>Email</label>
                             </div>
                             <div class="input-box">
-                                <span class="icon"><i class='bx bx-lock-alt'></i></span>
+                                <span class="icon">
+                                    <i class='bx bx-show' id="togglePassword"></i>
+                                </span>
                                 <input type="password" id="password" name="password" autocomplete="off" required>
                                 <label>Password</label>
                             </div>
+                            
                             <div class="account_signup text-end">
                                 <a href="{{route('password.request')}}"> <span class="theme-color">forget password?</span> </a>
                             </div>
@@ -279,6 +282,26 @@
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Toggle the visibility of the password field
+            $('#togglePassword').on('click', function () {
+                const passwordField = $('#password');
+                const icon = $(this);
+    
+                // Check the current type of the input field
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text'); // Change to text to show password
+                    icon.removeClass('bx-show').addClass('bx-hide'); // Change icon to 'eye open'
+                } else {
+                    passwordField.attr('type', 'password'); // Change back to password
+                    icon.removeClass('bx-hide').addClass('bx-show'); // Change icon back to 'eye closed'
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

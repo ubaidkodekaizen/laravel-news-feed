@@ -1,6 +1,19 @@
 @extends('layouts.main')
 @section('content')
 
+<style>
+    .user_company_profile .profile_pic img {
+    border-radius: 15px;
+    height: 300px;
+    width: 300px;
+    margin: 0 auto;
+    object-fit: cover;
+    max-width: 100%;
+    display: block;
+    border: 2px solid var(--primary);
+}
+</style>
+
 <section class="user_company_profile">
     <div class="container">
         <div class="row">
@@ -38,8 +51,10 @@
                         </div>
                     </div>
                     <div class="btn-flex">
-                        <a href="javascript:void(0)" class="btn btn-secondary">Direct Message</a>
-                        <a href="{{ $user->linkedin_url ?? 'javascript:void(0)' }}" target="_blank" class="btn btn-primary">Connect Via Linkedin</a>
+                        <a href="javascript:void(0)" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mainModal">
+                            Direct Message
+                        </a>
+                        <a href="https://www.linkedin.com/in/{{$user->linkedin_url}}" target="_blank" class="btn btn-primary">Connect Via Linkedin</a>
                     </div>
                 </div>
             </div>
@@ -168,5 +183,27 @@
     </div>
 </section>
 
+<!-- Main Modal -->
+<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: var(--primary); color: #fff;">
+                <h5 class="modal-title" id="mainModalLabel">Feature Coming Soon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-center">Direct Messaging is Coming Soon!</h3>
+                <p class="text-center">
+                    Our team is working hard to bring you an exciting <strong>Direct Messaging</strong> feature. 
+                    Soon, you'll be able to connect and communicate seamlessly with others on the platform. 
+                    Stay tuned for updates!
+                </p>
 
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

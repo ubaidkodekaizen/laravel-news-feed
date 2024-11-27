@@ -12,6 +12,23 @@ class SearchController extends Controller
 {
 
 
+
+    public function getSubcategories($industryName)
+    {
+        $industry = \DB::table('industries')
+            ->where('name', $industryName)
+            ->select('id')
+            ->first();
+        if (!$industry) {
+            return response()->json([]);
+        }
+        $subcategories = \DB::table('sub_categories')
+            ->where('industry_id', $industry->id)
+            ->select('id', 'name')
+            ->get();
+    
+        return response()->json($subcategories);
+    }
     
     public function getSuggestions(Request $request)
     {

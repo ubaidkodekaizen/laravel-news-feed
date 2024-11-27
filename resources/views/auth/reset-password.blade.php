@@ -21,7 +21,7 @@
             width: 100%;
             height: 50px;
             border-bottom: 2px solid #fff;
-            margin: 30px 0;
+            margin: 30px 0px 0px 0px;
         }
 
         .input-box label {
@@ -271,13 +271,15 @@
                                 <label>Confirm Password</label>
                             </div>
                            
-                            <button type="submit" class="custom-btn btn-14">Reset Password</button>
+                            <button type="submit" class="custom-btn btn-14 mt-4">Reset Password</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>    
 
@@ -314,10 +316,18 @@
                         equalTo: "Password confirmation does not match the password"
                     }
                 },
-
+                errorPlacement: function (error, element) {
+                    // Check if the input field is inside a `.input-box` container
+                    if (element.closest('.input-box').length) {
+                        element.closest('.input-box').after(error); // Place error after `.input-box`
+                    } else {
+                        error.insertAfter(element); // Default placement for inputs outside `.input-box`
+                    }
+                }
             });
         });
     </script>
+    
 
 </body>
 

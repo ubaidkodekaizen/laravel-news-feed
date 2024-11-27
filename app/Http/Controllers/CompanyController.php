@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Accreditation;
 use App\Models\Company;
+use App\Models\MuslimOrganization;
+use App\Models\Industry;
+use App\Models\SubCategory;
+use App\Models\CommunityInterest;
+use App\Models\BusinessType;
+use App\Models\BusinessContribution;
 use App\Models\ProductService;
 use Auth;
 use Illuminate\Http\Request;
@@ -23,6 +29,7 @@ class CompanyController extends Controller
 
     public function storeCompanyDetails(Request $request)
     {
+        
         $request->validate([
             'company_name' => 'required|string|max:255',
             'company_email' => 'nullable|email|max:255',
@@ -52,16 +59,74 @@ class CompanyController extends Controller
             'accreditation.*' => 'nullable|string|max:255',
             'company_logo' => 'nullable|file|image|max:2048',
         ]);
-    
+
+        $capitalize = function ($value) {
+            return $value ? ucwords(strtolower($value)) : null;
+        };
+
+        if ($request->company_business_type_other) {
+            $businessType = BusinessType::updateOrCreate(
+                ['name' => $capitalize($request->company_business_type_other)],
+                ['name' => $capitalize($request->company_business_type_other)]
+            );
+            $companyBusinessType = $businessType->name;
+        } else {
+            $companyBusinessType = $request->company_business_type;
+        }
+
+        if ($request->company_industry_other) {
+            $industry = Industry::updateOrCreate(
+                ['name' => $capitalize($request->company_industry_other)],
+                ['name' => $capitalize($request->company_industry_other)]
+            );
+            $companyIndustry = $industry->name;
+        } else {
+            $companyIndustry = $request->company_industry;
+        }
+
+        if ($request->company_sub_category_other) {
+            $industryId = Industry::where('name', $request->company_industry_other ?? $request->company_industry)->pluck('id')->first();
+        
+            $subCategoryName = ucfirst(strtolower($request->company_sub_category_other));
+            $subCategory = SubCategory::updateOrCreate(
+                ['name' => $subCategoryName],
+                ['name' => $subCategoryName, 'industry_id' => $industryId]
+            );
+            $companySubCategory = $subCategory->name;   
+        } else {
+            $companySubCategory = $request->company_sub_category;
+        }
+        
+
+        if ($request->company_contribute_to_muslim_community_other) {
+            $communityContribution = BusinessContribution::updateOrCreate(
+                ['name' => $capitalize($request->company_contribute_to_muslim_community_other)],
+                ['name' => $capitalize($request->company_contribute_to_muslim_community_other)]
+            );
+            $companyContribution = $communityContribution->name;
+        } else {
+            $companyContribution = $request->company_contribute_to_muslim_community;
+        }
+
+        if ($request->company_affiliation_to_muslim_org_other) {
+            $organizationAffiliation = MuslimOrganization::updateOrCreate(
+                ['name' => $capitalize($request->company_affiliation_to_muslim_org_other)],
+                ['name' => $capitalize($request->company_affiliation_to_muslim_org_other)]
+            );
+            $companyAffiliation = $organizationAffiliation->name;
+        } else {
+            $companyAffiliation = $request->company_affiliation_to_muslim_org;
+        }
+
         $user = Auth::user();
-    
+
         $company = Company::updateOrCreate(
             ['user_id' => $user->id],
             [
                 'company_name' => $request->company_name,
                 'company_email' => $request->company_email,
                 'company_web_url' => $request->company_web_url,
-                'company_linkedin_url' => $request->company_linkedin_url,
+                'company_linkedin_url' => $request->company_linkedin_url ?? $request->company_linkedin_user,
                 'company_position' => $request->company_position,
                 'company_about' => $request->company_about,
                 'company_revenue' => $request->company_revenue,
@@ -72,15 +137,15 @@ class CompanyController extends Controller
                 'company_county' => $request->company_county,
                 'company_zip_code' => $request->company_zip_code,
                 'company_no_of_employee' => $request->company_no_of_employee,
-                'company_business_type' => $request->company_business_type,
-                'company_industry' => $request->company_industry,
-                'company_sub_category' => $request->company_sub_category,
                 'company_community_service' => $request->company_community_service,
-                'company_contribute_to_muslim_community' => $request->company_contribute_to_muslim_community,
-                'company_affiliation_to_muslim_org' => $request->company_affiliation_to_muslim_org,
+                'company_business_type' => $companyBusinessType,
+                'company_industry' => $companyIndustry,
+                'company_sub_category' => $companySubCategory,
+                'company_contribute_to_muslim_community' => $companyContribution,
+                'company_affiliation_to_muslim_org' => $companyAffiliation,
             ]
         );
-
+    
         
         $companySlug = Str::slug($request->company_name);
         $originalSlug = $companySlug;

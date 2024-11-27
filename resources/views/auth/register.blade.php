@@ -261,19 +261,24 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
-                                        <span class="icon"><i class='bx bx-lock-alt'></i></span>
+                                        <span class="icon">
+                                            <i class='bx bx-show' id="togglePassword"></i>
+                                        </span>
                                         <input type="password" id="password" name="password" autocomplete="off" required>
                                         <label>Password</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-box">
-                                        <span class="icon"><i class='bx bx-lock-alt'></i></span>
+                                        <span class="icon">
+                                            <i class='bx bx-show' id="togglePasswordConfirmation"></i>
+                                        </span>
                                         <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="off" required>
                                         <label>Confirm Password</label>
                                     </div>
                                 </div>
                             </div>
+                            
                             
                            
                             <button type="submit" class="custom-btn btn-14">Register</button>
@@ -289,6 +294,38 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle visibility for Password
+            $('#togglePassword').on('click', function () {
+                const passwordField = $('#password');
+                const icon = $(this);
+    
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text'); // Show password
+                    icon.removeClass('bx-show').addClass('bx-hide'); // Change to 'eye open' icon
+                } else {
+                    passwordField.attr('type', 'password'); // Hide password
+                    icon.removeClass('bx-hide').addClass('bx-show'); // Change back to 'eye closed' icon
+                }
+            });
+    
+            // Toggle visibility for Confirm Password
+            $('#togglePasswordConfirmation').on('click', function () {
+                const passwordConfirmationField = $('#password_confirmation');
+                const icon = $(this);
+    
+                if (passwordConfirmationField.attr('type') === 'password') {
+                    passwordConfirmationField.attr('type', 'text'); // Show confirm password
+                    icon.removeClass('bx-show').addClass('bx-hide'); // Change to 'eye open' icon
+                } else {
+                    passwordConfirmationField.attr('type', 'password'); // Hide confirm password
+                    icon.removeClass('bx-hide').addClass('bx-show'); // Change back to 'eye closed' icon
+                }
+            });
+        });
+    </script>
+    
     <script>
         $(document).ready(function () {
             $('#user_register').validate({
