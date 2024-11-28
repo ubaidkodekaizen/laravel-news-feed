@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use DB;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 
@@ -20,6 +25,11 @@ class AuthorizeNetController extends Controller
     public function paymentPost(Request $request): RedirectResponse
     {
         
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+        ]);
         
         $validatedData = $request->validate([
             'card_number' => 'required|numeric',
@@ -27,6 +37,7 @@ class AuthorizeNetController extends Controller
             'cvv' => 'required|digits:3',
             'amount' => 'required|numeric|min:0.01',
         ]);
+        
 
         $apiLoginId = env('AUTHORIZENET_API_LOGIN_ID');
         $transactionKey = env('AUTHORIZENET_TRANSACTION_KEY');
@@ -69,10 +80,41 @@ class AuthorizeNetController extends Controller
             $transactionResponse = $response->getTransactionResponse();
 
             if ($transactionResponse && $transactionResponse->getResponseCode() == "1") {
-
                 
+                $user = User::create([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'paid' => 'Yes',
+                    'status' => 'pending',
+                ]);
 
-                return back()->with('success', 'Payment successful! Transaction ID: ' . $transactionResponse->getTransId());
+                Subscription::create([
+                    'user_id' => $user->id,
+                    'plan_id' => $request->plan_id,
+                    'subscription_type' => $request->type,
+                    'subscription_amount' => $request->amount,
+                    'start_date' => now(),
+                    'renewal_date' => $request->type === 'Monthly' ? now()->addMonth() : now()->addYear(),
+                    'status' => 'active', 
+                    'transaction_id' => $transactionResponse->getTransId(),
+                ]);
+
+                $token = Str::random(64);
+
+                DB::table('password_reset_tokens')->updateOrInsert(
+                    ['email' => $request->email],
+                    ['token' => $token, 'created_at' => now()]
+                );
+
+
+                Mail::send('emails.password-setup', ['token' => $token], function ($message) use ($request) {
+                    $message->to($request->email);
+                    $message->subject('Verify Email & Setup Password');
+                });
+
+               
+                return back()->with('success', 'Please check your email to verify your account and set up your password.');
             
             
             

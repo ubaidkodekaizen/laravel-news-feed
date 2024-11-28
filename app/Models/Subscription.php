@@ -16,7 +16,8 @@ class Subscription extends Model
         'subscription_amount',
         'start_date',
         'renewal_date',
-        'status'
+        'status',
+        'transaction_id',
     ];
 
     public function user()

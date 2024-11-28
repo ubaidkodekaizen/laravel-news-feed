@@ -37,7 +37,8 @@ class User extends Authenticatable
         'industry_to_connect',
         'sub_category_to_connect',
         'community_interest',
-        'status'
+        'status',
+        'paid',
     ];
 
     public function company()

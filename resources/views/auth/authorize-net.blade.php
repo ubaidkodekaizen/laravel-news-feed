@@ -62,7 +62,7 @@
 
         .form_container {
             max-width: 1000px;
-            margin: 0 auto;
+            margin: 50px auto;
 
         }
 
@@ -70,7 +70,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100svh;
+            /* height: 100svh; */
         }
 
         .form_container .row:first-child {
@@ -351,6 +351,7 @@
                                     </select>
                                 </div>
                                 <input type="hidden" name="amount" id="amount">
+                                <input type="hidden" name="type" id="type">
                             </div>
 
                             <div class="input-box">
@@ -431,8 +432,9 @@
         $(document).ready(function() {
             $('#plan_id').on('change', function() {
                 let selectedText = $(this).find('option:selected').text();
-                let amount = selectedText.split(' /')[0].trim();
+                let [amount, type] = selectedText.split(' /').map(part => part.trim());
                 $('#amount').val(amount);
+                $('#type').val(type);
             });
         });
     </script>

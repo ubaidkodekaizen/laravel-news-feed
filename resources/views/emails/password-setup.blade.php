@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -145,14 +147,14 @@
 																								
 																								<tr>
 																									<td class="title-36 a-center pb-10" style="font-size:30px; line-height:40px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; text-align:center; padding-bottom: 20px;">
-																										<strong>Reset Password</strong>
+																										<strong>Setup Password</strong>
 																									</td>
 																								</tr>
 
 												
                                                                                                 <tr>
 																									<td class="title-36 a-center pb-10" style="font-size:20px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:center;">
-																										<strong>You requested a password reset. Click the button below to reset your password.</strong>
+																										<strong>Please click the button below to verify your email and setup your password.</strong>
 																									</td>
 																								</tr>
 
@@ -164,8 +166,8 @@
                                                                                                             <tbody>
                                                                                                                 <tr>
                                                                                                                     <td bgcolor="#b8c034" style="font-size:16px;line-height:20px;font-family:'PT Sans',Arial,sans-serif;text-align:center;font-weight:bold;text-transform:uppercase;border-radius:25px;min-width:auto!important;color:#ffffff">
-                                                                                                                        <a href="{{ route('password.reset', ['token' => $token]) }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
-                                                                                                                            <span style="text-decoration:none;color:#ffffff">Reset Password</span>
+                                                                                                                        <a href="{{ route('password.setup', ['token' => $token]) }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
+                                                                                                                            <span style="text-decoration:none;color:#ffffff">Setup your Password</span>
                                                                                                                         </a>
                                                                                                                     </td>
                                                                                                                 </tr>
@@ -175,11 +177,11 @@
                                                                                                     </td>
                                                                                                 </tr>
 
-																								<tr>
+																								{{-- <tr>
 																									<td class="title-36 a-center pb-10" style="font-size:16px; line-height:20px; color:#303030; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px;">
 																										<strong>If you did not request this password reset, please ignore this email.</strong>
 																									</td>
-																								</tr>
+																								</tr> --}}
                                                                                                 
 																								
                                                                                                   

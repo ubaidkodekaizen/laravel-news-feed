@@ -38,6 +38,11 @@ class PasswordResetController extends Controller
         return back()->with('success', 'Password reset link sent to your email.');
     }
 
+    public function showSetupPasswordForm($token)
+    {
+        return view('auth.setup-password', ['token' => $token]);
+    }
+
     public function showResetPasswordForm($token)
     {
         return view('auth.reset-password', ['token' => $token]);
