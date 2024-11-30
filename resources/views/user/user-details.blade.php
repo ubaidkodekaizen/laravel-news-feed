@@ -83,7 +83,7 @@
                         </div>
                             
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 mobile_margin_30">
                         <div class="row">
                             <div class="col-lg-12">
                                 <label for="facebook_url" class="mt-0">Facebook URL</label>

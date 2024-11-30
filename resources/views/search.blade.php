@@ -1,185 +1,11 @@
 @extends('layouts.main')
 @section('content')
-    <style>
-        /* Basic styling for layout */
-        .sidebar {
-            width: 25%;
-            background-color: var(--primary);
-            padding: 20px;
-            border-right: 1px solid #ddd;
-            height: calc(100vh - 105px);
-            overflow-y: auto;
-            color: var(--white);
-        }
-
-        .main-content {
-            width: 75%;
-            padding: 20px;
-            height: calc(100vh - 105px);
-            overflow-y: auto;
-        }
-
-        .user-card {
-            background: #fff;
-            border: 2px solid var(--secondary);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-
-        .user-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        .filter-group {
-            margin-bottom: 15px;
-        }
-
-        .filter-section {
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--secondary);
-            padding-bottom: 5px;
-        }
-
-        .filter-header {
-            font-weight: bold;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-
-        .selected-filters,
-        .selected-filter-group {
-            margin-bottom: 10px;
-        }
-
-        .selected-filter {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 10px;
-            background-color: #e9ecef;
-            border-radius: 15px;
-            margin: 5px 5px 5px 0;
-            font-size: 12px;
-            color: var(--primary);
-        }
-
-        .selected-filter i {
-            margin-left: 5px;
-            cursor: pointer;
-        }
-
-        .filter-search {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .filter-option {
-            cursor: pointer;
-            padding: 5px 0;
-        }
-
-        .filter_heading {
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            /* border-bottom: 2px solid var(--secondary); */
-            width: fit-content;
-            padding-bottom: 2px;
-        }
-
-        .profile_name {
-            display: flex;
-            align-items: flex-start;
-            /* margin-bottom: 20px */
-        }
-
-        .profile_details {
-            margin-left: 20px;
-            width: 75%;
-        }
-
-        .btn_flex {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            width: 100%;
-            justify-content: end;
-        }
-
-        .profile_details .user_name {
-            text-decoration: none;
-            color: #0073b1;
-            font-weight: 600;
-            font-size: 21px;
-        }
-
-        .profile_details p {
-            margin-bottom: 5px;
-        }
-
-        .profile_details .user_position {
-            font-size: 17px;
-            font-weight: 500;
-        }
-
-        .profile_details a {
-            text-decoration: none;
-            color: #666666;
-        }
-
-        .profile_details a:hover {
-            color: #0073b1;
-            text-decoration: underline;
-        }
-
-        .user-card-flex {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .user-card .profile_name {
-            width: 75%;
-        }
-
-        /* .user_about{
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                width: 100%;
-            } */
-        .collapse.show {
-            background: #8080805c;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        .indus_member {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            margin: 0px 0px 0px 100px;
-        }
-
-        .indus_member p {
-            margin: 0;
-        }
-    </style>
-
-
-    <div class="d-flex">
-
-        <div class="sidebar">
+    <div class="navbar_d_flex">
+        <!-- Toggler Button -->
+        <button class="sidebar-toggler btn btn-primary d-lg-none" type="button" onclick="toggleSidebar()">
+            Filters
+        </button>
+        <div class="sidebar" id="sidebar">
             <h5 class="filter_heading">Filters</h5>
             <div id="filterContainer">
 
@@ -377,12 +203,21 @@
 
     </div>
 
-    
-    
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            if (sidebar) {
+                sidebar.classList.toggle("open");
+            } else {
+                console.error("Sidebar element not found!");
+            }
+        }
+
+
         let filters = {};
 
         function applyFilters() {
@@ -449,13 +284,12 @@
                 option.style.display = optionText.includes(filter) ? '' : 'none';
             }
         }
-        
+
         document.querySelectorAll('.filter-header').forEach(header => {
             header.addEventListener('click', function() {
                 const icon = this.querySelector('.toggle-icon');
                 icon.textContent = icon.textContent === '+' ? '-' : '+';
             });
         });
-
     </script>
 @endsection

@@ -46,7 +46,7 @@
                             <img src="{{asset('assets/images/logo_bg.png')}}" alt="" class="img-fluid">
                         </a>
                     </div>
-                    <div class="header-mid">
+                    <div class="header-mid mobile_hide">
                         <form method="GET" action="{{ route('search') }}" id="search_form">
                             <div class="search_area">
                                 <div class="suggestion_search w-50">

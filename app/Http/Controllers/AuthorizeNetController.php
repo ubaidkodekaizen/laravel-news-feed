@@ -34,7 +34,7 @@ class AuthorizeNetController extends Controller
         $validatedData = $request->validate([
             'card_number' => 'required|numeric',
             'expiration_date' => 'required|date_format:m/y',
-            'cvv' => 'required|digits:3',
+            'cvv' => 'required',
             'amount' => 'required|numeric|min:0.01',
         ]);
         

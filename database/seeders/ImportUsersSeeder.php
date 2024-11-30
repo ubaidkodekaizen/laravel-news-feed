@@ -76,7 +76,7 @@ class ImportUsersSeeder extends Seeder
 
             $linkedinUrl = $data['Person Linkedin Url'] ?? 'N/A';
             if (stripos($linkedinUrl, 'linkedin.com/in/') !== false) {
-                $linkedinUrl = str_replace(['http://linkedin.com/in/', 'https://linkedin.com/in/', 'https://www.linkedin.com/in/'], '', $linkedinUrl);
+                $linkedinUrl = str_replace(['http://linkedin.com/in/', 'https://linkedin.com/in/', 'https://www.linkedin.com/in/', 'http://www.linkedin.com/in/'], '', $linkedinUrl);
             }
 
             $data = array_map(function ($value) {
