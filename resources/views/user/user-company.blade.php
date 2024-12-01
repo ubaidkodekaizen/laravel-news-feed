@@ -305,10 +305,10 @@
             });
 
             function loadSubcategories(industryName) {
-                subCategoryDropdown.innerHTML = "<option value=\'\'>Select Company Sub Category</option>";
+                subCategoryDropdown.innerHTML = "<option value=\'\'>Select Company Sub Industry</option>";
 
                 if (industryName) {
-                    "{{ route('get-category', ['industryId' => '__industryName__']) }}".replace('__industryName__', industryName)
+                    fetch("{{ route('get-category', ['industryId' => '__industryName__']) }}".replace('__industryName__', industryName))
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(function(subCategory) {
