@@ -48,6 +48,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     Route::post('/admin/user/update', [AdminController::class, 'updateUserDetails'])->name('admin.user.update');
     Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
     Route::post('/admin/company/update', [AdminController::class, 'updateComoanyDetails'])->name('admin.company.update');
+    Route::get('/admin/subscriptions', [AdminController::class, 'showSubscriptions'])->name('admin.subscriptions');
 });
 
 

@@ -25,7 +25,7 @@ class AdminController extends Controller
             $user = Auth::user();
             if ($user->role_id === 1) {
                 return redirect()->route('admin.dashboard');
-            }  
+            }
         }
         return view('auth.admin-login');
     }
@@ -53,7 +53,19 @@ class AdminController extends Controller
         ]);
     }
 
-    public function showUsers(){
+    public function showSubscriptions()
+    {
+        $users = User::with(['company', 'subscriptions'])
+            ->whereHas('subscriptions')
+            ->orderByDesc('id')
+            ->get();
+        //dd($users);            
+
+        return view('admin.subscriptions', compact('users'));
+    }
+
+    public function showUsers()
+    {
         $users = User::with('company')->orderByDesc('id')->get();
         return view('admin.users', compact('users'));
 
@@ -64,7 +76,7 @@ class AdminController extends Controller
         $user = User::where('id', $id)
             ->with('company')
             ->firstOrFail();
-            
+
         return view('admin.user-profile', compact('user'));
     }
 
@@ -79,11 +91,11 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $company = Company::where('user_id', $user->id)->first();
 
-        return view('admin.edit-company', compact( 'company'));
+        return view('admin.edit-company', compact('company'));
     }
 
     public function updateUserDetails(Request $request)
-    {   
+    {
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -115,7 +127,7 @@ class AdminController extends Controller
         $user->phone = $request->phone;
         $user->linkedin_url = $request->linkedin_url ?? $request->linkedin_user;
         $user->x_url = $request->x_url;
-        $user->instagram_url = $request->instagram_url; 
+        $user->instagram_url = $request->instagram_url;
         $user->facebook_url = $request->facebook_url;
         $user->address = $request->address;
         $user->country = $request->country;
@@ -136,13 +148,13 @@ class AdminController extends Controller
 
         if ($request->sub_category_to_connect_other) {
             $industryId = Industry::where('name', $request->industry_to_connect_other ?? $request->industry_to_connect)->pluck('id')->first();
-        
+
             $subCategoryName = ucfirst(strtolower($request->sub_category_to_connect_other));
             $subCategory = SubCategory::updateOrCreate(
                 ['name' => $subCategoryName],
                 ['name' => $subCategoryName, 'industry_id' => $industryId]
             );
-            $user->sub_category_to_connect = $subCategory->name;   
+            $user->sub_category_to_connect = $subCategory->name;
         } else {
             $user->sub_category_to_connect = $request->sub_category_to_connect;
         }
@@ -171,7 +183,7 @@ class AdminController extends Controller
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('profile_photos', 'public');
             $user->photo = $photoPath;
-            
+
         }
         $user->status = 'complete';
         $user->save();
@@ -181,7 +193,7 @@ class AdminController extends Controller
 
     public function updateComoanyDetails(Request $request)
     {
-        
+
         $request->validate([
             'company_name' => 'required|string|max:255',
             'company_email' => 'nullable|email|max:255',
@@ -238,17 +250,17 @@ class AdminController extends Controller
 
         if ($request->company_sub_category_other) {
             $industryId = Industry::where('name', $request->company_industry_other ?? $request->company_industry)->pluck('id')->first();
-        
+
             $subCategoryName = ucfirst(strtolower($request->company_sub_category_other));
             $subCategory = SubCategory::updateOrCreate(
                 ['name' => $subCategoryName],
                 ['name' => $subCategoryName, 'industry_id' => $industryId]
             );
-            $companySubCategory = $subCategory->name;   
+            $companySubCategory = $subCategory->name;
         } else {
             $companySubCategory = $request->company_sub_category;
         }
-        
+
 
         if ($request->company_contribute_to_muslim_community_other) {
             $communityContribution = BusinessContribution::updateOrCreate(
@@ -297,8 +309,8 @@ class AdminController extends Controller
                 'company_affiliation_to_muslim_org' => $companyAffiliation,
             ]
         );
-    
-        
+
+
         $companySlug = Str::slug($request->company_name);
         $originalSlug = $companySlug;
         $counter = 1;
@@ -309,8 +321,8 @@ class AdminController extends Controller
         }
         $company->company_slug = $companySlug;
         $company->save();
-        
-    
+
+
         if ($request->has('product_service_name')) {
             foreach ($request->product_service_name as $index => $serviceName) {
                 if (!empty($serviceName)) {
@@ -320,14 +332,14 @@ class AdminController extends Controller
                             'product_service_name' => $serviceName,
                         ],
                         [
-                            'product_service_description' => $request->product_service_description[$index] ?? '', 
-                            'product_service_area' => $request->product_service_area[$index] ?? '', 
+                            'product_service_description' => $request->product_service_description[$index] ?? '',
+                            'product_service_area' => $request->product_service_area[$index] ?? '',
                         ]
                     );
                 }
             }
         }
-        
+
         if ($request->has('accreditation')) {
             foreach ($request->accreditation as $accreditation) {
                 if (!empty($accreditation)) {
@@ -340,21 +352,22 @@ class AdminController extends Controller
                 }
             }
         }
-        
-    
+
+
         if ($request->hasFile('company_logo')) {
             $photoPath = $request->file('company_logo')->store('profile_photos', 'public');
             $company->company_logo = $photoPath;
             $company->status = "complete";
             $company->save();
         }
-    
+
         return redirect()->back();
     }
 
 
 
-    public function showSubscribers(){
-        
+    public function showSubscribers()
+    {
+
     }
 }

@@ -1,0 +1,66 @@
+@extends('admin.layouts.main')
+@section('content')
+    <main class="main-content">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">User Management</h4>
+                        </div>
+                        <div class="card-body">
+                            <table id="usersTable" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Transaction ID</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Start Date</th>
+                                        <th>Renewal Date</th>
+                                        <th>Status</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($users as $user)
+                                        <tr>
+                                            <td>{{ $user->subscriptions[0]->id }}</td>
+                                            <td>{{ $user->first_name }} {{ $user->last_name }}</td>
+                                            <td>{{ $user->subscriptions[0]->transaction_id }}</td>
+                                            <td>{{ $user->subscriptions[0]->subscription_type }}</td>
+                                            <td>${{ $user->subscriptions[0]->subscription_amount }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($user->subscriptions[0]->start_date)->format('m/d/Y') }}
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($user->subscriptions[0]->renewal_date)->format('m/d/Y') }}
+                                            </td>
+                                            <td>{{ $user->subscriptions[0]->status }}</td>
+
+                                            {{-- <td>
+                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a> 
+                                        <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="{{ route('admin.company.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit Company</a>
+                                        <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+
+                                    </td> --}}
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td>No Users</td>
+
+                                        </tr>
+                                    @endforelse
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+@endsection
