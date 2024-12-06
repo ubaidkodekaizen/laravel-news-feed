@@ -17,7 +17,7 @@
                     return;
                 }
                 $.ajax({
-                    url: '/get-suggestions',
+                    url: {{ route('search.suggestion') }}",
                     method: 'GET',
                     data: {
                         term: searchTerm,

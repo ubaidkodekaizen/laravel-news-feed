@@ -231,10 +231,32 @@ class DropDownHelper
 
     public static function getPlanDropdown()
     {
+        // Check if the URL contains the 'amcob' query parameter
+        $urlHasAmcob = request()->has('amcob');
+        
         $plans = Plan::all();
         $options = '<option value="" disabled selected>Choose a Plan</option>';
 
+        // If 'amcob' exists in the URL, add the "Test" plan (ID 3) first
+        if ($urlHasAmcob) {
+            $testPlan = Plan::find(3); // Find the "Test" plan with ID 3
+            if ($testPlan) {
+                $options .= sprintf(
+                    '<option value="%s">%s / %s</option>',
+                    htmlspecialchars($testPlan->id, ENT_QUOTES, 'UTF-8'),
+                    htmlspecialchars($testPlan->plan_amount, ENT_QUOTES, 'UTF-8'),
+                    htmlspecialchars($testPlan->plan_name, ENT_QUOTES, 'UTF-8')
+                );
+            }
+        }
+
+        // Add the other plans to the dropdown
         foreach ($plans as $plan) {
+            // Skip adding the "Test" plan again if it was already added
+            if ($plan->id == 3) {
+                continue;
+            }
+
             $options .= sprintf(
                 '<option value="%s">%s / %s</option>',
                 htmlspecialchars($plan->id, ENT_QUOTES, 'UTF-8'),
@@ -245,6 +267,7 @@ class DropDownHelper
 
         return $options;
     }
+
 
 
 

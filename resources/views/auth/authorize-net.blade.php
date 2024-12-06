@@ -8,8 +8,13 @@
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
     <link rel="stylesheet" href="{{ asset('assets/css/auth-style.css') }}">
+    <style>
+        .img_side_width {
+            min-width: 530px;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,7 +25,7 @@
                     <div class="img_side_width">
                         <img src="{{ asset('assets/images/logo.png') }}" alt="" class="img-fluid">
                     </div>
-                    {{-- <img src="https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-83.jpg" alt="" class="img-fluid"> --}}
+
                 </div>
                 <div class="col-lg-6">
                     <div class="form-section">
@@ -85,6 +90,54 @@
                             </div>
 
                             <div class="input-box">
+                                <span class="icon"><i class='bx bx-map'></i></span> <!-- Address Icon -->
+                                <input id="address" type="text" name="billing_address" required>
+                                <label>Card Billing Address</label>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="input-box">
+                                        <div class="select">
+                                            <select id="country" name="country" required>
+                                                <option value="">Select Country</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-box">
+                                        <div class="select">
+                                            <select id="state" name="state" required>
+                                                <option value="">Select State/Region</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="input-box">
+                                        <span class="icon"><i class='bx bx-map'></i></span> <!-- City Icon -->
+                                        <input id="city" type="text" name="city" required>
+                                        <label>City</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-box">
+                                        <span class="icon"><i class='bx bx-map-pin'></i></span>
+                                        <input id="zipcode" type="text" name="zip_code" required>
+                                        <label>Zip Code</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="input-box">
                                 {{-- <label for="plan_id">Select Plan</label> --}}
                                 <div class="select">
                                     <select id="plan_id" name="plan_id" required>
@@ -97,7 +150,7 @@
 
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-credit-card'></i></span>
-                                <input id="card_number" type="text"
+                                <input id="card_number" type="number"
                                     class="@error('card_number') is-invalid @enderror" name="card_number" required
                                     autocomplete="off" maxlength="16">
                                 @error('card_number')
@@ -135,7 +188,7 @@
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
-                                        @enderror 
+                                        @enderror
                                         <label>{{ __('CVV') }}</label>
                                     </div>
                                 </div>
@@ -154,9 +207,155 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
+    <script>
+        const countriesData = {
+
+
+            "AE": {
+                "name": "United Arab Emirates",
+                "states": [
+                    "Abu Dhabi", "Ajman", "Dubai", "Fujairah", "Ras Al Khaimah", "Sharjah", "Umm Al-Quwain"
+                ]
+            },
+            "AU": {
+                "name": "Australia",
+                "states": [
+                    "New South Wales", "Queensland", "South Australia", "Tasmania", "Victoria",
+                    "Western Australia"
+                ]
+            },
+            "CA": {
+                "name": "Canada",
+                "states": [
+                    "Alberta", "British Columbia", "Manitoba", "New Brunswick", "Newfoundland and Labrador",
+                    "Nova Scotia", "Ontario", "Prince Edward Island", "Quebec", "Saskatchewan"
+                ]
+            },
+            "DE": {
+                "name": "Germany",
+                "states": [
+                    "Baden-Württemberg", "Bavaria", "Berlin", "Brandenburg", "Bremen", "Hamburg", "Hesse",
+                    "Lower Saxony", "Mecklenburg-Vorpommern", "North Rhine-Westphalia",
+                    "Rhineland-Palatinate",
+                    "Saarland", "Saxony", "Saxony-Anhalt", "Schleswig-Holstein", "Thuringia"
+                ]
+            },
+            "FR": {
+                "name": "France",
+                "states": [
+                    "Île-de-France", "Provence-Alpes-Côte d'Azur", "Auvergne-Rhône-Alpes",
+                    "Nouvelle-Aquitaine",
+                    "Occitanie", "Hauts-de-France", "Bretagne", "Normandie", "Grand Est",
+                    "Centre-Val de Loire",
+                    "Pays de la Loire", "Bourgogne-Franche-Comté", "Corse"
+                ]
+            },
+            "GB": {
+                "name": "United Kingdom",
+                "states": [
+                    "England", "Scotland", "Wales", "Northern Ireland"
+                ]
+            },
+            "IN": {
+                "name": "India",
+                "states": [
+                    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa",
+                    "Gujarat",
+                    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+                    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+                    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+                    "Uttarakhand",
+                    "West Bengal"
+                ]
+            },
+            "PK": {
+                "name": "Pakistan",
+                "states": [
+                    "Balochistan", "Khyber Pakhtunkhwa", "Punjab", "Sindh", "Azad Jammu and Kashmir",
+                    "Gilgit-Baltistan", "Islamabad Capital Territory"
+                ]
+            },
+            "SA": {
+                "name": "Saudi Arabia",
+                "states": [
+                    "Al Bahah", "Al Jawf", "Al Madinah", "Al-Qassim", "Asir", "Eastern Province", "Ha'il",
+                    "Mecca", "Najran", "Northern Borders", "Riyadh", "Tabuk", "Jizan", "Saudi Capital"
+                ]
+            },
+            "TR": {
+                "name": "Turkey",
+                "states": [
+                    "Adana", "Adiyaman", "Afyonkarahisar", "Agri", "Aksaray", "Amasya", "Ankara", "Antalya",
+                    "Ardahan", "Artvin", "Aydin", "Balikesir", "Bilecik", "Bingol", "Bitlis", "Bolu",
+                    "Burdur", "Bursa",
+                    "Canakkale", "Cankiri", "Corum", "Denizli", "Diyarbakir", "Edirne", "Elazig",
+                    "Erzincan", "Erzurum",
+                    "Eskisehir", "Gaziantep", "Giresun", "Gumushane", "Hakkari", "Hatay", "Igdir",
+                    "Isparta", "Istanbul",
+                    "Izmir", "Kahramanmaras", "Karabuk", "Karaman", "Kastamonu", "Kayseri", "Kirikkale",
+                    "Kirklareli",
+                    "Kirsehir", "Kocaeli", "Konya", "Kuyucak", "Malatya", "Manisa", "Mardin", "Mugla",
+                    "Mus", "Nevsehir",
+                    "Nigde", "Ordu", "Osmaniye", "Rize", "Sakarya", "Samsun", "Sanliurfa", "Siirt", "Sinop",
+                    "Sirnak",
+                    "Sivas", "Tekirdag", "Tokat", "Trabzon", "Tunceli", "Usak", "Van", "Yalova", "Yozgat"
+                ]
+            },
+            "US": {
+                "name": "United States",
+                "states": [
+                    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+                    "Delaware",
+                    "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas",
+                    "Kentucky",
+                    "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+                    "Mississippi",
+                    "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+                    "New Mexico",
+                    "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+                    "Pennsylvania",
+                    "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah",
+                    "Vermont",
+                    "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+                ]
+            },
+
+
+
+
+        };
+
+        function populateCountryState() {
+            const countrySelect = document.getElementById("country");
+            const stateSelect = document.getElementById("state");
+
+            Object.keys(countriesData).forEach(function(countryCode) {
+                let option = document.createElement("option");
+                option.value = countryCode;
+                option.textContent = countriesData[countryCode].name;
+                countrySelect.appendChild(option);
+            });
+
+            countrySelect.addEventListener("change", function() {
+                const selectedCountry = countrySelect.value;
+                const states = countriesData[selectedCountry]?.states || [];
+                stateSelect.innerHTML = "<option value=''>Select State/Region</option>";
+                states.forEach(function(state) {
+                    let option = document.createElement("option");
+                    option.value = state;
+                    option.textContent = state;
+                    stateSelect.appendChild(option);
+                });
+            });
+        }
+
+        window.onload = populateCountryState;
+    </script>
+
+
 
     <script>
-        document.getElementById('expiration_date').addEventListener('input', function (e) {
+        document.getElementById('expiration_date').addEventListener('input', function(e) {
             let value = e.target.value;
             value = value.replace(/[^0-9/]/g, '');
             if (value.length === 2 && e.inputType !== 'deleteContentBackward' && !value.includes('/')) {
@@ -165,7 +364,7 @@
             if (value.length > 5) {
                 value = value.slice(0, 5);
             }
-    
+
             e.target.value = value;
         });
     </script>
