@@ -298,7 +298,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const industryDropdown = document.getElementById("company_industry");
             const subCategoryDropdown = document.getElementById("company_sub_category");
-            const selectedSubcategory = "{{ $company->company_sub_category }}";
+            const selectedSubcategory = "{{ $company->company_sub_category ?? '' }}";
 
             industryDropdown.addEventListener("change", function() {
                 loadSubcategories(industryDropdown.value);

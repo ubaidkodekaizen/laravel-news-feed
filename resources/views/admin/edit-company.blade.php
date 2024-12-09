@@ -31,7 +31,7 @@
                                         Company Details
                                     </h1>
                                 </div>
-                                <input type="hidden" name="id" value="{{$company->id}}"/> 
+                                <input type="hidden" name="user_id" value="{{$user->id}}"/> 
                                 <div class="col-12">
                                     @if ($errors->any())
                                         <div class="alert alert-danger">
@@ -300,7 +300,8 @@
         document.addEventListener("DOMContentLoaded", function() {
             const industryDropdown = document.getElementById("company_industry");
             const subCategoryDropdown = document.getElementById("company_sub_category");
-            const selectedSubcategory = "{{ $company->company_sub_category }}";
+            const selectedSubcategory = "{{ $company->company_sub_category ?? '' }}";
+
 
             industryDropdown.addEventListener("change", function() {
                 loadSubcategories(industryDropdown.value);

@@ -21,7 +21,7 @@ Route::get('/get-suggestions', [SearchController::class, 'getSuggestions'])->nam
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
@@ -47,7 +47,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     Route::get('/admin/user/edit/{id}', [AdminController::class, 'editUser'])->name('admin.user.edit');
     Route::post('/admin/user/update', [AdminController::class, 'updateUserDetails'])->name('admin.user.update');
     Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
-    Route::post('/admin/company/update', [AdminController::class, 'updateComoanyDetails'])->name('admin.company.update');
+    Route::post('/admin/company/update', [AdminController::class, 'updateCompanyDetails'])->name('admin.company.update');
     Route::get('/admin/subscriptions', [AdminController::class, 'showSubscriptions'])->name('admin.subscriptions');
 });
 
@@ -91,4 +91,9 @@ Route::get('/logout', function () {
     Auth::logout();
     return redirect()->route('login.form');
 })->name('logout');
+
+Route::get('/admin/logout', function () {
+    Auth::logout();
+    return redirect()->route('admin.login');
+})->name('admin.logout');
 

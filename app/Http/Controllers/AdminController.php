@@ -66,7 +66,7 @@ class AdminController extends Controller
 
     public function showUsers()
     {
-        $users = User::with('company')->orderByDesc('id')->get();
+        $users = User::where('role_id', 4)->with('company')->orderByDesc('id')->get();
         return view('admin.users', compact('users'));
 
     }
@@ -90,9 +90,10 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $company = Company::where('user_id', $user->id)->first();
-
-        return view('admin.edit-company', compact('company'));
+    
+        return view('admin.edit-company', compact('user', 'company'));
     }
+
 
     public function updateUserDetails(Request $request)
     {
@@ -191,7 +192,7 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
-    public function updateComoanyDetails(Request $request)
+    public function updateCompanyDetails(Request $request)
     {
 
         $request->validate([
@@ -285,7 +286,7 @@ class AdminController extends Controller
         // $user = Auth::user();
 
         $company = Company::updateOrCreate(
-            ['id' => $request->id],
+            ['user_id' => $request->user_id],
             [
                 'company_name' => $request->company_name,
                 'company_email' => $request->company_email,

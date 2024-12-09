@@ -34,12 +34,12 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <p class="profile_data">
-                                        {{ $user->first_name }}
+                                        {{ $user->first_name ?? ''}}
                                     </p>
                                 </div>
                                 <div class="col-lg-6">
                                     <p class="profile_data">
-                                        {{ $user->last_name }}
+                                        {{ $user->last_name ?? '' }}
                                     </p>
                                 </div>
                                 <div class="col-lg-12">
@@ -156,6 +156,7 @@
                             </div>
                         </div>
                     </div>
+                    @if ($user->company && $user->company->productServices->isNotEmpty())
                     <div class="col-12">
                         <div class="custom_card_profile">
 
@@ -187,6 +188,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
 
             </div>
