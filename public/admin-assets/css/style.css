@@ -208,3 +208,6 @@ img:not(.logo img, .user_company_profile .company_logo img, .user_company_profil
   height: 50px;
   border-radius: 10px;
 }
+.ck.ck-editor__main>.ck-editor__editable{
+  min-height: 250px;
+}

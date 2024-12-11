@@ -50,6 +50,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
     Route::post('/admin/company/update', [AdminController::class, 'updateCompanyDetails'])->name('admin.company.update');
     Route::get('/admin/subscriptions', [AdminController::class, 'showSubscriptions'])->name('admin.subscriptions');
+    Route::get('/admin/blogs', function () {return view('admin.blogs');})->name('admin.blogs');
+    Route::get('/admin/events', function () {return view('admin.events');})->name('admin.events');
+    Route::get('/admin/add-blog', function () {return view('admin.add-blog');})->name('admin.add.blog');
+
 });
 
 

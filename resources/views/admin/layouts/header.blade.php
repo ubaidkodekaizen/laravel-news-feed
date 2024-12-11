@@ -73,6 +73,18 @@
                         Subscriptions
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.blogs') }}"
+                        class="{{ request()->routeIs('admin.blogs') ? 'active' : '' }}">
+                        Blogs
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.events') }}"
+                        class="{{ request()->routeIs('admin.events') ? 'active' : '' }}">
+                        Events
+                    </a>
+                </li>
                 {{-- <li>
                     <a href="{{ route('admin.companies') }}" 
                        class="{{ request()->routeIs('admin.companies') ? 'active' : '' }}">
