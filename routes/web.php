@@ -31,6 +31,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::post('/user/company/update', [CompanyController::class, 'storeCompanyDetails'])->name('user.company.update');
     Route::get('/user/company/{companySlug}', [CompanyController::class, 'showCompanyBySlug'])->name('company.profile');
     Route::get('search', [SearchController::class, 'SearchUserCompany'])->name('search');
+    Route::get('/feed', function () {return view('feed');})->name('feed');
     
     
 });

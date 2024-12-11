@@ -23,6 +23,7 @@ class DropDownHelper
 
         return $dropdown;
     }
+    
     public static function searchFilter(){
         
         $company_positions = Company::pluck('company_position')->unique()->sort();
@@ -51,24 +52,42 @@ class DropDownHelper
      
     public static function renderIndustryDropdown($selectedIndustry = null, $selectedSubcategory = null)
     {
-
+        // Get old input values for pre-selection
         $selectedIndustry = old('company_industry', $selectedIndustry);
         $selectedSubcategory = old('company_sub_category', $selectedSubcategory);
     
-        $industries = \DB::table('industries')->pluck('name', 'id');
+        // Fetch industries ordered by name, except "Other" which should appear last
+        $industries = \DB::table('industries')
+            ->select('id', 'name')
+            ->where('name', '!=', 'Other')
+            ->orderBy('name', 'asc')
+            ->get();
     
+        // Add "Other" to the end of the list
+        $otherIndustry = \DB::table('industries')
+            ->where('name', 'Other')
+            ->select('id', 'name')
+            ->first();
+    
+        if ($otherIndustry) {
+            $industries->push($otherIndustry);
+        }
+    
+        // Start the dropdown HTML
         $html = '<select name="company_industry" id="company_industry" class="form-select">';
         $html .= '<option value="">Select Industry</option>';
     
-        foreach ($industries as $industryId => $industryName) {
-            $isSelected = $industryName == $selectedIndustry ? 'selected' : '';
-            $html .= '<option value="' . $industryName . '" ' . $isSelected . '>' . $industryName . '</option>';
+        // Loop through industries to build the options
+        foreach ($industries as $industry) {
+            $isSelected = $industry->name == $selectedIndustry ? 'selected' : '';
+            $html .= '<option value="' . $industry->name . '" ' . $isSelected . '>' . $industry->name . '</option>';
         }
     
         $html .= '</select>';
     
         return $html;
     }
+
 
     public static function renderEmployeeSizeDropdown($selectedEmployeeSize = null)
     {
@@ -192,23 +211,42 @@ class DropDownHelper
     // DropDown For User
     public static function renderIndustryDropdownForUser($selectedIndustry = null, $selectedSubcategory = null)
     {
+        // Get old input values for pre-selection
         $selectedIndustry = old('industry_to_connect', $selectedIndustry);
         $selectedSubcategory = old('sub_category_to_connect', $selectedSubcategory);
     
-        $industries = \DB::table('industries')->pluck('name', 'id');
+        // Fetch industries ordered by name, except "Other" which should appear last
+        $industries = \DB::table('industries')
+            ->select('id', 'name')
+            ->where('name', '!=', 'Other')
+            ->orderBy('name', 'asc')
+            ->get();
     
+        // Add "Other" to the end of the list
+        $otherIndustry = \DB::table('industries')
+            ->where('name', 'Other')
+            ->select('id', 'name')
+            ->first();
+    
+        if ($otherIndustry) {
+            $industries->push($otherIndustry);
+        }
+    
+        // Start the dropdown HTML
         $html = '<select name="industry_to_connect" id="industry_to_connect" class="form-select">';
         $html .= '<option value="">Select Industry</option>';
     
-        foreach ($industries as $industryId => $industryName) {
-            $isSelected = $industryName == $selectedIndustry ? 'selected' : '';
-            $html .= '<option value="' . $industryName . '" ' . $isSelected . '>' . $industryName . '</option>';
+        // Loop through industries to build the options
+        foreach ($industries as $industry) {
+            $isSelected = $industry->name == $selectedIndustry ? 'selected' : '';
+            $html .= '<option value="' . $industry->name . '" ' . $isSelected . '>' . $industry->name . '</option>';
         }
     
         $html .= '</select>';
     
         return $html;
     }
+
     
     public static function renderCommunityInterestDropdown($selectedInterest = null)
     {

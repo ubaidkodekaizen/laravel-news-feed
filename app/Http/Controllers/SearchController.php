@@ -15,20 +15,40 @@ class SearchController extends Controller
 
     public function getSubcategories($industryName)
     {
+       
         $industry = \DB::table('industries')
             ->where('name', $industryName)
             ->select('id')
             ->first();
+    
+        // If no industry is found, return an empty JSON response
         if (!$industry) {
             return response()->json([]);
         }
+    
+        // Get subcategories for the industry, order them by name, excluding "Other"
         $subcategories = \DB::table('sub_categories')
             ->where('industry_id', $industry->id)
+            ->where('name', '!=', 'Other')
             ->select('id', 'name')
+            ->orderBy('name', 'asc')
             ->get();
     
+        
+        $otherSubcategory = \DB::table('sub_categories')
+            ->where('industry_id', $industry->id)
+            ->where('name', 'Other')
+            ->select('id', 'name')
+            ->first();
+    
+        if ($otherSubcategory) {
+            $subcategories->push($otherSubcategory);
+        }
+    
+        // Return the subcategories as JSON
         return response()->json($subcategories);
     }
+
     
     public function getSuggestions(Request $request)
     {
