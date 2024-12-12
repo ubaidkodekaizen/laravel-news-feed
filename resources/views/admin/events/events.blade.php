@@ -7,8 +7,8 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h4 class="card-title">Blogs</h4>
-                            <a href="{{ route('admin.add.blog') }}" class="btn btn-primary btn-md">Add Blog</a>
+                            <h4 class="card-title">Events</h4>
+                            <a href="{{ route('admin.add.event') }}" class="btn btn-primary btn-md">Add Event</a>
                         </div>
                         <div class="card-body">
                             <table id="blogsTable" class="table table-striped table-hover">
@@ -16,15 +16,23 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Title</th>
-                                        <th>Content</th>
+                                        <th>City</th>
+                                        <th>Time</th>
+                                        <th>Date</th>
+                                        <th>Venue</th>
+                                        <th>Event URL</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Blog 1</td>
-                                        <td>This is dummy content</td>
+                                        <td>Event 1</td>
+                                        <td>City Name</td>
+                                        <td>10:00 AM</td>
+                                        <td>15 Janurary 2024</td>
+                                        <td>Venue here</td>
+                                        <td>URL here</td>
                                         <td>
                                             <a href="javascript:void(0);" class="btn btn-warning btn-sm">View</a>
                                             <a href="javascript:void(0);" class="btn btn-primary btn-sm">Edit</a>

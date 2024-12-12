@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Accreditation;
 use App\Models\Company;
+use App\Models\Designation;
 use App\Models\MuslimOrganization;
 use App\Models\Industry;
 use App\Models\SubCategory;
@@ -29,13 +30,13 @@ class CompanyController extends Controller
 
     public function storeCompanyDetails(Request $request)
     {
-        
+        //dd($request->all());
         $request->validate([
             'company_name' => 'required|string|max:255',
             'company_email' => 'nullable|email|max:255',
             'company_web_url' => 'nullable|url|max:255',
             'company_linkedin_url' => 'nullable|url|max:255',
-            'company_position' => 'nullable|string|max:255',
+            'company_position' => 'nullable|string',
             'company_about' => 'nullable|string|max:5000',
             'company_revenue' => 'nullable|string|max:255',
             'company_address' => 'nullable|string|max:255',
@@ -63,6 +64,13 @@ class CompanyController extends Controller
         $capitalize = function ($value) {
             return $value ? ucwords(strtolower($value)) : null;
         };
+
+        if ($request->company_position_other) {
+            $position = Designation::updateOrCreate(
+                ['name' => $capitalize($request->company_position_other)],
+                ['name' => $capitalize($request->company_position_other)]
+            );
+        }
 
         if ($request->company_business_type_other) {
             $businessType = BusinessType::updateOrCreate(
@@ -197,7 +205,7 @@ class CompanyController extends Controller
             $company->save();
         }
     
-        return redirect()->route('search');
+        return redirect()->back();
     }
 
 

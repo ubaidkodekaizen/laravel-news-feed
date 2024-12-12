@@ -10,28 +10,24 @@
                             <h4 class="card-title">Add Blog</h4>
                         </div>
                         <div class="card-body">
-                           <form action="#" method="POST" enctype="multipart/form-data">
-                                  
+                           <form action="{{ route('admin.store.blog') }}" method="POST" enctype="multipart/form-data">
+                                  @csrf
                                <div class="row">
-                                    <!-- Blog Title -->
                                     <div class="col-12 mb-3">
                                         <label for="title" class="form-label">Blog Title</label>
                                         <input type="text" id="title" name="title" class="form-control" placeholder="Enter blog title" required>
                                     </div>
 
-                                    <!-- Blog Content -->
                                     <div class="col-12 mb-3">
                                         <label for="content" class="form-label">Blog Content</label>
                                         <textarea id="content" name="content" class="form-control" rows="10" placeholder="Write your blog content here..."></textarea>
                                     </div>
 
-                                    <!-- Blog Image -->
                                     <div class="col-12 mb-3">
                                         <label for="image" class="form-label">Blog Image</label>
                                         <input type="file" id="image" name="image" class="form-control" accept="image/*">
                                     </div>
 
-                                    <!-- Submit Button -->
                                     <div class="col-12">
                                         <button type="submit" class="btn btn-primary">Submit Blog</button>
                                     </div>

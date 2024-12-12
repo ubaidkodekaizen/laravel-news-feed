@@ -3,8 +3,8 @@
     <style>
         .user_company_profile .profile_pic img {
             border-radius: 15px;
-            height: 300px;
-            width: 300px;
+            height: 200px;
+            width: 200px;
             margin: 0 auto;
             object-fit: cover;
             max-width: 100%;

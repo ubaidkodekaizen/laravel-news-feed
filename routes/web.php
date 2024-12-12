@@ -11,9 +11,7 @@ use App\Http\Middleware\RoleMiddleware;
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () { return view('welcome'); });
 Route::get('/getSubcategories/{industryId}', [SearchController::class, 'getSubcategories'])->name('get-category');
 Route::get('/get-suggestions', [SearchController::class, 'getSuggestions'])->name('search.suggestion');
 
@@ -30,7 +28,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/user/company/details', [CompanyController::class, 'showUserCompanyForm'])->name('user.company.details');
     Route::post('/user/company/update', [CompanyController::class, 'storeCompanyDetails'])->name('user.company.update');
     Route::get('/user/company/{companySlug}', [CompanyController::class, 'showCompanyBySlug'])->name('company.profile');
-    Route::get('search', [SearchController::class, 'SearchUserCompany'])->name('search');
+    Route::get('/search', [SearchController::class, 'SearchUserCompany'])->name('search');
     Route::get('/feed', function () {return view('feed');})->name('feed');
     
     
@@ -40,20 +38,33 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
 
 Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
-    Route::get('admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+
+    Route::get('/admin/dashboard', [AdminController::class, 'adminDashboard'])->name('admin.dashboard');
+    
+    //Users
     Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
     Route::get('/admin/user/profile/{id}', [AdminController::class, 'showUserById'])->name('admin.user.profile');
     Route::get('/admin/user/edit/{id}', [AdminController::class, 'editUser'])->name('admin.user.edit');
     Route::post('/admin/user/update', [AdminController::class, 'updateUserDetails'])->name('admin.user.update');
     Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
     Route::post('/admin/company/update', [AdminController::class, 'updateCompanyDetails'])->name('admin.company.update');
-    Route::get('/admin/subscriptions', [AdminController::class, 'showSubscriptions'])->name('admin.subscriptions');
-    Route::get('/admin/blogs', function () {return view('admin.blogs');})->name('admin.blogs');
-    Route::get('/admin/events', function () {return view('admin.events');})->name('admin.events');
-    Route::get('/admin/add-blog', function () {return view('admin.add-blog');})->name('admin.add.blog');
+     
+    //Blogs
+    Route::get('/admin/blogs', [AdminController::class, 'adminBlogs'])->name('admin.blogs');
+    Route::get('/admin/add-blog', [AdminController::class, 'addBlog'])->name('admin.add.blog');
+    Route::post('/admin/store-blog/{id?}', [AdminController::class, 'storeBlog'])->name('admin.store.blog');
+    Route::get('/admin/edit-blog/{id}', [AdminController::class, 'editBlog'])->name('admin.edit.blog');
+    Route::delete('/admin/delete-blog/{id}', [AdminController::class, 'deleteBlog'])->name('admin.delete.blog');
 
+    
+    //Events
+    Route::get('/admin/events', [AdminController::class, 'adminEvents'])->name('admin.events');
+    Route::get('/admin/add-event', [AdminController::class, 'addEvent'])->name('admin.add.event');
+    Route::get('/admin/edit-event/{id}', [AdminController::class, 'editEvent'])->name('admin.edit.event');
+   
+    //Subscriptions
+    Route::get('/admin/subscriptions', [AdminController::class, 'showSubscriptions'])->name('admin.subscriptions');
+   
 });
 
 

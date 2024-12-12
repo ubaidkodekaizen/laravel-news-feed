@@ -77,84 +77,34 @@
 
                                 </div>
 
-                                <!-- Position/Designation -->
                                 <div class="col-lg-12 custom-select-dropdown">
                                     <label for="company_position">Position/Designation</label>
-                                    <div class="dropdown">
-                                        <button class="btn btn-light dropdown-toggle w-100" type="button"
-                                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Select Positions
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li>
-                                                <div class="form-check">
-                                                    <label class="form-check-label" for="positionCEO">CEO</label>
-                                                    <input class="form-check-input" type="checkbox" value="CEO"
-                                                        id="positionCEO">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check">
-                                                    <label class="form-check-label" for="positionCFO">CFO</label>
-                                                    <input class="form-check-input" type="checkbox" value="CFO"
-                                                        id="positionCFO">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check">
-                                                    <label class="form-check-label" for="positionManager">Manager</label>
-                                                    <input class="form-check-input" type="checkbox" value="Manager"
-                                                        id="positionManager">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check">
-                                                    <label class="form-check-label" for="positionHR">HR</label>
-                                                    <input class="form-check-input" type="checkbox" value="HR"
-                                                        id="positionHR">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check">
-                                                    <label class="form-check-label"
-                                                        for="positionDeveloper">Developer</label>
-                                                    <input class="form-check-input" type="checkbox" value="Developer"
-                                                        id="positionDeveloper">
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="form-check">
-                                                    <label class="form-check-label"
-                                                        for="company_position_other_select">Other</label>
-                                                    <input class="form-check-input" type="checkbox" value="Developer"
-                                                        id="company_position_other_select">
-                                                </div>
-                                            </li>
-                                        </ul>
+
+                                    <div class="selected-tags my-2">
+                                        {{ $company->company_position }}
                                     </div>
-                                    <input type="hidden" id="company_position_hidden" name="company_position_hidden"
-                                        value="{{ old('company_position', $company->company_position ?? '') }}">
+                                    <input type="hidden" id="company_position_hidden" name="company_position"
+                                        value="{{ old('company_position', $company->company_position ?? '') }}" />
+                                    {!! \App\Helpers\DropDownHelper::designationDropdown($company->company_position ?? '') !!}
 
                                 </div>
+
                                 <div class="col-lg-12 company_position_other_div d-none">
                                     <label for="company_position_other">Company Position Other</label>
                                     <input type="text" name="company_position_other" id="company_position_other"
-                                        class="form-control"
-                                        value="" required>
+                                        class="form-control" value="" required>
                                 </div>
 
                                 <!-- Company Address -->
                                 <div class="col-lg-12">
                                     <label for="company_address">Company Address</label>
-                                    <input type="text" name="company_address" id="company_address"
-                                        class="form-control"
+                                    <input type="text" name="company_address" id="company_address" class="form-control"
                                         value="{{ old('company_address', $company->company_address ?? '') }}" required>
                                 </div>
 
                                 <div class="col-lg-12">
                                     <label for="company_country">Company Country</label>
-                                    <input type="text" name="company_country" id="company_country"
-                                        class="form-control"
+                                    <input type="text" name="company_country" id="company_country" class="form-control"
                                         value="{{ old('company_country', $company->company_country ?? '') }}" required>
                                     {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdown($company->company_country ?? '') !!} --}}
                                 </div>
@@ -303,19 +253,24 @@
                                 <div class="col-lg-4">
                                     <label for="product_service_name">Products/Services you offer Name</label>
                                     <input type="text" name="product_service_name[]" id="product_service_name"
-                                        class="form-control" required>
+                                        class="form-control"
+                                        value="{{ old('product_service_name[]', $company->productServices[0]->product_service_name ?? '') }}"
+                                        required>
                                 </div>
                                 <div class="col-lg-4">
                                     <label for="product_service_description">Products/Services you offer
                                         Description</label>
                                     <input type="text" name="product_service_description[]"
-                                        id="product_service_description" class="form-control" required>
+                                        id="product_service_description"
+                                        value="{{ old('product_service_description[]', $company->productServices[0]->product_service_description ?? '') }}"class="form-control"
+                                        required>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="flex_field_btn">
                                         <div class="field w-75">
                                             <label for="product_service_area">Product Service Area</label>
                                             <input type="text" name="product_service_area[]" id="product_service_area"
+                                                value="{{ old('product_service_area[]', $company->productServices[0]->product_service_area ?? '') }}"
                                                 class="form-control">
                                         </div>
                                         <button type="button" id="add-product-service" class="btn btn-primary">
@@ -332,6 +287,7 @@
                                 <div class="col-lg-6">
                                     <label for="accreditation">Accreditation </label>
                                     <input type="text" name="accreditation[]" id="accreditation"
+                                        value="{{ old('accreditation[]', $company->accreditations[0]->accreditation_name ?? '') }}"
                                         class="form-control">
                                 </div>
                                 <div class="col-lg-6">
@@ -353,44 +309,133 @@
     </section>
 @endsection
 @section('scripts')
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        // Prevent dropdown menu from closing when clicking inside
-        document.querySelectorAll('.dropdown-menu').forEach((dropdown) => {
-            dropdown.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        });
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const checkboxes = document.querySelectorAll('.form-check-input');
+            const hiddenInput = document.getElementById('company_position_hidden');
+            const otherCheckbox = document.getElementById('company_position_other_select');
+            const otherFieldDiv = document.querySelector('.company_position_other_div');
+            const otherInput = document.getElementById('company_position_other');
+            const tagContainer = document.querySelector('.selected-tags'); // Container for tags
+            const searchInput = document.getElementById('search-dropdown'); // Search input for dropdown
 
-        const checkboxes = document.querySelectorAll('.form-check-input');
-        const hiddenInput = document.getElementById('company_position_hidden');
-        const otherCheckbox = document.getElementById('company_position_other_select');
-        const otherFieldDiv = document.querySelector('.company_position_other_div');
+            const selectedPositions = hiddenInput.value.split(',').map(pos => pos
+                .trim()); // Split saved positions into an array
 
-        // Handle checkbox changes
-        checkboxes.forEach((checkbox) => {
-            checkbox.addEventListener('change', () => {
-                // Update the hidden input with all selected values
+            const updateHiddenInput = () => {
                 const selected = Array.from(document.querySelectorAll('.form-check-input:checked'))
-                    .map(cb => cb.labels[0].textContent.trim()) // Use label text for clarity
-                    .join(', ');
+                    .filter(cb => cb !== otherCheckbox)
+                    .map(cb => cb.labels[0].textContent.trim());
 
-                hiddenInput.value = selected;
-
-                // Toggle "Other" field visibility
-                if (otherCheckbox.checked) {
-                    otherFieldDiv.classList.remove('d-none');
-                    otherFieldDiv.classList.add('d-block');
-                } else {
-                    otherFieldDiv.classList.remove('d-block');
-                    otherFieldDiv.classList.add('d-none');
+                if (otherCheckbox.checked && otherInput.value.trim()) {
+                    selected.push(otherInput.value.trim());
                 }
 
-                console.log(hiddenInput.value); // Debug: log selected values
+                hiddenInput.value = selected.join(', '); // Update hidden input with selected positions
+                updateTags(); // Reflect changes in tags
+            };
+
+            const updateTags = () => {
+                tagContainer.innerHTML = ''; // Clear existing tags
+                const selectedCheckboxes = Array.from(document.querySelectorAll('.form-check-input:checked'));
+                selectedCheckboxes.forEach((checkbox) => {
+                    const label = checkbox.labels[0]; // Get associated label
+                    if (label) { // Check if label exists
+                        const tagText = label.textContent.trim();
+                        createTag(tagText, checkbox);
+                    }
+                });
+
+                // Handle "Other" tag if selected
+                if (otherCheckbox.checked && otherInput.value.trim()) {
+                    createTag(otherInput.value.trim(), null, true); // Add "Other" as a tag
+                }
+            };
+
+            const createTag = (text, checkbox, isOther = false) => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = text;
+
+                const closeButton = document.createElement('span');
+                closeButton.className = 'tag-close';
+                closeButton.textContent = '×';
+                closeButton.addEventListener('click', () => {
+                    tag.remove();
+                    if (isOther) {
+                        otherCheckbox.checked = false;
+                        otherInput.value = '';
+                        otherFieldDiv.classList.add('d-none');
+                        otherFieldDiv.classList.remove('d-block');
+                    } else if (checkbox) {
+                        checkbox.checked = false;
+                    }
+                    updateHiddenInput();
+                });
+
+                tag.appendChild(closeButton);
+                tagContainer.appendChild(tag);
+            };
+
+
+
+            selectedPositions.forEach((position) => {
+                const checkbox = Array.from(checkboxes).find(cb => {
+                    const label = cb.labels[0];
+                    return label && label.textContent.trim() === position;
+                });
+
+                if (checkbox) {
+                    checkbox.checked = true;
+                } else if (position === "Other") {
+                    otherCheckbox.checked = true;
+                    otherFieldDiv.classList.remove('d-none');
+                    otherFieldDiv.classList.add('d-block');
+                    otherInput.value = position;
+                }
+            });
+
+
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener('change', () => {
+                    if (otherCheckbox.checked) {
+                        otherFieldDiv.classList.remove('d-none');
+                        otherFieldDiv.classList.add('d-block');
+                    } else {
+                        otherFieldDiv.classList.add('d-none');
+                        otherFieldDiv.classList.remove('d-block');
+                    }
+                    updateHiddenInput();
+                });
+            });
+
+
+            otherInput.addEventListener('keyup', updateHiddenInput);
+
+
+            searchInput.addEventListener('input', () => {
+                const dropdownMenu = document.querySelector('.position-dropdown-menu');
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const listItems = dropdownMenu.querySelectorAll('li');
+
+                listItems.forEach((item) => {
+                    const label = item.querySelector('.form-check-label');
+                    if (label) {
+                        const labelText = label.textContent
+                            .toLowerCase();
+
+
+                        if (labelText.includes(searchTerm)) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 
 
 

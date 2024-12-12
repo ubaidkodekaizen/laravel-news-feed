@@ -5,15 +5,58 @@ use App\Models\Company;
 use App\Models\User;
 use App\Models\Plan;
 use App\Models\ProductService;
+use DB;
 
 class DropDownHelper
 {
-   
+
+
+    public static function designationDropdown($dropdownId = 'dropdownMenuButton', $selectedValues = [])
+    {
+        $designations = DB::table('designations')->pluck('name');
+
+        $html = '<div class="dropdown">';
+        $html .= '<button class="btn btn-light dropdown-toggle w-100" type="button" id="' . $dropdownId . '" data-bs-toggle="dropdown" aria-expanded="false">';
+        $html .= 'Select Positions';
+        $html .= '</button>';
+
+        $html .= '<ul id="position-dropdown-menu" class="dropdown-menu position-dropdown-menu" aria-labelledby="' . $dropdownId . '">';
+        $html .= '<li class="mb-2">';
+        $html .= '<input type="text" id="search-dropdown" class="form-control mb-2" placeholder="Search...">';
+        $html .= '</li>';
+
+        foreach ($designations as $designation) {
+            $designationId = 'position' . preg_replace('/[^a-zA-Z0-9]/', '', $designation);
+            // Check if the current designation is selected
+            $isChecked = in_array($designation, $selectedValues) ? 'checked' : '';
+
+            $html .= '<li>';
+            $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
+            $html .= '<label class="form-check-label" for="' . $designationId . '">' . htmlspecialchars($designation) . '</label>';
+            $html .= '<input class="form-check-input ms-2" type="checkbox" value="' . htmlspecialchars($designation) . '" id="' . $designationId . '" ' . $isChecked . '>';
+            $html .= '</div>';
+            $html .= '</li>';
+        }
+
+        // Option for 'Other'
+        $html .= '<li>';
+        $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
+        $html .= '<label class="form-check-label" for="company_position_other_select">Other</label>';
+        $html .= '<input class="form-check-input ms-2" type="checkbox" value="Other" id="company_position_other_select">';
+        $html .= '</div>';
+        $html .= '</li>';
+
+        $html .= '</ul>';
+        $html .= '</div>';
+
+        return $html;
+    }
+
 
     public static function countryDropdown()
     {
         $countries = User::whereNotNull('country')->where('country', '!=', '')
-        ->distinct()->pluck('country', 'country')->sort();
+            ->distinct()->pluck('country', 'country')->sort();
         $dropdown = '<select name="country" id="header_location" class="form-select select2">';
         $dropdown .= '<option value="">Select Location</option>';
         foreach ($countries as $country) {
@@ -23,9 +66,10 @@ class DropDownHelper
 
         return $dropdown;
     }
-    
-    public static function searchFilter(){
-        
+
+    public static function searchFilter()
+    {
+
         $company_positions = Company::pluck('company_position')->unique()->sort();
         $company_industries = Company::pluck('company_industry')->unique()->sort();
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
@@ -35,7 +79,7 @@ class DropDownHelper
         $company_countries = User::pluck('country')->unique()->sort();
         $company_revenues = Company::pluck('company_revenue')->unique()->sort();
         $product_service_names = ProductService::pluck('product_service_name')->unique()->sort();
-    
+
         return [
             'company_positions' => $company_positions,
             'company_industries' => $company_industries,
@@ -48,43 +92,43 @@ class DropDownHelper
             'product_service_names' => $product_service_names,
         ];
     }
-    
-     
+
+
     public static function renderIndustryDropdown($selectedIndustry = null, $selectedSubcategory = null)
     {
         // Get old input values for pre-selection
         $selectedIndustry = old('company_industry', $selectedIndustry);
         $selectedSubcategory = old('company_sub_category', $selectedSubcategory);
-    
+
         // Fetch industries ordered by name, except "Other" which should appear last
         $industries = \DB::table('industries')
             ->select('id', 'name')
             ->where('name', '!=', 'Other')
             ->orderBy('name', 'asc')
             ->get();
-    
+
         // Add "Other" to the end of the list
         $otherIndustry = \DB::table('industries')
             ->where('name', 'Other')
             ->select('id', 'name')
             ->first();
-    
+
         if ($otherIndustry) {
             $industries->push($otherIndustry);
         }
-    
+
         // Start the dropdown HTML
         $html = '<select name="company_industry" id="company_industry" class="form-select">';
         $html .= '<option value="">Select Industry</option>';
-    
+
         // Loop through industries to build the options
         foreach ($industries as $industry) {
             $isSelected = $industry->name == $selectedIndustry ? 'selected' : '';
             $html .= '<option value="' . $industry->name . '" ' . $isSelected . '>' . $industry->name . '</option>';
         }
-    
+
         $html .= '</select>';
-    
+
         return $html;
     }
 
@@ -105,12 +149,12 @@ class DropDownHelper
         // Generate the HTML for employee size dropdown
         $html = '<select name="company_no_of_employee" id="company_no_of_employee" class="form-select">';
         $html .= '<option value="">Select No. of Employees</option>';
-        
+
         foreach ($employee_sizes as $value => $label) {
             $isSelected = $value == $selectedEmployeeSize ? 'selected' : '';
             $html .= '<option value="' . $value . '" ' . $isSelected . '>' . $label . '</option>';
         }
-        
+
         $html .= '</select>';
 
         return $html;
@@ -160,12 +204,12 @@ class DropDownHelper
         return $html;
     }
 
-    
+
     public static function renderAffiliationToMuslimOrgDropdown($selectedAffiliation = null)
     {
         $selectedAffiliation = old('company_affiliation_to_muslim_org', $selectedAffiliation);
         $affiliations = \DB::table('muslim_organizations')
-            ->pluck('name', 'name') 
+            ->pluck('name', 'name')
             ->toArray();
 
         $html = '<select name="company_affiliation_to_muslim_org" id="company_affiliation_to_muslim_org" class="form-select">';
@@ -194,60 +238,60 @@ class DropDownHelper
 
         $html = '<select name="company_revenue" id="company_revenue" class="form-select">';
         $html .= '<option value="">Select Revenue</option>';
-        
+
         foreach ($revenue_ranges as $value => $label) {
             $isSelected = $value == $selectedRevenue ? 'selected' : '';
             $html .= '<option value="' . $value . '" ' . $isSelected . '>' . $label . '</option>';
         }
-        
+
         $html .= '</select>';
 
         return $html;
     }
 
-    
-    
-    
+
+
+
     // DropDown For User
     public static function renderIndustryDropdownForUser($selectedIndustry = null, $selectedSubcategory = null)
     {
         // Get old input values for pre-selection
         $selectedIndustry = old('industry_to_connect', $selectedIndustry);
         $selectedSubcategory = old('sub_category_to_connect', $selectedSubcategory);
-    
+
         // Fetch industries ordered by name, except "Other" which should appear last
         $industries = \DB::table('industries')
             ->select('id', 'name')
             ->where('name', '!=', 'Other')
             ->orderBy('name', 'asc')
             ->get();
-    
+
         // Add "Other" to the end of the list
         $otherIndustry = \DB::table('industries')
             ->where('name', 'Other')
             ->select('id', 'name')
             ->first();
-    
+
         if ($otherIndustry) {
             $industries->push($otherIndustry);
         }
-    
+
         // Start the dropdown HTML
         $html = '<select name="industry_to_connect" id="industry_to_connect" class="form-select">';
         $html .= '<option value="">Select Industry</option>';
-    
+
         // Loop through industries to build the options
         foreach ($industries as $industry) {
             $isSelected = $industry->name == $selectedIndustry ? 'selected' : '';
             $html .= '<option value="' . $industry->name . '" ' . $isSelected . '>' . $industry->name . '</option>';
         }
-    
+
         $html .= '</select>';
-    
+
         return $html;
     }
 
-    
+
     public static function renderCommunityInterestDropdown($selectedInterest = null)
     {
         $selectedInterest = old('community_interest', $selectedInterest);
@@ -271,7 +315,7 @@ class DropDownHelper
     {
         // Check if the URL contains the 'amcob' query parameter
         $urlHasAmcob = request()->has('amcob');
-        
+
         $plans = Plan::all();
         $options = '<option value="" disabled selected>Choose a Plan</option>';
 
@@ -424,7 +468,7 @@ class DropDownHelper
     // {
     //     $selectedState = old('state', $selectedState);
     //     $selectedCity = old('city', $selectedCity);
-        
+
 
     //     $html = '<select name="city" id="city" class="form-select">';
     //     $html .= '<option value="">Select City</option>';
@@ -463,7 +507,7 @@ class DropDownHelper
 
 
 
-// public static function renderCountryDropdown($selectedCountry = null)
+    // public static function renderCountryDropdown($selectedCountry = null)
     // {
     //     $selectedCountry = old('company_country', $selectedCountry);
 
@@ -612,10 +656,10 @@ class DropDownHelper
     //     return $html;
     // }
 
-   
-    
-    
-    
 
-   
+
+
+
+
+
 }

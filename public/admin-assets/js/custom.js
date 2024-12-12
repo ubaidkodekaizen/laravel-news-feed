@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', function () {
     $('#usersTable').DataTable({
         responsive: true,
-        pageLength: 15,
+        pageLength: 10,
         searching: true,
         language: {
             search: "Search Users:",

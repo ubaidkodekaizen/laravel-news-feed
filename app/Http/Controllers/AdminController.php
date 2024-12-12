@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 use App\Models\Accreditation;
+use App\Models\Blog;
 use App\Models\BusinessContribution;
 use App\Models\BusinessType;
 use App\Models\Company;
+use App\Models\Event;
 use App\Models\MuslimOrganization;
 use App\Models\ProductService;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Models\CommunityInterest;
 use App\Models\SubCategory;
 use App\Models\Industry;
-use Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+
 
 
 class AdminController extends Controller
@@ -53,13 +58,16 @@ class AdminController extends Controller
         ]);
     }
 
+    public function adminDashboard(){
+        return view('admin.dashboard');
+    }
+
     public function showSubscriptions()
     {
         $users = User::with(['company', 'subscriptions'])
             ->whereHas('subscriptions')
             ->orderByDesc('id')
-            ->get();
-        //dd($users);            
+            ->get();           
 
         return view('admin.subscriptions', compact('users'));
     }
@@ -67,7 +75,7 @@ class AdminController extends Controller
     public function showUsers()
     {
         $users = User::where('role_id', 4)->with('company')->orderByDesc('id')->get();
-        return view('admin.users', compact('users'));
+        return view('admin.users.users', compact('users'));
 
     }
 
@@ -77,13 +85,13 @@ class AdminController extends Controller
             ->with('company')
             ->firstOrFail();
 
-        return view('admin.user-profile', compact('user'));
+        return view('admin.users.user-profile', compact('user'));
     }
 
     public function editUser($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.edit-user', compact('user'));
+        return view('admin.users.edit-user', compact('user'));
     }
 
     public function editCompany($id)
@@ -91,7 +99,7 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $company = Company::where('user_id', $user->id)->first();
     
-        return view('admin.edit-company', compact('user', 'company'));
+        return view('admin.users.edit-company', compact('user', 'company'));
     }
 
 
@@ -367,8 +375,78 @@ class AdminController extends Controller
 
 
 
-    public function showSubscribers()
-    {
 
+
+    public function adminBlogs()
+    {
+        $blogs = Blog::orderBy('id', 'desc')->get();
+        return view('admin.blogs.blogs', compact('blogs'));
     }
+
+
+    public function addBlog(Request $request){
+        return view('admin.blogs.add-blog');
+    }
+
+    public function storeBlog(Request $request, $id = null)
+    {
+        $request->validate([
+            'title'   => 'required|string|max:255',
+            'content' => 'required|string',
+            'image'   => 'nullable|image|mimes:jpg,jpeg,png,gif',
+        ]);
+        if($id) {
+            $blog = Blog::findOrFail($id);
+        } else {
+            $blog = new Blog();
+        }
+        if ($request->hasFile('image')) {
+            if ($blog->image && Storage::exists('public/' . $blog->image)) {
+                Storage::delete('public/' . $blog->image);
+            }
+            $imagePath = $request->file('image')->store('blogs', 'public');
+        } else {
+            $imagePath = $blog->image;
+        }
+        $blog->title = $request->title;
+        $blog->slug = Str::slug($request->title);
+        $blog->content = $request->content;
+        $blog->image = $imagePath;
+     
+        $blog->save();
+
+        $message = $id ? 'Blog updated successfully!' : 'Blog created successfully!';
+        return redirect()->route('admin.blogs')->with('success', $message);
+    }
+
+    public function editBlog($id)
+    {
+        $blog = Blog::findOrFail($id);
+        return view('admin.blogs.edit-blog', compact('blog'));
+    }
+    
+
+    public function deleteBlog($id)
+    {
+        $blog = Blog::findOrFail($id);
+        $blog->delete();
+        return redirect()->route('admin.blogs')->with('success', 'Blog deleted successfully!');
+    }
+
+
+
+
+    public function adminEvents(){
+        return view('admin.events.events');
+    }
+
+    public function addEvent(Request $request){
+        return view('admin.events.add-event');
+    }
+
+    public function editEvent($id){
+        return view('admin.events.edit-event');
+    }
+
+
 }
