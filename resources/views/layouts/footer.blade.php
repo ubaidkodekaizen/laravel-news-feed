@@ -6,7 +6,7 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJmm5iuEx2gVM3qj9a1zAWI_Y_C4Judnc&libraries=places&callback=initAutocomplete"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="{{asset('assets/js/custom.js')}}"></script>
-
+@yield('scripts')
 <script>
 
 

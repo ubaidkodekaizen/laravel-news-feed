@@ -133,7 +133,7 @@ body {
     max-height: 90px;
     width: 100%;
 }
-.user_form label {
+.user_form label:not(.form-check-label) {
     margin: 20px 0px 5px 0px;
 }
 
@@ -406,7 +406,7 @@ body {
     border-radius: 10px;
     padding: 10px;
 }
-.user_company_profile .new_user_details label{
+.user_company_profile .new_user_details label:not(.form-check-label){
     font-size: 18px;
     font-weight: 500;
     margin: 30px 0px 5px;
@@ -756,7 +756,7 @@ body {
     margin: 30px auto;
     text-align: center;
 }
-.feed_lp .btn-light {
+.custom-select-dropdown .btn-light {
     display: flex;
     align-items: center;
     width: 100%;
@@ -922,4 +922,12 @@ body {
 }
 .feed_lp {
     padding: 40px 0pc;
+}
+.custom-select-dropdown {
+    margin-top: 10px;
+}
+
+.custom-select-dropdown .dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
 }

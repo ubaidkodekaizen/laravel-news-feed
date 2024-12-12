@@ -1,14 +1,7 @@
 @extends('layouts.main')
 @section('content')
     <style>
-        .custom-select-dropdown {
-            margin-top: 10px;
-        }
-
-        .custom-select-dropdown .dropdown-menu {
-            max-height: 200px;
-            overflow-y: auto;
-        }
+        
 
         .text-danger {
             font-size: 12px;
