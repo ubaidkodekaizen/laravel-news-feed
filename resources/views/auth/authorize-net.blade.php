@@ -200,6 +200,10 @@
                                 {{ __('Sign Up') }}
                             </button>
                         </form>
+                        <div class="account_signup">
+                            <a href="{{route('login.form')}}">Already have an account? <span class="theme-color">Sign
+                                    In</span> </a>
+                        </div>
                     </div>
                 </div>
             </div>
