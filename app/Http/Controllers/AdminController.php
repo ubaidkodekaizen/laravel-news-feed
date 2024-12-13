@@ -58,7 +58,8 @@ class AdminController extends Controller
         ]);
     }
 
-    public function adminDashboard(){
+    public function adminDashboard()
+    {
         return view('admin.dashboard');
     }
 
@@ -67,7 +68,7 @@ class AdminController extends Controller
         $users = User::with(['company', 'subscriptions'])
             ->whereHas('subscriptions')
             ->orderByDesc('id')
-            ->get();           
+            ->get();
 
         return view('admin.subscriptions', compact('users'));
     }
@@ -98,7 +99,7 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $company = Company::where('user_id', $user->id)->first();
-    
+
         return view('admin.users.edit-company', compact('user', 'company'));
     }
 
@@ -384,18 +385,19 @@ class AdminController extends Controller
     }
 
 
-    public function addBlog(Request $request){
+    public function addBlog(Request $request)
+    {
         return view('admin.blogs.add-blog');
     }
 
     public function storeBlog(Request $request, $id = null)
     {
         $request->validate([
-            'title'   => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'image'   => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif',
         ]);
-        if($id) {
+        if ($id) {
             $blog = Blog::findOrFail($id);
         } else {
             $blog = new Blog();
@@ -412,7 +414,7 @@ class AdminController extends Controller
         $blog->slug = Str::slug($request->title);
         $blog->content = $request->content;
         $blog->image = $imagePath;
-     
+
         $blog->save();
 
         $message = $id ? 'Blog updated successfully!' : 'Blog created successfully!';
@@ -424,7 +426,7 @@ class AdminController extends Controller
         $blog = Blog::findOrFail($id);
         return view('admin.blogs.edit-blog', compact('blog'));
     }
-    
+
 
     public function deleteBlog($id)
     {
@@ -434,18 +436,73 @@ class AdminController extends Controller
     }
 
 
+    // Event Routes
 
-
-    public function adminEvents(){
-        return view('admin.events.events');
+    public function adminEvents()
+    {
+        $events = Event::orderBy('id', 'desc')->get();
+        return view('admin.events.events', compact('events'));
     }
 
-    public function addEvent(Request $request){
+    public function addEvent(Request $request)
+    {
         return view('admin.events.add-event');
     }
 
-    public function editEvent($id){
-        return view('admin.events.edit-event');
+    public function storeEvent(Request $request, $id = null)
+    {
+        $request->validate([
+            'event_title' => 'required|string|max:255',
+            'event_city' => 'required|string|max:100',
+            'event_time' => 'required',
+            'event_date' => 'required|date',
+            'event_venue' => 'required|string|max:255',
+            'event_url' => 'required|url',
+            'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
+        ]);
+
+        $event = $id ? Event::findOrFail($id) : new Event();
+
+
+        $event->title = $request->input('event_title');
+        $event->city = $request->input('event_city');
+        $event->time = $request->input('event_time');
+        $event->date = $request->input('event_date');
+        $event->venue = $request->input('event_venue');
+        $event->url = $request->input('event_url');
+
+
+        if ($request->hasFile('event_image')) {
+
+            if ($event->image && Storage::exists('public/' . $event->image)) {
+                Storage::delete('public/' . $event->image);
+            }
+
+            $imagePath = $request->file('event_image')->store('event_images', 'public');
+            $event->image = $imagePath;
+        }
+
+        $event->save();
+
+        $message = $id ? 'Event updated successfully!' : 'Event added successfully!';
+        return redirect()->route('admin.events')->with('success', $message);
+    }
+
+
+    public function editEvent($id)
+    {
+        $event = Event::findOrFail($id);
+        return view('admin.events.edit-event', compact('event'));
+    }
+
+    public function deleteEvent($id)
+    {
+        $event = Event::findOrFail($id);
+        if ($event->image) {
+            Storage::delete('public/event_images/' . $event->image);
+        }
+        $event->delete();
+        return redirect()->route('admin.events')->with('success', 'Event deleted successfully!');
     }
 
 

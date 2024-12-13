@@ -13,5 +13,5 @@ class Event extends Model
     protected $table = 'events';
 
     // Define the fillable fields (optional but recommended)
-    protected $fillable = ['title', 'time', 'date', 'venue', 'url', 'image'];
+    protected $fillable = ['title', 'time', 'date', 'city', 'venue', 'url', 'image'];
 }

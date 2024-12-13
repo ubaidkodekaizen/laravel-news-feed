@@ -25,21 +25,37 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Event 1</td>
-                                        <td>City Name</td>
-                                        <td>10:00 AM</td>
-                                        <td>15 Janurary 2024</td>
-                                        <td>Venue here</td>
-                                        <td>URL here</td>
-                                        <td>
-                                            <a href="javascript:void(0);" class="btn btn-warning btn-sm">View</a>
-                                            <a href="javascript:void(0);" class="btn btn-primary btn-sm">Edit</a>
-                                            <a href="javascript:void(0);" class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
-                                    </tr>
-                                    
+                                    @forelse($events as $key => $event)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td> <!-- Row Number -->
+                                            <td>{{ $event->title }}</td> <!-- Event Title -->
+                                            <td>{{ $event->city }}</td> <!-- Event City -->
+                                            <td>{{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}</td>
+                                            <!-- Event Time -->
+                                            <td>{{ \Carbon\Carbon::parse($event->date)->format('d F Y') }}</td>
+                                            <!-- Event Date -->
+                                            <td>{{ $event->venue }}</td> <!-- Event Venue -->
+                                            <td><a href="{{ $event->url }}" target="_blank">{{ $event->url }}</a></td>
+                                            <!-- Event URL -->
+                                            <td>
+                                                <!-- View, Edit, and Delete Buttons -->
+                                                <a href="#" class="btn btn-warning btn-sm">View</a>
+                                                <a href="{{ route('admin.edit.event', $event->id) }}"
+                                                    class="btn btn-primary btn-sm">Edit</a>
+                                                <form action="{{ route('admin.delete.event', $event->id) }}" method="POST"
+                                                    style="display:inline-block;" onsubmit="return confirmDelete();">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center">No events available to display.</td>
+                                        </tr>
+                                    @endforelse
+
                                 </tbody>
                             </table>
                         </div>
@@ -49,4 +65,10 @@
         </div>
 
     </main>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this event?');
+        }
+    </script>
 @endsection

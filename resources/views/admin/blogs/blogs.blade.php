@@ -28,8 +28,10 @@
                                             <td>{{ Str::limit(strip_tags($blog->content), 50) }}</td>
                                             <td>
                                                 <a href="#" class="btn btn-warning btn-sm">View</a>
-                                                <a href="{{ route('admin.edit.blog', $blog->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                                                <form action="{{ route('admin.delete.blog', $blog->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete();">
+                                                <a href="{{ route('admin.edit.blog', $blog->id) }}"
+                                                    class="btn btn-primary btn-sm">Edit</a>
+                                                <form action="{{ route('admin.delete.blog', $blog->id) }}" method="POST"
+                                                    style="display:inline-block;" onsubmit="return confirmDelete();">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -41,7 +43,7 @@
                                             <td colspan="4" class="text-center">No blogs found</td>
                                         </tr>
                                     @endforelse
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -57,5 +59,5 @@
             // Show confirmation alert
             return confirm('Are you sure you want to delete this blog?');
         }
-    </script>    
+    </script>
 @endsection
