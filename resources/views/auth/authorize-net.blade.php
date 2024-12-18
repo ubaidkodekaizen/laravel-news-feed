@@ -90,6 +90,18 @@
                             </div>
 
                             <div class="input-box">
+                                <span class="icon"><i class='bx bx-phone'></i></span>
+                                <input id="phone" type="text" class="@error('phone') is-invalid @enderror"
+                                    name="phone" required autocomplete="off" maxlength="100">
+                                @error('phone')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <label>{{ __('Phone Number') }}</label>
+                            </div>
+
+                            <div class="input-box">
                                 <span class="icon"><i class='bx bx-map'></i></span> <!-- Address Icon -->
                                 <input id="address" type="text" name="billing_address" required>
                                 <label>Card Billing Address</label>
@@ -194,14 +206,23 @@
                                 </div>
                             </div>
 
+                            <div class="form-check mt-3 account_signup">
+                                <input class="form-check-input" type="checkbox" name="agree_terms" id="agree_terms"
+                                    required>
 
+                                <label class="form-check-label" for="agree_terms">
+                                    I have read and agree to the <a href="{{ route('terms.of.service') }}" target="_blank"> <span
+                                            class="theme-color">Terms of service</span> </a>
+                                </label>
+                            </div>
 
                             <button type="submit" class="custom-btn btn-14">
                                 {{ __('Sign Up') }}
                             </button>
                         </form>
                         <div class="account_signup">
-                            <a href="{{route('login.form')}}">Already have an account? <span class="theme-color">Sign
+                            <a href="{{ route('login.form') }}">Already have an account? <span
+                                    class="theme-color">Sign
                                     In</span> </a>
                         </div>
                     </div>
@@ -211,6 +232,60 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('#user_register').validate({
+                rules: {
+                    first_name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    last_name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    agree_terms: {
+                        required: true
+                    },
+                },
+                messages: {
+                    first_name: {
+                        required: "Please enter your first name",
+                        minlength: "First name must be at least 2 characters"
+                    },
+                    last_name: {
+                        required: "Please enter your last name",
+                        minlength: "Last name must be at least 2 characters"
+                    },
+                    email: {
+                        required: "Please enter your email",
+                        email: "Please enter a valid email address"
+                    },
+                    agree_terms: {
+                        required: "You must agree to the terms of service"
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    // Append the error message after the closest `.input-box` container
+                    if (element.closest('.input-box').length) {
+                        error.insertAfter(element.closest('.input-box'));
+                    }else if(element.closest('.account_signup').length){
+                        error.insertAfter(element.closest('.account_signup'));
+                    } else {
+                        // Default placement if `.input-box` is not found
+                        error.insertAfter(element);
+                    }
+                }
+            });
+
+
+        });
+    </script>
     <script>
         const countriesData = {
 
@@ -382,7 +457,7 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#togglePassword').on('click', function() {
                 const passwordField = $('#password');
@@ -410,60 +485,9 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 
-    <script>
-        $(document).ready(function() {
-            $('#user_register').validate({
-                rules: {
-                    first_name: {
-                        required: true,
-                        minlength: 2
-                    },
-                    last_name: {
-                        required: true,
-                        minlength: 2
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8
-                    },
-                    password_confirmation: {
-                        required: true,
-                        minlength: 8,
-                        equalTo: '[name="password"]'
-                    }
-                },
-                messages: {
-                    first_name: {
-                        required: "Please enter your first name",
-                        minlength: "First name must be at least 2 characters"
-                    },
-                    last_name: {
-                        required: "Please enter your last name",
-                        minlength: "Last name must be at least 2 characters"
-                    },
-                    email: {
-                        required: "Please enter your email",
-                        email: "Please enter a valid email address"
-                    },
-                    password: {
-                        required: "Please provide a password",
-                        minlength: "Password must be at least 8 characters"
-                    },
-                    password_confirmation: {
-                        required: "Please confirm your password",
-                        minlength: "Password confirmation must be at least 8 characters",
-                        equalTo: "Password confirmation does not match the password"
-                    }
-                },
-            });
-        });
-    </script>
+
 </body>
 
 </html>

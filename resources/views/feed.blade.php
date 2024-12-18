@@ -1,8 +1,6 @@
 @extends('layouts.main')
 @section('content')
     <style>
-        
-
         .text-danger {
             font-size: 12px;
             margin-bottom: 5px;
@@ -119,86 +117,49 @@
 
     <section class="event_slider">
         <div class="container">
+            <h2 class="mb-3">Events</h2>
             <div class="swiper">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="card">
-                            <img src="https://via.placeholder.com/300x180" alt="Event Image">
-                            <div class="card-content">
-                                <h3>Event 1</h3>
-                                <div class="details">
-                                    <span>Janurary 7, 2025</span>
-                                    <span>10:00 AM - 11:00 AM</span>
+
+                    @forelse($events as $event)
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <img src="{{ $event->image ? asset('storage/' . $event->image) : 'https://via.placeholder.com/300x180' }}"
+                                    alt="Event Image">
+                                <div class="card-content">
+                                    <!-- Event Title -->
+                                    <div class="details">
+                                        <h3>{{ $event->title }}</h3>
+                                        <!-- Event City & Venue -->
+                                        <p><strong>City:</strong> {{ $event->city }}</p>
+                                        <p><strong>Venue:</strong> {{ $event->venue }}</p>
+
+                                        <!-- Event Date & Time -->
+
+                                        <span><strong>Date:</strong>
+                                            {{ \Carbon\Carbon::parse($event->date)->format('F j, Y') }}</span>
+                                        <span><strong>Time:</strong>
+                                            {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}</span>
+                                    </div>
+
+                                    <!-- Book Now Button -->
+                                    <a href="{{ $event->url }}" class="view-more">Book Now</a>
                                 </div>
-                                <a href="#" class="view-more">View More</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="card">
-                            <img src="https://via.placeholder.com/300x180" alt="Event Image">
-                            <div class="card-content">
-                                <h3>Event 2</h3>
-                                <div class="details">
-                                    <span>Janurary 7, 2025</span>
-                                    <span>10:00 AM - 11:00 AM</span>
+
+                    @empty
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/300x180" alt="No Events">
+                                <div class="card-content">
+                                    <h3>No Events Available</h3>
+                                    <p>Stay tuned for upcoming events.</p>
                                 </div>
-                                <a href="#" class="view-more">View More</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="card">
-                            <img src="https://via.placeholder.com/300x180" alt="Event Image">
-                            <div class="card-content">
-                                <h3>Event 3</h3>
-                                <div class="details">
-                                    <span>Janurary 7, 2025</span>
-                                    <span>10:00 AM - 11:00 AM</span>
-                                </div>
-                                <a href="#" class="view-more">View More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="card">
-                            <img src="https://via.placeholder.com/300x180" alt="Event Image">
-                            <div class="card-content">
-                                <h3>Event 4</h3>
-                                <div class="details">
-                                    <span>Janurary 7, 2025</span>
-                                    <span>10:00 AM - 11:00 AM</span>
-                                </div>
-                                <a href="#" class="view-more">View More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="card">
-                            <img src="https://via.placeholder.com/300x180" alt="Event Image">
-                            <div class="card-content">
-                                <h3>Event 5</h3>
-                                <div class="details">
-                                    <span>Janurary 7, 2025</span>
-                                    <span>10:00 AM - 11:00 AM</span>
-                                </div>
-                                <a href="#" class="view-more">View More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="card">
-                            <img src="https://via.placeholder.com/300x180" alt="Event Image">
-                            <div class="card-content">
-                                <h3>Event 6</h3>
-                                <div class="details">
-                                    <span>Janurary 7, 2025</span>
-                                    <span>10:00 AM - 11:00 AM</span>
-                                </div>
-                                <a href="#" class="view-more">View More</a>
-                            </div>
-                        </div>
-                    </div>
+                    @endforelse
+
                 </div>
                 <!-- Add Pagination and Navigation -->
                 <div class="swiper-button-prev"></div>
@@ -280,41 +241,42 @@
     <section class="articles">
         <div class="container">
             <h2 class="mb-3">Articles</h2>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header p-0 border-0">
-                            <img src="https://via.placeholder.com/650x300" alt="" class="img-fluid rounded">
+            <div class="article_slider overflow-hidden">
+                <div class="swiper-wrapper">
+                    @forelse($blogs as $blog)
+                        <div class="swiper-slide">
+
+                            <div class="card">
+                                <div class="card-header p-0 border-0">
+                                    <!-- Blog Image -->
+                                    <img src="{{ $blog->image ? asset('storage/' . $blog->image) : 'https://via.placeholder.com/650x300' }}"
+                                        alt="{{ $blog->title }}" class="img-fluid rounded">
+                                </div>
+                                <div class="card-body">
+
+                                    <h3>{{ $blog->title }}</h3>
+
+
+                                    <p>{!! \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) !!}</p>
+
+
+
+                                    <a href="#" class="btn btn-primary">Read More</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h3>
-                                Don't let your luggage be a burden
-                            </h3>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris nisi ut aliquip ex ea commodo consequat.
-                            </p>
+                    @empty
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="col-12">
+                                    <p>No blogs available at the moment. Please check back later.</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    @endforelse
                 </div>
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header p-0 border-0">
-                            <img src="https://via.placeholder.com/650x300" alt="" class="img-fluid rounded">
-                        </div>
-                        <div class="card-body">
-                            <h3>
-                               Disconnect like never before without getting lost
-                            </h3>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris nisi ut aliquip ex ea commodo consequat.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
         </div>
     </section>
@@ -417,7 +379,7 @@
                     <ul class="footer_list">
                         <li>
                             <a href="javascript:void(0);">
-                                Terms and conditions 
+                                Terms and conditions
                             </a>
                         </li>
                         <li>
@@ -442,14 +404,14 @@
                         </li>
                         <li>
                             <a href="javascript:void(0);">
-                                Safety Resources Center 
+                                Safety Resources Center
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
             <p class="powered_by">
-                Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a> 
+                Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
     </section>

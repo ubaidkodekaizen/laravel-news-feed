@@ -395,7 +395,7 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
         ]);
         if ($id) {
             $blog = Blog::findOrFail($id);

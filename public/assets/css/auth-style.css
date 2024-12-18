@@ -199,7 +199,7 @@ input:-webkit-autofill {
     -webkit-text-fill-color: #fff !important;
 }
 
-.error {
+.error:not(.form-check-input) {
     width: 100%;
     text-align: start;
     display: block;

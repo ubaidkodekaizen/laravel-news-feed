@@ -315,8 +315,31 @@ $(document).ready(function () {
                 slidesPerView: 3,
             },
             1300: {
-                slidesPerView: 5,
+                slidesPerView: 4,
             },
+        },
+    });
+
+   
+    const article_slider = new Swiper('.article_slider', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            768: {
+                slidesPerView: 1,
+            },
+            1024: {
+                slidesPerView: 2,
+            }
         },
     });
 });

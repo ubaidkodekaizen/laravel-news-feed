@@ -13,6 +13,8 @@ class SearchController extends Controller
 
 
 
+
+    // For Industries in user and company form
     public function getSubcategories($industryName)
     {
        
@@ -20,13 +22,9 @@ class SearchController extends Controller
             ->where('name', $industryName)
             ->select('id')
             ->first();
-    
-        // If no industry is found, return an empty JSON response
         if (!$industry) {
             return response()->json([]);
         }
-    
-        // Get subcategories for the industry, order them by name, excluding "Other"
         $subcategories = \DB::table('sub_categories')
             ->where('industry_id', $industry->id)
             ->where('name', '!=', 'Other')
@@ -34,7 +32,6 @@ class SearchController extends Controller
             ->orderBy('name', 'asc')
             ->get();
     
-        
         $otherSubcategory = \DB::table('sub_categories')
             ->where('industry_id', $industry->id)
             ->where('name', 'Other')
@@ -44,12 +41,11 @@ class SearchController extends Controller
         if ($otherSubcategory) {
             $subcategories->push($otherSubcategory);
         }
-    
-        // Return the subcategories as JSON
         return response()->json($subcategories);
     }
 
     
+    // For suggestions in search bar
     public function getSuggestions(Request $request)
     {
         $searchTerm = $request->input('term');
@@ -76,6 +72,8 @@ class SearchController extends Controller
         return response()->json($suggestions);
     }
     
+    
+    // For main search
     public function SearchUserCompany(Request $request)
     {
         $query = User::where('status', 'complete')

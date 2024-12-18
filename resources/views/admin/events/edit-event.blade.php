@@ -15,6 +15,17 @@
 
 
                                 <div class="row">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <ul class="mb-0">
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    @endif
                                     <!-- Event Title -->
                                     <div class="col-12 mb-3">
                                         <label for="event_title" class="form-label">Event Title</label>

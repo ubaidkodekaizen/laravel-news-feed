@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up | Muslim Link</title>
-    <link rel="icon" href="{{asset('assets/images/logo_bg.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
@@ -80,7 +80,7 @@
             overflow: hidden;
         }
 
-        .form_container .row:first-child > .col-lg-6 {
+        .form_container .row:first-child>.col-lg-6 {
             padding: 0;
             margin: 0;
         }
@@ -185,10 +185,12 @@
             position: relative;
             max-width: 100%;
         }
+
         .img_side_width img {
             max-width: 200px;
             height: auto;
         }
+
         .account_signup span {
             font-weight: 600;
             font-size: 18px;
@@ -211,6 +213,7 @@
         input:-webkit-autofill {
             -webkit-text-fill-color: #fff !important;
         }
+
         .error {
             width: 100%;
             text-align: start;
@@ -235,20 +238,23 @@
                     <div class="form-section w-100">
                         <h2 class="heading">Sign Up</h2>
                         <p class="subheading">Sign Un to continue to your application. </p>
-                        <form action="{{ route('register') }}" method="POST" id="user_register" autocomplete="off" class="form">
+                        <form action="{{ route('register') }}" method="POST" id="user_register" autocomplete="off"
+                            class="form">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input type="text" name="first_name" id="first_name" autocomplete="off" required>
+                                        <input type="text" name="first_name" id="first_name" autocomplete="off"
+                                            required>
                                         <label>First Name</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input type="text" id="last_name" name="last_name" autocomplete="off" required>
+                                        <input type="text" id="last_name" name="last_name" autocomplete="off"
+                                            required>
                                         <label>Last Name</label>
                                     </div>
                                 </div>
@@ -264,7 +270,8 @@
                                         <span class="icon">
                                             <i class='bx bx-show' id="togglePassword"></i>
                                         </span>
-                                        <input type="password" id="password" name="password" autocomplete="off" required>
+                                        <input type="password" id="password" name="password" autocomplete="off"
+                                            required>
                                         <label>Password</label>
                                     </div>
                                 </div>
@@ -273,17 +280,19 @@
                                         <span class="icon">
                                             <i class='bx bx-show' id="togglePasswordConfirmation"></i>
                                         </span>
-                                        <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="off" required>
+                                        <input type="password" id="password_confirmation" name="password_confirmation"
+                                            autocomplete="off" required>
                                         <label>Confirm Password</label>
                                     </div>
                                 </div>
                             </div>
-                            
-                            
                            
+
+
                             <button type="submit" class="custom-btn btn-14">Register</button>
                             <div class="account_signup">
-                                <a href="{{route('login.form')}}">Already have an account? <span class="theme-color">Sign
+                                <a href="{{ route('login.form') }}">Already have an account? <span
+                                        class="theme-color">Sign
                                         In</span> </a>
                             </div>
                         </form>
@@ -295,12 +304,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Toggle visibility for Password
-            $('#togglePassword').on('click', function () {
+            $('#togglePassword').on('click', function() {
                 const passwordField = $('#password');
                 const icon = $(this);
-    
+
                 if (passwordField.attr('type') === 'password') {
                     passwordField.attr('type', 'text'); // Show password
                     icon.removeClass('bx-show').addClass('bx-hide'); // Change to 'eye open' icon
@@ -309,12 +318,12 @@
                     icon.removeClass('bx-hide').addClass('bx-show'); // Change back to 'eye closed' icon
                 }
             });
-    
+
             // Toggle visibility for Confirm Password
-            $('#togglePasswordConfirmation').on('click', function () {
+            $('#togglePasswordConfirmation').on('click', function() {
                 const passwordConfirmationField = $('#password_confirmation');
                 const icon = $(this);
-    
+
                 if (passwordConfirmationField.attr('type') === 'password') {
                     passwordConfirmationField.attr('type', 'text'); // Show confirm password
                     icon.removeClass('bx-show').addClass('bx-hide'); // Change to 'eye open' icon
@@ -325,9 +334,9 @@
             });
         });
     </script>
-    
+
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#user_register').validate({
                 rules: {
                     first_name: {

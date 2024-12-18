@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthorizeNetController;
 use App\Http\Middleware\RoleMiddleware;
@@ -12,7 +13,8 @@ use App\Http\Middleware\RoleMiddleware;
 
 
 Route::get('/', function () {
-    return view('welcome'); });
+    return view('welcome');
+});
 Route::get('/getSubcategories/{industryId}', [SearchController::class, 'getSubcategories'])->name('get-category');
 Route::get('/get-suggestions', [SearchController::class, 'getSuggestions'])->name('search.suggestion');
 
@@ -23,16 +25,19 @@ Route::get('/get-suggestions', [SearchController::class, 'getSuggestions'])->nam
 Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('dashboard'); })->name('dashboard');
+        return view('dashboard');
+    })->name('dashboard');
+
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
     Route::get('/user/profile/{slug}', [UserController::class, 'showUserBySlug'])->name('user.profile');
+
     Route::get('/user/company/details', [CompanyController::class, 'showUserCompanyForm'])->name('user.company.details');
     Route::post('/user/company/update', [CompanyController::class, 'storeCompanyDetails'])->name('user.company.update');
     Route::get('/user/company/{companySlug}', [CompanyController::class, 'showCompanyBySlug'])->name('company.profile');
+
     Route::get('/search', [SearchController::class, 'SearchUserCompany'])->name('search');
-    Route::get('/feed', function () {
-        return view('feed'); })->name('feed');
+    Route::get('/feed', [PageController::class, 'feed'])->name('feed');
 
 
 });
@@ -118,3 +123,13 @@ Route::get('/admin/logout', function () {
     return redirect()->route('admin.login');
 })->name('admin.logout');
 
+Route::get('/terms', function () {
+    return view('terms-of-service');
+})->name('terms.of.service');
+
+Route::get('/privacy-policy', function () {
+    return view('privacy-policy');
+})->name('privacy.policy');
+Route::get('/confirmation-email', function () {
+    return view('emails.confirmation-email');
+})->name('confirmation-email');
