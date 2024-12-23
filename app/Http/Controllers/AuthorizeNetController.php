@@ -135,7 +135,7 @@ class AuthorizeNetController extends Controller
                     'user' => $user,
                     'subscription' => $subscription,
                 ], function ($message) use ($request) {
-                    $message->to("ubaid.syed@kodekaizen.com", "kashif.zubair@amcob.org");
+                    $message->to("kashif.zubair@amcob.org", "ubaid.syed@kodekaizen.com", "kashif.zubair@myadroit.com");
                     $message->subject('A new customer for Muslim Lynk');
                 });
 

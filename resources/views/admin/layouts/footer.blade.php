@@ -42,7 +42,7 @@
                 const input = document.getElementById(mapping.inputId);
                 const autocomplete = new google.maps.places.Autocomplete(input, {
                     types: ['geocode'],
-                    componentRestrictions: { country: ["us"] }
+                  
                 });
 
                 autocomplete.addListener('place_changed', () => {

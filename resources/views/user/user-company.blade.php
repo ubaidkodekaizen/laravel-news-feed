@@ -81,7 +81,7 @@
                                     <label for="company_position">Position/Designation</label>
 
                                     <div class="selected-tags my-2">
-                                        {{ $company->company_position }}
+                                        {{ $company->company_position ?? '' }}
                                     </div>
                                     <input type="hidden" id="company_position_hidden" name="company_position"
                                         value="{{ old('company_position', $company->company_position ?? '') }}" />

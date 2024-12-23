@@ -42,16 +42,13 @@
                                 {{ session('error') }}
                             </div>
                         @endif
-                        <form method="POST" action="{{ route('authorize.payment') }}" id="user_register"
-                            autocomplete="off" class="form">
+                        <form method="POST" action="{{ route('authorize.payment') }}" id="user_register" autocomplete="off" class="form">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input id="first_name" type="text"
-                                            class=" @error('first_name') is-invalid @enderror" name="first_name"
-                                            required autocomplete="off" maxlength="50">
+                                        <input id="first_name" type="text" class="@error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="off" maxlength="50">
                                         @error('first_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -61,12 +58,9 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input id="last_name" type="text"
-                                            class="@error('last_name') is-invalid @enderror" name="last_name" required
-                                            autocomplete="off" maxlength="50">
+                                        <input id="last_name" type="text" class="@error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}" required autocomplete="off" maxlength="50">
                                         @error('last_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -76,11 +70,10 @@
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-envelope'></i></span>
-                                <input id="email" type="email" class="@error('email') is-invalid @enderror"
-                                    name="email" required autocomplete="off" maxlength="100">
+                                <input id="email" type="email" class="@error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="off" maxlength="100">
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -88,11 +81,10 @@
                                 @enderror
                                 <label>{{ __('Email Address') }}</label>
                             </div>
-
+                        
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-phone'></i></span>
-                                <input id="phone" type="text" class="@error('phone') is-invalid @enderror"
-                                    name="phone" required autocomplete="off" maxlength="100">
+                                <input id="phone" type="text" class="@error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="off" maxlength="100">
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -100,19 +92,20 @@
                                 @enderror
                                 <label>{{ __('Phone Number') }}</label>
                             </div>
-
+                        
                             <div class="input-box">
-                                <span class="icon"><i class='bx bx-map'></i></span> <!-- Address Icon -->
-                                <input id="address" type="text" name="billing_address" required>
+                                <span class="icon"><i class='bx bx-map'></i></span>
+                                <input id="address" type="text" name="billing_address" value="{{ old('billing_address') }}" required>
                                 <label>Card Billing Address</label>
                             </div>
-
+                        
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <div class="select">
                                             <select id="country" name="country" required>
                                                 <option value="">Select Country</option>
+                                                <option value="{{ old('country') }}" selected>{{ old('country') }}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -122,49 +115,43 @@
                                         <div class="select">
                                             <select id="state" name="state" required>
                                                 <option value="">Select State/Region</option>
+                                                <option value="{{ old('state') }}" selected>{{ old('state') }}</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                        
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
-                                        <span class="icon"><i class='bx bx-map'></i></span> <!-- City Icon -->
-                                        <input id="city" type="text" name="city" required>
+                                        <span class="icon"><i class='bx bx-map'></i></span>
+                                        <input id="city" type="text" name="city" value="{{ old('city') }}" required>
                                         <label>City</label>
                                     </div>
-
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-map-pin'></i></span>
-                                        <input id="zipcode" type="text" name="zip_code" required>
+                                        <input id="zipcode" type="text" name="zip_code" value="{{ old('zip_code') }}" required>
                                         <label>Zip Code</label>
                                     </div>
                                 </div>
                             </div>
-
-
-
-
+                        
                             <div class="input-box">
-                                {{-- <label for="plan_id">Select Plan</label> --}}
                                 <div class="select">
                                     <select id="plan_id" name="plan_id" required>
                                         {!! \App\Helpers\DropdownHelper::getPlanDropdown() !!}
                                     </select>
                                 </div>
-                                <input type="hidden" name="amount" id="amount">
-                                <input type="hidden" name="type" id="type">
+                                <input type="hidden" name="amount" id="amount" value="{{ old('amount') }}">
+                                <input type="hidden" name="type" id="type" value="{{ old('type') }}">
                             </div>
-
+                        
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-credit-card'></i></span>
-                                <input id="card_number" type="number"
-                                    class="@error('card_number') is-invalid @enderror" name="card_number" required
-                                    autocomplete="off" maxlength="16">
+                                <input id="card_number" type="number" class="@error('card_number') is-invalid @enderror" name="card_number" value="{{ old('card_number') }}" required autocomplete="off" maxlength="16">
                                 @error('card_number')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -172,14 +159,12 @@
                                 @enderror
                                 <label>{{ __('Card Number (16 digits)') }}</label>
                             </div>
-
+                        
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-calendar'></i></span>
-                                        <input id="expiration_date" type="text"
-                                            class="@error('expiration_date') is-invalid @enderror"
-                                            name="expiration_date" required autocomplete="off" maxlength="5">
+                                        <input id="expiration_date" type="text" class="@error('expiration_date') is-invalid @enderror" name="expiration_date" value="{{ old('expiration_date') }}" required autocomplete="off" maxlength="5">
                                         @error('expiration_date')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -188,14 +173,11 @@
                                         <label>{{ __('Expiration Date (MM/YY)') }}</label>
                                     </div>
                                 </div>
-
+                        
                                 <div class="col-lg-6">
-
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-shield-alt-2'></i></span>
-                                        <input id="cvv" type="text"
-                                            class="@error('cvv') is-invalid @enderror" name="cvv" required
-                                            autocomplete="off" maxlength="4">
+                                        <input id="cvv" type="text" class="@error('cvv') is-invalid @enderror" name="cvv" value="{{ old('cvv') }}" required autocomplete="off" maxlength="4">
                                         @error('cvv')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -205,7 +187,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="form-check mt-3 account_signup">
                                 <input class="form-check-input" type="checkbox" name="agree_terms" id="agree_terms"
                                     required>
@@ -215,11 +196,10 @@
                                             class="theme-color">Terms of service</span> </a>
                                 </label>
                             </div>
-
-                            <button type="submit" class="custom-btn btn-14">
-                                {{ __('Sign Up') }}
-                            </button>
+                        
+                            <button type="submit" class="custom-btn btn-14">{{ __('Sign Up') }}</button>
                         </form>
+                        
                         <div class="account_signup">
                             <a href="{{ route('login.form') }}">Already have an account? <span
                                     class="theme-color">Sign
