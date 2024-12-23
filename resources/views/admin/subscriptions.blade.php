@@ -15,7 +15,9 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Transaction ID</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Subscription ID</th>
                                         <th>Type</th>
                                         <th>Amount</th>
                                         <th>Start Date</th>
@@ -29,6 +31,8 @@
                                         <tr>
                                             <td>{{ $user->subscriptions[0]->id }}</td>
                                             <td>{{ $user->first_name }} {{ $user->last_name }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->phone }}</td>
                                             <td>{{ $user->subscriptions[0]->transaction_id }}</td>
                                             <td>{{ $user->subscriptions[0]->subscription_type }}</td>
                                             <td>${{ $user->subscriptions[0]->subscription_amount }}</td>
