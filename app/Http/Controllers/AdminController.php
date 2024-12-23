@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\Event;
 use App\Models\MuslimOrganization;
 use App\Models\ProductService;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Models\CommunityInterest;
 use App\Models\SubCategory;
@@ -65,13 +66,13 @@ class AdminController extends Controller
 
     public function showSubscriptions()
     {
-        $users = User::with(['company', 'subscriptions'])
-            ->whereHas('subscriptions')
+        $subscriptions = Subscription::with('user')
             ->orderByDesc('id')
             ->get();
 
-        return view('admin.subscriptions', compact('users'));
+        return view('admin.subscriptions', compact('subscriptions'));
     }
+
 
     public function showUsers()
     {

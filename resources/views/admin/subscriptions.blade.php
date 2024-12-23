@@ -27,20 +27,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($users as $user)
+                                    @forelse($subscriptions as $subscription)
                                         <tr>
-                                            <td>{{ $user->subscriptions[0]->id }}</td>
-                                            <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->phone }}</td>
-                                            <td>{{ $user->subscriptions[0]->transaction_id }}</td>
-                                            <td>{{ $user->subscriptions[0]->subscription_type }}</td>
-                                            <td>${{ $user->subscriptions[0]->subscription_amount }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($user->subscriptions[0]->start_date)->format('m/d/Y') }}
+                                            <td>{{ $subscription->id }}</td>
+                                            <td>{{ $subscription->user->first_name }} {{ $subscription->user->last_name }}</td>
+                                            <td>{{ $subscription->user->email }}</td>
+                                            <td>{{ $subscription->user->phone }}</td>
+                                            <td>{{ $subscription->transaction_id }}</td>
+                                            <td>{{ $subscription->subscription_type }}</td>
+                                            <td>${{ $subscription->subscription_amount }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($subscription->start_date)->format('m/d/Y') }}
                                             </td>
-                                            <td>{{ \Carbon\Carbon::parse($user->subscriptions[0]->renewal_date)->format('m/d/Y') }}
+                                            <td>{{ \Carbon\Carbon::parse($subscription->renewal_date)->format('m/d/Y') }}
                                             </td>
-                                            <td>{{ $user->subscriptions[0]->status }}</td>
+                                            <td>{{ $subscription->status }}</td>
 
                                             {{-- <td>
                                         <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a> 

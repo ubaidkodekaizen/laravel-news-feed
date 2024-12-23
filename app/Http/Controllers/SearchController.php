@@ -90,9 +90,14 @@ class SearchController extends Controller
             if ($request->filled('company_position')) {
                 $positions = is_array($request->company_position) ? $request->company_position : [$request->company_position];
                 $query->whereHas('company', function ($query) use ($positions) {
-                    $query->whereIn('company_position', $positions);
+                    $query->where(function ($subQuery) use ($positions) {
+                        foreach ($positions as $position) {
+                            $subQuery->orWhere('company_position', 'like', "%{$position}%");
+                        }
+                    });
                 });
             }
+            
 
             // Filter by Industry in companies table
             if ($request->filled('company_industry')) {
