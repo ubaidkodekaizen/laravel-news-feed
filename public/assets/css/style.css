@@ -442,7 +442,7 @@ body {
     font-weight: 400;
 }
 .header .header-mid {
-    min-width: 70%; 
+    min-width: 70%;
 }
 
 .header .header-mid .search_area{
@@ -970,5 +970,99 @@ body {
     width: 100%;
     object-fit: cover;
     object-position: center;
-    
+
+}
+.custom_card_profile .nav-tabs {
+    justify-content: center;
+    gap: 20px;
+    border: none;
+    margin-bottom: 40px;
+}
+
+.custom_card_profile .nav-tabs .nav-link {
+    padding: 10px 50px;
+    border: 1px solid;
+    border-radius: 10px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.custom_card_profile .nav-tabs .nav-link.active {
+    background: var(--secondary);
+    color: var(--white);
+    border-color: var(--white);
+}
+.list_check_flex {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    margin-top: 20px;
+}
+.list_check_flex .btn-check {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    pointer-events: none;
+}
+.list_check_flex .custom_btn {
+    color: var(--primary);
+    background-color: #fff;
+    border-color: var(--primary);
+}
+.user_company_profile .new_user_details .list_check_flex label{
+    margin: 0px;
+}
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active{
+    background: var(--secondary);
+    color: var(--white);
+    border: 1px solid var(--secondary);
+}
+
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.toggle__input {
+    display: none;
+}
+
+.toggle__label {
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    background-color: var(--primary);
+    border-radius: 99px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0!important;
+    /* border: 1px solid; */
+}
+
+.toggle__input:checked + .toggle__label {
+    background-color: red;
+}
+
+.toggle__input:checked + .toggle__label::after {
+    left: 32px;
+}
+
+.toggle__label::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    background-color: var(--white);
+    border-radius: 50%;
+    transition: left 0.3s ease;
+}
+.cont{
+    display: inline;
 }

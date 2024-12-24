@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CommunityInterest;
+use App\Models\Company;
 use App\Models\SubCategory;
 use App\Models\User;
 use App\Models\Industry;
@@ -17,9 +18,10 @@ use Str;
 
 
 
+
 class UserController extends Controller
 {
-    
+
     public function showRegistrationForm()
     {
         if (Auth::check()) {
@@ -85,13 +87,14 @@ class UserController extends Controller
     public function showUserDetailsForm()
     {
         $user = Auth::user();
-        return view('user.user-details', compact('user'));
+        $company = Company::where('user_id', $user->id)->first();
+        return view('user.user-details', compact('user' , 'company'));
     }
 
     public function updateUserDetails(Request $request)
     {
         //dd($request->all());
-        
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -123,7 +126,7 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->linkedin_url = $request->linkedin_url ?? $request->linkedin_user;
         $user->x_url = $request->x_url;
-        $user->instagram_url = $request->instagram_url; 
+        $user->instagram_url = $request->instagram_url;
         $user->facebook_url = $request->facebook_url;
         $user->address = $request->address;
         $user->country = $request->country;
@@ -144,13 +147,13 @@ class UserController extends Controller
 
         if ($request->sub_category_to_connect_other) {
             $industryId = Industry::where('name', $request->industry_to_connect_other ?? $request->industry_to_connect)->pluck('id')->first();
-        
+
             $subCategoryName = ucfirst(strtolower($request->sub_category_to_connect_other));
             $subCategory = SubCategory::updateOrCreate(
                 ['name' => $subCategoryName],
                 ['name' => $subCategoryName, 'industry_id' => $industryId]
             );
-            $user->sub_category_to_connect = $subCategory->name;   
+            $user->sub_category_to_connect = $subCategory->name;
         } else {
             $user->sub_category_to_connect = $request->sub_category_to_connect;
         }
@@ -179,7 +182,7 @@ class UserController extends Controller
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('profile_photos', 'public');
             $user->photo = $photoPath;
-            
+
         }
         $user->status = 'complete';
         $user->save();
@@ -192,13 +195,13 @@ class UserController extends Controller
         $user = User::where('slug', $slug)
             ->with('company')
             ->firstOrFail();
-            
+
 
         return view('user-profile', compact('user'));
     }
 
-    
-    
+
+
 
 
 
