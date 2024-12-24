@@ -66,7 +66,7 @@
                     <div class="col-lg-6">
                         <div class="custom_card_profile">
                             <div class="company_logo profile_data mt-0">
-                                <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
                                     alt="">
                             </div>
                             <p class="profile_data">
@@ -155,9 +155,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    @if ($user->company && $user->company->productServices->isNotEmpty())
-                    <div class="col-12">
+                        @if ($user->company && $user->company->productServices->isNotEmpty())
+                      
                         <div class="custom_card_profile">
 
                             <h1 class="profile_data profile_heading mt-0">
@@ -187,8 +186,9 @@
                                 @endforelse
                             </div>
                         </div>
+                        @endif
                     </div>
-                    @endif
+                   
                 </div>
 
             </div>

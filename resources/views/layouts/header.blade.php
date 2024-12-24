@@ -52,7 +52,7 @@
                         <form method="GET" action="{{ route('search') }}" id="search_form">
                             <div class="search_area">
                                 <div class="suggestion_search w-50">
-                                    <input type="text" id="header_search" placeholder="Product, Service or Industry" class="form-control">
+                                    <input type="text" id="header_search" autocomplete="off" placeholder="Product, Service or Industry" class="form-control">
                                     <div id="suggestion_box" class="suggestion-box" style="display: none;">
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{route('user.details.show')}}">User Profile</a></li>
-                                <li><a class="dropdown-item" href="{{route('user.company.details')}}">User Company</a></li>
+                                {{-- <li><a class="dropdown-item" href="{{route('user.company.details')}}">User Company</a></li> --}}
                                 <li><a class="dropdown-item" href="{{route('logout')}}">Logout</a></li>
                             </ul>
                         </div>

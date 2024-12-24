@@ -3,7 +3,7 @@
     <div class="details_card">
         <div class="user_profile_flex align-items-center">
             <div class="profile_square">
-                <img src="{{ $company->company_logo ? Storage::url($company->company_logo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                <img src="{{ $company->company_logo ? Storage::url($company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
                     alt="Company Logo">
             </div>
             <div class="basic_details">

@@ -21,7 +21,7 @@
                                             </div>
                                             <div class="avatar-preview">
                                                 <div id="imagePreview">
-                                                    <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                                    <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
                                                         alt="">
                                                 </div>
                                             </div>

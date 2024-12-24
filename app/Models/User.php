@@ -35,6 +35,15 @@ class User extends Authenticatable
         'community_interest',
         'status',
         'paid',
+        'phone_public',
+        'email_public',
+        'user_position',
+        'gender',
+        'age_group',
+        'ethnicity',
+        'nationality',
+        'languages',
+        'marital_status',
     ];
 
     public function company()
@@ -45,6 +54,11 @@ class User extends Authenticatable
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function userEducations()
+    {
+        return $this->hasMany(UserEducation::class);
     }
 
     

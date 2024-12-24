@@ -22,7 +22,7 @@
                         <div class="selected-filter-group" id="selectedPositionFilters"></div>
                         <input type="text" name="company_position" class="filter-search" placeholder="Search Position..."
                             oninput="filterOptions(this, 'positionFilterOptions')">
-                        <div id="positionFilterOptions">
+                        <div id="positionFilterOptions" style="display: none">
                             @foreach ($filters['company_positions'] as $position)
                                 <div class="filter-option"
                                     onclick="addFilter('company_position', '{{ $position }}', 'selectedPositionFilters')">
@@ -41,7 +41,7 @@
                         <div class="selected-filter-group" id="selectedIndustryFilters"></div>
                         <input type="text" name="company_industry" class="filter-search" placeholder="Search Industry..."
                             oninput="filterOptions(this, 'industryFilterOptions')">
-                        <div id="industryFilterOptions">
+                        <div id="industryFilterOptions" style="display: none">
                             @foreach ($filters['company_industries'] as $industry)
                                 <div class="filter-option"
                                     onclick="addFilter('company_industry', '{{ $industry }}', 'selectedIndustryFilters')">
@@ -61,7 +61,7 @@
                         <input type="text" name="company_sub_category" class="filter-search"
                             placeholder="Search Industry..."
                             oninput="filterOptions(this, 'industrySubCategoryFilterOptions')">
-                        <div id="industrySubCategoryFilterOptions">
+                        <div id="industrySubCategoryFilterOptions" style="display: none">
                             @foreach ($filters['company_sub_categories'] as $sub_category)
                                 <div class="filter-option"
                                     onclick="addFilter('company_sub_category', '{{ $sub_category }}', 'selectedIndustrySubCategoryFilters')">
@@ -138,7 +138,7 @@
                         <div class="selected-filter-group" id="selectedCountryFilters"></div>
                         <input type="text" name="company_country" class="filter-search"
                             placeholder="Search Country..." oninput="filterOptions(this, 'countryFilterOptions')">
-                        <div id="countryFilterOptions">
+                        <div id="countryFilterOptions" style="display: none">
                             @foreach ($filters['company_countries'] as $country)
                                 <div class="filter-option"
                                     onclick="addFilter('country', '{{ $country }}', 'selectedCountryFilters')">
@@ -157,7 +157,7 @@
                         <div class="selected-filter-group" id="selectedStateFilters"></div>
                         <input type="text" name="company_state" class="filter-search" placeholder="Search State..."
                             oninput="filterOptions(this, 'stateFilterOptions')">
-                        <div id="stateFilterOptions">
+                        <div id="stateFilterOptions" style="display: none">
                             @foreach ($filters['company_states'] as $state)
                                 <div class="filter-option"
                                     onclick="addFilter('state', '{{ $state }}', 'selectedStateFilters')">
@@ -177,7 +177,7 @@
                         <input type="text" name="product_service_name" class="filter-search"
                             placeholder="Search Product/Service..."
                             oninput="filterOptions(this, 'productServiceFilterOptions')">
-                        <div id="productServiceFilterOptions">
+                        <div id="productServiceFilterOptions" style="display: none">
                             @foreach ($filters['product_service_names'] as $product_service)
                                 <div class="filter-option"
                                     onclick="addFilter('product_service_name', '{{ $product_service }}', 'selectedProductServiceFilters')">
@@ -217,11 +217,18 @@
             }
         }
 
-
         let filters = {};
 
-        function applyFilters() {
+        // Debounce function to delay execution
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
 
+        function applyFilters() {
             $('.filter-search').each(function() {
                 let value = $(this).val();
                 if (value) {
@@ -245,9 +252,15 @@
                 method: 'GET',
                 success: function(response) {
                     $('#userResults').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching results:', error);
+                    alert('Failed to apply filters. Please try again.');
                 }
             });
         }
+
+        const debouncedApplyFilters = debounce(applyFilters, 300);
 
         function addFilter(category, value, targetId) {
             const targetElement = document.getElementById(targetId);
@@ -263,7 +276,7 @@
                 }
                 filters[category].push(value);
             }
-            applyFilters();
+            debouncedApplyFilters();
         }
 
         function removeFilter(category, value, targetId) {
@@ -272,17 +285,42 @@
                 document.getElementById(targetId).removeChild(filter);
             }
             filters[category] = filters[category].filter(item => item !== value);
-            applyFilters();
+            debouncedApplyFilters();
         }
 
         function filterOptions(input, optionsContainerId) {
             const filter = input.value.toLowerCase();
-            const options = document.getElementById(optionsContainerId).getElementsByClassName('filter-option');
+            const optionsContainer = document.getElementById(optionsContainerId);
+            const options = optionsContainer.getElementsByClassName('filter-option');
+            let hasVisibleOptions = false;
 
+            // Loop through options and show/hide based on the search filter
             for (let option of options) {
                 const optionText = option.textContent.toLowerCase();
-                option.style.display = optionText.includes(filter) ? '' : 'none';
+                if (optionText.includes(filter)) {
+                    option.style.display = ''; // Show option
+                    hasVisibleOptions = true;
+                } else {
+                    option.style.display = 'none'; // Hide option
+                }
             }
+
+            // If the input is empty, hide the options container
+            if (filter.length === 0) {
+                optionsContainer.style.display = 'none';
+            } else {
+                // Show or hide the options container based on whether any options are visible
+                optionsContainer.style.display = hasVisibleOptions ? 'block' : 'none';
+            }
+        }
+
+
+
+        function resetFilters() {
+            filters = {};
+            $('.selected-filter-group').empty();
+            $('.filter-search').val('');
+            applyFilters();
         }
 
         document.querySelectorAll('.filter-header').forEach(header => {

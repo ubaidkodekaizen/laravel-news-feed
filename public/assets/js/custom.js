@@ -225,18 +225,8 @@ $(document).ready(function () {
             city: {
                 required: true
             },
-            state: {
-                required: true
-            },
             country: {
                 required: true
-            },
-            county: {
-                required: true
-            },
-            zip_code: {
-                required: true,
-                digits: true
             },
             industry_to_connect: {
                 required: true
@@ -272,9 +262,7 @@ $(document).ready(function () {
             facebook_url: "Please enter a valid URL",
             address: "Please enter your address",
             city: "Please enter your city",
-            county: "Please enter your county",
             country: "Please enter your country",
-            state: "Please enter your state",
             zip_code: {
                 required: "Please enter your zip code",
                 digits: "Zip code must be a number"
