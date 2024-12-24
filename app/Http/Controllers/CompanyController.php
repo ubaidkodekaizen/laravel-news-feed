@@ -33,31 +33,31 @@ class CompanyController extends Controller
         //dd($request->all());
         $request->validate([
             'company_name' => 'required|string|max:255',
-            'company_email' => 'nullable|email|max:255',
+            // 'company_email' => 'nullable|email|max:255',
             'company_web_url' => 'nullable|url|max:255',
             'company_linkedin_url' => 'nullable|url|max:255',
             'company_position' => 'nullable|string',
-            'company_about' => 'nullable|string|max:5000',
+            // 'company_about' => 'nullable|string|max:5000',
             'company_revenue' => 'nullable|string|max:255',
-            'company_address' => 'nullable|string|max:255',
-            'company_country' => 'nullable|string|max:255',
-            'company_state' => 'nullable|string|max:255',
-            'company_city' => 'nullable|string|max:255',
-            'company_county' => 'nullable|string|max:255',
-            'company_zip_code' => 'nullable|string|max:20',
+            // 'company_address' => 'nullable|string|max:255',
+            // 'company_country' => 'nullable|string|max:255',
+            // 'company_state' => 'nullable|string|max:255',
+            // 'company_city' => 'nullable|string|max:255',
+            // 'company_county' => 'nullable|string|max:255',
+            // 'company_zip_code' => 'nullable|string|max:20',
             'company_no_of_employee' => 'nullable|string|max:255',
             'company_business_type' => 'nullable|string|max:255',
             'company_industry' => 'nullable|string|max:255',
-            'company_sub_category' => 'nullable|string|max:255',
-            'company_community_service' => 'nullable|string|max:255',
-            'company_contribute_to_muslim_community' => 'nullable|string|max:255',
-            'company_affiliation_to_muslim_org' => 'nullable|string|max:255',
+            // 'company_sub_category' => 'nullable|string|max:255',
+            // 'company_community_service' => 'nullable|string|max:255',
+            // 'company_contribute_to_muslim_community' => 'nullable|string|max:255',
+            // 'company_affiliation_to_muslim_org' => 'nullable|string|max:255',
             'product_service_name' => 'nullable|array',
             'product_service_name.*' => 'nullable|string|max:255',
             'product_service_description' => 'nullable|array',
             'product_service_description.*' => 'nullable|string|max:500',
-            'accreditation' => 'nullable|array',
-            'accreditation.*' => 'nullable|string|max:255',
+            // 'accreditation' => 'nullable|array',
+            // 'accreditation.*' => 'nullable|string|max:255',
             'company_logo' => 'nullable|file|image|max:2048',
         ]);
 
@@ -92,39 +92,39 @@ class CompanyController extends Controller
             $companyIndustry = $request->company_industry;
         }
 
-        if ($request->company_sub_category_other) {
-            $industryId = Industry::where('name', $request->company_industry_other ?? $request->company_industry)->pluck('id')->first();
+        // if ($request->company_sub_category_other) {
+        //     $industryId = Industry::where('name', $request->company_industry_other ?? $request->company_industry)->pluck('id')->first();
         
-            $subCategoryName = ucfirst(strtolower($request->company_sub_category_other));
-            $subCategory = SubCategory::updateOrCreate(
-                ['name' => $subCategoryName],
-                ['name' => $subCategoryName, 'industry_id' => $industryId]
-            );
-            $companySubCategory = $subCategory->name;   
-        } else {
-            $companySubCategory = $request->company_sub_category;
-        }
+        //     $subCategoryName = ucfirst(strtolower($request->company_sub_category_other));
+        //     $subCategory = SubCategory::updateOrCreate(
+        //         ['name' => $subCategoryName],
+        //         ['name' => $subCategoryName, 'industry_id' => $industryId]
+        //     );
+        //     $companySubCategory = $subCategory->name;   
+        // } else {
+        //     $companySubCategory = $request->company_sub_category;
+        // }
         
 
-        if ($request->company_contribute_to_muslim_community_other) {
-            $communityContribution = BusinessContribution::updateOrCreate(
-                ['name' => $capitalize($request->company_contribute_to_muslim_community_other)],
-                ['name' => $capitalize($request->company_contribute_to_muslim_community_other)]
-            );
-            $companyContribution = $communityContribution->name;
-        } else {
-            $companyContribution = $request->company_contribute_to_muslim_community;
-        }
+        // if ($request->company_contribute_to_muslim_community_other) {
+        //     $communityContribution = BusinessContribution::updateOrCreate(
+        //         ['name' => $capitalize($request->company_contribute_to_muslim_community_other)],
+        //         ['name' => $capitalize($request->company_contribute_to_muslim_community_other)]
+        //     );
+        //     $companyContribution = $communityContribution->name;
+        // } else {
+        //     $companyContribution = $request->company_contribute_to_muslim_community;
+        // }
 
-        if ($request->company_affiliation_to_muslim_org_other) {
-            $organizationAffiliation = MuslimOrganization::updateOrCreate(
-                ['name' => $capitalize($request->company_affiliation_to_muslim_org_other)],
-                ['name' => $capitalize($request->company_affiliation_to_muslim_org_other)]
-            );
-            $companyAffiliation = $organizationAffiliation->name;
-        } else {
-            $companyAffiliation = $request->company_affiliation_to_muslim_org;
-        }
+        // if ($request->company_affiliation_to_muslim_org_other) {
+        //     $organizationAffiliation = MuslimOrganization::updateOrCreate(
+        //         ['name' => $capitalize($request->company_affiliation_to_muslim_org_other)],
+        //         ['name' => $capitalize($request->company_affiliation_to_muslim_org_other)]
+        //     );
+        //     $companyAffiliation = $organizationAffiliation->name;
+        // } else {
+        //     $companyAffiliation = $request->company_affiliation_to_muslim_org;
+        // }
 
         $user = Auth::user();
 
@@ -136,21 +136,23 @@ class CompanyController extends Controller
                 'company_web_url' => $request->company_web_url,
                 'company_linkedin_url' => $request->company_linkedin_url ?? $request->company_linkedin_user,
                 'company_position' => $request->company_position,
-                'company_about' => $request->company_about,
+                // 'company_about' => $request->company_about,
                 'company_revenue' => $request->company_revenue,
-                'company_address' => $request->company_address,
-                'company_country' => $request->company_country,
-                'company_state' => $request->company_state,
-                'company_city' => $request->company_city,
-                'company_county' => $request->company_county,
-                'company_zip_code' => $request->company_zip_code,
+                // 'company_address' => $request->company_address,
+                // 'company_country' => $request->company_country,
+                // 'company_state' => $request->company_state,
+                // 'company_city' => $request->company_city,
+                // 'company_county' => $request->company_county,
+                // 'company_zip_code' => $request->company_zip_code,
                 'company_no_of_employee' => $request->company_no_of_employee,
                 'company_community_service' => $request->company_community_service,
                 'company_business_type' => $companyBusinessType,
                 'company_industry' => $companyIndustry,
-                'company_sub_category' => $companySubCategory,
-                'company_contribute_to_muslim_community' => $companyContribution,
-                'company_affiliation_to_muslim_org' => $companyAffiliation,
+                'company_experience' => $request->company_experience,
+                'company_phone' => $request->company_phone,
+                // 'company_sub_category' => $companySubCategory,
+                // 'company_contribute_to_muslim_community' => $companyContribution,
+                // 'company_affiliation_to_muslim_org' => $companyAffiliation,
             ]
         );
     
@@ -184,18 +186,18 @@ class CompanyController extends Controller
             }
         }
         
-        if ($request->has('accreditation')) {
-            foreach ($request->accreditation as $accreditation) {
-                if (!empty($accreditation)) {
-                    Accreditation::updateOrCreate(
-                        [
-                            'company_id' => $company->id,
-                            'accreditation_name' => $accreditation,
-                        ],
-                    );
-                }
-            }
-        }
+        // if ($request->has('accreditation')) {
+        //     foreach ($request->accreditation as $accreditation) {
+        //         if (!empty($accreditation)) {
+        //             Accreditation::updateOrCreate(
+        //                 [
+        //                     'company_id' => $company->id,
+        //                     'accreditation_name' => $accreditation,
+        //                 ],
+        //             );
+        //         }
+        //     }
+        // }
         
     
         if ($request->hasFile('company_logo')) {
@@ -212,7 +214,7 @@ class CompanyController extends Controller
     public function showCompanyBySlug($companySlug)
     {
         $company = Company::where('company_slug', $companySlug)
-            ->with(['productServices', 'accreditations'])
+            ->with(['productServices'])
             ->firstOrFail();
 
         return view('company-profile', compact('company'));

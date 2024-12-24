@@ -33,6 +33,8 @@ class Company extends Model
         'company_community_service',
         'company_contribute_to_muslim_community',
         'company_affiliation_to_muslim_org',
+        'company_experience',
+        'company_phone',
         'status'
     ];
 

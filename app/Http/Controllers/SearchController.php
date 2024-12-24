@@ -82,11 +82,11 @@ class SearchController extends Controller
             })
             ->with([
                 'company' => function ($query) {
-                    $query->with(['productServices', 'accreditations']);
+                    $query->with(['productServices']);
                 }
             ]);
 
-            // Filter by Position in companies table
+          
             if ($request->filled('company_position')) {
                 $positions = is_array($request->company_position) ? $request->company_position : [$request->company_position];
                 $query->whereHas('company', function ($query) use ($positions) {
@@ -99,7 +99,7 @@ class SearchController extends Controller
             }
             
 
-            // Filter by Industry in companies table
+          
             if ($request->filled('company_industry')) {
                 $industries = is_array($request->company_industry) ? $request->company_industry : [$request->company_industry];
                 $query->whereHas('company', function ($query) use ($industries) {
@@ -107,7 +107,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Sub-Category in companies table
+        
             if ($request->filled('company_sub_category')) {
                 $subCategories = is_array($request->company_sub_category) ? $request->company_sub_category : [$request->company_sub_category];
                 $query->whereHas('company', function ($query) use ($subCategories) {
@@ -115,7 +115,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Business Type in companies table
+   
             if ($request->filled('company_business_type')) {
                 $businessTypes = is_array($request->company_business_type) ? $request->company_business_type : [$request->company_business_type];
                 $query->whereHas('company', function ($query) use ($businessTypes) {
@@ -123,7 +123,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Employee Count in companies table
+       
             if ($request->filled('company_no_of_employee')) {
                 $employeeCounts = is_array($request->company_no_of_employee) ? $request->company_no_of_employee : [$request->company_no_of_employee];
                 $query->whereHas('company', function ($query) use ($employeeCounts) {
@@ -131,7 +131,7 @@ class SearchController extends Controller
                 });
             }
 
-            // Filter by Revenue in companies table
+     
             if ($request->filled('company_revenue')) {
                 $revenues = is_array($request->company_revenue) ? $request->company_revenue : [$request->company_revenue];
                 $query->whereHas('company', function ($query) use ($revenues) {

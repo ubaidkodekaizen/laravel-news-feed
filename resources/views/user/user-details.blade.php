@@ -143,7 +143,8 @@
                                             </div>
 
                                             <div class="col-lg-12">
-                                                <label for="phone" class="toggle_flex">Cell / Mobile<span class="text-danger">* </span>
+                                                <label for="phone" class="toggle_flex">Cell / Mobile<span
+                                                        class="text-danger">* </span>
                                                     <div class="cont">
                                                         (Public
                                                         <div class="toggle">
@@ -289,6 +290,10 @@
                         </div>
 
                     </div>
+
+
+
+
                     <div class="tab-pane fade" id="company-details-tab-pane" role="tabpanel"
                         aria-labelledby="company-details-tab" tabindex="0">
                         <div class="card_profile_first new_user_details">
@@ -351,6 +356,8 @@
                                                     required>
                                             </div> --}}
                                             <!-- Company Web URL -->
+
+
                                             <div class="col-lg-12">
                                                 <label for="company_web_url">Company URL</label>
                                                 <input type="text" name="company_web_url" id="company_web_url"
@@ -382,25 +389,22 @@
                                             </div>
 
                                             <div class="col-lg-12 custom-select-dropdown mt-0">
-                                                <label for="company_position">Years of Experience</label>
-
-                                                <select name="years_of_experience" id="years_of_experience"
-                                                    class="form-select">
-                                                    <option value="Under 1">Under 1</option>
-                                                    <option value="1-5 years">1-5 years</option>
-                                                    <option value="5-10 years">5-10 years</option>
-                                                    <option value="10-20 years">10-20 years</option>
-                                                    <option value="20+ years">20+ years</option>
+                                                <label for="company_experience">Years of Experience</label>
+                                                <select name="company_experience" id="company_experience" class="form-select">
+                                                    <option value="Under 1" {{ $company->company_experience == 'Under 1' ? 'selected' : '' }}>Under 1</option>
+                                                    <option value="1-5 years" {{ $company->company_experience == '1-5 years' ? 'selected' : '' }}>1-5 years</option>
+                                                    <option value="5-10 years" {{ $company->company_experience == '5-10 years' ? 'selected' : '' }}>5-10 years</option>
+                                                    <option value="10-20 years" {{ $company->company_experience == '10-20 years' ? 'selected' : '' }}>10-20 years</option>
+                                                    <option value="20+ years" {{ $company->company_experience == '20+ years' ? 'selected' : '' }}>20+ years</option>
                                                 </select>
-
-
                                             </div>
+                                            
 
                                             <div class="col-lg-12">
                                                 <label for="work_phone_num">Work Phone Number</label>
-                                                <input type="tel" name="work_phone_num" id="work_phone_num"
+                                                <input type="tel" name="company_phone" id="company_phone"
                                                     class="form-control"
-                                                    value="{{ old('work_phone_num', $company->work_phone_num ?? '') }}"
+                                                    value="{{ old('company_phone', $company->company_phone ?? '') }}"
                                                     required>
                                             </div>
 
@@ -410,15 +414,6 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="row">
-
-                                            <!-- Company Description -->
-                                            {{-- <div class="col-lg-12">
-                                                <label for="company_about">Company Description</label>
-                                                <textarea name="company_about" id="company_about" class="form-control" cols="30" rows="5" required>{{ old('company_about', $company->company_about ?? '') }}</textarea>
-                                            </div> --}}
-
-
-
                                             <!-- Company Linkedin URL -->
                                             <div class="col-lg-12">
                                                 <label for="company_linkedin_user">Company LinkedIn Page</label>
@@ -525,42 +520,9 @@
 @endsection
 @section('scripts')
     <script>
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     const industryDropdown = document.getElementById("industry_to_connect");
-        //     const subCategoryDropdown = document.getElementById("sub_category_to_connect");
-        //     const selectedSubcategory = "{{ $user->sub_category_to_connect }}";
-
-        //     // industryDropdown.addEventListener("change", function() {
-        //     //     loadSubcategories(industryDropdown.value);
-        //     // });
-
-        //     // function loadSubcategories(industryName) {
-        //     //     subCategoryDropdown.innerHTML = "<option value=\'\'>Select Sub Industry</option>";
-
-        //     //     if (industryName) {
-        //     //         fetch("{{ route('get-category', ['industryId' => '__industryName__']) }}".replace(
-        //     //                 '__industryName__', industryName))
-        //     //             .then(response => response.json())
-        //     //             .then(data => {
-        //     //                 data.forEach(function(subCategory) {
-        //     //                     let option = document.createElement("option");
-        //     //                     option.value = subCategory.name;
-        //     //                     option.text = subCategory.name;
-        //     //                     option.selected = (subCategory.name === selectedSubcategory);
-        //     //                     subCategoryDropdown.appendChild(option);
-        //     //                 });
-        //     //             })
-        //     //             .catch(error => {
-        //     //                 console.error("Error fetching subcategories:", error);
-        //     //             });
-        //     //     }
-        //     // }
-        //     // loadSubcategories(industryDropdown.value);
-        // });
-
-
+       
         document.addEventListener('DOMContentLoaded', function() {
-            // Add event listeners for each dropdown
+          
             document.querySelector('select[name="industry_to_connect"]').addEventListener('change', function() {
                 toggleOtherField(this, 'industry_other_field_2');
             });
@@ -579,7 +541,7 @@
                     otherField.style.display = 'block';
                 } else {
                     otherField.style.display = 'none';
-                    otherField.querySelector('input').value = ''; // Clear the input field
+                    otherField.querySelector('input').value = '';
                 }
             }
         });
