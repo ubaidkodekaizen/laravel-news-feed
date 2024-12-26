@@ -662,8 +662,7 @@
                                                     class="mt-2">Description</label>
                                                 <input type="text" name="product_service_description[]"
                                                     id="product_service_description"
-                                                    value="{{ old('product_service_description[]', $company->productServices[0]->product_service_description ?? '') }}"class="form-control"
-                                                    required>
+                                                    value="{{ old('product_service_description[]', $company->productServices[0]->product_service_description ?? '') }}"class="form-control">
                                             </div>
                                             <div class="col-lg-1">
                                                 <div class="flex_field_btn h-100">
