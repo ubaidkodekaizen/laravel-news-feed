@@ -5,7 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
 
 
-    <script src="{{asset('assets/js/custom.js')}}"></script>
+    <script src="{{asset('assets/js/custom.js?v1')}}"></script>
     <script>
 
         $(document).ready(function() {
