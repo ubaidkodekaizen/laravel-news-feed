@@ -678,7 +678,7 @@
 
 
                                     <div class="col-12 mt-4 text-end">
-                                        <button type="submit" class="btn theme-btn">Submit</button>
+                                        <button type="submit" class="btn btn-primary w-100">Save</button>
                                     </div>
                                 </div>
                             </form>

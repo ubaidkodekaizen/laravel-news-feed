@@ -235,37 +235,37 @@
                         <div class="profile_div">
                             <label for="company_name">Company Name</label>
                             <p class="profile_data">
-                                {{ $user->company->company_name }}
+                                {{ $user->company->company_name ?? '' }}
                             </p>
                         </div>
                         <div class="col-lg-12 profile_div">
                             <label for="title_designation">Title/Designation</label>
                             <p class="profile_data">
-                                {{ $user->company->company_position }}
+                                {{ $user->company->company_position ?? '' }}
                             </p>
                         </div>
                         <div class="profile_div">
                             <label for="company_url">Company URL</label>
                             <p class="profile_data">
-                                {{ $user->company->company_web_url }}
+                                {{ $user->company->company_web_url ?? '' }}
                             </p>
                         </div>
                         <div class="profile_div">
                             <label for="years_of_experience">Years of Experience</label>
                             <p class="profile_data">
-                                {{ $user->company->company_experience }}
+                                {{ $user->company->company_experience ?? '' }}
                             </p>
                         </div>
                         <div class="profile_div">
                             <label for="work_phone">Work Phone Number</label>
                             <p class="profile_data">
-                                {{ $user->company->company_phone }}
+                                {{ $user->company->company_phone ?? '' }}
                             </p>
                         </div>
                         <div class="profile_div">
                             <label for="company_linkedin">Company LinkedIn Page</label>
                             <p class="profile_data">
-                                {{ $user->company->company_linkedin_url }}
+                                {{ $user->company->company_linkedin_url ?? '' }}
                             </p>
                         </div>
                         {{-- <h1 class="profile_heading">
@@ -322,7 +322,7 @@
                                     Revenue
                                 </h2>
                                 <p class="profile_data">
-                                    ${{ $user->company->company_revenue }}
+                                    ${{ $user->company->company_revenue ?? '' }}
                                 </p>
                             </div>
                             <div class="col-lg-6">
@@ -330,7 +330,7 @@
                                     No. of Employees
                                 </h2>
                                 <p class="profile_data">
-                                    {{ $user->company->company_no_of_employee }}
+                                    {{ $user->company->company_no_of_employee ?? '' }}
                                 </p>
                             </div>
                             <div class="col-lg-6">
@@ -338,7 +338,7 @@
                                     Business Type
                                 </h2>
                                 <p class="profile_data">
-                                    {{ $user->company->company_business_type }}
+                                    {{ $user->company->company_business_type ?? '' }}
                                 </p>
                             </div>
                             <div class="col-lg-6">
@@ -346,7 +346,7 @@
                                     Industry
                                 </h2>
                                 <p class="profile_data">
-                                    {{ $user->company->company_industry }}
+                                    {{ $user->company->company_industry ?? '' }}
                                 </p>
                             </div>
                         </div>
@@ -356,29 +356,33 @@
                         <h1 class="profile_data profile_heading mt-0">
                             Product/Services
                         </h1>
-                        <div class="accordion mt-4" id="accordionExample">
-                            @forelse ($user->company->productServices as $productService)
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapse{{ $loop->index }}"
-                                            aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
-                                            aria-controls="collapse{{ $loop->index }}">
-                                            {{ $productService->product_service_name }}
-                                        </button>
-                                    </h2>
-                                    <div id="collapse{{ $loop->index }}"
-                                        class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
-                                        data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            {{ $productService->product_service_description }}
+                        @if (isset($user->company->productServices))
+                            <div class="accordion mt-4" id="accordionExample">
+                                @forelse ($user->company->productServices as $productService)
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapse{{ $loop->index }}"
+                                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
+                                                aria-controls="collapse{{ $loop->index }}">
+                                                {{ $productService->product_service_name }}
+                                            </button>
+                                        </h2>
+                                        <div id="collapse{{ $loop->index }}"
+                                            class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
+                                            data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                {{ $productService->product_service_description }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @empty
-                                <p>No Product or Service to show.</p>
-                            @endforelse
-                        </div>
+                                @empty
+                                    <p>No Product or Service to show.</p>
+                                @endforelse
+                            </div>
+                        @else
+                            <p>No Product or Service to show.</p>
+                        @endif
                     </div>
                 </div>
                 <div class="col-12">
