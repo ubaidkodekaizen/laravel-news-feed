@@ -563,21 +563,27 @@
                                         <label for="company_experience">Years of Experience</label>
                                         <select name="company_experience" id="company_experience" class="form-select">
                                             <option value="Under 1"
-                                                {{ $company->company_experience == 'Under 1' ? 'selected' : '' }}>Under 1
+                                                {{ optional($company)->company_experience == 'Under 1' ? 'selected' : '' }}>
+                                                Under 1
                                             </option>
                                             <option value="1-5 years"
-                                                {{ $company->company_experience == '1-5 years' ? 'selected' : '' }}>1-5
-                                                years</option>
+                                                {{ optional($company)->company_experience == '1-5 years' ? 'selected' : '' }}>
+                                                1-5 years
+                                            </option>
                                             <option value="5-10 years"
-                                                {{ $company->company_experience == '5-10 years' ? 'selected' : '' }}>5-10
-                                                years</option>
+                                                {{ optional($company)->company_experience == '5-10 years' ? 'selected' : '' }}>
+                                                5-10 years
+                                            </option>
                                             <option value="10-20 years"
-                                                {{ $company->company_experience == '10-20 years' ? 'selected' : '' }}>10-20
-                                                years</option>
+                                                {{ optional($company)->company_experience == '10-20 years' ? 'selected' : '' }}>
+                                                10-20 years
+                                            </option>
                                             <option value="20+ years"
-                                                {{ $company->company_experience == '20+ years' ? 'selected' : '' }}>20+
-                                                years</option>
+                                                {{ optional($company)->company_experience == '20+ years' ? 'selected' : '' }}>
+                                                20+ years
+                                            </option>
                                         </select>
+
                                     </div>
 
 

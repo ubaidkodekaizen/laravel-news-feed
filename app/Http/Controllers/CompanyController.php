@@ -18,14 +18,14 @@ use Str;
 
 class CompanyController extends Controller
 {
-    
+
 
     public function showUserCompanyForm()
     {
         $user = Auth::user();
         $company = Company::where('user_id', $user->id)->first();
 
-        return view('user.user-company', compact( 'company'));
+        return view('user.user-company', compact('company'));
     }
 
     public function storeCompanyDetails(Request $request)
@@ -97,8 +97,8 @@ class CompanyController extends Controller
                 'company_phone' => $request->company_phone,
             ]
         );
-    
-        
+
+
         $companySlug = Str::slug($request->company_name);
         $originalSlug = $companySlug;
         $counter = 1;
@@ -109,8 +109,8 @@ class CompanyController extends Controller
         }
         $company->company_slug = $companySlug;
         $company->save();
-        
-    
+
+
         if ($request->has('product_service_name')) {
             foreach ($request->product_service_name as $index => $serviceName) {
                 if (!empty($serviceName)) {
@@ -120,24 +120,24 @@ class CompanyController extends Controller
                             'product_service_name' => $serviceName,
                         ],
                         [
-                            'product_service_description' => $request->product_service_description[$index] ?? '', 
-                            'product_service_area' => $request->product_service_area[$index] ?? '', 
+                            'product_service_description' => $request->product_service_description[$index] ?? '',
+                            'product_service_area' => $request->product_service_area[$index] ?? '',
                         ]
                     );
                 }
             }
         }
-        
-        
-    
+
+
+
         if ($request->hasFile('company_logo')) {
             $photoPath = $request->file('company_logo')->store('profile_photos', 'public');
             $company->company_logo = $photoPath;
             $company->status = "complete";
             $company->save();
         }
-    
-        return redirect()->back();
+
+        return redirect()->back()->with('success', 'Professional details updated successfully!');
     }
 
 
@@ -150,5 +150,5 @@ class CompanyController extends Controller
         return view('company-profile', compact('company'));
     }
 
-    
+
 }

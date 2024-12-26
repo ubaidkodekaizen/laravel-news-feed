@@ -87,22 +87,26 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="profile_div">
-                                    <label for="county">County</label>
-                                    <p class="profile_data">
-                                        {{ $user->county ?? '' }}
-                                    </p>
+                            @if ($user->county)
+                                <div class="col-lg-6">
+                                    <div class="profile_div">
+                                        <label for="county">County</label>
+                                        <p class="profile_data">
+                                            {{ $user->county ?? '' }}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="profile_div">
-                                    <label for="state">State</label>
-                                    <p class="profile_data">
-                                        {{ $user->state ?? '' }}
-                                    </p>
+                            @endif
+                            @if ($user->state)
+                                <div class="col-lg-6">
+                                    <div class="profile_div">
+                                        <label for="state">State</label>
+                                        <p class="profile_data">
+                                            {{ $user->state ?? '' }}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                             <div class="col-lg-6">
                                 <div class="profile_div">
                                     <label for="country">Country</label>
@@ -342,7 +346,7 @@
                                     Industry
                                 </h2>
                                 <p class="profile_data">
-                                    {{ $user->company->company_sub_category }}, {{ $user->company->company_industry }}
+                                    {{ $user->company->company_industry }}
                                 </p>
                             </div>
                         </div>

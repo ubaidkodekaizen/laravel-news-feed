@@ -160,8 +160,8 @@ class SearchController extends Controller
                 });
             }
 
-            $query->orderByRaw("CASE WHEN state IS NULL THEN 2 WHEN state = 'N/A' THEN 1 ELSE 0 END")
-            ->orderBy('state', 'asc');
+            $query->orderByRaw("CASE WHEN country IS NULL THEN 2 WHEN country = 'N/A' THEN 1 ELSE 0 END")
+            ->orderBy('id', 'desc');
         // Fetch filtered results
         $users = $query->paginate(15);
 
