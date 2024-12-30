@@ -4,7 +4,7 @@
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJmm5iuEx2gVM3qj9a1zAWI_Y_C4Judnc&libraries=places&callback=initCityAutocomplete">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJmm5iuEx2gVM3qj9a1zAWI_Y_C4Judnc&libraries=places&callback=initAutocomplete">
 </script>
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="{{ asset('assets/js/custom.js?v1') }}"></script>
@@ -12,89 +12,103 @@
 <script>
     $(document).ready(function() {
 
-
-
-        // Google Map Autocomplete for City
-        function initCityAutocomplete() {
-            const cityMappings = [{
-                    inputId: 'city', // Input field for city
+        // Google map autocomplete
+        function initAutocomplete() {
+            const addressMappings = [{
+                    inputId: 'address',
                     fields: {
-                        city: 'city',
-                        state: 'state',
                         country: 'country',
-                        county: 'county'
+                        state: 'state',
+                        city: 'city',
+                        county: 'county',
+                        zip_code: 'zip_code',
                     }
                 },
                 {
-                    inputId: 'company_city', // Input field for company city
+                    inputId: 'company_address',
                     fields: {
-                        city: 'company_city',
-                        state: 'company_state',
                         country: 'company_country',
-                        county: 'company_county'
+                        state: 'company_state',
+                        city: 'company_city',
+                        county: 'company_county',
+                        zip_code: 'company_zip_code',
                     }
                 }
             ];
 
-            cityMappings.forEach(mapping => {
+            addressMappings.forEach(mapping => {
                 const input = document.getElementById(mapping.inputId);
                 const autocomplete = new google.maps.places.Autocomplete(input, {
-                    types: ['(cities)'], // Restrict autocomplete to cities
-                    fields: ['address_components', 'geometry'] // Fetch only required fields
+                    types: ['geocode'],
                 });
 
                 autocomplete.addListener('place_changed', () => {
                     const place = autocomplete.getPlace();
                     if (place.address_components) {
-                        const addressComponents = parseCityComponents(place.address_components);
-                        populateCityFields(mapping.fields, addressComponents);
+                        const addressComponents = parseAddressComponents(place
+                            .address_components);
+                        populateFields(mapping.fields, addressComponents);
                     }
                 });
             });
         }
 
-        // Parse City-specific Address Components
-        function parseCityComponents(components) {
-            const cityComponents = {
-                city: '',
-                state: '',
+        function parseAddressComponents(components) {
+            const addressComponents = {
                 country: '',
-                county: ''
+                state: '',
+                city: '',
+                county: '',
+                zip_code: ''
             };
 
             components.forEach(component => {
                 const types = component.types;
 
-                if (types.includes('locality')) {
-                    cityComponents.city = component.long_name; // City Name
+                if (types.includes('country')) {
+                    addressComponents.country = component.long_name;
                 } else if (types.includes('administrative_area_level_1')) {
-                    cityComponents.state = component.long_name; // State Name
+                    addressComponents.state = component.long_name;
+                } else if (types.includes('locality')) {
+                    addressComponents.city = component.long_name;
                 } else if (types.includes('administrative_area_level_2')) {
-                    cityComponents.county = component.long_name; // County Name
-                } else if (types.includes('country')) {
-                    cityComponents.country = component.long_name; // Country Name
+                    addressComponents.county = component.long_name;
+                } else if (types.includes('postal_code')) {
+                    addressComponents.zip_code = component.long_name;
                 }
             });
 
-            return cityComponents;
+            return addressComponents;
         }
 
-        // Populate Fields with City Data
-        function populateCityFields(fieldMapping, cityComponents) {
+        function populateFields(fieldMapping, addressComponents) {
             for (const [key, elementId] of Object.entries(fieldMapping)) {
-                if (cityComponents[key] && document.getElementById(elementId)) {
-                    document.getElementById(elementId).value = cityComponents[key];
+                if (addressComponents[key]) {
+                    document.getElementById(elementId).value = addressComponents[key];
                 }
             }
         }
 
-        // Initialize Autocomplete on Window Load
-        window.onload = initCityAutocomplete;
-
-
+        window.onload = initAutocomplete;
 
 
         // Search Bar
+        $('#search_form').on('submit', function() {
+            // Disable empty input fields
+            $(this).find('input').each(function() {
+                if (!$(this).val().trim()) {
+                    $(this).prop('disabled', true);
+                }
+            });
+
+            // Disable unselected select fields
+            $(this).find('select').each(function() {
+                if (!$(this).val()) { // Check if no value is selected
+                    $(this).prop('disabled', true);
+                }
+            });
+        });
+
 
 
         $('#header_search').on('keyup', function(e) {
@@ -127,8 +141,8 @@
                     suggestionBox.empty();
 
                     // Only show suggestions if there's valid data
-                    if (response.product_services.length || response.company_sub_categories
-                        .length || response.company_industries.length) {
+                    if (response.product_services.length || response.company_industries
+                        .length) {
                         suggestionBox.show();
                         response.product_services.forEach(function(item) {
                             suggestionBox.append(
@@ -136,11 +150,11 @@
                                 item.product_service_name + '">' + item
                                 .product_service_name + '</div>');
                         });
-                        response.company_sub_categories.forEach(function(item) {
-                            suggestionBox.append(
-                                '<div class="suggestion-item" data-type="company_sub_category" data-value="' +
-                                item + '">' + item + '</div>');
-                        });
+                        // response.company_sub_categories.forEach(function(item) {
+                        //     suggestionBox.append(
+                        //         '<div class="suggestion-item" data-type="company_sub_category" data-value="' +
+                        //         item + '">' + item + '</div>');
+                        // });
                         response.company_industries.forEach(function(item) {
                             suggestionBox.append(
                                 '<div class="suggestion-item" data-type="company_industry" data-value="' +
@@ -161,9 +175,10 @@
                 $('#product_service_name1').val(selectedValue);
             } else if (dataType === 'company_industry') {
                 $('#company_industry1').val(selectedValue);
-            } else if (dataType === 'company_sub_category') {
-                $('#company_sub_category1').val(selectedValue);
             }
+            //else if (dataType === 'company_sub_category') {
+            //     $('#company_sub_category1').val(selectedValue);
+            // }
 
             $('#header_search').val(selectedValue);
 

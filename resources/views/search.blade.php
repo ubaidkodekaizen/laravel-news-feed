@@ -208,6 +208,27 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            const pageUrl = $(this).attr('href');
+            const newUrl = `${pageUrl}&${$.param(filters, true)}`;
+            window.history.pushState({
+                path: newUrl
+            }, '', newUrl);
+            $.ajax({
+                url: newUrl,
+                method: 'GET',
+                success: function(response) {
+                    $('#userResults').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching paginated results:', error);
+                    alert('Failed to load results. Please try again.');
+                }
+            });
+        });
+
+
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebar");
             if (sidebar) {
@@ -219,6 +240,32 @@
 
         let filters = {};
 
+        // Function to parse existing query parameters into the filters object
+        function getQueryParams() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            let params = {};
+            for (const [key, value] of urlParams.entries()) {
+                if (!params[key]) {
+                    params[key] = [];
+                }
+                params[key].push(value);
+            }
+            return params;
+        }
+
+        // Function to sync existing URL parameters with the current filters
+        function syncFilters() {
+            const existingParams = getQueryParams();
+            for (const [key, values] of Object.entries(existingParams)) {
+                if (!filters[key]) {
+                    filters[key] = values;
+                } else {
+                    filters[key] = [...new Set([...filters[key], ...values])]; // Merge without duplicates
+                }
+            }
+        }
+
         // Debounce function to delay execution
         function debounce(func, delay) {
             let timeout;
@@ -229,26 +276,13 @@
         }
 
         function applyFilters() {
-            $('.filter-search').each(function() {
-                let value = $(this).val();
-                if (value) {
-                    let filterName = $(this).attr('id');
-                    if (filters[filterName]) {
-                        filters[filterName].push(value);
-                    } else {
-                        filters[filterName] = [value];
-                    }
-                }
-            });
-
-            let newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
+            syncFilters();
+            const newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
-
             $.ajax({
-                url: window.location.pathname,
-                data: filters,
+                url: newUrl,
                 method: 'GET',
                 success: function(response) {
                     $('#userResults').html(response);
@@ -259,6 +293,7 @@
                 }
             });
         }
+
 
         const debouncedApplyFilters = debounce(applyFilters, 300);
 
@@ -280,13 +315,41 @@
         }
 
         function removeFilter(category, value, targetId) {
-            const filter = document.getElementById(`${category}-${value}`);
-            if (filter) {
-                document.getElementById(targetId).removeChild(filter);
+            const filterElement = document.getElementById(`${category}-${value}`);
+            if (filterElement) {
+                document.getElementById(targetId).removeChild(filterElement);
             }
-            filters[category] = filters[category].filter(item => item !== value);
-            debouncedApplyFilters();
+
+            // Remove the value from the filters object
+            if (filters[category]) {
+                filters[category] = filters[category].filter(item => item !== value);
+
+                // If no values remain for this category, delete the key
+                if (filters[category].length === 0) {
+                    delete filters[category];
+                }
+            }
+
+            // Rebuild URL and reapply filters
+            const newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
+            window.history.pushState({
+                path: newUrl
+            }, '', newUrl);
+
+            $.ajax({
+                url: window.location.pathname,
+                data: filters,
+                method: 'GET',
+                success: function(response) {
+                    $('#userResults').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching results:', error);
+                    alert('Failed to apply filters. Please try again.');
+                }
+            });
         }
+
 
         function filterOptions(input, optionsContainerId) {
             const filter = input.value.toLowerCase();
@@ -294,27 +357,18 @@
             const options = optionsContainer.getElementsByClassName('filter-option');
             let hasVisibleOptions = false;
 
-            // Loop through options and show/hide based on the search filter
             for (let option of options) {
                 const optionText = option.textContent.toLowerCase();
                 if (optionText.includes(filter)) {
-                    option.style.display = ''; // Show option
+                    option.style.display = '';
                     hasVisibleOptions = true;
                 } else {
-                    option.style.display = 'none'; // Hide option
+                    option.style.display = 'none';
                 }
             }
 
-            // If the input is empty, hide the options container
-            if (filter.length === 0) {
-                optionsContainer.style.display = 'none';
-            } else {
-                // Show or hide the options container based on whether any options are visible
-                optionsContainer.style.display = hasVisibleOptions ? 'block' : 'none';
-            }
+            optionsContainer.style.display = filter.length === 0 || !hasVisibleOptions ? 'none' : 'block';
         }
-
-
 
         function resetFilters() {
             filters = {};
@@ -322,6 +376,7 @@
             $('.filter-search').val('');
             applyFilters();
         }
+
 
         document.querySelectorAll('.filter-header').forEach(header => {
             header.addEventListener('click', function() {

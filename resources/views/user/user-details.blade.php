@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('content')
 
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />
 
     <section class="user_company_profile">
         <div class="container">
@@ -176,7 +176,8 @@
                                                 Public)
                                             </div>
                                         </label>
-                                        <input type="tel" name="phone" id="phone" class="form-control"
+                                        <input type="tel" name="phone" id="phone"
+                                            class="form-control phone_number w-100"
                                             value="{{ old('phone', $user->phone) }}">
                                     </div>
 
@@ -527,7 +528,7 @@
                                     <div class="col-lg-6">
                                         <label for="company_name">Company Name</label>
                                         <input type="text" name="company_name" id="company_name" class="form-control"
-                                            value="{{ old('company_name', $company->company_name ?? '') }}" required>
+                                            value="{{ old('company_name', $company->company_name ?? '') }}">
                                     </div>
 
 
@@ -535,8 +536,7 @@
                                         <label for="company_web_url">Company URL</label>
                                         <input type="text" name="company_web_url" id="company_web_url"
                                             class="form-control"
-                                            value="{{ old('company_web_url', $company->company_web_url ?? '') }}"
-                                            required>
+                                            value="{{ old('company_web_url', $company->company_web_url ?? '') }}">
                                     </div>
 
 
@@ -556,7 +556,7 @@
                                     <div class="col-lg-6 company_position_other_div d-none">
                                         <label for="company_position_other">Title/Designation Other</label>
                                         <input type="text" name="company_position_other" id="company_position_other"
-                                            class="form-control" value="" required>
+                                            class="form-control" value="">
                                     </div>
 
                                     <div class="col-lg-6 custom-select-dropdown mt-0">
@@ -590,8 +590,8 @@
                                     <div class="col-lg-6">
                                         <label for="work_phone_num">Work Phone Number</label>
                                         <input type="tel" name="company_phone" id="company_phone"
-                                            class="form-control"
-                                            value="{{ old('company_phone', $company->company_phone ?? '') }}" required>
+                                            class="form-control phone_number"
+                                            value="{{ old('company_phone', $company->company_phone ?? '') }}">
                                     </div>
                                     <!-- Company Linkedin URL -->
                                     <div class="col-lg-6">
@@ -600,8 +600,7 @@
                                             <div class="input-group-text">https://www.linkedin.com/company/</div>
                                             <input type="text" name="company_linkedin_user" id="company_linkedin_user"
                                                 class="form-control"
-                                                value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}"
-                                                required>
+                                                value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}">
                                         </div>
                                         <input type="hidden" name="company_linkedin_url"
                                             id="company_linkedin_url_hidden" value="">
@@ -654,8 +653,7 @@
                                                 <label for="product_service_name" class="mt-2">Name</label>
                                                 <input type="text" name="product_service_name[]"
                                                     id="product_service_name" class="form-control"
-                                                    value="{{ old('product_service_name[]', $company->productServices[0]->product_service_name ?? '') }}"
-                                                    required>
+                                                    value="{{ old('product_service_name[]', $company->productServices[0]->product_service_name ?? '') }}">
                                             </div>
                                             <div class="col-lg-6">
                                                 <label for="product_service_description"
@@ -693,6 +691,31 @@
     </section>
 @endsection
 @section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize intlTelInput on all elements with class 'phone_number'
+            $(".phone_number").each(function() {
+                const phoneInput = $(this);
+                const iti = phoneInput.intlTelInput({
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js" // Ensure this is loaded for utils functionality
+                });
+
+                // Before form submission, update the input value to include the full number
+                phoneInput.closest("form").on("submit", function() {
+                    if (iti.intlTelInput("isValidNumber")) {
+                        const fullNumber = iti.intlTelInput(
+                        "getNumber"); // Get full number with country code
+                        phoneInput.val(fullNumber); // Update input value with the full number
+                    } else {
+                        alert("Invalid phone number entered!");
+                        return false; // Prevent form submission if the number is invalid
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         let eduCount = 1;
 
