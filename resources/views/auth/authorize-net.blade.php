@@ -42,13 +42,16 @@
                                 {{ session('error') }}
                             </div>
                         @endif
-                        <form method="POST" action="{{ route('authorize.payment') }}" id="user_register" autocomplete="off" class="form">
+                        <form method="POST" action="{{ route('authorize.payment') }}" id="user_register"
+                            autocomplete="off" class="form">
                             @csrf
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input id="first_name" type="text" class="@error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required autocomplete="off" maxlength="50">
+                                        <input id="first_name" type="text"
+                                            class="@error('first_name') is-invalid @enderror" name="first_name"
+                                            value="{{ old('first_name') }}" required autocomplete="off" maxlength="50">
                                         @error('first_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -60,7 +63,9 @@
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input id="last_name" type="text" class="@error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name') }}" required autocomplete="off" maxlength="50">
+                                        <input id="last_name" type="text"
+                                            class="@error('last_name') is-invalid @enderror" name="last_name"
+                                            value="{{ old('last_name') }}" required autocomplete="off" maxlength="50">
                                         @error('last_name')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -70,10 +75,12 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-envelope'></i></span>
-                                <input id="email" type="email" class="@error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="off" maxlength="100">
+                                <input id="email" type="email" class="@error('email') is-invalid @enderror"
+                                    name="email" value="{{ old('email') }}" required autocomplete="off"
+                                    maxlength="100">
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -81,10 +88,12 @@
                                 @enderror
                                 <label>{{ __('Email Address') }}</label>
                             </div>
-                        
+
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-phone'></i></span>
-                                <input id="phone" type="text" class="@error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="off" maxlength="100">
+                                <input id="phone" type="text" class="@error('phone') is-invalid @enderror"
+                                    name="phone" value="{{ old('phone') }}" required autocomplete="off"
+                                    maxlength="100">
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -92,53 +101,75 @@
                                 @enderror
                                 <label>{{ __('Phone Number') }}</label>
                             </div>
-                        
+
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-map'></i></span>
-                                <input id="address" type="text" name="billing_address" value="{{ old('billing_address') }}" required>
+                                <input id="address" type="text" name="billing_address"
+                                    value="{{ old('billing_address') }}" required>
                                 <label>Card Billing Address</label>
                             </div>
-                        
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <div class="select">
-                                            <select id="country" name="country" required>
-                                                <option value="">Select Country</option>
-                                                <option value="{{ old('country') }}" selected>{{ old('country') }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <div class="select">
-                                            <select id="state" name="state" required>
-                                                <option value="">Select State/Region</option>
-                                                <option value="{{ old('state') }}" selected>{{ old('state') }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        
+
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-map'></i></span>
-                                        <input id="city" type="text" name="city" value="{{ old('city') }}" required>
+                                        <input id="country" type="text" name="country"
+                                            value="{{ old('country') }}" required>
+                                        <label>Country</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-box">
+                                        <span class="icon"><i class='bx bx-map'></i></span>
+                                        <input id="state" type="text" name="state"
+                                            value="{{ old('state') }}" required>
+                                        <label>State</label>
+                                    </div>
+                                </div>
+                                <!--<div class="col-lg-6">-->
+                                <!--    <div class="input-box">-->
+                                <!--        <input id="country" type="text" name="country" value="{{ old('country') }}" required>-->
+                                <!--<div class="select">-->
+
+                                <!--    <select id="country" name="country" required>-->
+                                <!--        <option value="">Select Country</option>-->
+                                <!--        <option value="{{ old('country') }}" selected>{{ old('country') }}</option>-->
+                                <!--    </select>-->
+                                <!--</div>-->
+                                <!--    </div>-->
+                                <!--</div>-->
+                                <!--<div class="col-lg-6">-->
+                                <!--    <div class="input-box">-->
+                                <!--         <input id="state" type="text" name="state" value="{{ old('state') }}" required>-->
+                                <!--<div class="select">-->
+                                <!--    <select id="state" name="state" required>-->
+                                <!--        <option value="">Select State/Region</option>-->
+                                <!--        <option value="{{ old('state') }}" selected>{{ old('state') }}</option>-->
+                                <!--    </select>-->
+                                <!--</div>-->
+                                <!--    </div>-->
+                                <!--</div>-->
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="input-box">
+                                        <span class="icon"><i class='bx bx-map'></i></span>
+                                        <input id="city" type="text" name="city"
+                                            value="{{ old('city') }}" required>
                                         <label>City</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-map-pin'></i></span>
-                                        <input id="zipcode" type="text" name="zip_code" value="{{ old('zip_code') }}" required>
+                                        <input id="zipcode" type="text" name="zip_code"
+                                            value="{{ old('zip_code') }}" required>
                                         <label>Zip Code</label>
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div class="input-box">
                                 <div class="select">
                                     <select id="plan_id" name="plan_id" required>
@@ -148,10 +179,12 @@
                                 <input type="hidden" name="amount" id="amount" value="{{ old('amount') }}">
                                 <input type="hidden" name="type" id="type" value="{{ old('type') }}">
                             </div>
-                        
+
                             <div class="input-box">
                                 <span class="icon"><i class='bx bx-credit-card'></i></span>
-                                <input id="card_number" type="number" class="@error('card_number') is-invalid @enderror" name="card_number" value="{{ old('card_number') }}" required autocomplete="off" maxlength="16">
+                                <input id="card_number" type="number"
+                                    class="@error('card_number') is-invalid @enderror" name="card_number"
+                                    value="{{ old('card_number') }}" required autocomplete="off" maxlength="16">
                                 @error('card_number')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -159,12 +192,15 @@
                                 @enderror
                                 <label>{{ __('Card Number (16 digits)') }}</label>
                             </div>
-                        
+
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-calendar'></i></span>
-                                        <input id="expiration_date" type="text" class="@error('expiration_date') is-invalid @enderror" name="expiration_date" value="{{ old('expiration_date') }}" required autocomplete="off" maxlength="5">
+                                        <input id="expiration_date" type="text"
+                                            class="@error('expiration_date') is-invalid @enderror"
+                                            name="expiration_date" value="{{ old('expiration_date') }}" required
+                                            autocomplete="off" maxlength="5">
                                         @error('expiration_date')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -173,11 +209,13 @@
                                         <label>{{ __('Expiration Date (MM/YY)') }}</label>
                                     </div>
                                 </div>
-                        
+
                                 <div class="col-lg-6">
                                     <div class="input-box">
                                         <span class="icon"><i class='bx bx-shield-alt-2'></i></span>
-                                        <input id="cvv" type="text" class="@error('cvv') is-invalid @enderror" name="cvv" value="{{ old('cvv') }}" required autocomplete="off" maxlength="4">
+                                        <input id="cvv" type="text"
+                                            class="@error('cvv') is-invalid @enderror" name="cvv"
+                                            value="{{ old('cvv') }}" required autocomplete="off" maxlength="4">
                                         @error('cvv')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -192,14 +230,14 @@
                                     required>
 
                                 <label class="form-check-label" for="agree_terms">
-                                    I have read and agree to the <a href="{{ route('terms.of.service') }}" target="_blank"> <span
-                                            class="theme-color">Terms of service</span> </a>
+                                    I have read and agree to the <a href="{{ route('terms.of.service') }}"
+                                        target="_blank"> <span class="theme-color">Terms of service</span> </a>
                                 </label>
                             </div>
-                        
+
                             <button type="submit" class="custom-btn btn-14">{{ __('Sign Up') }}</button>
                         </form>
-                        
+
                         <div class="account_signup">
                             <a href="{{ route('login.form') }}">Already have an account? <span
                                     class="theme-color">Sign
@@ -212,7 +250,82 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJmm5iuEx2gVM3qj9a1zAWI_Y_C4Judnc&libraries=places&callback=initBillingAddressAutocomplete">
+    </script>
     <script>
+        // Google Maps Autocomplete for Billing Address
+        function initBillingAddressAutocomplete() {
+            const billingMapping = {
+                inputId: 'address', // Billing Address Input Field
+                fields: {
+                    country: 'country',
+                    state: 'state',
+                    city: 'city',
+                    zip_code: 'zipcode'
+                }
+            };
+
+            const input = document.getElementById(billingMapping.inputId);
+            if (!input) {
+                console.error('Billing address input field not found!');
+                return;
+            }
+
+            const autocomplete = new google.maps.places.Autocomplete(input, {
+                types: ['geocode'], // Focus on geographic data
+                fields: ['address_components', 'geometry']
+            });
+
+            autocomplete.addListener('place_changed', () => {
+                const place = autocomplete.getPlace();
+
+                if (place.address_components) {
+                    const addressComponents = parseBillingAddressComponents(place.address_components);
+                    populateBillingFields(billingMapping.fields, addressComponents);
+                }
+            });
+        }
+
+        // Parse Address Components for Billing Address
+        function parseBillingAddressComponents(components) {
+            const addressComponents = {
+                country: '',
+                state: '',
+                city: '',
+                zip_code: ''
+            };
+
+            components.forEach(component => {
+                const types = component.types;
+
+                if (types.includes('country')) {
+                    addressComponents.country = component.long_name; // Full Country Name
+                } else if (types.includes('administrative_area_level_1')) {
+                    addressComponents.state = component.long_name; // State/Province
+                } else if (types.includes('locality')) {
+                    addressComponents.city = component.long_name; // City
+                } else if (types.includes('postal_code')) {
+                    addressComponents.zip_code = component.long_name; // Zip Code
+                }
+            });
+
+            return addressComponents;
+        }
+
+        // Populate Fields with Extracted Address Data
+        function populateBillingFields(fieldMapping, addressComponents) {
+            for (const [key, elementId] of Object.entries(fieldMapping)) {
+                const field = document.getElementById(elementId);
+                if (addressComponents[key] && field) {
+                    field.value = addressComponents[key];
+                }
+            }
+        }
+
+        // Initialize Autocomplete on Window Load
+        window.onload = initBillingAddressAutocomplete;
+
         $(document).ready(function() {
 
             $('#user_register').validate({
@@ -254,7 +367,7 @@
                     // Append the error message after the closest `.input-box` container
                     if (element.closest('.input-box').length) {
                         error.insertAfter(element.closest('.input-box'));
-                    }else if(element.closest('.account_signup').length){
+                    } else if (element.closest('.account_signup').length) {
                         error.insertAfter(element.closest('.account_signup'));
                     } else {
                         // Default placement if `.input-box` is not found
@@ -266,6 +379,7 @@
 
         });
     </script>
+
     <script>
         const countriesData = {
 

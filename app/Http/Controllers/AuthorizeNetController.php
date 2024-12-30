@@ -51,7 +51,7 @@ class AuthorizeNetController extends Controller
         $payment = new AnetAPI\PaymentType();
         $payment->setCreditCard($creditCard);
 
-       
+
 
         $billingAddress = new AnetAPI\CustomerAddressType();
         $billingAddress->setFirstName($request->first_name);
@@ -101,7 +101,7 @@ class AuthorizeNetController extends Controller
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'email' => $request->email,
-                    'phone' => $request->phone, 
+                    'phone' => $request->phone,
                     'paid' => 'Yes',
                     'status' => 'pending',
                 ]);
@@ -135,7 +135,12 @@ class AuthorizeNetController extends Controller
                     'user' => $user,
                     'subscription' => $subscription,
                 ], function ($message) use ($request) {
-                    $message->to("kashif.zubair@amcob.org", "ubaid.syed@kodekaizen.com", "kashif.zubair@myadroit.com");
+                    $message->to([
+                        "kashif.zubair@amcob.org",
+                        "ubaid.syed@kodekaizen.com",
+                        "kashif.zubair@myadroit.com"
+                    ]);
+
                     $message->subject('A new customer for Muslim Lynk');
                 });
 
