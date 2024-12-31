@@ -36,6 +36,9 @@
                                 @csrf
                                 <div class="row">
                                     <div class="col-12">
+                                        <h1 class="profile_heading text-center">
+                                            Personal Information
+                                        </h1>
                                         <div class="profile_pic">
                                             <div class="avatar-upload mb-3">
                                                 <div class="avatar-edit">
@@ -50,11 +53,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <label class="form-label text-center w-100 mt-0">Upload Photo</label>
                                         </div>
-                                        <h1 class="profile_heading text-center">
-                                            Personal Information
-                                        </h1>
+                                        
                                     </div>
                                     <div class="col-12">
                                         @if ($errors->any())
@@ -492,6 +493,9 @@
                                 @csrf
                                 <div class="row">
                                     <div class="col-12">
+                                        <h1 class="profile_heading text-center mt-0">
+                                            Professional Information
+                                        </h1>
                                         <div class="profile_pic">
                                             <div class="avatar-upload mb-3">
                                                 <div class="avatar-edit">
@@ -507,9 +511,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <h1 class="profile_heading text-center mt-0">
-                                            Professional Information
-                                        </h1>
+                                        
+                                        <label class="form-label text-center w-100 mt-0">Upload Logo</label>
                                     </div>
                                     <div class="col-12">
                                         @if ($errors->any())
@@ -1237,7 +1240,7 @@
             newRow.appendChild(areaCol);
 
             // Add new row to container
-            rowContainer.appendChild(newRow);
+            rowContainer.appendChild(newRow); 
         });
     </script>
 @endsection
