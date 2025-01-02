@@ -298,11 +298,10 @@ class DropDownHelper
     }
 
 
-    public static function renderIndustryDropdown($selectedIndustry = null, $selectedSubcategory = null)
+    public static function renderIndustryDropdown($selectedValues = [])
     {
-        // Get old input values for pre-selection
-        $selectedIndustry = old('company_industry', $selectedIndustry);
-        $selectedSubcategory = old('company_sub_category', $selectedSubcategory);
+        // Ensure $selectedValues is always an array
+        $selectedValues = (array) $selectedValues;
 
         // Fetch industries ordered by name, except "Other" which should appear last
         $industries = \DB::table('industries')
@@ -322,19 +321,43 @@ class DropDownHelper
         }
 
         // Start the dropdown HTML
-        $html = '<select name="company_industry" id="company_industry" class="form-select">';
-        $html .= '<option value="">Select Industry</option>';
+        $html = '<div class="dropdown">';
+        $html .= '<button class="btn btn-light dropdown-toggle w-100" type="button" id="industryDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">';
+        $html .= 'Select Industries';
+        $html .= '</button>';
 
-        // Loop through industries to build the options
+        $html .= '<ul id="industry-dropdown-menu" class="dropdown-menu position-dropdown-menu" aria-labelledby="industryDropdownButton">';
+        $html .= '<li class="mb-2">';
+        $html .= '<input type="text" id="search-industry-dropdown" class="form-control mb-2" placeholder="Search...">';
+        $html .= '</li>';
+
+        // Loop through industries to build the list items with checkboxes
         foreach ($industries as $industry) {
-            $isSelected = $industry->name == $selectedIndustry ? 'selected' : '';
-            $html .= '<option value="' . $industry->name . '" ' . $isSelected . '>' . $industry->name . '</option>';
+            $industryId = 'industry' . preg_replace('/[^a-zA-Z0-9]/', '', $industry->name);
+            $isChecked = in_array($industry->name, $selectedValues) ? 'checked' : '';
+
+            $html .= '<li>';
+            $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
+            $html .= '<label class="form-check-label" for="' . $industryId . '">' . htmlspecialchars($industry->name) . '</label>';
+            $html .= '<input class="form-check-input ms-2" type="checkbox" value="' . htmlspecialchars($industry->name) . '" id="' . $industryId . '" ' . $isChecked . '>';
+            $html .= '</div>';
+            $html .= '</li>';
         }
 
-        $html .= '</select>';
+        // Option for "Other"
+        $html .= '<li>';
+        $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
+        $html .= '<label class="form-check-label" for="industry_other_select">Other</label>';
+        $html .= '<input class="form-check-input ms-2" type="checkbox" value="Other" id="industry_other_select">';
+        $html .= '</div>';
+        $html .= '</li>';
+
+        $html .= '</ul>';
+        $html .= '</div>';
 
         return $html;
     }
+
 
 
     public static function renderEmployeeSizeDropdown($selectedEmployeeSize = null)
