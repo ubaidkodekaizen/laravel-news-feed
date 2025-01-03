@@ -274,14 +274,70 @@ class DropDownHelper
     public static function searchFilter()
     {
 
-        $company_positions = Company::pluck('company_position')->unique()->sort();
-        $company_industries = Company::pluck('company_industry')->unique()->sort();
+        //$company_positions = Company::pluck('company_position')->unique()->sort();
+        //$company_industries = Company::pluck('company_industry')->unique()->sort();
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
         $company_business_types = Company::pluck('company_business_type')->unique()->sort();
         $company_no_of_employees = Company::pluck('company_no_of_employee')->unique()->sort();
+        $company_revenues = Company::pluck('company_revenue')->unique()->sort();
+        $company_experiences = Company::pluck('company_experience')->unique()->sort();
+
         $company_states = User::pluck('state')->unique()->sort();
         $company_countries = User::pluck('country')->unique()->sort();
-        $company_revenues = Company::pluck('company_revenue')->unique()->sort();
+
+        $user_city = User::pluck('city')->unique()->sort();
+        $user_county = User::pluck('county')->unique()->sort();
+        // $user_user_position = User::pluck('user_position')->unique()->sort();
+        $user_gender = User::pluck('gender')->unique()->sort();
+        $user_age_group = User::pluck('age_group')->unique()->sort();
+        $user_ethnicity = User::pluck('ethnicity')->unique()->sort();
+        // $user_nationality = User::pluck('nationality')->unique()->sort();
+        // $user_languages = User::pluck('languages')->unique()->sort();
+
+        // Extract and split comma-separated values for user-related fields
+        $user_nationality = User::pluck('nationality')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_languages = User::pluck('languages')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_user_position = User::pluck('user_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        // Extract and split comma-separated values for company-related fields
+        $company_positions = Company::pluck('company_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $company_industries = Company::pluck('company_industry')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+
+
         $product_service_names = ProductService::pluck('product_service_name')->unique()->sort();
 
         return [
@@ -290,9 +346,20 @@ class DropDownHelper
             'company_sub_categories' => $company_sub_categories,
             'company_business_types' => $company_business_types,
             'company_no_of_employees' => $company_no_of_employees,
+            'company_revenues' => $company_revenues,
             'company_states' => $company_states,
             'company_countries' => $company_countries,
-            'company_revenues' => $company_revenues,
+
+            'company_experiences' => $company_experiences,
+            'user_city' => $user_city,
+            'user_county' => $user_county,
+            'user_position' => $user_user_position,
+            'user_gender' => $user_gender,
+            'user_age_group' => $user_age_group,
+            'user_ethnicity' => $user_ethnicity,
+            'user_nationality' => $user_nationality,
+            'user_languages' => $user_languages,
+
             'product_service_names' => $product_service_names,
         ];
     }
