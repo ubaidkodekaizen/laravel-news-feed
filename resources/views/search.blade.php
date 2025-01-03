@@ -208,27 +208,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            const pageUrl = $(this).attr('href');
-            const newUrl = `${pageUrl}&${$.param(filters, true)}`;
-            window.history.pushState({
-                path: newUrl
-            }, '', newUrl);
-            $.ajax({
-                url: newUrl,
-                method: 'GET',
-                success: function(response) {
-                    $('#userResults').html(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching paginated results:', error);
-                    alert('Failed to load results. Please try again.');
-                }
-            });
-        });
-
-
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebar");
             if (sidebar) {
@@ -240,32 +219,6 @@
 
         let filters = {};
 
-        // Function to parse existing query parameters into the filters object
-        function getQueryParams() {
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            let params = {};
-            for (const [key, value] of urlParams.entries()) {
-                if (!params[key]) {
-                    params[key] = [];
-                }
-                params[key].push(value);
-            }
-            return params;
-        }
-
-        // Function to sync existing URL parameters with the current filters
-        function syncFilters() {
-            const existingParams = getQueryParams();
-            for (const [key, values] of Object.entries(existingParams)) {
-                if (!filters[key]) {
-                    filters[key] = values;
-                } else {
-                    filters[key] = [...new Set([...filters[key], ...values])]; // Merge without duplicates
-                }
-            }
-        }
-
         // Debounce function to delay execution
         function debounce(func, delay) {
             let timeout;
@@ -275,63 +228,20 @@
             };
         }
 
+        // Sync header filters into the global filters object
+        function syncHeaderFilters() {
+            const headerForm = new FormData(document.getElementById('search_form'));
+            for (const [key, value] of headerForm.entries()) {
+                if (value) {
+                    filters[key] = Array.isArray(filters[key]) ? [...filters[key], value] : [value];
+                }
+            }
+        }
+
+        // Apply filters and refresh results
         function applyFilters() {
-            syncFilters();
-            const newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
-            window.history.pushState({
-                path: newUrl
-            }, '', newUrl);
-            $.ajax({
-                url: newUrl,
-                method: 'GET',
-                success: function(response) {
-                    $('#userResults').html(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching results:', error);
-                    alert('Failed to apply filters. Please try again.');
-                }
-            });
-        }
-
-
-        const debouncedApplyFilters = debounce(applyFilters, 300);
-
-        function addFilter(category, value, targetId) {
-            const targetElement = document.getElementById(targetId);
-            if (!document.getElementById(`${category}-${value}`)) {
-                const filter = document.createElement('div');
-                filter.className = 'selected-filter';
-                filter.id = `${category}-${value}`;
-                filter.innerHTML =
-                    `${value} <i class="fa fa-times" onclick="removeFilter('${category}', '${value}', '${targetId}')"></i>`;
-                targetElement.appendChild(filter);
-                if (!filters[category]) {
-                    filters[category] = [];
-                }
-                filters[category].push(value);
-            }
-            debouncedApplyFilters();
-        }
-
-        function removeFilter(category, value, targetId) {
-            const filterElement = document.getElementById(`${category}-${value}`);
-            if (filterElement) {
-                document.getElementById(targetId).removeChild(filterElement);
-            }
-
-            // Remove the value from the filters object
-            if (filters[category]) {
-                filters[category] = filters[category].filter(item => item !== value);
-
-                // If no values remain for this category, delete the key
-                if (filters[category].length === 0) {
-                    delete filters[category];
-                }
-            }
-
-            // Rebuild URL and reapply filters
-            const newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
+            syncHeaderFilters();
+            let newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
@@ -350,7 +260,40 @@
             });
         }
 
+        const debouncedApplyFilters = debounce(applyFilters, 300);
 
+        // Add filter
+        function addFilter(category, value, targetId) {
+            const targetElement = document.getElementById(targetId);
+            if (!document.getElementById(`${category}-${value}`)) {
+                const filter = document.createElement('div');
+                filter.className = 'selected-filter';
+                filter.id = `${category}-${value}`;
+                filter.innerHTML =
+                    `${value} <i class="fa fa-times" onclick="removeFilter('${category}', '${value}', '${targetId}')"></i>`;
+                targetElement.appendChild(filter);
+                if (!filters[category]) {
+                    filters[category] = [];
+                }
+                filters[category].push(value);
+            }
+            debouncedApplyFilters();
+        }
+
+        // Remove filter
+        function removeFilter(category, value, targetId) {
+            const filter = document.getElementById(`${category}-${value}`);
+            if (filter) {
+                document.getElementById(targetId).removeChild(filter);
+            }
+            filters[category] = filters[category].filter(item => item !== value);
+            if (filters[category].length === 0) {
+                delete filters[category];
+            }
+            debouncedApplyFilters();
+        }
+
+        // Filter dropdown options
         function filterOptions(input, optionsContainerId) {
             const filter = input.value.toLowerCase();
             const optionsContainer = document.getElementById(optionsContainerId);
@@ -370,6 +313,7 @@
             optionsContainer.style.display = filter.length === 0 || !hasVisibleOptions ? 'none' : 'block';
         }
 
+        // Reset all filters
         function resetFilters() {
             filters = {};
             $('.selected-filter-group').empty();
@@ -377,7 +321,31 @@
             applyFilters();
         }
 
+        // Handle pagination click with filters applied
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            const pageUrl = $(this).attr('href');
+            let newUrl = `${pageUrl}&${$.param(filters, true)}`;
 
+            window.history.pushState({
+                path: newUrl
+            }, '', newUrl);
+
+            $.ajax({
+                url: pageUrl,
+                data: filters,
+                method: 'GET',
+                success: function(response) {
+                    $('#userResults').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching paginated results:', error);
+                    alert('Failed to load results. Please try again.');
+                }
+            });
+        });
+
+        // Toggle filter sections
         document.querySelectorAll('.filter-header').forEach(header => {
             header.addEventListener('click', function() {
                 const icon = this.querySelector('.toggle-icon');
