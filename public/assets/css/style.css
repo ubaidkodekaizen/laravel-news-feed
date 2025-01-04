@@ -949,6 +949,20 @@ body {
     max-height: 200px;
     overflow-y: auto;
 }
+.selected-tags-industry .tag2 {
+    border: 1px solid #273572;
+    border-radius: 13px;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    gap: 5px;
+}
+.selected-tags-industry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 .selected-tags .tag {
     border: 1px solid #273572;
     border-radius: 13px;

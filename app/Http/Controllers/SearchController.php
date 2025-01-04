@@ -57,15 +57,12 @@ class SearchController extends Controller
             ->get(['company_industry']);
 
         $users = User::where('first_name', 'like', '%' . $searchTerm . '%')
-            ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
             ->get(['first_name', 'last_name']);
 
         $suggestions = [
             'product_services' => $product_services,
-            // 'company_sub_categories' => $companies->pluck('company_sub_category'),
             'company_industries' => $companies->pluck('company_industry'),
-            // 'first_name' => $users->pluck('first_name'),
-            // 'last_name' => $users->pluck('last_name'),
+            'first_name' => $users,
         ];
 
         return response()->json($suggestions);
@@ -102,17 +99,22 @@ class SearchController extends Controller
         if ($request->filled('company_industry')) {
             $industries = is_array($request->company_industry) ? $request->company_industry : [$request->company_industry];
             $query->whereHas('company', function ($query) use ($industries) {
-                $query->whereIn('company_industry', $industries);
+                $query->where(function ($q) use ($industries) {
+                    foreach ($industries as $industry) {
+                        $q->orWhere('company_industry', 'LIKE', '%' . $industry . '%');
+                    }
+                });
             });
         }
 
 
-        if ($request->filled('company_sub_category')) {
-            $subCategories = is_array($request->company_sub_category) ? $request->company_sub_category : [$request->company_sub_category];
-            $query->whereHas('company', function ($query) use ($subCategories) {
-                $query->whereIn('company_sub_category', $subCategories);
-            });
-        }
+
+        // if ($request->filled('company_sub_category')) {
+        //     $subCategories = is_array($request->company_sub_category) ? $request->company_sub_category : [$request->company_sub_category];
+        //     $query->whereHas('company', function ($query) use ($subCategories) {
+        //         $query->whereIn('company_sub_category', $subCategories);
+        //     });
+        // }
 
 
         if ($request->filled('company_business_type')) {
@@ -138,6 +140,18 @@ class SearchController extends Controller
             });
         }
 
+        if ($request->filled('company_experience')) {
+            $experiences = is_array($request->company_experience) ? $request->company_experience : [$request->company_experience];
+            $query->whereHas('company', function ($query) use ($experiences) {
+                $query->whereIn('company_experience', $experiences);
+            });
+        }
+
+
+        if ($request->filled('first_name')) {
+            $names = is_array($request->first_name) ? $request->first_name : [$request->first_name];
+            $query->whereIn('first_name', $names); // Assuming 'country' is in the users table
+        }
         // Filter by Country in users table
         if ($request->filled('country')) {
             $countries = is_array($request->country) ? $request->country : [$request->country];
@@ -148,6 +162,50 @@ class SearchController extends Controller
         if ($request->filled('state')) {
             $states = is_array($request->state) ? $request->state : [$request->state];
             $query->whereIn('state', $states); // Assuming 'state' is in the users table
+        }
+
+        if ($request->filled('user_county')) {
+            $counties = is_array($request->user_county) ? $request->user_county : [$request->user_county];
+            $query->whereIn('county', $counties); // Assuming 'county' is in the users table
+        }
+
+        if ($request->filled('user_city')) {
+            $cities = is_array($request->user_city) ? $request->user_city : [$request->user_city];
+            $query->whereIn('city', $cities); // Assuming 'city' is in the users table
+        }
+
+        if ($request->filled('user_position')) {
+            $user_positions = is_array($request->user_position) ? $request->user_position : [$request->user_position];
+            $query->where(function ($q) use ($user_positions) {
+                foreach ($user_positions as $position) {
+                    $q->orWhere('user_position', 'LIKE', '%' . $position . '%');
+                }
+            });
+        }
+
+
+        if ($request->filled('user_gender')) {
+            $user_genders = is_array($request->user_gender) ? $request->user_gender : [$request->user_gender];
+            $query->whereIn('gender', $user_genders); // Assuming 'gender' is in the users table
+        }
+
+        if ($request->filled('user_age_group')) {
+            $user_age_groups = is_array($request->user_age_group) ? $request->user_age_group : [$request->user_age_group];
+            $query->whereIn('age_group', $user_age_groups); // Assuming 'age_group' is in the users table
+        }
+
+        if ($request->filled('user_ethnicity')) {
+            $user_ethnicities = is_array($request->user_ethnicity) ? $request->user_ethnicity : [$request->user_ethnicity];
+            $query->whereIn('ethnicity', $user_ethnicities); // Assuming 'ethnicity' is in the users table
+        }
+
+        if ($request->filled('user_nationality')) {
+            $user_nationalities = is_array($request->user_nationality) ? $request->user_nationality : [$request->user_nationality];
+            $query->where(function ($q) use ($user_nationalities) {
+                foreach ($user_nationalities as $nationality) {
+                    $q->orWhere('nationality', 'LIKE', '%' . $nationality . '%');
+                }
+            });
         }
 
 

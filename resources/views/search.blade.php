@@ -16,7 +16,7 @@
                 <!-- Position Filter Section -->
                 <div class="filter-section">
                     <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#positionFilter">
-                        Position <span class="toggle-icon">+</span>
+                        Position/Designation <span class="toggle-icon">+</span>
                     </div>
                     <div id="positionFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedPositionFilters"></div>
@@ -27,6 +27,25 @@
                                 <div class="filter-option"
                                     onclick="addFilter('company_position', '{{ $position }}', 'selectedPositionFilters')">
                                     {{ $position }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employees Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#experienceFilter">
+                        No. of Experience <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="experienceFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedExperienceFilters"></div>
+                        <input type="text" name="company_experience" class="filter-search"
+                            placeholder="Search Experience..." oninput="filterOptions(this, 'employeesFilterOptions')">
+                        <div id="experienceFilterOptions">
+                            @foreach ($filters['company_experiences'] as $experience)
+                                <div class="filter-option"
+                                    onclick="addFilter('company_experience', '{{ $experience }}', 'selectedExperienceFilters')">
+                                    {{ $experience }}</div>
                             @endforeach
                         </div>
                     </div>
@@ -129,15 +148,18 @@
                     </div>
                 </div>
 
+
+
+
                 {{-- Position Filter --}}
                 <div class="filter-section">
                     <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#userPositionFilter">
-                        Looking For <span class="toggle-icon">+</span>
+                        Person You're Looking To Connect <span class="toggle-icon">+</span>
                     </div>
                     <div id="userPositionFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedUserPositionFilters"></div>
                         <input type="text" name="user_position" class="filter-search"
-                            placeholder="Search what you're looking..."
+                            placeholder="Search type of person you want to connect..."
                             oninput="filterOptions(this, 'userPositionFilterOptions')">
                         <div id="userPositionFilterOptions" style="display: none">
                             @foreach ($filters['user_position'] as $position)

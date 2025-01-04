@@ -63,9 +63,10 @@
 
                                 {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
 
+                                <input type="hidden" name="first_name" id="first_name1">
                                 <input type="hidden" name="product_service_name" id="product_service_name1">
                                 <input type="hidden" name="company_industry" id="company_industry1">
-                                <input type="hidden" name="company_sub_category" id="company_sub_category1">
+
 
                                 <button class="btn btn-primary search_btn">Search</button>
 

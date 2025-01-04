@@ -8,7 +8,7 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="{{ asset('assets/js/custom.js?v1') }}"></script>
-@yield('scripts')
+
 <script>
     $(document).ready(function() {
 
@@ -143,6 +143,7 @@
 
                     // Only show suggestions if there's valid data
                     if (response.product_services.length || response.company_industries
+                        .length || response.first_name
                         .length) {
                         suggestionBox.show();
                         response.product_services.forEach(function(item) {
@@ -151,11 +152,12 @@
                                 item.product_service_name + '">' + item
                                 .product_service_name + '</div>');
                         });
-                        // response.company_sub_categories.forEach(function(item) {
-                        //     suggestionBox.append(
-                        //         '<div class="suggestion-item" data-type="company_sub_category" data-value="' +
-                        //         item + '">' + item + '</div>');
-                        // });
+                        response.first_name.forEach(function(item) {
+                            suggestionBox.append(
+                                '<div class="suggestion-item" data-type="first_name" data-value="' +
+                                item.first_name + '">' + item.first_name +
+                                '</div>');
+                        });
                         response.company_industries.forEach(function(item) {
                             suggestionBox.append(
                                 '<div class="suggestion-item" data-type="company_industry" data-value="' +
@@ -176,10 +178,9 @@
                 $('#product_service_name1').val(selectedValue);
             } else if (dataType === 'company_industry') {
                 $('#company_industry1').val(selectedValue);
+            } else if (dataType === 'first_name') {
+                $('#first_name1').val(selectedValue);
             }
-            //else if (dataType === 'company_sub_category') {
-            //     $('#company_sub_category1').val(selectedValue);
-            // }
 
             $('#header_search').val(selectedValue);
 
@@ -225,7 +226,7 @@
     });
 </script>
 
-
+@yield('scripts')
 </body>
 
 </html>
