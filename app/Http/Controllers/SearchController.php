@@ -148,8 +148,8 @@ class SearchController extends Controller
         }
 
 
-        if ($request->filled('first_name')) {
-            $names = is_array($request->first_name) ? $request->first_name : [$request->first_name];
+        if ($request->filled('name')) {
+            $names = is_array($request->name) ? $request->name : [$request->name];
             $query->whereIn('first_name', $names); // Assuming 'country' is in the users table
         }
         // Filter by Country in users table

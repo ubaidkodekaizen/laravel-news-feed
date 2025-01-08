@@ -63,7 +63,7 @@
 
                                 {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
 
-                                <input type="hidden" name="first_name" id="first_name1">
+                                <input type="hidden" name="name" id="first_name1">
                                 <input type="hidden" name="product_service_name" id="product_service_name1">
                                 <input type="hidden" name="company_industry" id="company_industry1">
 

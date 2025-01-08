@@ -154,8 +154,9 @@
                         });
                         response.first_name.forEach(function(item) {
                             suggestionBox.append(
-                                '<div class="suggestion-item" data-type="first_name" data-value="' +
-                                item.first_name + '">' + item.first_name +
+                                '<div class="suggestion-item" data-type="name" data-value="' +
+                                item.first_name + '">' +
+                                item.first_name + ' ' + item.last_name +
                                 '</div>');
                         });
                         response.company_industries.forEach(function(item) {
@@ -178,7 +179,7 @@
                 $('#product_service_name1').val(selectedValue);
             } else if (dataType === 'company_industry') {
                 $('#company_industry1').val(selectedValue);
-            } else if (dataType === 'first_name') {
+            } else if (dataType === 'name') {
                 $('#first_name1').val(selectedValue);
             }
 
