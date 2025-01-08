@@ -115,6 +115,8 @@ class AdminController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'phone' => 'nullable|string|max:20',
             'linkedin_url' => 'nullable|url',
             'country' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
@@ -129,8 +131,10 @@ class AdminController extends Controller
         $user = User::find($request->id);
 
 
-        $user->first_name = $request->first_name ?? '';
-        $user->last_name = $request->last_name ?? '';
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->linkedin_url = $request->linkedin_url ?? $request->linkedin_user;
         $user->x_url = $request->x_url ?? '';
         $user->instagram_url = $request->instagram_url ?? '';
@@ -194,21 +198,22 @@ class AdminController extends Controller
     public function updateCompanyDetails(Request $request)
     {
         //dd($request->all());
-        $request->validate([
-            'company_name' => 'required|string|max:255',
-            'company_web_url' => 'nullable|url|max:255',
-            'company_linkedin_url' => 'nullable|url|max:255',
-            'company_position' => 'nullable|string',
-            'company_revenue' => 'nullable|string|max:255',
-            'company_no_of_employee' => 'nullable|string|max:255',
-            'company_business_type' => 'nullable|string|max:255',
-            'company_industry' => 'nullable|string|max:255',
-            'product_service_name' => 'nullable|array',
-            'product_service_name.*' => 'nullable|string|max:255',
-            'product_service_description' => 'nullable|array',
-            'product_service_description.*' => 'nullable|string|max:500',
-            'company_logo' => 'nullable|file|image|max:2048',
-        ]);
+        // $request->validate([
+        //     'company_name' => 'required|string|max:255',
+        //     'company_web_url' => 'nullable|url|max:255',
+        //     'company_linkedin_url' => 'nullable|url|max:255',
+        //     'company_position' => 'nullable|string',
+        //     'company_revenue' => 'nullable|string|max:255',
+        //     'company_no_of_employee' => 'nullable|string|max:255',
+        //     'company_business_type' => 'nullable|string|max:255',
+        //     'company_industry' => 'nullable|string|max:255',
+        //     'product_service_name' => 'nullable|array',
+        //     'product_service_name.*' => 'nullable|string|max:255',
+        //     'product_service_description' => 'nullable|array',
+        //     'product_service_description.*' => 'nullable|string|max:500',
+        //     'company_logo' => 'nullable|file|image|max:2048',
+        // ]);
+
 
         $capitalize = function ($value) {
             return $value ? ucwords(strtolower($value)) : null;
@@ -241,23 +246,22 @@ class AdminController extends Controller
             $companyIndustry = $request->company_industry;
         }
 
-        $user = Auth::user();
+        // $user = User::find($request->user_id);
 
         $company = Company::updateOrCreate(
             ['user_id' => $request->user_id],
             [
-                'company_name' => $request->company_name,
-                'company_email' => $request->company_email,
-                'company_web_url' => $request->company_web_url,
+                'company_name' => $request->company_name ?? '',
+                'company_web_url' => $request->company_web_url ?? '',
                 'company_linkedin_url' => $request->company_linkedin_url ?? $request->company_linkedin_user,
-                'company_position' => $request->company_position,
-                'company_revenue' => $request->company_revenue,
-                'company_no_of_employee' => $request->company_no_of_employee,
-                'company_community_service' => $request->company_community_service,
-                'company_business_type' => $companyBusinessType,
-                'company_industry' => $companyIndustry,
-                'company_experience' => $request->company_experience,
-                'company_phone' => $request->company_phone,
+                'company_position' => $request->company_position ?? '',
+                'company_revenue' => $request->company_revenue ?? '',
+                'company_no_of_employee' => $request->company_no_of_employee ?? '',
+                'company_community_service' => $request->company_community_service ?? '',
+                'company_business_type' => $companyBusinessType ?? '',
+                'company_industry' => $companyIndustry ?? '',
+                'company_experience' => $request->company_experience ?? '',
+                'company_phone' => $request->company_phone ?? '',
             ]
         );
 
@@ -271,6 +275,7 @@ class AdminController extends Controller
             $counter++;
         }
         $company->company_slug = $companySlug;
+        $company->status = "complete";
         $company->save();
 
 

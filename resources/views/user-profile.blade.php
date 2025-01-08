@@ -170,7 +170,8 @@
                             <ul class="list_check_flex px-3">
                                 @if ($user->linkedin_url)
                                     <li>
-                                        <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank" title="Facebook">
+                                        <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
+                                            title="Facebook">
                                             <img src="{{ asset('assets/images/social-icons/linkedin.png') }}"
                                                 alt="">
                                         </a>
