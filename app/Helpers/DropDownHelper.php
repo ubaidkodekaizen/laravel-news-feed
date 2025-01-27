@@ -274,14 +274,70 @@ class DropDownHelper
     public static function searchFilter()
     {
 
-        $company_positions = Company::pluck('company_position')->unique()->sort();
-        $company_industries = Company::pluck('company_industry')->unique()->sort();
+        //$company_positions = Company::pluck('company_position')->unique()->sort();
+        //$company_industries = Company::pluck('company_industry')->unique()->sort();
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
         $company_business_types = Company::pluck('company_business_type')->unique()->sort();
         $company_no_of_employees = Company::pluck('company_no_of_employee')->unique()->sort();
+        $company_revenues = Company::pluck('company_revenue')->unique()->sort();
+        $company_experiences = Company::pluck('company_experience')->unique()->sort();
+
         $company_states = User::pluck('state')->unique()->sort();
         $company_countries = User::pluck('country')->unique()->sort();
-        $company_revenues = Company::pluck('company_revenue')->unique()->sort();
+
+        $user_city = User::pluck('city')->unique()->sort();
+        $user_county = User::pluck('county')->unique()->sort();
+        // $user_user_position = User::pluck('user_position')->unique()->sort();
+        $user_gender = User::pluck('gender')->unique()->sort();
+        $user_age_group = User::pluck('age_group')->unique()->sort();
+        $user_ethnicity = User::pluck('ethnicity')->unique()->sort();
+        // $user_nationality = User::pluck('nationality')->unique()->sort();
+        // $user_languages = User::pluck('languages')->unique()->sort();
+
+        // Extract and split comma-separated values for user-related fields
+        $user_nationality = User::pluck('nationality')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_languages = User::pluck('languages')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_user_position = User::pluck('user_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        // Extract and split comma-separated values for company-related fields
+        $company_positions = Company::pluck('company_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $company_industries = Company::pluck('company_industry')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+
+
         $product_service_names = ProductService::pluck('product_service_name')->unique()->sort();
 
         return [
@@ -290,56 +346,46 @@ class DropDownHelper
             'company_sub_categories' => $company_sub_categories,
             'company_business_types' => $company_business_types,
             'company_no_of_employees' => $company_no_of_employees,
+            'company_revenues' => $company_revenues,
             'company_states' => $company_states,
             'company_countries' => $company_countries,
-            'company_revenues' => $company_revenues,
+
+            'company_experiences' => $company_experiences,
+            'user_city' => $user_city,
+            'user_county' => $user_county,
+            'user_position' => $user_user_position,
+            'user_gender' => $user_gender,
+            'user_age_group' => $user_age_group,
+            'user_ethnicity' => $user_ethnicity,
+            'user_nationality' => $user_nationality,
+            'user_languages' => $user_languages,
+
             'product_service_names' => $product_service_names,
         ];
     }
 
-
-    public static function renderIndustryDropdown($selectedValues = [])
+    public static function industryDropdown($dropdownId = 'industryDropdownButton', $selectedValues = [])
     {
-        // Ensure $selectedValues is always an array
-        $selectedValues = (array) $selectedValues;
+        $industries = DB::table('industries')->pluck('name');
 
-        // Fetch industries ordered by name, except "Other" which should appear last
-        $industries = \DB::table('industries')
-            ->select('id', 'name')
-            ->where('name', '!=', 'Other')
-            ->orderBy('name', 'asc')
-            ->get();
-
-        // Add "Other" to the end of the list
-        $otherIndustry = \DB::table('industries')
-            ->where('name', 'Other')
-            ->select('id', 'name')
-            ->first();
-
-        if ($otherIndustry) {
-            $industries->push($otherIndustry);
-        }
-
-        // Start the dropdown HTML
         $html = '<div class="dropdown">';
-        $html .= '<button class="btn btn-light dropdown-toggle w-100" type="button" id="industryDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">';
+        $html .= '<button class="btn btn-light dropdown-toggle w-100" type="button" id="' . $dropdownId . '" data-bs-toggle="dropdown" aria-expanded="false">';
         $html .= 'Select Industries';
         $html .= '</button>';
 
-        $html .= '<ul id="industry-dropdown-menu" class="dropdown-menu position-dropdown-menu" aria-labelledby="industryDropdownButton">';
+        $html .= '<ul id="industry-dropdown-menu" class="dropdown-menu industry-dropdown-menu" aria-labelledby="' . $dropdownId . '">';
         $html .= '<li class="mb-2">';
-        $html .= '<input type="text" id="search-industry-dropdown" class="form-control mb-2" placeholder="Search...">';
+        $html .= '<input type="text" id="industry-search-dropdown" class="form-control mb-2" placeholder="Search...">';
         $html .= '</li>';
 
-        // Loop through industries to build the list items with checkboxes
         foreach ($industries as $industry) {
-            $industryId = 'industry' . preg_replace('/[^a-zA-Z0-9]/', '', $industry->name);
-            $isChecked = in_array($industry->name, $selectedValues) ? 'checked' : '';
+            $industryId = 'industry' . preg_replace('/[^a-zA-Z0-9]/', '', $industry);
+            $isChecked = in_array($industry, $selectedValues) ? 'checked' : '';
 
             $html .= '<li>';
             $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
-            $html .= '<label class="form-check-label" for="' . $industryId . '">' . htmlspecialchars($industry->name) . '</label>';
-            $html .= '<input class="form-check-input ms-2" type="checkbox" value="' . htmlspecialchars($industry->name) . '" id="' . $industryId . '" ' . $isChecked . '>';
+            $html .= '<label class="form-check-label" for="' . $industryId . '">' . htmlspecialchars($industry) . '</label>';
+            $html .= '<input class="form-check-input ms-2" type="checkbox" value="' . htmlspecialchars($industry) . '" id="' . $industryId . '" ' . $isChecked . '>';
             $html .= '</div>';
             $html .= '</li>';
         }
@@ -357,6 +403,66 @@ class DropDownHelper
 
         return $html;
     }
+
+    // public static function renderIndustryDropdown($selectedValues = [])
+    // {
+    //     // Ensure $selectedValues is always an array
+    //     $selectedValues = is_array($selectedValues) ? $selectedValues : explode(',', $selectedValues);
+
+    //     // Fetch industries ordered by name, except "Other"
+    //     $industries = \DB::table('industries')
+    //         ->select('id', 'name')
+    //         ->where('name', '!=', 'Other')
+    //         ->orderBy('name', 'asc')
+    //         ->get();
+
+    //     // Add "Other" to the end of the list
+    //     $otherIndustry = \DB::table('industries')
+    //         ->where('name', 'Other')
+    //         ->select('id', 'name')
+    //         ->first();
+
+    //     if ($otherIndustry) {
+    //         $industries->push($otherIndustry);
+    //     }
+
+    //     // Start the dropdown HTML
+    //     $html = '<div class="dropdown">';
+    //     $html .= '<button class="btn btn-light dropdown-toggle w-100" type="button" id="industryDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">';
+    //     $html .= 'Select Industries';
+    //     $html .= '</button>';
+
+    //     $html .= '<ul id="industry-dropdown-menu" class="dropdown-menu position-dropdown-menu" aria-labelledby="industryDropdownButton">';
+    //     $html .= '<li class="mb-2">';
+    //     $html .= '<input type="text" id="search-industry-dropdown" class="form-control mb-2" placeholder="Search...">';
+    //     $html .= '</li>';
+
+    //     // Loop through industries to build the list items with checkboxes
+    //     foreach ($industries as $industry) {
+    //         $industryId = 'industry' . preg_replace('/[^a-zA-Z0-9]/', '', $industry->name);
+    //         $isChecked = in_array($industry->name, $selectedValues) ? 'checked' : '';
+
+    //         $html .= '<li>';
+    //         $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
+    //         $html .= '<label class="form-check-label" for="' . $industryId . '">' . htmlspecialchars($industry->name) . '</label>';
+    //         $html .= '<input class="form-check-input ms-2 industry-checkbox" type="checkbox" value="' . htmlspecialchars($industry->name) . '" id="' . $industryId . '" ' . $isChecked . '>';
+    //         $html .= '</div>';
+    //         $html .= '</li>';
+    //     }
+
+    //     // Option for "Other"
+    //     $html .= '<li>';
+    //     $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
+    //     $html .= '<label class="form-check-label" for="industry_other_select">Other</label>';
+    //     $html .= '<input class="form-check-input ms-2 industry-checkbox" type="checkbox" value="Other" id="industry_other_select">';
+    //     $html .= '</div>';
+    //     $html .= '</li>';
+
+    //     $html .= '</ul>';
+    //     $html .= '</div>';
+
+    //     return $html;
+    // }
 
 
 
@@ -578,310 +684,6 @@ class DropDownHelper
     }
 
 
-
-
-    // public static function renderCountryDropdownForUser($selectedCountry = null)
-    // {
-    //     $selectedCountry = old('country', $selectedCountry);
-
-    //     $countries = [
-    //         'USA' => 'USA',
-    //         'UK' => 'UK',
-    //         'Canada' => 'Canada'
-    //     ];
-
-    //     $html = '<select name="country" id="country" class="form-select">';
-    //     $html .= '<option value="">Select Country</option>';
-
-    //     foreach ($countries as $code => $name) {
-    //         $isSelected = $code == $selectedCountry ? 'selected' : '';
-    //         $html .= '<option value="' . $code . '" ' . $isSelected . '>' . $name . '</option>';
-    //     }
-
-    //     $html .= '</select>';
-    //     $html .= '
-    //         <script>
-    //             const countryData = {
-    //                 "USA": {
-    //                     "California": ["Irvine", "Los Angeles", "San Francisco", "San Diego", "Sacramento", "Fresno", "Long Beach", "Oakland", "Bakersfield", "Anaheim", "Santa Ana"],
-    //                     "Texas": ["Houston", "Dallas", "Austin", "San Antonio", "Fort Worth", "El Paso", "Arlington", "Corpus Christi", "Plano", "Laredo"],
-    //                     "Florida": ["Miami", "Orlando", "Tampa", "Jacksonville", "St. Petersburg", "Fort Lauderdale", "Tallahassee", "Hialeah", "Port St. Lucie", "Cape Coral"],
-    //                     "New York": ["New York City", "Buffalo", "Rochester", "Albany", "Syracuse", "Yonkers", "Schenectady", "Binghamton", "Saratoga Springs", "Ithaca"],
-    //                     "Illinois": ["Chicago", "Aurora", "Naperville", "Joliet", "Rockford", "Springfield", "Peoria", "Elgin", "Champaign", "Waukegan"],
-    //                     "Pennsylvania": ["Philadelphia", "Pittsburgh", "Allentown", "Erie", "Reading", "Scranton", "Bethlehem", "Lancaster", "Harrisburg", "York"],
-    //                     "Ohio": ["Columbus", "Cleveland", "Cincinnati", "Toledo", "Akron", "Dayton", "Parma", "Canton", "Youngstown", "Lorain"],
-    //                     "Georgia": ["Atlanta", "Augusta", "Columbus", "Macon", "Savannah", "Athens", "Sandy Springs", "Roswell", "Albany", "Marietta"],
-    //                     "Michigan": ["Detroit", "Grand Rapids", "Warren", "Sterling Heights", "Lansing", "Ann Arbor", "Flint", "Kalamazoo", "Saginaw", "Dearborn"],
-    //                     "North Carolina": ["Charlotte", "Raleigh", "Greensboro", "Durham", "Winston-Salem", "Fayetteville", "Cary", "High Point", "Gastonia", "Chapel Hill"]
-    //                 },
-    //                 "UK": {
-    //                     "England": ["London", "Manchester", "Birmingham", "Liverpool", "Nottingham", "Sheffield", "Leeds", "Newcastle", "Bradford", "Bristol"],
-    //                     "Scotland": ["Edinburgh", "Glasgow", "Aberdeen", "Dundee", "Inverness", "Perth", "Stirling", "Ayr", "East Kilbride", "Livingston"],
-    //                     "Wales": ["Cardiff", "Swansea", "Newport", "Wrexham", "Barry", "Cwmbran", "Bangor", "Colwyn Bay", "Aberystwyth", "Merthyr Tydfil"],
-    //                     "Northern Ireland": ["Belfast", "Derry", "Lisburn", "Newtownabbey", "Bangor", "Omagh", "Craigavon", "Antrim", "Coleraine", "Armagh"]
-    //                 },
-    //                 "Canada": {
-    //                     "Ontario": ["Toronto", "Ottawa", "Mississauga", "Brampton", "Hamilton", "London", "Markham", "Vaughan", "Kitchener", "Windsor"],
-    //                     "Quebec": ["Montreal", "Quebec City", "Laval", "Gatineau", "Sherbrooke", "Trois-Rivières", "Saguenay", "Drummondville", "Saint-Jean-sur-Richelieu", "Chicoutimi"],
-    //                     "British Columbia": ["Vancouver", "Victoria", "Surrey", "Burnaby", "Kelowna", "Abbotsford", "Kamloops", "Nanaimo", "Richmond", "Langley"],
-    //                     "Alberta": ["Calgary", "Edmonton", "Red Deer", "Lethbridge", "St. Albert", "Sherwood Park", "Medicine Hat", "Grande Prairie", "Airdrie", "Fort McMurray"],
-    //                     "Manitoba": ["Winnipeg", "Brandon", "Steinbach", "Thompson", "Portage la Prairie", "Winkler", "Selkirk", "Morden", "Dauphin", "The Pas"],
-    //                     "Saskatchewan": ["Saskatoon", "Regina", "Moose Jaw", "Prince Albert", "Yorkton", "Swift Current", "Kindersley", "Humboldt", "Estevan", "North Battleford"],
-    //                     "Nova Scotia": ["Halifax", "Sydney", "Dartmouth", "Truro", "New Glasgow", "Glace Bay", "Yarmouth", "Bridgewater", "Antigonish", "Lunenburg"],
-    //                     "New Brunswick": ["Fredericton", "Saint John", "Moncton", "Miramichi", "Edmundston", "Bathurst", "Rothesay", "Dieppe", "Woodstock", "Campbellton"],
-    //                     "Prince Edward Island": ["Charlottetown", "Summerside", "Montague", "Kings County", "Queens County", "Souris", "Alberton", "Borden-Carleton", "Cornwall", "Hunter River"],
-    //                     "Newfoundland and Labrador": ["St. Johns", "Corner Brook", "Mount Pearl", "Gander", "Grand Falls-Windsor", "Stephenville", "Labrador City", "Happy Valley-Goose Bay", "Conception Bay South", "Torbay"]
-    //                 }
-    //             };
-
-    //             // Preselect the country if a value is provided
-    //             if ("' . $selectedCountry . '" !== "") {
-    //                 document.getElementById("country").value = "' . $selectedCountry . '";
-    //                 // Trigger the change event to load states
-    //                 document.getElementById("country").dispatchEvent(new Event("change"));
-    //             }
-    //         </script>
-    //     ';
-    //     return $html;
-    // }
-
-
-    // public static function renderStateDropdownForUser($selectedCountry = null, $selectedState = null)
-    // {
-    //     $selectedState = old('state', $selectedState);
-    //     $selectedCountry = old('country', $selectedCountry);
-
-    //     $html = '<select name="state" id="state" class="form-select">';
-    //     $html .= '<option value="">Select State</option>';
-    //     $html .= '</select>';
-
-    //     $html .= '
-    //         <script>
-    //             document.getElementById("country").addEventListener("change", function() {
-    //                 const selectedCountry = this.value;
-    //                 const stateDropdown = document.getElementById("state");
-    //                 const cityDropdown = document.getElementById("city");
-
-    //                 // Clear previous options
-    //                 stateDropdown.innerHTML = "<option value=\'\'>Select State</option>";
-    //                 cityDropdown.innerHTML = "<option value=\'\'>Select City</option>";
-
-    //                 if (countryData[selectedCountry]) {
-    //                     Object.keys(countryData[selectedCountry]).forEach(state => {
-    //                         const option = document.createElement("option");
-    //                         option.value = state;
-    //                         option.text = state;
-    //                         stateDropdown.appendChild(option);
-    //                     });
-    //                     // Preselect the state if a value is provided
-    //                     if ("' . $selectedState . '" !== "") {
-    //                         stateDropdown.value = "' . $selectedState . '";
-    //                         // Trigger the change event to load cities
-    //                         stateDropdown.dispatchEvent(new Event("change"));
-    //                     }
-    //                 }
-    //             });
-
-    //             // Trigger the change event for preselected country
-    //             document.getElementById("country").dispatchEvent(new Event("change"));
-    //         </script>
-    //     ';
-
-    //     return $html;
-    // }
-
-
-    // public static function renderCityDropdownForUser($selectedState = null, $selectedCity = null)
-    // {
-    //     $selectedState = old('state', $selectedState);
-    //     $selectedCity = old('city', $selectedCity);
-
-
-    //     $html = '<select name="city" id="city" class="form-select">';
-    //     $html .= '<option value="">Select City</option>';
-    //     $html .= '</select>';
-
-    //     $html .= '
-    //         <script>
-    //             document.getElementById("state").addEventListener("change", function() {
-    //                 const selectedCountry = document.getElementById("country").value;
-    //                 const selectedState = this.value;
-    //                 const cityDropdown = document.getElementById("city");
-
-    //                 cityDropdown.innerHTML = "<option value=\'\'>Select City</option>";
-
-    //                 if (countryData[selectedCountry] && countryData[selectedCountry][selectedState]) {
-    //                     countryData[selectedCountry][selectedState].forEach(city => {
-    //                         const option = document.createElement("option");
-    //                         option.value = city;
-    //                         option.text = city;
-    //                         cityDropdown.appendChild(option);
-    //                     });
-    //                     // Preselect the city if a value is provided
-    //                     if ("' . $selectedCity . '" !== "") {
-    //                         cityDropdown.value = "' . $selectedCity . '";
-    //                     }
-    //                 }
-    //             });
-
-    //             // Trigger the change event for preselected state
-    //             document.getElementById("state").dispatchEvent(new Event("change"));
-    //         </script>
-    //     ';
-
-    //     return $html;
-    // }
-
-
-
-    // public static function renderCountryDropdown($selectedCountry = null)
-    // {
-    //     $selectedCountry = old('company_country', $selectedCountry);
-
-    //     $countries = [
-    //         'USA' => 'USA',
-    //         'UK' => 'UK',
-    //         'Canada' => 'Canada'
-    //     ];
-
-    //     $html = '<select name="company_country" id="company_country" class="form-select">';
-    //     $html .= '<option value="">Select Country</option>';
-
-    //     foreach ($countries as $code => $name) {
-    //         $isSelected = $code == $selectedCountry ? 'selected' : '';
-    //         $html .= '<option value="' . $code . '" ' . $isSelected . '>' . $name . '</option>';
-    //     }
-
-    //     $html .= '</select>';
-    //     $html .= '
-    //         <script>
-    //             const countryData = {
-    //                 "USA": {
-    //                     "California": ["Irvine", "Los Angeles", "San Francisco", "San Diego", "Sacramento", "Fresno", "Long Beach", "Oakland", "Bakersfield", "Anaheim", "Santa Ana"],
-    //                     "Texas": ["Houston", "Dallas", "Austin", "San Antonio", "Fort Worth", "El Paso", "Arlington", "Corpus Christi", "Plano", "Laredo"],
-    //                     "Florida": ["Miami", "Orlando", "Tampa", "Jacksonville", "St. Petersburg", "Fort Lauderdale", "Tallahassee", "Hialeah", "Port St. Lucie", "Cape Coral"],
-    //                     "New York": ["New York City", "Buffalo", "Rochester", "Albany", "Syracuse", "Yonkers", "Schenectady", "Binghamton", "Saratoga Springs", "Ithaca"],
-    //                     "Illinois": ["Chicago", "Aurora", "Naperville", "Joliet", "Rockford", "Springfield", "Peoria", "Elgin", "Champaign", "Waukegan"],
-    //                     "Pennsylvania": ["Philadelphia", "Pittsburgh", "Allentown", "Erie", "Reading", "Scranton", "Bethlehem", "Lancaster", "Harrisburg", "York"],
-    //                     "Ohio": ["Columbus", "Cleveland", "Cincinnati", "Toledo", "Akron", "Dayton", "Parma", "Canton", "Youngstown", "Lorain"],
-    //                     "Georgia": ["Atlanta", "Augusta", "Columbus", "Macon", "Savannah", "Athens", "Sandy Springs", "Roswell", "Albany", "Marietta"],
-    //                     "Michigan": ["Detroit", "Grand Rapids", "Warren", "Sterling Heights", "Lansing", "Ann Arbor", "Flint", "Kalamazoo", "Saginaw", "Dearborn"],
-    //                     "North Carolina": ["Charlotte", "Raleigh", "Greensboro", "Durham", "Winston-Salem", "Fayetteville", "Cary", "High Point", "Gastonia", "Chapel Hill"]
-    //                 },
-    //                 "UK": {
-    //                     "England": ["London", "Manchester", "Birmingham", "Liverpool", "Nottingham", "Sheffield", "Leeds", "Newcastle", "Bradford", "Bristol"],
-    //                     "Scotland": ["Edinburgh", "Glasgow", "Aberdeen", "Dundee", "Inverness", "Perth", "Stirling", "Ayr", "East Kilbride", "Livingston"],
-    //                     "Wales": ["Cardiff", "Swansea", "Newport", "Wrexham", "Barry", "Cwmbran", "Bangor", "Colwyn Bay", "Aberystwyth", "Merthyr Tydfil"],
-    //                     "Northern Ireland": ["Belfast", "Derry", "Lisburn", "Newtownabbey", "Bangor", "Omagh", "Craigavon", "Antrim", "Coleraine", "Armagh"]
-    //                 },
-    //                 "Canada": {
-    //                     "Ontario": ["Toronto", "Ottawa", "Mississauga", "Brampton", "Hamilton", "London", "Markham", "Vaughan", "Kitchener", "Windsor"],
-    //                     "Quebec": ["Montreal", "Quebec City", "Laval", "Gatineau", "Sherbrooke", "Trois-Rivières", "Saguenay", "Drummondville", "Saint-Jean-sur-Richelieu", "Chicoutimi"],
-    //                     "British Columbia": ["Vancouver", "Victoria", "Surrey", "Burnaby", "Kelowna", "Abbotsford", "Kamloops", "Nanaimo", "Richmond", "Langley"],
-    //                     "Alberta": ["Calgary", "Edmonton", "Red Deer", "Lethbridge", "St. Albert", "Sherwood Park", "Medicine Hat", "Grande Prairie", "Airdrie", "Fort McMurray"],
-    //                     "Manitoba": ["Winnipeg", "Brandon", "Steinbach", "Thompson", "Portage la Prairie", "Winkler", "Selkirk", "Morden", "Dauphin", "The Pas"],
-    //                     "Saskatchewan": ["Saskatoon", "Regina", "Moose Jaw", "Prince Albert", "Yorkton", "Swift Current", "Kindersley", "Humboldt", "Estevan", "North Battleford"],
-    //                     "Nova Scotia": ["Halifax", "Sydney", "Dartmouth", "Truro", "New Glasgow", "Glace Bay", "Yarmouth", "Bridgewater", "Antigonish", "Lunenburg"],
-    //                     "New Brunswick": ["Fredericton", "Saint John", "Moncton", "Miramichi", "Edmundston", "Bathurst", "Rothesay", "Dieppe", "Woodstock", "Campbellton"],
-    //                     "Prince Edward Island": ["Charlottetown", "Summerside", "Montague", "Kings County", "Queens County", "Souris", "Alberton", "Borden-Carleton", "Cornwall", "Hunter River"],
-    //                     "Newfoundland and Labrador": ["St. Johns", "Corner Brook", "Mount Pearl", "Gander", "Grand Falls-Windsor", "Stephenville", "Labrador City", "Happy Valley-Goose Bay", "Conception Bay South", "Torbay"]
-    //                 }
-    //             };
-
-    //             // Preselect the country if a value is provided
-    //             if ("' . $selectedCountry . '" !== "") {
-    //                 document.getElementById("company_country").value = "' . $selectedCountry . '";
-    //                 // Trigger the change event to load states
-    //                 document.getElementById("company_country").dispatchEvent(new Event("change"));
-    //             }
-    //         </script>
-    //     ';
-    //     return $html;
-    // }
-
-
-    // public static function renderStateDropdown($selectedCountry = null, $selectedState = null)
-    // {
-    //     $selectedState = old('company_state', $selectedState);
-
-    //     $html = '<select name="company_state" id="company_state" class="form-select">';
-    //     $html .= '<option value="">Select State</option>';
-    //     $html .= '</select>';
-
-    //     $html .= '
-    //         <script>
-    //             document.getElementById("company_country").addEventListener("change", function() {
-    //                 const selectedCountry = this.value;
-    //                 const stateDropdown = document.getElementById("company_state");
-    //                 const cityDropdown = document.getElementById("company_city");
-
-    //                 // Clear previous options
-    //                 stateDropdown.innerHTML = "<option value=\'\'>Select State</option>";
-    //                 cityDropdown.innerHTML = "<option value=\'\'>Select City</option>";
-
-    //                 if (countryData[selectedCountry]) {
-    //                     Object.keys(countryData[selectedCountry]).forEach(state => {
-    //                         const option = document.createElement("option");
-    //                         option.value = state;
-    //                         option.text = state;
-    //                         stateDropdown.appendChild(option);
-    //                     });
-    //                     // Preselect the state if a value is provided
-    //                     if ("' . $selectedState . '" !== "") {
-    //                         stateDropdown.value = "' . $selectedState . '";
-    //                         // Trigger the change event to load cities
-    //                         stateDropdown.dispatchEvent(new Event("change"));
-    //                     }
-    //                 }
-    //             });
-
-    //             // Trigger the change event for preselected country
-    //             document.getElementById("company_country").dispatchEvent(new Event("change"));
-    //         </script>
-    //     ';
-
-    //     return $html;
-    // }
-
-
-    // public static function renderCityDropdown($selectedState = null, $selectedCity = null)
-    // {
-    //     $selectedCity = old('company_city', $selectedCity);
-
-    //     $html = '<select name="company_city" id="company_city" class="form-select">';
-    //     $html .= '<option value="">Select City</option>';
-    //     $html .= '</select>';
-
-    //     $html .= '
-    //         <script>
-    //             document.getElementById("company_state").addEventListener("change", function() {
-    //                 const selectedCountry = document.getElementById("company_country").value;
-    //                 const selectedState = this.value;
-    //                 const cityDropdown = document.getElementById("company_city");
-
-    //                 cityDropdown.innerHTML = "<option value=\'\'>Select City</option>";
-
-    //                 if (countryData[selectedCountry] && countryData[selectedCountry][selectedState]) {
-    //                     countryData[selectedCountry][selectedState].forEach(city => {
-    //                         const option = document.createElement("option");
-    //                         option.value = city;
-    //                         option.text = city;
-    //                         cityDropdown.appendChild(option);
-    //                     });
-    //                     // Preselect the city if a value is provided
-    //                     if ("' . $selectedCity . '" !== "") {
-    //                         cityDropdown.value = "' . $selectedCity . '";
-    //                     }
-    //                 }
-    //             });
-
-    //             // Trigger the change event for preselected state
-    //             document.getElementById("company_state").dispatchEvent(new Event("change"));
-    //         </script>
-    //     ';
-
-    //     return $html;
-    // }
 
 
 

@@ -168,6 +168,14 @@
                                 Social Links
                             </h1>
                             <ul class="list_check_flex px-3">
+                                @if ($user->linkedin_url)
+                                    <li>
+                                        <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank" title="Facebook">
+                                            <img src="{{ asset('assets/images/social-icons/linkedin.png') }}"
+                                                alt="">
+                                        </a>
+                                    </li>
+                                @endif
                                 @if ($user->facebook_url)
                                     <li>
                                         <a href="{{ $user->facebook_url }}" target="_blank" title="Facebook">
@@ -217,12 +225,12 @@
 
                         </div>
                         <div class="btn-flex">
-                            <a href="javascript:void(0)" class="btn btn-secondary" data-bs-toggle="modal"
+                            <a href="javascript:void(0)" class="btn btn-secondary w-100" data-bs-toggle="modal"
                                 data-bs-target="#mainModal">
                                 Direct Message
                             </a>
-                            <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
-                                class="btn btn-primary">Connect Via Linkedin</a>
+                            {{-- <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
+                                class="btn btn-primary">Connect Via Linkedin</a> --}}
                         </div>
                     </div>
                 </div>
@@ -379,10 +387,9 @@
                                 @empty
                                     <p>No Product or Service to show.</p>
                                 @endforelse
-                            </div>    
-                            @else
+                            </div>
+                        @else
                             <p>No Product or Service to show.</p>
-                            
                         @endif
                     </div>
                 </div>
@@ -413,7 +420,7 @@
                                     </div>
                                 </div>
                             @empty
-                                <p>No Product or Service to show.</p>
+                                <p>No Education is added to show.</p>
                             @endforelse
                         </div>
                     </div>

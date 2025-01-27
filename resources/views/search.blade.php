@@ -16,7 +16,7 @@
                 <!-- Position Filter Section -->
                 <div class="filter-section">
                     <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#positionFilter">
-                        Position <span class="toggle-icon">+</span>
+                        Position/Designation <span class="toggle-icon">+</span>
                     </div>
                     <div id="positionFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedPositionFilters"></div>
@@ -27,6 +27,25 @@
                                 <div class="filter-option"
                                     onclick="addFilter('company_position', '{{ $position }}', 'selectedPositionFilters')">
                                     {{ $position }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employees Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#experienceFilter">
+                        No. of Experience <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="experienceFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedExperienceFilters"></div>
+                        <input type="text" name="company_experience" class="filter-search"
+                            placeholder="Search Experience..." oninput="filterOptions(this, 'employeesFilterOptions')">
+                        <div id="experienceFilterOptions">
+                            @foreach ($filters['company_experiences'] as $experience)
+                                <div class="filter-option"
+                                    onclick="addFilter('company_experience', '{{ $experience }}', 'selectedExperienceFilters')">
+                                    {{ $experience }}</div>
                             @endforeach
                         </div>
                     </div>
@@ -52,7 +71,7 @@
                 </div>
 
                 <!-- Sub - Category Filter Section -->
-                <div class="filter-section">
+                {{-- <div class="filter-section">
                     <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#industrySubCategoryFilter">
                         Sub - Industry <span class="toggle-icon">+</span>
                     </div>
@@ -69,7 +88,7 @@
                             @endforeach
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Business Type Filter Section -->
                 <div class="filter-section">
@@ -94,7 +113,7 @@
                 <!-- Revenue Filter Section -->
                 <div class="filter-section">
                     <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#revenueFilter">
-                        Revenue <span class="toggle-icon">+</span>
+                        Business Revenue <span class="toggle-icon">+</span>
                     </div>
                     <div id="revenueFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedRevenueFilters"></div>
@@ -113,7 +132,7 @@
                 <!-- Employees Filter Section -->
                 <div class="filter-section">
                     <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#employeesFilter">
-                        Employees <span class="toggle-icon">+</span>
+                        No. of Employees <span class="toggle-icon">+</span>
                     </div>
                     <div id="employeesFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedEmployeesFilters"></div>
@@ -128,6 +147,108 @@
                         </div>
                     </div>
                 </div>
+
+
+
+
+                {{-- Position Filter --}}
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#userPositionFilter">
+                        Person You're Looking To Connect <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="userPositionFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedUserPositionFilters"></div>
+                        <input type="text" name="user_position" class="filter-search"
+                            placeholder="Search type of person you want to connect..."
+                            oninput="filterOptions(this, 'userPositionFilterOptions')">
+                        <div id="userPositionFilterOptions" style="display: none">
+                            @foreach ($filters['user_position'] as $position)
+                                <div class="filter-option"
+                                    onclick="addFilter('user_position', '{{ $position }}', 'selectedUserPositionFilters')">
+                                    {{ $position }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+
+
+                {{-- Gender Filter --}}
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#genderFilter">
+                        Gender <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="genderFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedGenderFilters"></div>
+                        <input type="text" name="user_gender" class="filter-search" placeholder="Search Gender..."
+                            oninput="filterOptions(this, 'genderFilterOptions')">
+                        <div id="genderFilterOptions" style="display: none">
+                            @foreach ($filters['user_gender'] as $gender)
+                                <div class="filter-option"
+                                    onclick="addFilter('user_gender', '{{ $gender }}', 'selectedGenderFilters')">
+                                    {{ $gender }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Age Group Filter --}}
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#ageGroupFilter">
+                        Age Group <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="ageGroupFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedAgeGroupFilters"></div>
+                        <input type="text" name="user_age_group" class="filter-search"
+                            placeholder="Search Age Group..." oninput="filterOptions(this, 'ageGroupFilterOptions')">
+                        <div id="ageGroupFilterOptions" style="display: none">
+                            @foreach ($filters['user_age_group'] as $ageGroup)
+                                <div class="filter-option"
+                                    onclick="addFilter('user_age_group', '{{ $ageGroup }}', 'selectedAgeGroupFilters')">
+                                    {{ $ageGroup }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Ethnicity Filter --}}
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#ethnicityFilter">
+                        Ethnicity <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="ethnicityFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedEthnicityFilters"></div>
+                        <input type="text" name="user_ethnicity" class="filter-search"
+                            placeholder="Search Ethnicity..." oninput="filterOptions(this, 'ethnicityFilterOptions')">
+                        <div id="ethnicityFilterOptions" style="display: none">
+                            @foreach ($filters['user_ethnicity'] as $ethnicity)
+                                <div class="filter-option"
+                                    onclick="addFilter('user_ethnicity', '{{ $ethnicity }}', 'selectedEthnicityFilters')">
+                                    {{ $ethnicity }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Nationality Filter --}}
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#nationalityFilter">
+                        Nationality <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="nationalityFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedNationalityFilters"></div>
+                        <input type="text" name="user_nationality" class="filter-search"
+                            placeholder="Search Nationality..." oninput="filterOptions(this, 'nationalityFilterOptions')">
+                        <div id="nationalityFilterOptions" style="display: none">
+                            @foreach ($filters['user_nationality'] as $nationality)
+                                <div class="filter-option"
+                                    onclick="addFilter('user_nationality', '{{ $nationality }}', 'selectedNationalityFilters')">
+                                    {{ $nationality }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Country Filter Section -->
                 <div class="filter-section">
@@ -162,6 +283,44 @@
                                 <div class="filter-option"
                                     onclick="addFilter('state', '{{ $state }}', 'selectedStateFilters')">
                                     {{ $state }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- City Filter --}}
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#cityFilter">
+                        City <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="cityFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedCityFilters"></div>
+                        <input type="text" name="user_city" class="filter-search" placeholder="Search City..."
+                            oninput="filterOptions(this, 'cityFilterOptions')">
+                        <div id="cityFilterOptions" style="display: none">
+                            @foreach ($filters['user_city'] as $city)
+                                <div class="filter-option"
+                                    onclick="addFilter('user_city', '{{ $city }}', 'selectedCityFilters')">
+                                    {{ $city }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                {{-- County Filter --}}
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#countyFilter">
+                        County <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="countyFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedCountyFilters"></div>
+                        <input type="text" name="user_county" class="filter-search" placeholder="Search County..."
+                            oninput="filterOptions(this, 'countyFilterOptions')">
+                        <div id="countyFilterOptions" style="display: none">
+                            @foreach ($filters['user_county'] as $county)
+                                <div class="filter-option"
+                                    onclick="addFilter('user_county', '{{ $county }}', 'selectedCountyFilters')">
+                                    {{ $county }}</div>
                             @endforeach
                         </div>
                     </div>
@@ -208,27 +367,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            const pageUrl = $(this).attr('href');
-            const newUrl = `${pageUrl}&${$.param(filters, true)}`;
-            window.history.pushState({
-                path: newUrl
-            }, '', newUrl);
-            $.ajax({
-                url: newUrl,
-                method: 'GET',
-                success: function(response) {
-                    $('#userResults').html(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching paginated results:', error);
-                    alert('Failed to load results. Please try again.');
-                }
-            });
-        });
-
-
         function toggleSidebar() {
             const sidebar = document.getElementById("sidebar");
             if (sidebar) {
@@ -240,32 +378,6 @@
 
         let filters = {};
 
-        // Function to parse existing query parameters into the filters object
-        function getQueryParams() {
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            let params = {};
-            for (const [key, value] of urlParams.entries()) {
-                if (!params[key]) {
-                    params[key] = [];
-                }
-                params[key].push(value);
-            }
-            return params;
-        }
-
-        // Function to sync existing URL parameters with the current filters
-        function syncFilters() {
-            const existingParams = getQueryParams();
-            for (const [key, values] of Object.entries(existingParams)) {
-                if (!filters[key]) {
-                    filters[key] = values;
-                } else {
-                    filters[key] = [...new Set([...filters[key], ...values])]; // Merge without duplicates
-                }
-            }
-        }
-
         // Debounce function to delay execution
         function debounce(func, delay) {
             let timeout;
@@ -275,63 +387,20 @@
             };
         }
 
+        // Sync header filters into the global filters object
+        function syncHeaderFilters() {
+            const headerForm = new FormData(document.getElementById('search_form'));
+            for (const [key, value] of headerForm.entries()) {
+                if (value) {
+                    filters[key] = Array.isArray(filters[key]) ? [...filters[key], value] : [value];
+                }
+            }
+        }
+
+        // Apply filters and refresh results
         function applyFilters() {
-            syncFilters();
-            const newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
-            window.history.pushState({
-                path: newUrl
-            }, '', newUrl);
-            $.ajax({
-                url: newUrl,
-                method: 'GET',
-                success: function(response) {
-                    $('#userResults').html(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching results:', error);
-                    alert('Failed to apply filters. Please try again.');
-                }
-            });
-        }
-
-
-        const debouncedApplyFilters = debounce(applyFilters, 300);
-
-        function addFilter(category, value, targetId) {
-            const targetElement = document.getElementById(targetId);
-            if (!document.getElementById(`${category}-${value}`)) {
-                const filter = document.createElement('div');
-                filter.className = 'selected-filter';
-                filter.id = `${category}-${value}`;
-                filter.innerHTML =
-                    `${value} <i class="fa fa-times" onclick="removeFilter('${category}', '${value}', '${targetId}')"></i>`;
-                targetElement.appendChild(filter);
-                if (!filters[category]) {
-                    filters[category] = [];
-                }
-                filters[category].push(value);
-            }
-            debouncedApplyFilters();
-        }
-
-        function removeFilter(category, value, targetId) {
-            const filterElement = document.getElementById(`${category}-${value}`);
-            if (filterElement) {
-                document.getElementById(targetId).removeChild(filterElement);
-            }
-
-            // Remove the value from the filters object
-            if (filters[category]) {
-                filters[category] = filters[category].filter(item => item !== value);
-
-                // If no values remain for this category, delete the key
-                if (filters[category].length === 0) {
-                    delete filters[category];
-                }
-            }
-
-            // Rebuild URL and reapply filters
-            const newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
+            syncHeaderFilters();
+            let newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
@@ -350,7 +419,40 @@
             });
         }
 
+        const debouncedApplyFilters = debounce(applyFilters, 300);
 
+        // Add filter
+        function addFilter(category, value, targetId) {
+            const targetElement = document.getElementById(targetId);
+            if (!document.getElementById(`${category}-${value}`)) {
+                const filter = document.createElement('div');
+                filter.className = 'selected-filter';
+                filter.id = `${category}-${value}`;
+                filter.innerHTML =
+                    `${value} <i class="fa fa-times" onclick="removeFilter('${category}', '${value}', '${targetId}')"></i>`;
+                targetElement.appendChild(filter);
+                if (!filters[category]) {
+                    filters[category] = [];
+                }
+                filters[category].push(value);
+            }
+            debouncedApplyFilters();
+        }
+
+        // Remove filter
+        function removeFilter(category, value, targetId) {
+            const filter = document.getElementById(`${category}-${value}`);
+            if (filter) {
+                document.getElementById(targetId).removeChild(filter);
+            }
+            filters[category] = filters[category].filter(item => item !== value);
+            if (filters[category].length === 0) {
+                delete filters[category];
+            }
+            debouncedApplyFilters();
+        }
+
+        // Filter dropdown options
         function filterOptions(input, optionsContainerId) {
             const filter = input.value.toLowerCase();
             const optionsContainer = document.getElementById(optionsContainerId);
@@ -370,6 +472,7 @@
             optionsContainer.style.display = filter.length === 0 || !hasVisibleOptions ? 'none' : 'block';
         }
 
+        // Reset all filters
         function resetFilters() {
             filters = {};
             $('.selected-filter-group').empty();
@@ -377,7 +480,31 @@
             applyFilters();
         }
 
+        // Handle pagination click with filters applied
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            const pageUrl = $(this).attr('href');
+            let newUrl = `${pageUrl}&${$.param(filters, true)}`;
 
+            window.history.pushState({
+                path: newUrl
+            }, '', newUrl);
+
+            $.ajax({
+                url: pageUrl,
+                data: filters,
+                method: 'GET',
+                success: function(response) {
+                    $('#userResults').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching paginated results:', error);
+                    alert('Failed to load results. Please try again.');
+                }
+            });
+        });
+
+        // Toggle filter sections
         document.querySelectorAll('.filter-header').forEach(header => {
             header.addEventListener('click', function() {
                 const icon = this.querySelector('.toggle-icon');

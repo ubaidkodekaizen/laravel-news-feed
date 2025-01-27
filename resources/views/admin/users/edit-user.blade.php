@@ -1,5 +1,6 @@
 @extends('admin.layouts.main')
 @section('content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />
 
 
     <main class="main-content">
@@ -36,6 +37,10 @@
                                     @csrf
                                     <div class="row">
                                         <div class="col-12">
+                                            <h1 class="profile_heading text-center">
+                                                Personal Information
+                                            </h1>
+                                            <input type="hidden" name="id" value="{{ $user->id }}" />
                                             <div class="profile_pic">
                                                 <div class="avatar-upload mb-3">
                                                     <div class="avatar-edit">
@@ -50,12 +55,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" name="id" value="{{ $user->id }}" />
-
+                                                <label class="form-label text-center w-100 mt-0">Upload Photo</label>
                                             </div>
-                                            <h1 class="profile_heading text-center">
-                                                Personal Information
-                                            </h1>
+
                                         </div>
                                         <div class="col-12">
                                             @if ($errors->any())
@@ -180,8 +182,9 @@
                                                     Public)
                                                 </div>
                                             </label>
-                                            <input type="tel" name="phone" id="phone" class="form-control"
-                                                value="{{ old('phone', $user->phone) }}" readonly>
+                                            <input type="tel" name="phone" id="phone"
+                                                class="form-control phone_number w-100"
+                                                value="{{ old('phone', $user->phone) }}">
                                         </div>
 
                                         <div class="col-lg-6">
@@ -199,7 +202,7 @@
                                                 </div>
                                             </label>
                                             <input type="email" name="email" id="email" class="form-control"
-                                                value="{{ old('email', $user->email) }}" readonly>
+                                                value="{{ old('email', $user->email) }}">
                                         </div>
 
 
@@ -513,6 +516,9 @@
                                     @csrf
                                     <div class="row">
                                         <div class="col-12">
+                                            <h1 class="profile_heading text-center mt-0">
+                                                Professional Information
+                                            </h1>
                                             <div class="profile_pic">
                                                 <div class="avatar-upload mb-3">
                                                     <div class="avatar-edit">
@@ -528,11 +534,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="user_id" value="{{ $user->id }}" />
-                                            <h1 class="profile_heading text-center mt-0">
-                                                Professional Information
-                                            </h1>
+
+                                            <label class="form-label text-center w-100 mt-0">Upload Logo</label>
                                         </div>
+                                        <input type="hidden" name="user_id" value="{{ $user->id }}" />
                                         <div class="col-12">
                                             @if ($errors->any())
                                                 <div class="alert alert-danger">
@@ -551,7 +556,7 @@
                                             <label for="company_name">Company Name</label>
                                             <input type="text" name="company_name" id="company_name"
                                                 class="form-control"
-                                                value="{{ old('company_name', $company->company_name ?? '') }}" required>
+                                                value="{{ old('company_name', $company->company_name ?? '') }}">
                                         </div>
 
 
@@ -559,8 +564,7 @@
                                             <label for="company_web_url">Company URL</label>
                                             <input type="text" name="company_web_url" id="company_web_url"
                                                 class="form-control"
-                                                value="{{ old('company_web_url', $company->company_web_url ?? '') }}"
-                                                required>
+                                                value="{{ old('company_web_url', $company->company_web_url ?? '') }}">
                                         </div>
 
 
@@ -568,7 +572,7 @@
                                         <div class="col-lg-6 custom-select-dropdown">
                                             <label for="company_position">Title/Designation</label>
 
-                                            <div class="selected-tags my-2">
+                                            <div class="selected-tags my-2" id="selected-tags">
                                                 {{ $company->company_position ?? '' }}
                                             </div>
                                             <input type="hidden" id="company_position_hidden" name="company_position"
@@ -580,7 +584,7 @@
                                         <div class="col-lg-6 company_position_other_div d-none">
                                             <label for="company_position_other">Title/Designation Other</label>
                                             <input type="text" name="company_position_other"
-                                                id="company_position_other" class="form-control">
+                                                id="company_position_other" class="form-control" value="">
                                         </div>
 
                                         <div class="col-lg-6 custom-select-dropdown mt-0">
@@ -615,9 +619,8 @@
                                         <div class="col-lg-6">
                                             <label for="work_phone_num">Work Phone Number</label>
                                             <input type="tel" name="company_phone" id="company_phone"
-                                                class="form-control"
-                                                value="{{ old('company_phone', $company->company_phone ?? '') }}"
-                                                required>
+                                                class="form-control phone_number"
+                                                value="{{ old('company_phone', $company->company_phone ?? '') }}">
                                         </div>
                                         <!-- Company Linkedin URL -->
                                         <div class="col-lg-6">
@@ -626,26 +629,31 @@
                                                 <div class="input-group-text">https://www.linkedin.com/company/</div>
                                                 <input type="text" name="company_linkedin_user"
                                                     id="company_linkedin_user" class="form-control"
-                                                    value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}"
-                                                    required>
+                                                    value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}">
                                             </div>
                                             <input type="hidden" name="company_linkedin_url"
                                                 id="company_linkedin_url_hidden" value="">
 
                                         </div>
 
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-6 custom-select-dropdown">
                                             <label for="company_industry">Industry</label>
-                                            {!! \App\Helpers\DropDownHelper::renderIndustryDropdown(
-                                                $company->company_industry ?? '',
-                                                $company->company_sub_category ?? '',
-                                            ) !!}
-                                            <div id="industry_other_field" style="display: none;">
-                                                <label for="industry_other">Other Industry</label>
-                                                <input type="text" name="company_industry_other" id="industry_other"
-                                                    class="form-control" placeholder="Enter other industry">
+                                            <div class="selected-tags-industry my-2" id="selected-tags-industry">
+                                                {{ $company->company_industry ?? '' }}
                                             </div>
+                                            <input type="hidden" id="company_industry_hidden" name="company_industry"
+                                                value="{{ old('company_industry', $company->company_industry ?? '') }}" />
+                                            {!! \App\Helpers\DropDownHelper::industryDropdown($company->company_industry ?? '') !!}
                                         </div>
+
+                                        <div class="col-lg-6 company_industry_other_div d-none">
+                                            <label for="company_industry_other">Industry Other</label>
+                                            <input type="text" name="company_industry_other"
+                                                id="company_industry_other" class="form-control" value="">
+                                        </div>
+
+
+
 
                                         <!-- Business Type Dropdown -->
                                         <div class="col-lg-6">
@@ -680,16 +688,14 @@
                                                     <label for="product_service_name" class="mt-2">Name</label>
                                                     <input type="text" name="product_service_name[]"
                                                         id="product_service_name" class="form-control"
-                                                        value="{{ old('product_service_name[]', $company->productServices[0]->product_service_name ?? '') }}"
-                                                        required>
+                                                        value="{{ old('product_service_name[]', $company->productServices[0]->product_service_name ?? '') }}">
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <label for="product_service_description"
                                                         class="mt-2">Description</label>
                                                     <input type="text" name="product_service_description[]"
                                                         id="product_service_description"
-                                                        value="{{ old('product_service_description[]', $company->productServices[0]->product_service_description ?? '') }}"class="form-control"
-                                                        required>
+                                                        value="{{ old('product_service_description[]', $company->productServices[0]->product_service_description ?? '') }}"class="form-control">
                                                 </div>
                                                 <div class="col-lg-1">
                                                     <div class="flex_field_btn h-100">
@@ -723,6 +729,49 @@
 
 @endsection
 @section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
+
+    <script>
+        $('#search_form').on('submit', function() {
+            // Disable empty input fields
+            $(this).find('input').each(function() {
+                if (!$(this).val().trim()) {
+                    $(this).prop('disabled', true);
+                }
+            });
+
+            // Disable unselected select fields
+            $(this).find('select').each(function() {
+                if (!$(this).val()) { // Check if no value is selected
+                    $(this).prop('disabled', true);
+                }
+            });
+        });
+
+
+        $(document).ready(function() {
+            // Initialize intlTelInput on all elements with class 'phone_number'
+            $(".phone_number").each(function() {
+                const phoneInput = $(this);
+                const iti = phoneInput.intlTelInput({
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js" // Ensure this is loaded for utils functionality
+                });
+
+                // Before form submission, update the input value to include the full number
+                phoneInput.closest("form").on("submit", function() {
+                    if (iti.intlTelInput("isValidNumber")) {
+                        const fullNumber = iti.intlTelInput(
+                            "getNumber"); // Get full number with country code
+                        phoneInput.val(fullNumber); // Update input value with the full number
+                    } else {
+                        alert("Invalid phone number entered!");
+                        return false; // Prevent form submission if the number is invalid
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         let eduCount = 1;
 
@@ -915,32 +964,6 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            document.querySelector('select[name="industry_to_connect"]').addEventListener('change', function() {
-                toggleOtherField(this, 'industry_other_field_2');
-            });
-
-            document.querySelector('select[name="sub_category_to_connect"]').addEventListener('change', function() {
-                toggleOtherField(this, 'subcategory_other_field');
-            });
-
-            document.querySelector('select[name="community_interest"]').addEventListener('change', function() {
-                toggleOtherField(this, 'community_interest_other_field');
-            });
-
-            function toggleOtherField(dropdown, fieldId) {
-                const otherField = document.getElementById(fieldId);
-                if (dropdown.value.toLowerCase() === 'other') {
-                    otherField.style.display = 'block';
-                } else {
-                    otherField.style.display = 'none';
-                    otherField.querySelector('input').value = '';
-                }
-            }
-        });
-
-
         document.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -956,48 +979,33 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const checkboxes = document.querySelectorAll('.form-check-input');
-            const hiddenInput = document.getElementById('company_position_hidden');
-            const otherCheckbox = document.getElementById('company_position_other_select');
-            const otherFieldDiv = document.querySelector('.company_position_other_div');
-            const otherInput = document.getElementById('company_position_other');
-            const tagContainer = document.querySelector('.selected-tags'); // Container for tags
-            const searchInput = document.getElementById('search-dropdown'); // Search input for dropdown
+            // DESIGNATION FUNCTIONALITY
+            const designationCheckboxes = document.querySelectorAll('.position-dropdown-menu .form-check-input');
 
-            const selectedPositions = hiddenInput.value.split(',').map(pos => pos
-                .trim()); // Split saved positions into an array
+            const designationHiddenInput = document.getElementById('company_position_hidden');
+            const designationOtherCheckbox = document.getElementById('company_position_other_select');
+            const designationOtherFieldDiv = document.querySelector('.company_position_other_div');
+            const designationOtherInput = document.getElementById('company_position_other');
+            const designationTagContainer = document.querySelector('#selected-tags');
+            const designationSearchInput = document.getElementById('search-dropdown');
 
-            const updateHiddenInput = () => {
-                const selected = Array.from(document.querySelectorAll('.form-check-input:checked'))
-                    .filter(cb => cb !== otherCheckbox)
-                    .map(cb => cb.labels[0].textContent.trim());
-
-                if (otherCheckbox.checked && otherInput.value.trim()) {
-                    selected.push(otherInput.value.trim());
-                }
-
-                hiddenInput.value = selected.join(', '); // Update hidden input with selected positions
-                updateTags(); // Reflect changes in tags
-            };
-
-            const updateTags = () => {
-                tagContainer.innerHTML = ''; // Clear existing tags
-                const selectedCheckboxes = Array.from(document.querySelectorAll('.form-check-input:checked'));
-                selectedCheckboxes.forEach((checkbox) => {
-                    const label = checkbox.labels[0]; // Get associated label
-                    if (label) { // Check if label exists
+            const updateDesignationTags = () => {
+                designationTagContainer.innerHTML = '';
+                const selectedCheckboxes = Array.from(designationCheckboxes).filter(cb => cb.checked);
+                selectedCheckboxes.forEach(checkbox => {
+                    const label = checkbox.labels[0];
+                    if (label) {
                         const tagText = label.textContent.trim();
-                        createTag(tagText, checkbox);
+                        createDesignationTag(tagText, checkbox);
                     }
                 });
 
-                // Handle "Other" tag if selected
-                if (otherCheckbox.checked && otherInput.value.trim()) {
-                    createTag(otherInput.value.trim(), null, true); // Add "Other" as a tag
+                if (designationOtherCheckbox.checked && designationOtherInput.value.trim()) {
+                    createDesignationTag(designationOtherInput.value.trim(), null, true);
                 }
             };
 
-            const createTag = (text, checkbox, isOther = false) => {
+            const createDesignationTag = (text, checkbox, isOther = false) => {
                 const tag = document.createElement('span');
                 tag.className = 'tag';
                 tag.textContent = text;
@@ -1008,74 +1016,75 @@
                 closeButton.addEventListener('click', () => {
                     tag.remove();
                     if (isOther) {
-                        otherCheckbox.checked = false;
-                        otherInput.value = '';
-                        otherFieldDiv.classList.add('d-none');
-                        otherFieldDiv.classList.remove('d-block');
+                        designationOtherCheckbox.checked = false;
+                        designationOtherInput.value = '';
+                        designationOtherFieldDiv.classList.add('d-none');
                     } else if (checkbox) {
                         checkbox.checked = false;
                     }
-                    updateHiddenInput();
+                    updateDesignationHiddenInput();
                 });
 
                 tag.appendChild(closeButton);
-                tagContainer.appendChild(tag);
+                designationTagContainer.appendChild(tag);
             };
 
+            const updateDesignationHiddenInput = () => {
+                const selected = Array.from(designationCheckboxes)
+                    .filter(cb => cb.checked && cb !== designationOtherCheckbox)
+                    .map(cb => cb.labels[0].textContent.trim());
 
-
-            selectedPositions.forEach((position) => {
-                const checkbox = Array.from(checkboxes).find(cb => {
-                    const label = cb.labels[0];
-                    return label && label.textContent.trim() === position;
-                });
-
-                if (checkbox) {
-                    checkbox.checked = true;
-                } else if (position === "Other") {
-                    otherCheckbox.checked = true;
-                    otherFieldDiv.classList.remove('d-none');
-                    otherFieldDiv.classList.add('d-block');
-                    otherInput.value = position;
+                if (designationOtherCheckbox.checked && designationOtherInput.value.trim()) {
+                    selected.push(designationOtherInput.value.trim());
                 }
-            });
 
+                designationHiddenInput.value = Array.from(new Set(selected)).join(', ');
+                updateDesignationTags();
+            };
 
+            const initializeDesignationTags = () => {
+                const existingValues = designationHiddenInput.value.split(', ').filter(value => value.trim());
 
-            checkboxes.forEach((checkbox) => {
-                checkbox.addEventListener('change', () => {
-                    if (otherCheckbox.checked) {
-                        otherFieldDiv.classList.remove('d-none');
-                        otherFieldDiv.classList.add('d-block');
-                    } else {
-                        otherFieldDiv.classList.add('d-none');
-                        otherFieldDiv.classList.remove('d-block');
+                existingValues.forEach(value => {
+                    const matchingCheckbox = Array.from(designationCheckboxes).find(cb => cb.labels[0]
+                        .textContent.trim() === value);
+
+                    if (matchingCheckbox) {
+                        matchingCheckbox.checked = true;
+                    } else if (value === designationOtherInput.value.trim()) {
+                        designationOtherCheckbox.checked = true;
+                        designationOtherFieldDiv.classList.remove('d-none');
                     }
-                    updateHiddenInput();
+                });
+
+                updateDesignationTags();
+            };
+
+            initializeDesignationTags();
+
+            designationCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    if (designationOtherCheckbox.checked) {
+                        designationOtherFieldDiv.classList.remove('d-none');
+                    } else {
+                        designationOtherFieldDiv.classList.add('d-none');
+                    }
+                    updateDesignationHiddenInput();
                 });
             });
 
+            designationOtherInput.addEventListener('keyup', updateDesignationHiddenInput);
 
-            otherInput.addEventListener('keyup', updateHiddenInput);
-
-
-            searchInput.addEventListener('input', () => {
+            designationSearchInput.addEventListener('input', () => {
                 const dropdownMenu = document.querySelector('.position-dropdown-menu');
-                const searchTerm = searchInput.value.toLowerCase().trim();
+                const searchTerm = designationSearchInput.value.toLowerCase().trim();
                 const listItems = dropdownMenu.querySelectorAll('li');
 
-                listItems.forEach((item) => {
+                listItems.forEach(item => {
                     const label = item.querySelector('.form-check-label');
                     if (label) {
-                        const labelText = label.textContent
-                            .toLowerCase();
-
-
-                        if (labelText.includes(searchTerm)) {
-                            item.style.display = '';
-                        } else {
-                            item.style.display = 'none';
-                        }
+                        const labelText = label.textContent.toLowerCase();
+                        item.style.display = labelText.includes(searchTerm) ? '' : 'none';
                     }
                 });
             });
@@ -1085,14 +1094,152 @@
 
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // INDUSTRY FUNCTIONALITY
+            const industryCheckboxes = document.querySelectorAll('.industry-dropdown-menu .form-check-input');
+
+            const industryHiddenInput = document.getElementById('company_industry_hidden');
+            const industryOtherCheckbox = document.getElementById('industry_other_select');
+            const industryOtherFieldDiv = document.querySelector('.company_industry_other_div');
+            const industryOtherInput = document.getElementById('company_industry_other');
+            const industryTagContainer = document.querySelector('#selected-tags-industry');
+            const industrySearchInput = document.getElementById('industry-search-dropdown');
+            console.log('Industry Tags Updated:', industryHiddenInput.value);
+            const updateIndustryHiddenInput = () => {
+                // Get existing values from the hidden input field
+                const existingValues = industryHiddenInput.value.split(', ').filter(value => value.trim());
+
+                // Get newly selected checkboxes
+                const selected = Array.from(industryCheckboxes)
+                    .filter(cb => cb.checked && cb !== industryOtherCheckbox)
+                    .map(cb => cb.labels[0].textContent.trim());
+
+                // Include "Other" field value if applicable
+                if (industryOtherCheckbox.checked && industryOtherInput.value.trim()) {
+                    selected.push(industryOtherInput.value.trim());
+                }
+
+                // Combine existing and new values, removing duplicates
+                const updatedValues = Array.from(new Set([...existingValues, ...selected]));
+
+                // Update the hidden input field
+                industryHiddenInput.value = updatedValues.join(', ');
+
+                console.log("Industry Hidden Input Value: ", industryHiddenInput.value); // Debugging line
+                updateIndustryTags();
+            };
+            const updateIndustryTags = () => {
+                industryTagContainer.innerHTML = '';
+                const selectedCheckboxes = Array.from(industryCheckboxes).filter(cb => cb.checked);
+                selectedCheckboxes.forEach(checkbox => {
+                    const label = checkbox.labels[0];
+                    if (label) {
+                        const tagText = label.textContent.trim();
+                        createIndustryTag(tagText, checkbox);
+                    }
+                });
+
+                if (industryOtherCheckbox.checked && industryOtherInput.value.trim()) {
+                    createIndustryTag(industryOtherInput.value.trim(), null, true);
+                }
+            };
+            const createIndustryTag = (text, checkbox, isOther = false) => {
+                const tag = document.createElement('span');
+                tag.className = 'tag2';
+                tag.textContent = text;
+
+                const closeButton = document.createElement('span');
+                closeButton.className = 'tag-close2';
+                closeButton.textContent = '×';
+                closeButton.addEventListener('click', () => {
+                    tag.remove();
+
+                    // Update checkbox or "Other" field as appropriate
+                    if (isOther) {
+                        industryOtherCheckbox.checked = false;
+                        industryOtherInput.value = '';
+                        industryOtherFieldDiv.classList.add('d-none');
+                    } else if (checkbox) {
+                        checkbox.checked = false;
+                    }
+
+                    // Remove the tag's value from the hidden input field
+                    const updatedValues = industryHiddenInput.value
+                        .split(', ')
+                        .filter(value => value.trim() !== text); // Remove the tag's value
+                    industryHiddenInput.value = updatedValues.join(', ');
+
+                    console.log("Updated Hidden Input Value After Removal: ", industryHiddenInput
+                        .value); // Debugging line
+
+                    updateIndustryTags(); // Optional: Update tags visually if needed
+                });
+
+                tag.appendChild(closeButton);
+                industryTagContainer.appendChild(tag);
+            };
+
+
+            const initializeIndustryTags = () => {
+                const existingValues = industryHiddenInput.value.split(', ').filter(value => value.trim());
+
+                // Loop through existing values and check corresponding checkboxes
+                existingValues.forEach(value => {
+                    const matchingCheckbox = Array.from(industryCheckboxes).find(cb => cb.labels[0]
+                        .textContent.trim() === value);
+
+                    if (matchingCheckbox) {
+                        matchingCheckbox.checked = true;
+                    } else if (value === industryOtherInput.value.trim()) {
+                        industryOtherCheckbox.checked = true;
+                        industryOtherFieldDiv.classList.remove('d-none');
+                    }
+                });
+
+                // Generate tags for existing values
+                updateIndustryTags();
+            };
+            initializeIndustryTags();
+
+
+
+
+
+            industryCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    if (industryOtherCheckbox.checked) {
+                        industryOtherFieldDiv.classList.remove('d-none');
+                    } else {
+                        industryOtherFieldDiv.classList.add('d-none');
+                    }
+                    updateIndustryHiddenInput();
+                });
+            });
+
+
+            industryOtherInput.addEventListener('keyup', updateIndustryHiddenInput);
+
+            industrySearchInput.addEventListener('input', () => {
+                const dropdownMenu = document.querySelector('.industry-dropdown-menu');
+                const searchTerm = industrySearchInput.value.toLowerCase().trim();
+                const listItems = dropdownMenu.querySelectorAll('li');
+
+                listItems.forEach(item => {
+                    const label = item.querySelector('.form-check-label');
+                    if (label) {
+                        const labelText = label.textContent.toLowerCase();
+                        item.style.display = labelText.includes(searchTerm) ? '' : 'none';
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('select[name="company_business_type"]').addEventListener('change', function() {
                 toggleOtherField(this, 'business_type_other_field');
             });
 
-            document.querySelector('select[name="company_industry"]').addEventListener('change', function() {
-                toggleOtherField(this, 'industry_other_field');
-            });
 
 
 
@@ -1160,6 +1307,22 @@
             flexFieldBtn.classList.add('flex_field_btn');
             flexFieldBtn.classList.add('h-100');
 
+            // const fieldDiv = document.createElement('div');
+            // fieldDiv.classList.add('field', 'w-75');
+
+            // const areaLabel = document.createElement('label');
+            // areaLabel.setAttribute('for', 'product_service_area_' + count);
+            // areaLabel.innerText = 'Product Service Area ' + count;
+
+            // const areaInput = document.createElement('input');
+            // areaInput.type = 'text';
+            // areaInput.name = 'product_service_area[]';
+            // areaInput.id = 'product_service_area_' + count;
+            // areaInput.classList.add('form-control');
+
+            // fieldDiv.appendChild(areaLabel);
+            // fieldDiv.appendChild(areaInput);
+            // flexFieldBtn.appendChild(fieldDiv);
 
             // Delete Button
             const deleteButton = document.createElement('button');

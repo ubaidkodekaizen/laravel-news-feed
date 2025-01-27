@@ -24,7 +24,9 @@
         </div>
         <div class="indus_member">
             <p class="user_about"><strong>Industry: </strong> {{ $user->company->company_industry }}</p>
-            <p class="user_exp"><strong>Member since: </strong> {{ $user->created_at->format('M d, Y') }}</p>
+            <p class="user_exp"><strong>Member since: </strong>
+                {{ $user->created_at ? $user->created_at->format('M d, Y') : 'Not available' }}
+            </p>
         </div>
     </div>
 @empty
