@@ -1114,3 +1114,31 @@ body {
 .iti{
     width: 100%;
 }
+#dashboardMenu .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0;
+}
+
+#dashboardMenu .nav-list .nav-items a {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: .5rem;
+    padding: .75rem .5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    color: var(--white);
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .1s;
+    animation-duration: .1s;
+    text-decoration: none;
+}
+#dashboardMenu .nav-list .nav-items a.active{
+    border-radius: 10px;
+    background-color: var(--white);
+    color: var(--primary);
+}
