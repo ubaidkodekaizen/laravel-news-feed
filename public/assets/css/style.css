@@ -1142,3 +1142,51 @@ body {
     background-color: var(--white);
     color: var(--primary);
 }
+#dashboardMenu .nav-list .nav-items a:hover{
+    border-radius: 10px;
+    background-color: var(--white);
+    color: var(--primary);
+}
+
+.icon_name_flex {
+    padding: 0px 20px;
+    display: flex;
+    min-height: 130px;
+    align-items: center;
+    gap: 20px;
+    border-radius: 20px;
+    background-color: var(--primary);
+    font-size: 18px;
+    font-weight: 500;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.icon_name_flex .icon i {
+    font-size: 30px;
+}
+
+.icon_name_flex .card_data .heading {
+    font-size: 22px;
+    margin-bottom: 13px;
+}
+
+.icon_name_flex .card_data .card_num {
+    font-size: 28px;
+}
+#dashboardMenu .nav-list .nav-items {
+    margin-bottom: 15px;
+}
+.section_heading_flex{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+.section_heading_flex h2{
+    font-size: 25px;
+    text-align: left;
+}
+.table_image {
+    max-height: 60px;
+}
