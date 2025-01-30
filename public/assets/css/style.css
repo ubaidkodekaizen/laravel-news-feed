@@ -1190,3 +1190,54 @@ body {
 .table_image {
     max-height: 60px;
 }
+.add_form .image-uploader {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    position: relative;
+}
+
+.add_form .upload-area {
+    cursor: pointer;
+}
+
+.add_form .upload-area span {
+    color: #666;
+    font-size: 16px;
+}
+
+.add_form .image-preview {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.add_form .image-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+}
+
+.add_form .dragover {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+.add_form #remove-image {
+    margin-top: 10px;
+}
+.add_form {
+    box-shadow: 0 0 20px rgba(8, 21, 66, 0.05);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 15px;
+}
+
+.data_table_user .btn_flex{
+    height: 60px;
+    justify-content: start;
+}
+.data_table_user .table.dataTable tbody td{
+    vertical-align: middle;
+}

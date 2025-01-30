@@ -36,6 +36,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/user/services', function () {
         return view('user-services');
     })->name('user.services');
+    Route::get('/user/services/add', function () {
+        return view('add-services');
+    })->name('user.add.service');
 
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');

@@ -1,46 +1,44 @@
-<!-- resources/views/user-products.blade.php -->
-
 @extends('layouts.dashboard-layout')
 
 @section('dashboard-content')
     <div class="row">
         <div class="col-12">
             <div class="section_heading_flex">
-                <h2>Add Product</h2>
+                <h2>Add Service</h2>
             </div>
             <div class="add_form">
                 <form action="">
                     <div class="row">
                         <div class="col-lg-6 mb-3">
-                            <label for="product_name" class="form-label">Product Name:</label>
-                            <input type="text" name="product_name" id="product_name" class="form-control" required>
+                            <label for="service_name" class="form-label">Service Name:</label>
+                            <input type="text" name="service_name" id="service_name" class="form-control" required>
                         </div>
                         <div class="col-lg-6 mb-3">
-                            <label for="product_category" class="form-label">Product Category:</label>
-                            <select name="product_category" id="product_category" class="form-select" required>
-                                <option value="">Select Product Category</option>
+                            <label for="service_category" class="form-label">Service Category:</label>
+                            <select name="service_category" id="service_category" class="form-select" required>
+                                <option value="">Select service Category</option>
                             </select>
                         </div>
                         <div class="col-lg-6 mb-3">
-                            <label for="product_price" class="form-label">Product Price:</label>
-                            <input type="text" name="product_price" id="product_price" class="form-control" required>
+                            <label for="service_price" class="form-label">Service Price:</label>
+                            <input type="text" name="service_price" id="service_price" class="form-control" required>
                         </div>
                         <div class="col-lg-6 mb-3">
-                            <label for="product_price" class="form-label">Price Type:</label>
-                            <select name="product_price" id="product_price" class="form-select" required>
+                            <label for="service_price_type" class="form-label">Price Type:</label>
+                            <select name="service_price_type" id="service_price_type" class="form-select" required>
                                 <option value="">Select Price Type</option>
                                 <option value="Monthly">Monthly</option>
                                 <option value="Yearly">Yearly</option>
                             </select>
                         </div>
                         <div class="col-lg-12 mb-3">
-                            <label for="product_description" class="form-label">Product Description:</label>
-                            <textarea name="product_description" id="product_description" class="form-control" rows="4"></textarea>
+                            <label for="service_description" class="form-label">Service Description:</label>
+                            <textarea name="service_description" id="service_description" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="col-12 mb-3">
-                            <label for="product_image" class="form-label">Product Image:</label>
+                            <label for="service_image" class="form-label">Service Image:</label>
                             <div class="image-uploader">
-                                <input type="file" name="product_image" id="product_image" class="form-control" required accept="image/*" style="display: none;">
+                                <input type="file" name="service_image" id="service_image" class="form-control" required accept="image/*" style="display: none;">
                                 <div class="upload-area" id="upload-area">
                                     <span>Click to upload or drag and drop</span>
                                 </div>
@@ -64,7 +62,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const uploadArea = document.getElementById('upload-area');
-        const fileInput = document.getElementById('product_image');
+        const fileInput = document.getElementById('service_image');
         const previewImage = document.getElementById('preview-image');
         const removeImageButton = document.getElementById('remove-image');
         const imagePreviewContainer = document.getElementById('image-preview');
