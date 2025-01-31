@@ -730,7 +730,102 @@
 @endsection
 @section('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
-
+<script>
+    $("#user_details").validate({
+    rules: {
+        first_name: {
+            required: true,
+            minlength: 2
+        },
+        last_name: {
+            required: true,
+            minlength: 2
+        },
+        email: {
+            required: true,
+            email: true
+        },
+        phone: {
+            required: true,
+        },
+        linkedin_url: {
+            required: true,
+        },
+        x_url: {
+            url: true
+        },
+        instagram_url: {
+            url: true
+        },
+        facebook_url: {
+            url: true
+        },
+        address: {
+            required: true
+        },
+        city: {
+            required: true
+        },
+        country: {
+            required: true
+        },
+        industry_to_connect: {
+            required: true
+        },
+        sub_category_to_connect: {
+            required: true
+        },
+        community_interest: {
+            required: true
+        },
+        "are_you[]": {
+            required: function () {
+                return $(".list_check_flex input[type=checkbox]:checked").length === 0;
+            }
+        }
+    },
+    messages: {
+        first_name: {
+            required: "Please enter your first name",
+            minlength: "First name must be at least 2 characters"
+        },
+        last_name: {
+            required: "Please enter your last name",
+            minlength: "Last name must be at least 2 characters"
+        },
+        email: {
+            required: "Please enter your email",
+            email: "Please enter a valid email address"
+        },
+        phone: {
+            required: "Please enter your phone number",
+            minlength: "Phone number must be at least 10 digits",
+            digits: "Please enter only numbers"
+        },
+        linkedin_url: "Please enter a valid URL",
+        x_url: "Please enter a valid URL",
+        instagram_url: "Please enter a valid URL",
+        facebook_url: "Please enter a valid URL",
+        address: "Please enter your address",
+        city: "Please enter your city",
+        country: "Please enter your country",
+        zip_code: {
+            required: "Please enter your zip code",
+            digits: "Zip code must be a number"
+        },
+        industry_to_connect: "Please select an industry",
+        sub_category_to_connect: "Please select a sub-category",
+        community_interest: "Please select your community interest",
+        "are_you[]": "Please select at least one option"
+    },
+    submitHandler: function (form) {
+        form.submit(); // Only submit when form is valid
+    },
+    invalidHandler: function (event, validator) {
+        console.log("Form contains invalid fields. It won't submit.");
+    }
+});
+</script>
     <script>
         $('#search_form').on('submit', function() {
             // Disable empty input fields

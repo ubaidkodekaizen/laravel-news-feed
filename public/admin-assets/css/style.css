@@ -211,3 +211,8 @@ img:not(.logo img, .user_company_profile .company_logo img, .user_company_profil
 .ck.ck-editor__main>.ck-editor__editable{
   min-height: 250px;
 }
+.card_header_flex{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

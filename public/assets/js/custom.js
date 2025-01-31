@@ -208,7 +208,6 @@ $(document).ready(function () {
             },
             linkedin_url: {
                 required: true,
-                // url: true
             },
             x_url: {
                 url: true
@@ -236,6 +235,12 @@ $(document).ready(function () {
             },
             community_interest: {
                 required: true
+            },
+            // Add validation for "Are You?" section
+            "are_you[]": {
+                required: function () {
+                    return $(".list_check_flex input[type=checkbox]:checked").length === 0;
+                }
             }
         },
         messages: {
@@ -269,7 +274,8 @@ $(document).ready(function () {
             },
             industry_to_connect: "Please select an industry",
             sub_category_to_connect: "Please select a sub-category",
-            community_interest: "Please select your community interest"
+            community_interest: "Please select your community interest",
+            "are_you[]": "Please select at least one option"
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
@@ -278,11 +284,12 @@ $(document).ready(function () {
                 element.closest(".col-lg-6").append(error);
             } else if (element.closest(".col-lg-4").length) {
                 element.closest(".col-lg-4").append(error);
-            } else {
+            } else if (element.closest(".col-12").length) {
                 element.closest(".col-12").append(error);
             }
         }
     });
+    
 
     const swiper = new Swiper('.swiper', {
         slidesPerView: 1,

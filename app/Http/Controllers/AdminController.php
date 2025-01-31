@@ -82,6 +82,11 @@ class AdminController extends Controller
         return view('admin.users.users', compact('users'));
 
     }
+    public function addUser()
+    {
+        return view('admin.users.add-user');
+
+    }
 
     public function showUserById($id)
     {

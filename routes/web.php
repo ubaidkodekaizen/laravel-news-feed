@@ -51,6 +51,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
 
     //Users
     Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
+    Route::get('/admin/users/add', [AdminController::class, 'addUser'])->name('admin.add.user');
     Route::get('/admin/user/profile/{id}', [AdminController::class, 'showUserById'])->name('admin.user.profile');
     Route::get('/admin/user/edit/{id}', [AdminController::class, 'editUser'])->name('admin.user.edit');
     Route::post('/admin/user/update', [AdminController::class, 'updateUserDetails'])->name('admin.user.update');

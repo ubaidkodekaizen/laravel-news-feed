@@ -6,8 +6,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header card_header_flex">
                         <h4 class="card-title">User Management</h4>
+                        <a href="{{Route('admin.add.user')}}" class="btn btn-primary">Add User</a>
                     </div>
                     <div class="card-body">
                         <table id="usersTable" class="table table-striped table-hover">

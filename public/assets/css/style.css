@@ -1023,6 +1023,7 @@ body {
     margin: 0;
     list-style: none;
     margin-top: 20px;
+    position: relative;
 }
 .list_check_flex .btn-check {
     position: absolute;
