@@ -27,6 +27,18 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('/user/products', function () {
+        return view('user-products');
+    })->name('user.products');
+    Route::get('/user/product/add', function () {
+        return view('add-product');
+    })->name('user.add.product');
+    Route::get('/user/services', function () {
+        return view('user-services');
+    })->name('user.services');
+    Route::get('/user/services/add', function () {
+        return view('add-services');
+    })->name('user.add.service');
 
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
