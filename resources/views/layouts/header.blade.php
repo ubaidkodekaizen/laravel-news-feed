@@ -86,7 +86,7 @@
                                 {{ Auth::user()->first_name }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('user.details.show') }}">User Profile</a>
+                                <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
                                 {{-- <li><a class="dropdown-item" href="{{route('user.company.details')}}">User Company</a></li> --}}
                                 <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>

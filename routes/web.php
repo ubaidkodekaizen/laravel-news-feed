@@ -25,19 +25,19 @@ Route::get('/get-suggestions', [SearchController::class, 'getSuggestions'])->nam
 Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('user.dashboard');
     })->name('dashboard');
     Route::get('/user/products', function () {
-        return view('user-products');
+        return view('user.user-products');
     })->name('user.products');
     Route::get('/user/product/add', function () {
-        return view('add-product');
+        return view('user.add-product');
     })->name('user.add.product');
     Route::get('/user/services', function () {
-        return view('user-services');
+        return view('user.user-services');
     })->name('user.services');
     Route::get('/user/services/add', function () {
-        return view('add-services');
+        return view('user.add-services');
     })->name('user.add.service');
 
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
@@ -64,11 +64,13 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     //Users
     Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
     Route::get('/admin/users/add', [AdminController::class, 'addUser'])->name('admin.add.user');
+    Route::post('/admin/users/create', [AdminController::class, 'createUser'])->name('admin.create.user');
     Route::get('/admin/user/profile/{id}', [AdminController::class, 'showUserById'])->name('admin.user.profile');
     Route::get('/admin/user/edit/{id}', [AdminController::class, 'editUser'])->name('admin.user.edit');
     Route::post('/admin/user/update', [AdminController::class, 'updateUserDetails'])->name('admin.user.update');
     Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
     Route::post('/admin/company/update', [AdminController::class, 'updateCompanyDetails'])->name('admin.company.update');
+    Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
 
     //Blogs
     Route::get('/admin/blogs', [AdminController::class, 'adminBlogs'])->name('admin.blogs');

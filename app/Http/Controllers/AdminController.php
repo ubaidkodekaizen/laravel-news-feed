@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 
 
@@ -88,6 +89,32 @@ class AdminController extends Controller
 
     }
 
+    public function createUser(Request $request)
+    {
+        
+        $request->validate([
+            'first_name' => 'required|string|min:2|max:255',
+            'last_name' => 'required|string|min:2|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
+
+        // Create the user
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+
+        return redirect()->route('admin.users')->with('success', 'User created successfully!');
+
+     
+    }
+
+
+
     public function showUserById($id)
     {
         $user = User::where('id', $id)
@@ -104,13 +131,6 @@ class AdminController extends Controller
         return view('admin.users.edit-user', compact('user', 'company'));
     }
 
-    // public function editCompany($id)
-    // {
-    //     $user = User::findOrFail($id);
-    //     $company = Company::where('user_id', $user->id)->first();
-
-    //     return view('admin.users.edit-company', compact('user', 'company'));
-    // }
 
 
     public function updateUserDetails(Request $request)
@@ -155,7 +175,11 @@ class AdminController extends Controller
         $user->marital_status = $request->marital_status ?? $request->$request->other_marital_status;
         $user->tiktok_url = $request->tiktok_url ?? '';
         $user->youtube_url = $request->youtube_url ?? '';
-        $user->user_position = implode(', ', $request->are_you);
+        if ($request->has('are_you') && !empty($request->are_you)) {
+            $user->user_position = implode(', ', $request->are_you);
+        } else {
+            $user->user_position = null;
+        }
         $user->languages = $request->languages ?? '';
         $user->email_public = $request->email_public ?? 'No';
         $user->phone_public = $request->phone_public ?? 'No';
@@ -202,22 +226,6 @@ class AdminController extends Controller
 
     public function updateCompanyDetails(Request $request)
     {
-        //dd($request->all());
-        // $request->validate([
-        //     'company_name' => 'required|string|max:255',
-        //     'company_web_url' => 'nullable|url|max:255',
-        //     'company_linkedin_url' => 'nullable|url|max:255',
-        //     'company_position' => 'nullable|string',
-        //     'company_revenue' => 'nullable|string|max:255',
-        //     'company_no_of_employee' => 'nullable|string|max:255',
-        //     'company_business_type' => 'nullable|string|max:255',
-        //     'company_industry' => 'nullable|string|max:255',
-        //     'product_service_name' => 'nullable|array',
-        //     'product_service_name.*' => 'nullable|string|max:255',
-        //     'product_service_description' => 'nullable|array',
-        //     'product_service_description.*' => 'nullable|string|max:500',
-        //     'company_logo' => 'nullable|file|image|max:2048',
-        // ]);
 
 
         $capitalize = function ($value) {
@@ -313,9 +321,17 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Professional details updated successfully!');
     }
 
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('admin.users')->with('success', 'User deleted successfully!');
+    }
 
 
 
+
+    // Blog Routes
 
     public function adminBlogs()
     {

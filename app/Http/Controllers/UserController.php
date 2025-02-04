@@ -67,11 +67,17 @@ class UserController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
-                return redirect()->route('search');
+
+            if ($user->role_id === 4) {
+                if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
+                    return redirect()->route('search');
+                } else {
+                    return redirect()->route('user.details.show');
+                }
             } else {
-                return redirect()->route('user.details.show');
+                return redirect()->route('admin.dashboard');
             }
+           
         }
 
         return back()->withErrors([
@@ -129,7 +135,12 @@ class UserController extends Controller
         $user->marital_status = $request->marital_status ?? $request->$request->other_marital_status;
         $user->tiktok_url = $request->tiktok_url ?? '';
         $user->youtube_url = $request->youtube_url ?? '';
-        $user->user_position = implode(', ', $request->are_you);
+        if ($request->has('are_you') && !empty($request->are_you)) {
+            $user->user_position = implode(', ', $request->are_you);
+        } else {
+            $user->user_position = null; 
+        }
+      
         $user->languages = $request->languages ?? '';
         $user->email_public = $request->email_public ?? 'No';
         $user->phone_public = $request->phone_public ?? 'No';
@@ -181,7 +192,7 @@ class UserController extends Controller
             ->firstOrFail();
 
 
-        return view('user-profile', compact('user'));
+        return view('user.user-profile', compact('user'));
     }
 
 

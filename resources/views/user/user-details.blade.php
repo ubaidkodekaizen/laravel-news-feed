@@ -1,5 +1,6 @@
-@extends('layouts.main')
-@section('content')
+@extends('layouts.dashboard-layout')
+
+@section('dashboard-content')
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />
 
@@ -30,7 +31,7 @@
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="user-details-pane" role="tabpanel"
                         aria-labelledby="user-details" tabindex="0">
-                        <div class="card_profile_first new_user_details">
+                        <div class="new_user_details">
                             <form action="{{ route('user.details.update') }}" method="POST" enctype="multipart/form-data"
                                 id="user_details">
                                 @csrf
@@ -116,6 +117,13 @@
                                                     {{ in_array('Govt/Public Sector Leader', $selectedAreYou) ? 'checked' : '' }}>
                                                 <label class="btn btn-outline-secondary custom_btn"
                                                     for="govt_public_sector_leader">Govt/Public Sector Leader</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" class="btn-check" id="industry_expert"
+                                                    name="are_you[]" value="Industry Expert"
+                                                    {{ in_array('Industry Expert', $selectedAreYou) ? 'checked' : '' }}>
+                                                <label class="btn btn-outline-secondary custom_btn"
+                                                    for="industry_expert">Industry Expert</label>
                                             </li>
                                             <li>
                                                 <input type="checkbox" class="btn-check" id="job_seeker"
@@ -428,8 +436,8 @@
                                             <div class="col-lg-1">
                                                 <div class="flex_field_btn h-100">
                                                     <button type="button" id="add-education"
-                                                        class="btn btn-primary mt-4">
-                                                        <i class="fas fa-plus"></i> Add
+                                                        class="btn btn-primary">
+                                                        <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>
@@ -487,7 +495,7 @@
                     </div>
                     <div class="tab-pane fade" id="company-details-tab-pane" role="tabpanel"
                         aria-labelledby="company-details-tab" tabindex="0">
-                        <div class="card_profile_first new_user_details">
+                        <div class="new_user_details">
                             <form action="{{ route('user.company.update') }}" method="POST"
                                 enctype="multipart/form-data" id="user_company">
                                 @csrf
@@ -675,7 +683,7 @@
                                                 <div class="flex_field_btn h-100">
                                                     <button type="button" id="add-product-service"
                                                         class="btn btn-primary">
-                                                        <i class="fas fa-plus"></i> Add
+                                                        <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>

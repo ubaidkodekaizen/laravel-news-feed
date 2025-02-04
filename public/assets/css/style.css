@@ -348,7 +348,7 @@ body {
 }
 .user_company_profile {
     padding: 20px 0px;
-    background: #2735720d;
+    /* background: #2735720d; */
 }
 
 .user_company_profile .profile_pic img {

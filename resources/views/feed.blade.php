@@ -415,7 +415,8 @@
             </p>
         </div>
     </section>
-
+@endsection
+@section('script')
     <script>
         // Prevent dropdown menu from closing when clicking inside
         document.querySelectorAll('.dropdown-menu').forEach((dropdown) => {

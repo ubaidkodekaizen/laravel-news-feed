@@ -10,7 +10,8 @@
                         <h4 class="card-title">Add User</h4>
                     </div>
                     <div class="card-body">
-                        <form action="" id="add-user">
+                        <form action="{{route('admin.create.user')}}" id="add-user" method="POST">
+                            @csrf
                             <div class="row">
                                 <div class="col-lg-6 mb-3">
                                     <label for="first_name" class="form-label">First Name:</label>

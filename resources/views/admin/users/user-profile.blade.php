@@ -1,5 +1,7 @@
 @extends('admin.layouts.main')
 @section('content')
+<main class="main-content">
+
     <style>
         .user_company_profile .profile_pic img {
             border-radius: 15px;
@@ -453,4 +455,6 @@
             </div>
         </div>
     </div>
+        
+</main>
 @endsection
