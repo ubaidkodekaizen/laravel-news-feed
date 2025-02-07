@@ -1,0 +1,467 @@
+.chatBoxHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 10px;
+    background: #273572;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+}
+
+#chat-container {
+    position: fixed;
+    right: 15px;
+    bottom: 0;
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    z-index: 9999;
+}
+
+#chat-container .chatBox {
+    border: 1px solid #273572;
+    background: #fff;
+    border-radius: 5px 5px 0 0;
+    max-width: 300px;
+    width: 100%;
+    min-width: 300px;
+}
+
+.chatBox.chatBoxClose {
+    max-width: max-content !important;
+    min-width: max-content !important;
+    border: none !important;
+    background: none !important;
+}
+
+.chatBox.chatBoxClose .chatBoxHead {
+    display: none;
+}
+.chatBox.chatBoxOpen .chatBoxMinIcon {
+    display: none;
+}
+.chatBoxMinIcon {
+    height: 50px;
+    width: 50px;
+    background: #273572;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.chatContainerInner {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+.chatBoxHead span {
+    color: #fff;
+}
+
+.chatBoxHead .actionBtns {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chatBoxHead button {
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    width: 30px;
+    height: 25px;
+    color: #fff;
+    transition: .3s;
+}
+.chatBoxHead button:hover {
+    background: #8f8f8f45;
+    transition: .3s;
+}
+.chatBox {
+    bottom: 0;
+    transition: .3s;
+}
+
+.chatBoxContent {
+    min-height: 200px;
+}
+
+.chatBox.chatBoxOpen .chatBoxContent {
+    min-height: 200px;
+}
+
+.chatBox.chatBoxClose .chatBoxContent {
+    min-height: 0px;
+    height: 0;
+    display: none;
+}
+
+.conversationBox {
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    overflow-y: scroll;
+    position: relative;
+    padding-top: 35px;
+}
+
+
+
+.conversationBox .conversationBoxInner {
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    position: relative;
+    padding: 5px 5px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.conversationBox .conversationBoxInner:hover {
+    background: #b8c034;
+    transition: .3s;
+}
+
+.conversationUserProfile img {
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.conversationUserProfile {
+    max-width: 25px;
+}
+
+.conversationUnreadCount {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    background: #273572;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.conversationUserDetails .conversationLastMessage {
+    font-size: 14px;
+    font-weight: 400;
+    color: #848484;
+    line-height: 1.3em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+    width: 100%;
+}
+
+.conversationUserDetails .conversationUsername {
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+    line-height: 1.3em;
+}
+
+.messageBox {
+    border: 1px solid #273572;
+    background: #fff;
+    border-radius: 5px 5px 0 0;
+    max-width: 450px;
+    width: 100%;
+    min-width: 450px;
+    position: relative;
+}
+
+.messageBoxInput .messageBoxInputInner {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    border-top: 1px solid #273572;
+    border-bottom: 1px solid #273572;
+}
+
+.messageBoxInput {
+    width: 100%;
+}
+
+.messageBoxInputField {
+    width: 100%;
+    padding: 10px;
+    border: none;
+}
+
+.messageBoxInputBtn {
+    border: none;
+    background: #273572;
+    color: #fff;
+    padding: 10px 15px;
+}
+
+.messageBoxList {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    min-height: 400px;
+    max-height: 400px;
+}
+
+.messageBoxListItem {
+    width: 100%;
+    padding: 10px 10px;
+}
+
+.messageBoxListItemInner {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    gap: 10px;
+    width: 100%;
+}
+
+.messageBoxListItemInner .messageSenderPhoto {
+    width: 40px;
+    height: 40px;
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+.messageBoxListItemContent {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    gap: 5px;
+}
+
+.messageBoxListItemContentUsername {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    line-height: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
+.messageBoxListItemContentMsg {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+    line-height: 1.3em;
+    background: #27357214;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0px 1px 4px rgba(0 0 0 / 25%);
+}
+
+.messageBoxHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 10px;
+    background: #273572;
+    cursor: pointer;
+}
+
+.messageBoxHead .messageBoxHeadInner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.messageBoxHead .messageBoxHeadInner .closeMessageBoxBtn {
+    filter: invert(1) brightness(100);
+}
+
+.messageBoxHead .messageBoxHeadSenderPhoto {
+    height: 35px;
+    width: 35px;
+    max-width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.messageBoxHead .messageBoxHeadUsername {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.3em;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.messageBoxHead .messageBoxHeadUsername:hover {
+    text-decoration: underline;
+    transition: .3s;
+}
+
+.messageBox.messageBoxListClose .messageBoxList {
+    min-height: 0;
+    max-height: 0;
+}
+
+.messageBox.messageBoxListClose .messageBoxInput {
+    display: none;
+}
+
+.messageBox.messageBoxHide {
+    display: none;
+}
+
+.messageBox.messageBoxShow {
+    display: block;
+}
+
+.noConversations {
+    padding: 10px 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #848484;
+}
+
+.messageBoxListItemContentUsername .messageBoxTime::before {
+    content: "•";
+    margin-right: 5px;
+}
+
+.messageBoxListItemContentUsername .messageBoxTime {
+    color: #848484;
+    font-weight: 400;
+    line-height: 1.3em;
+}
+
+.messageBoxListItemContentUsername {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    line-height: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+}
+
+.messageBoxListItem.messageRight .messageBoxListItemInner {
+    flex-direction: row-reverse;
+    justify-content: end;
+}
+
+.messageBoxListItem.messageRight .messageBoxListItemContent {
+    align-items: end;
+}
+
+.messageBoxListItem.messageRight .messageBoxListItemContentUsername {
+    flex-direction: row-reverse;
+}
+
+.messageBoxListItem .messageBoxListItemContentUsername a {
+    text-decoration: none;
+    color: #000;
+    transition: .3s;
+}
+
+.messageBoxListItem .messageBoxListItemContentUsername a:hover {
+    color: #273572;
+    text-decoration: underline;
+    transition: .3s;
+}
+
+.messageBoxListItem.messageRight .messageBoxTime {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.messageBoxListItem.messageRight .messageBoxTime::before {
+    margin-left: 5px;
+    margin-right: 0px;
+}
+
+.typing-indicator {
+    padding: 0;
+    line-height: 1.3em;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.messageDateHeader {
+    padding: 10px 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #7f7f7f;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.messageDateHeader::before {
+    content: "";
+    background: #cfccc1;
+    height: 1px;
+    flex: 1;
+    display: block;
+}
+
+.messageDateHeader::after {
+    content: "";
+    background: #cfccc1;
+    height: 1px;
+    flex: 1;
+    display: block;
+}
+
+.messageBoxEmojiBtn {
+    border: none;
+    background: transparent;
+    max-width: 30px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+}
+
+.messageBoxEmojiBox {
+    position: absolute;
+    bottom: 50px;
+    right: 0;
+}
+.conversationBoxSearch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    height: 35px;
+}
+
+.conversationBoxSearch input {
+    padding: 5px 10px;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #dddddd;
+    outline: none;
+}
+
+@media(max-width: 800px) {}

@@ -1,3 +1,4 @@
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 @yield('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
@@ -10,7 +11,14 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="{{ asset('assets/js/custom.js?v1') }}"></script>
-
+@auth
+    <script>
+        window.userId = {{ auth()->id() }};
+    </script>
+    <div id="chat-container"></div>
+@endauth
+@viteReactRefresh 
+@vite(['resources/js/App.jsx'])
 <script>
     $(document).ready(function() {
 
@@ -228,8 +236,12 @@
 
     });
 </script>
-
-
+<script>
+    document.querySelector(".logoutBtn").addEventListener("click", function(){
+        localStorage.setItem("sanctum-token", "");
+    });
+</script>
+@yield('scripts')
 </body>
 
 </html>

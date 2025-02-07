@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
         .suggestion-box {
@@ -89,7 +90,7 @@
                                 <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
                                 {{-- <li><a class="dropdown-item" href="{{route('user.company.details')}}">User Company</a></li> --}}
-                                <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                                <li><a class="dropdown-item logoutBtn" href="{{ route('logout') }}">Logout</a></li>
                             </ul>
                         </div>
                     </div>

@@ -15,11 +15,20 @@
                     <p class="user_location">{{ $user->city }} {{ $user->state }} {{ $user->country }}</p>
                 </div>
             </div>
-            <div class="btn_flex">
+            <div class="btn_flex gap-2">
+                <a href="javascript:void(0)" 
+                            class="btn btn-secondary  btn-sm direct-message-btn" 
+                            onclick="directMessageBtn({{ $user->id }})">
+                            <i class="fa-solid fa-comment-dots"></i>
+                            </a>
                 <a href="{{ route('user.profile', ['slug' => $user->slug]) }}" target="_blank"
-                    class="btn btn-success btn-sm">View Profile</a>
+                    class="btn btn-success btn-sm">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
                 <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
-                    class="btn btn-primary btn-sm">Connect on LinkedIn</a>
+                    class="btn btn-primary btn-sm">
+                    <i class="fa-brands fa-linkedin"></i>
+                </a>
             </div>
         </div>
         <div class="indus_member">

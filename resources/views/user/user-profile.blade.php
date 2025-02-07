@@ -226,8 +226,9 @@
 
                         </div>
                         <div class="btn-flex">
-                            <a href="javascript:void(0)" class="btn btn-secondary w-100" data-bs-toggle="modal"
-                                data-bs-target="#mainModal">
+                            <a href="javascript:void(0)" 
+                            class="btn btn-secondary w-100 direct-message-btn" 
+                            data-receiver-id="{{ $user->id }}">
                                 Direct Message
                             </a>
                             {{-- <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
@@ -436,22 +437,101 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: var(--primary); color: #fff;">
-                    <h5 class="modal-title" id="mainModalLabel">Feature Coming Soon</h5>
+                    <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 class="text-center">Direct Messaging is Coming Soon!</h3>
-                    <p class="text-center">
-                        Our team is working hard to bring you an exciting <strong>Direct Messaging</strong> feature.
-                        Soon, you'll be able to connect and communicate seamlessly with others on the platform.
-                        Stay tuned for updates!
-                    </p>
+                    <form id="directMessageForm">
+                        <input type="hidden" name="receiver_id" id="receiver_id" value="{{$user->id}}"> <!-- Receiver ID will be set dynamically -->
+    
+                        <div class="mb-3">
+                            <label for="messageContent" class="form-label">Your Message</label>
+                            <textarea class="form-control" id="messageContent" name="content" rows="4" required>Hi {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}, 
+I came across your profile and was really impressed by your work in {{ $user->user_position ?? '' }}. I’d love to connect and exchange ideas.
 
-                </div>
-                <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+Looking forward to connecting! 
+
+Best Regards,
+{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</textarea>
+                        </div>
+    
+                        <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
+                    </form>
+                    <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
                 </div>
             </div>
         </div>
     </div>
+    
+    
+@endsection
+
+
+@section("scripts")
+<script>
+    $(document).ready(function () {  
+    // Check if conversation exists before opening modal
+    $('.direct-message-btn').on('click', function() {
+        const receiverId = $(this).data('receiver-id');
+        
+        // Check if conversation exists
+        $.ajax({
+            url: '/api/check-conversation',
+            method: 'GET',
+            data: { receiver_id: receiverId },
+            headers: {
+                "Authorization": localStorage.getItem("sanctum-token")
+            },
+            success: function(response) {
+                if (response.conversation_exists) {
+                    // If conversation exists, open chat directly
+                    if (window.openChatWithUser) {
+                        window.openChatWithUser(receiverId);
+                    }
+                } else {
+                    // If no conversation, open the modal
+                    $('#receiver_id').val(receiverId);
+                    $('#mainModal').modal('show');
+                }
+            },
+            error: function(xhr) {
+                console.error('Error checking conversation:', xhr);
+            }
+        });
+    });
+
+    $('#directMessageForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const formData = {
+            receiver_id: $('#receiver_id').val(),
+            content: $('#messageContent').val(),
+            _token: '{{ csrf_token() }}'
+        };
+
+        $.ajax({
+            url: '{{ route("sendMessage") }}',
+            method: 'POST',
+            data: formData,
+            headers: {
+                "Authorization": localStorage.getItem("sanctum-token")
+            },
+            success: function (response) {
+                // Close the modal
+                $('#mainModal').modal('hide');
+                
+                // Trigger opening the chat box and specific conversation
+                if (window.openChatWithUser) {
+                    window.openChatWithUser(formData.receiver_id);
+                }
+            },
+            error: function (xhr) {
+                const errorMsg = xhr.responseJSON?.error || 'An error occurred. Please try again.';
+                $('#messageStatus').html(`<div class="alert alert-danger">${errorMsg}</div>`);
+            }
+        });
+    });
+});
+
+</script>
 @endsection
