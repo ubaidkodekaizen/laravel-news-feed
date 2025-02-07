@@ -59,7 +59,7 @@
                                     <div class="profile_div">
                                         <label for="mobile">Cell/Mobile</label>
                                         <p class="profile_data">
-                                            {{ $user->phone ?? '' }}
+                                            <a href="tel:{{ $user->phone ?? '' }}">{{ $user->phone ?? '' }}</a>   
                                         </p>
                                     </div>
 
@@ -72,7 +72,7 @@
                                     <div class="profile_div">
                                         <label for="email">Email</label>
                                         <p class="profile_data">
-                                            {{ $user->email ?? '' }}
+                                            <a href="mailto:{{ $user->email ?? '' }}">{{ $user->email ?? '' }}</a>
                                         </p>
                                     </div>
 
@@ -256,7 +256,7 @@
                         <div class="profile_div">
                             <label for="company_url">Company URL</label>
                             <p class="profile_data">
-                                {{ $user->company->company_web_url ?? '' }}
+                                <a href="{{ $user->company->company_web_url ?? '' }}" target="_blank">{{ $user->company->company_web_url ?? '' }}</a>
                             </p>
                         </div>
                         <div class="profile_div">
@@ -268,13 +268,13 @@
                         <div class="profile_div">
                             <label for="work_phone">Work Phone Number</label>
                             <p class="profile_data">
-                                {{ $user->company->company_phone ?? '' }}
+                                <a href="tel:{{ $user->company->company_phone ?? '' }}">{{ $user->company->company_phone ?? '' }}</a>
                             </p>
                         </div>
                         <div class="profile_div">
                             <label for="company_linkedin">Company LinkedIn Page</label>
                             <p class="profile_data">
-                                {{ $user->company->company_linkedin_url ?? '' }}
+                                <a href="{{ $user->company->company_linkedin_url ?? '' }}" target="_blank" rel="noopener noreferrer">{{ $user->company->company_linkedin_url ?? '' }}</a>
                             </p>
                         </div>
                         {{-- <h1 class="profile_heading">

@@ -11,42 +11,50 @@
             <div class="add_form">
                 <form action="">
                     <div class="row">
-                        <div class="col-lg-6 mb-3">
-                            <label for="product_name" class="form-label">Product Name:</label>
-                            <input type="text" name="product_name" id="product_name" class="form-control" required>
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <label for="product_category" class="form-label">Product Category:</label>
-                            <select name="product_category" id="product_category" class="form-select" required>
-                                <option value="">Select Product Category</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <label for="product_price" class="form-label">Product Price:</label>
-                            <input type="text" name="product_price" id="product_price" class="form-control" required>
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <label for="product_price" class="form-label">Price Type:</label>
-                            <select name="product_price" id="product_price" class="form-select" required>
-                                <option value="">Select Price Type</option>
-                                <option value="Monthly">Monthly</option>
-                                <option value="Yearly">Yearly</option>
-                            </select>
+                        <div class="col-lg-12 mb-3">
+                            <label for="title" class="form-label">Title:</label>
+                            <input type="text" name="title" id="title" class="form-control" required>
                         </div>
                         <div class="col-lg-12 mb-3">
-                            <label for="product_description" class="form-label">Product Description:</label>
-                            <textarea name="product_description" id="product_description" class="form-control" rows="4"></textarea>
+                            <label for="short_description">Short Description</label>
+                            <textarea name="short_description" id="short_description" rows="4" class="form-control"></textarea>
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <label for="original_price" class="form-label">Original Price:</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="original_price">$</span>
+                                <input type="number" name="original_price" class="form-control" aria-label="Original Price"
+                                    aria-describedby="original_price" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <label for="discounted_price" class="form-label">Discounted Price:</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="discounted_price">$</span>
+                                <input type="number" name="discounted_price" class="form-control" aria-label="Discounted Price"
+                                    aria-describedby="discounted_price" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <label for="quantity" class="form-label">Quantity:</label>
+                            <input type="number" name="quantity" id="quantity" class="form-control" required>
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <label for="unit_of_quantity" class="form-label">Unit of quantity:</label>
+                            <input type="text" name="unit_of_quantity" class="form-control" placeholder="KG/Unit/L/ Etc." required>
                         </div>
                         <div class="col-12 mb-3">
-                            <label for="product_image" class="form-label">Product Image:</label>
+                            <label for="product_image" class="form-label">Image:</label>
                             <div class="image-uploader">
-                                <input type="file" name="product_image" id="product_image" class="form-control" required accept="image/*" style="display: none;">
+                                <input type="file" name="product_image" id="product_image" class="form-control" required
+                                    accept="image/*" style="display: none;">
                                 <div class="upload-area" id="upload-area">
                                     <span>Click to upload or drag and drop</span>
                                 </div>
                                 <div class="image-preview" id="image-preview">
                                     <img id="preview-image" src="#" alt="Preview" style="display: none;">
-                                    <button type="button" id="remove-image" class="btn btn-danger btn-sm" style="display: none;">Remove</button>
+                                    <button type="button" id="remove-image" class="btn btn-danger btn-sm"
+                                        style="display: none;">Remove</button>
                                 </div>
                             </div>
                         </div>
@@ -61,71 +69,70 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const uploadArea = document.getElementById('upload-area');
-        const fileInput = document.getElementById('product_image');
-        const previewImage = document.getElementById('preview-image');
-        const removeImageButton = document.getElementById('remove-image');
-        const imagePreviewContainer = document.getElementById('image-preview');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('product_image');
+            const previewImage = document.getElementById('preview-image');
+            const removeImageButton = document.getElementById('remove-image');
+            const imagePreviewContainer = document.getElementById('image-preview');
 
-        // Open file dialog when upload area is clicked
-        uploadArea.addEventListener('click', function() {
-            fileInput.click();
-        });
+            // Open file dialog when upload area is clicked
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
 
-        // Handle file selection
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                    removeImageButton.style.display = 'block';
-                    uploadArea.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            // Handle file selection
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        removeImageButton.style.display = 'block';
+                        uploadArea.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-        // Handle drag and drop
-        uploadArea.addEventListener('dragover', function(event) {
-            event.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+            // Handle drag and drop
+            uploadArea.addEventListener('dragover', function(event) {
+                event.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
 
-        uploadArea.addEventListener('dragleave', function(event) {
-            event.preventDefault();
-            uploadArea.classList.remove('dragover');
-        });
+            uploadArea.addEventListener('dragleave', function(event) {
+                event.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
 
-        uploadArea.addEventListener('drop', function(event) {
-            event.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const file = event.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                fileInput.files = event.dataTransfer.files;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                    removeImageButton.style.display = 'block';
-                    uploadArea.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            uploadArea.addEventListener('drop', function(event) {
+                event.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = event.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    fileInput.files = event.dataTransfer.files;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        removeImageButton.style.display = 'block';
+                        uploadArea.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-        // Remove image
-        removeImageButton.addEventListener('click', function() {
-            previewImage.src = '#';
-            previewImage.style.display = 'none';
-            removeImageButton.style.display = 'none';
-            uploadArea.style.display = 'block';
-            fileInput.value = '';
+            // Remove image
+            removeImageButton.addEventListener('click', function() {
+                previewImage.src = '#';
+                previewImage.style.display = 'none';
+                removeImageButton.style.display = 'none';
+                uploadArea.style.display = 'block';
+                fileInput.value = '';
+            });
         });
-    });
-</script>
+    </script>
 @endsection
-

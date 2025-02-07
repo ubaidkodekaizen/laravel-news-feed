@@ -35,7 +35,7 @@
                 <!-- Employees Filter Section -->
                 <div class="filter-section">
                     <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#experienceFilter">
-                        No. of Experience <span class="toggle-icon">+</span>
+                        Years of Experience <span class="toggle-icon">+</span>
                     </div>
                     <div id="experienceFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedExperienceFilters"></div>
@@ -161,7 +161,7 @@
                         <input type="text" name="user_position" class="filter-search"
                             placeholder="Search type of person you want to connect..."
                             oninput="filterOptions(this, 'userPositionFilterOptions')">
-                        <div id="userPositionFilterOptions" style="display: none">
+                        <div id="userPositionFilterOptions">
                             @foreach ($filters['user_position'] as $position)
                                 <div class="filter-option"
                                     onclick="addFilter('user_position', '{{ $position }}', 'selectedUserPositionFilters')">
@@ -182,7 +182,7 @@
                         <div class="selected-filter-group" id="selectedGenderFilters"></div>
                         <input type="text" name="user_gender" class="filter-search" placeholder="Search Gender..."
                             oninput="filterOptions(this, 'genderFilterOptions')">
-                        <div id="genderFilterOptions" style="display: none">
+                        <div id="genderFilterOptions">
                             @foreach ($filters['user_gender'] as $gender)
                                 <div class="filter-option"
                                     onclick="addFilter('user_gender', '{{ $gender }}', 'selectedGenderFilters')">
@@ -201,7 +201,7 @@
                         <div class="selected-filter-group" id="selectedAgeGroupFilters"></div>
                         <input type="text" name="user_age_group" class="filter-search"
                             placeholder="Search Age Group..." oninput="filterOptions(this, 'ageGroupFilterOptions')">
-                        <div id="ageGroupFilterOptions" style="display: none">
+                        <div id="ageGroupFilterOptions">
                             @foreach ($filters['user_age_group'] as $ageGroup)
                                 <div class="filter-option"
                                     onclick="addFilter('user_age_group', '{{ $ageGroup }}', 'selectedAgeGroupFilters')">
@@ -220,7 +220,7 @@
                         <div class="selected-filter-group" id="selectedEthnicityFilters"></div>
                         <input type="text" name="user_ethnicity" class="filter-search"
                             placeholder="Search Ethnicity..." oninput="filterOptions(this, 'ethnicityFilterOptions')">
-                        <div id="ethnicityFilterOptions" style="display: none">
+                        <div id="ethnicityFilterOptions">
                             @foreach ($filters['user_ethnicity'] as $ethnicity)
                                 <div class="filter-option"
                                     onclick="addFilter('user_ethnicity', '{{ $ethnicity }}', 'selectedEthnicityFilters')">

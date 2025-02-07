@@ -16,8 +16,8 @@
                     <i class="fa-solid fa-user"></i>
                     My Profile
                 </a>
-            </li>
-            {{-- <li class="nav-items">
+            </li> 
+            <li class="nav-items">
                 <a href="{{ route('user.products') }}" class="{{ request()->routeIs('user.products') ? 'active' : '' }}">
                     <i class="fa-solid fa-diagram-project"></i>
                     Products
@@ -34,7 +34,7 @@
                     <i class="fa-solid fa-money-bill-wheat"></i>
                     Subscriptions
                 </a>
-            </li> --}}
+            </li>
         </ul>
     </div>
 </div>
