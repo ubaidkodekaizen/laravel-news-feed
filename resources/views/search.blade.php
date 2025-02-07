@@ -362,7 +362,30 @@
 
     </div>
 
+ <!-- Main Modal -->
+ <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: var(--primary); color: #fff;">
+                <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="directMessageForm">
+                    <input type="hidden" name="receiver_id" id="receiver_id" value=""> <!-- Receiver ID will be set dynamically -->
 
+                    <div class="mb-3">
+                        <label for="messageContent" class="form-label">Your Message</label>
+                        <textarea class="form-control" id="messageContent" name="content" rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
+                </form>
+                <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
+            </div>
+        </div>
+    </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -512,4 +535,85 @@
             });
         });
     </script>
+@endsection
+
+
+@section("scripts")
+<script>
+
+function directMessageBtn(receiverId){ 
+        $('#receiver_id').val(receiverId);
+
+        
+        // Check if conversation exists
+        $.ajax({
+            url: '/api/check-conversation',
+            method: 'GET',
+            data: { receiver_id: receiverId },
+            headers: {
+                "Authorization": localStorage.getItem("sanctum-token")
+            },
+            success: function(response) {
+                if (response.conversation_exists) {
+                    // If conversation exists, open chat directly
+                    if (window.openChatWithUser) {
+                        window.openChatWithUser(receiverId);
+                    }
+                } else {
+                    // If no conversation, open the modal
+                    console.log(response.receiver);
+                    $('#receiver_id').val(receiverId);
+                            $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
+I came across your profile and was really impressed by your work in ${response.receiver.user_position ?? ''}. I’d love to connect and exchange ideas.
+
+Looking forward to connecting! 
+
+Best Regards,
+{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
+                    $('#mainModal').modal('show');
+                }
+            },
+            error: function(xhr) {
+                console.error('Error checking conversation:', xhr);
+            }
+        });
+    }
+    $(document).ready(function () {  
+    // Check if conversation exists before opening modal
+     
+
+    $('#directMessageForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const formData = {
+            receiver_id: $('#receiver_id').val(),
+            content: $('#messageContent').val(),
+            _token: '{{ csrf_token() }}'
+        };
+
+        $.ajax({
+            url: '{{ route("sendMessage") }}',
+            method: 'POST',
+            data: formData,
+            headers: {
+                "Authorization": localStorage.getItem("sanctum-token")
+            },
+            success: function (response) {
+                // Close the modal
+                $('#mainModal').modal('hide');
+                
+                // Trigger opening the chat box and specific conversation
+                if (window.openChatWithUser) {
+                    window.openChatWithUser(formData.receiver_id);
+                }
+            },
+            error: function (xhr) {
+                const errorMsg = xhr.responseJSON?.error || 'An error occurred. Please try again.';
+                $('#messageStatus').html(`<div class="alert alert-danger">${errorMsg}</div>`);
+            }
+        });
+    });
+});
+
+</script>
 @endsection
