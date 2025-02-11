@@ -70,6 +70,28 @@
                                                 </div>
                                             @endif
                                         </div>
+                                        <div class="col-lg-6">
+                                            <label for="first_name" class="form-label w-100">AMCOB Member:</label>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="amcob_member"
+                                                    id="mcob-member-yes" value="MCOB Member Yes">
+                                                <label class="form-check-label" for="mcob-member-yes">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="amcob_member"
+                                                    id="mcob-member-no" value="MCOB Member No">
+                                                <label class="form-check-label" for="mcob-member-no">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="membership_duration" class="form-label">Membership Duration:</label>
+                                            <select name="membership_duration" id="membership_duration" class="form-select">
+                                                <option value="">Select Membership Duration</option>
+                                                <option value="30">30 Days</option>
+                                                <option value="60">60 Days</option>
+                                                <option value="90">90 Days</option>
+                                            </select>
+                                        </div>
                                         <div class="col-12">
                                             <label for="list_check_flex">Are You?<span class="text-danger">*</span> (Select
                                                 all
@@ -154,6 +176,7 @@
                                         </div>
 
                                     </div>
+
                                     <div class="row">
 
                                         <div class="col-lg-6">

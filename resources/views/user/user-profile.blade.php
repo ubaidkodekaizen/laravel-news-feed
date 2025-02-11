@@ -447,7 +447,7 @@
                         <div class="mb-3">
                             <label for="messageContent" class="form-label">Your Message</label>
                             <textarea class="form-control" id="messageContent" name="content" rows="4" required>Hi {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}, 
-I came across your profile and was really impressed by your work in {{ $user->user_position ?? '' }}. I’d love to connect and exchange ideas.
+I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
 
 Looking forward to connecting! 
 

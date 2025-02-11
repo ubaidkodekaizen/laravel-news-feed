@@ -139,6 +139,7 @@
 
 .conversationUserProfile {
     max-width: 25px;
+    width: 100%;
 }
 
 .conversationUnreadCount {
@@ -238,6 +239,8 @@
     height: 40px;
     max-width: 100%;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center center;
 }
 
 .messageBoxListItemContent {
@@ -246,6 +249,7 @@
     align-items: start;
     justify-content: start;
     gap: 5px;
+    flex: 1;
 }
 
 .messageBoxListItemContentUsername {
@@ -463,5 +467,12 @@
     border-bottom: 1px solid #dddddd;
     outline: none;
 }
-
+.filter_heading.subheading_line {
+    padding-bottom: 10px;
+    display: block;
+    border-bottom: 2px solid var(--white);
+    width: 100%;
+    padding-top: 20px;
+    font-weight: 700;
+}
 @media(max-width: 800px) {}
