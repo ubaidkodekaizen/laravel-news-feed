@@ -139,7 +139,6 @@
 
 .conversationUserProfile {
     max-width: 25px;
-    width: 100%;
 }
 
 .conversationUnreadCount {
@@ -239,8 +238,6 @@
     height: 40px;
     max-width: 100%;
     border-radius: 50%;
-    object-fit: cover;
-    object-position: center center;
 }
 
 .messageBoxListItemContent {
@@ -249,7 +246,6 @@
     align-items: start;
     justify-content: start;
     gap: 5px;
-    flex: 1;
 }
 
 .messageBoxListItemContentUsername {
@@ -467,12 +463,31 @@
     border-bottom: 1px solid #dddddd;
     outline: none;
 }
-.filter_heading.subheading_line {
-    padding-bottom: 10px;
-    display: block;
-    border-bottom: 2px solid var(--white);
-    width: 100%;
-    padding-top: 20px;
-    font-weight: 700;
-}
-@media(max-width: 800px) {}
+
+/* reactions */
+.messageReactions {
+    display: flex;
+    gap: 4px;
+    margin-top: -10px;
+  }
+  
+  .reaction {
+    cursor: pointer;
+    background: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+  
+  .messageReactionOptions {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  
+  .messageReactionOptions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
