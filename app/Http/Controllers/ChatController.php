@@ -108,46 +108,44 @@ class ChatController extends Controller
 
 
     public function getMessages(Conversation $conversation)
-    {
-        try {
-            $this->authorize('view-conversation', $conversation);
+{
+    try {
+        $this->authorize('view-conversation', $conversation);
 
-            $messages = Message::where('conversation_id', $conversation->id)
-                ->with(['sender:id,first_name,last_name,email,photo,slug'])
-                ->orderBy('created_at', 'asc')
-                ->get()
-                ->map(function ($message) {
-                    $photoPath = $message->sender->photo;
-
-                   // Check if the photo URL is already complete
-                    $message->sender->photo = $photoPath
+        $messages = Message::where('conversation_id', $conversation->id)
+            ->with(['sender:id,first_name,last_name,email,photo,slug', 'reactions.user:id,first_name,last_name'])
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($message) {
+                $photoPath = $message->sender->photo;
+                $message->sender->photo = $photoPath
                     ? (str_starts_with($photoPath, 'http')
                         ? $photoPath
-                        : asset('storage/profile_photos/' . basename($photoPath))) // Use basename to keep only the filename
+                        : asset('storage/profile_photos/' . basename($photoPath)))
                     : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
 
-                    return $message;
-                });
+                return $message;
+            });
 
-            // Mark unread messages as read
-            Message::where('conversation_id', $conversation->id)
-                ->where('receiver_id', auth()->id())
-                ->whereNull('read_at')
-                ->update(['read_at' => now()]);
+        // Mark unread messages as read
+        Message::where('conversation_id', $conversation->id)
+            ->where('receiver_id', auth()->id())
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
 
-            return response()->json($messages);
-        } catch (\Exception $e) {
-            \Log::error('Error in getMessages', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
+        return response()->json($messages);
+    } catch (\Exception $e) {
+        \Log::error('Error in getMessages', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
 
-            return response()->json([
-                'message' => 'Error fetching messages',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Error fetching messages',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     
     public function getConversations(): JsonResponse
@@ -289,6 +287,55 @@ class ChatController extends Controller
         ]);
     }
 
+    public function addReaction(Message $message, Request $request)
+    {
+        $request->validate([
+            'emoji' => 'required|string|max:10', // Validate the emoji
+        ]);
 
+        $user = auth()->user();
+
+        // Check if the user has already reacted with this emoji
+        $existingReaction = $message->reactions()
+            ->where('user_id', $user->id)
+            ->where('emoji', $request->emoji)
+            ->first();
+
+        if ($existingReaction) {
+            return response()->json(['message' => 'You have already reacted with this emoji.'], 400);
+        }
+
+        // Add the reaction
+        $reaction = $message->reactions()->create([
+            'user_id' => $user->id,
+            'emoji' => $request->emoji,
+        ]);
+
+        return response()->json($reaction);
+    }
+
+
+    public function removeReaction(Message $message, Request $request)
+    {
+        $request->validate([
+            'emoji' => 'required|string|max:10', // Validate the emoji
+        ]);
+
+        $user = auth()->user();
+
+        // Find and delete the reaction
+        $reaction = $message->reactions()
+            ->where('user_id', $user->id)
+            ->where('emoji', $request->emoji)
+            ->first();
+
+        if (!$reaction) {
+            return response()->json(['message' => 'Reaction not found.'], 404);
+        }
+
+        $reaction->delete();
+
+        return response()->json(['message' => 'Reaction removed.']);
+    }
 
 } 

@@ -1,7 +1,40 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
 
 const MessageList = ({ messages }) => {
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
+
+  const handleReact = async (messageId, emoji) => {
+    try {
+      const response = await axios.post(`/api/messages/${messageId}/react`, {
+        emoji,
+      }, {
+        headers: {
+          Authorization: localStorage.getItem("sanctum-token"),
+        },
+      });
+      console.log("Reaction added:", response.data);
+    } catch (error) {
+      console.error("Error adding reaction:", error);
+    }
+  };
+
+  const handleRemoveReaction = async (messageId, emoji) => {
+    try {
+      const response = await axios.delete(`/api/messages/${messageId}/react`, {
+        data: { emoji },
+        headers: {
+          Authorization: localStorage.getItem("sanctum-token"),
+        },
+      });
+      console.log("Reaction removed:", response.data);
+    } catch (error) {
+      console.error("Error removing reaction:", error);
+    }
+  };
+
+
+
   const groupMessagesByDate = (messages) => {
     const groups = [];
     let currentGroup = [];
@@ -85,6 +118,24 @@ const MessageList = ({ messages }) => {
                   </div>
                   <div className="messageBoxListItemContentMsg">
                     {msg.content}
+                  </div>
+                  <div className="messageReactions">
+                    {msg.reactions?.map((reaction) => (
+                      <span
+                        key={reaction.id}
+                        className="reaction"
+                        onClick={() => handleRemoveReaction(msg.id, reaction.emoji)}
+                      >
+                        {reaction.emoji}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="messageReactionOptions">
+                    <button onClick={() => handleReact(msg.id, '👍')}>👍</button>
+                    <button onClick={() => handleReact(msg.id, '❤️')}>❤️</button>
+                    <button onClick={() => handleReact(msg.id, '😂')}>😂</button>
+                    <button onClick={() => handleReact(msg.id, '😮')}>😮</button>
+                    <button onClick={() => handleReact(msg.id, '😢')}>😢</button>
                   </div>
                 </div>
               </div>

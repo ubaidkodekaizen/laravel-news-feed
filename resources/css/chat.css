@@ -464,4 +464,30 @@
     outline: none;
 }
 
-@media(max-width: 800px) {}
+/* reactions */
+.messageReactions {
+    display: flex;
+    gap: 4px;
+    margin-top: -10px;
+  }
+  
+  .reaction {
+    cursor: pointer;
+    background: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+  
+  .messageReactionOptions {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  
+  .messageReactionOptions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
