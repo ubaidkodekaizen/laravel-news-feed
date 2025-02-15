@@ -8,14 +8,14 @@
            <div class="custom_card">
                 <div class="icon_name_flex">
                     <div class="icon">
-                        <i class="fa-brands fa-product-hunt"></i>
+                        <i class="fa-solid fa-laptop"></i>
                     </div>
                     <div class="card_data">
                         <div class="heading">
                         Total Products
                         </div>
                         <div class="card_num">
-                            05
+                            {{ \App\Helpers\GeneralHelper::getProductCountbyAuth() }}
                         </div>
                     </div>
                 </div>
@@ -25,35 +25,19 @@
             <div class="custom_card">
                  <div class="icon_name_flex">
                      <div class="icon">
-                         <i class="fa-brands fa-product-hunt"></i>
+                        <i class="fa-solid fa-user-cog"></i>
                      </div>
                      <div class="card_data">
                          <div class="heading">
-                         Total Products
+                         Total Services
                          </div>
                          <div class="card_num">
-                             05
+                            {{ \App\Helpers\GeneralHelper::getServiceCountbyAuth() }}
                          </div>
                      </div>
                  </div>
             </div>
          </div>
-         <div class="col-lg-4 mb-3">
-            <div class="custom_card">
-                 <div class="icon_name_flex">
-                     <div class="icon">
-                         <i class="fa-brands fa-product-hunt"></i>
-                     </div>
-                     <div class="card_data">
-                         <div class="heading">
-                         Total Products
-                         </div>
-                         <div class="card_num">
-                             05
-                         </div>
-                     </div>
-                 </div>
-            </div>
-         </div>
+       
     </div>
 @endsection

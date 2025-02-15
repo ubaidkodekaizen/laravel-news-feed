@@ -9,52 +9,71 @@
                 <h2>Add Product</h2>
             </div>
             <div class="add_form">
-                <form action="">
+                <form action="{{ route('user.store.product', $product->id ?? '') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
                     <div class="row">
                         <div class="col-lg-12 mb-3">
                             <label for="title" class="form-label">Title:</label>
-                            <input type="text" name="title" id="title" class="form-control" required>
+                            <input type="text" name="title" id="title" class="form-control"
+                                value="{{ old('title', $product->title ?? '') }}" required>
                         </div>
+
                         <div class="col-lg-12 mb-3">
                             <label for="short_description">Short Description</label>
-                            <textarea name="short_description" id="short_description" rows="4" class="form-control"></textarea>
+                            <textarea name="short_description" id="short_description" rows="4" class="form-control">{{ old('short_description', $product->short_description ?? '') }}</textarea>
                         </div>
+
                         <div class="col-lg-6 mb-3">
                             <label for="original_price" class="form-label">Original Price:</label>
                             <div class="input-group">
-                                <span class="input-group-text" id="original_price">$</span>
-                                <input type="number" name="original_price" class="form-control" aria-label="Original Price"
-                                    aria-describedby="original_price" required>
+                                <span class="input-group-text">$</span>
+                                <input type="number" name="original_price" class="form-control"
+                                    value="{{ old('original_price', $product->original_price ?? '') }}" required>
                             </div>
                         </div>
+
                         <div class="col-lg-6 mb-3">
                             <label for="discounted_price" class="form-label">Discounted Price:</label>
                             <div class="input-group">
-                                <span class="input-group-text" id="discounted_price">$</span>
-                                <input type="number" name="discounted_price" class="form-control" aria-label="Discounted Price"
-                                    aria-describedby="discounted_price" required>
+                                <span class="input-group-text">$</span>
+                                <input type="number" name="discounted_price" class="form-control"
+                                    value="{{ old('discounted_price', $product->discounted_price ?? '') }}" required>
                             </div>
                         </div>
+
                         <div class="col-lg-6 mb-3">
                             <label for="quantity" class="form-label">Quantity:</label>
-                            <input type="number" name="quantity" id="quantity" class="form-control" required>
+                            <input type="number" name="quantity" id="quantity" class="form-control"
+                                value="{{ old('quantity', $product->quantity ?? '') }}" required>
                         </div>
+
                         <div class="col-lg-6 mb-3">
                             <label for="unit_of_quantity" class="form-label">Unit of quantity:</label>
-                            <input type="text" name="unit_of_quantity" class="form-control" placeholder="KG/Unit/L/ Etc." required>
+                            <input type="text" name="unit_of_quantity" class="form-control"
+                                value="{{ old('unit_of_quantity', $product->unit_of_quantity ?? '') }}"
+                                placeholder="KG/Unit/L/ Etc." required>
                         </div>
+
                         <div class="col-12 mb-3">
                             <label for="product_image" class="form-label">Image:</label>
                             <div class="image-uploader">
-                                <input type="file" name="product_image" id="product_image" class="form-control" required
+                                <input type="file" name="product_image" id="product_image" class="form-control"
                                     accept="image/*" style="display: none;">
                                 <div class="upload-area" id="upload-area">
                                     <span>Click to upload or drag and drop</span>
                                 </div>
                                 <div class="image-preview" id="image-preview">
-                                    <img id="preview-image" src="#" alt="Preview" style="display: none;">
-                                    <button type="button" id="remove-image" class="btn btn-danger btn-sm"
-                                        style="display: none;">Remove</button>
+                                    @if (isset($product->product_image) && $product->product_image)
+                                        <img id="preview-image" src="{{ asset('storage/' . $product->product_image) }}"
+                                            alt="Preview">
+                                        <button type="button" id="remove-image"
+                                            class="btn btn-danger btn-sm">Remove</button>
+                                    @else
+                                        <img id="preview-image" src="#" alt="Preview" style="display: none;">
+                                        <button type="button" id="remove-image" class="btn btn-danger btn-sm"
+                                            style="display: none;">Remove</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>

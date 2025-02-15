@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CommunityInterest;
 use App\Models\Company;
-use App\Models\SubCategory;
 use App\Models\User;
-use App\Models\Industry;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -57,40 +54,40 @@ class UserController extends Controller
     }
 
     public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string|min:8',
-    ]);
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8',
+        ]);
 
-    if (Auth::attempt($request->only('email', 'password'))) {
-        $request->session()->regenerate();
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
 
-        $user = Auth::user();
+            $user = Auth::user();
 
-        // ✅ Generate Sanctum token
-        $token = $user->createToken('chat_app')->plainTextToken;
+            // ✅ Generate Sanctum token
+            $token = $user->createToken('chat_app')->plainTextToken;
 
-        // ✅ Store token in the session
-        session(['sanctum_token' => $token]);
+            // ✅ Store token in the session
+            session(['sanctum_token' => $token]);
 
 
             if ($user->role_id === 4) {
-            if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
-                return redirect()->route('search');
-            } else {
-                return redirect()->route('user.details.show');
-            }
+                if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
+                    return redirect()->route('search');
+                } else {
+                    return redirect()->route('user.details.show');
+                }
             } else {
                 return redirect()->route('admin.dashboard');
             }
-           
-    }
 
-    return back()->withErrors([
-        'email' => 'The provided credentials do not match our records.',
-    ]);
-}
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
 
 
     public function showUserDetailsForm()
@@ -145,9 +142,9 @@ class UserController extends Controller
         if ($request->has('are_you') && !empty($request->are_you)) {
             $user->user_position = implode(', ', $request->are_you);
         } else {
-            $user->user_position = null; 
+            $user->user_position = null;
         }
-      
+
         $user->languages = $request->languages ?? '';
         $user->email_public = $request->email_public ?? 'No';
         $user->phone_public = $request->phone_public ?? 'No';
@@ -171,23 +168,6 @@ class UserController extends Controller
         }
         $user->status = 'complete';
         $user->save();
-
-        if ($request->has('college_name') && is_array($request->college_name)) {
-            foreach ($request->college_name as $index => $college) {
-                if (!empty($college)) {
-                    UserEducation::updateOrCreate(
-                        [
-                            'user_id' => $user->id,
-                            'college_university' => $college,
-                            'degree_diploma' => $request->degree[$index] ?? null,
-                        ],
-                        [
-                            'year' => $request->year_graduated[$index] ?? null,
-                        ]
-                    );
-                }
-            }
-        }
 
         return redirect()->back()->with('success', 'User details updated successfully!');
     }

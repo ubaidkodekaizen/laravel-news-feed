@@ -18,6 +18,7 @@
             @yield('dashboard-content')
         </div>
     </div>
+    @yield('script')
 @endsection
 
 <script>

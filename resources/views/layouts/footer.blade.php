@@ -1,5 +1,5 @@
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 @yield('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
@@ -127,9 +127,9 @@
 
             // Handle Enter key
             if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent form from being submitted prematurely
+                e.preventDefault(); 
                 if (searchTerm) {
-                    $('#product_service_name1').val(searchTerm);
+                    $('#product1').val(searchTerm);
                     $('#search_form').submit();
                 }
                 return;
@@ -152,15 +152,21 @@
                     suggestionBox.empty();
 
                     // Only show suggestions if there's valid data
-                    if (response.product_services.length || response.company_industries
+                    if (response.products.length || response.services.length || response.company_industries
                         .length || response.first_name
                         .length) {
                         suggestionBox.show();
-                        response.product_services.forEach(function(item) {
+                        response.products.forEach(function(item) {
                             suggestionBox.append(
-                                '<div class="suggestion-item" data-type="product_service" data-value="' +
-                                item.product_service_name + '">' + item
-                                .product_service_name + '</div>');
+                                '<div class="suggestion-item" data-type="product" data-value="' +
+                                item.title + '">' + item
+                                .title + '</div>');
+                        });
+                        response.services.forEach(function(item) {
+                            suggestionBox.append(
+                                '<div class="suggestion-item" data-type="service" data-value="' +
+                                item.title + '">' + item
+                                .title + '</div>');
                         });
                         response.first_name.forEach(function(item) {
                             suggestionBox.append(
@@ -185,8 +191,11 @@
             var selectedValue = $(this).data('value');
             var dataType = $(this).data('type');
 
-            if (dataType === 'product_service') {
-                $('#product_service_name1').val(selectedValue);
+            if (dataType === 'product') {
+                $('#product1').val(selectedValue);
+            }
+            else if (dataType === 'service') {
+                $('#service1').val(selectedValue);
             } else if (dataType === 'company_industry') {
                 $('#company_industry1').val(selectedValue);
             } else if (dataType === 'name') {

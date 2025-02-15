@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
@@ -65,7 +66,8 @@
                                 {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
 
                                 <input type="hidden" name="name" id="first_name1">
-                                <input type="hidden" name="product_service_name" id="product_service_name1">
+                                <input type="hidden" name="product" id="product1">
+                                <input type="hidden" name="service" id="service1">
                                 <input type="hidden" name="company_industry" id="company_industry1">
 
 

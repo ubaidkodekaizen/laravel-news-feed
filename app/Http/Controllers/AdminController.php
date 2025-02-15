@@ -91,7 +91,7 @@ class AdminController extends Controller
 
     public function createUser(Request $request)
     {
-        
+
         $request->validate([
             'first_name' => 'required|string|min:2|max:255',
             'last_name' => 'required|string|min:2|max:255',
@@ -110,7 +110,7 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users')->with('success', 'User created successfully!');
 
-     
+
     }
 
 

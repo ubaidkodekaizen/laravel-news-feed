@@ -48,9 +48,6 @@ class Company extends Model
         return $this->hasMany(ProductService::class);
     }
 
-    public function accreditations()
-    {
-        return $this->hasMany(Accreditation::class);
-    }
+  
 }
 

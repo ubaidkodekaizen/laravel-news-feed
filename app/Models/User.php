@@ -8,13 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Conversation;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    
-    use HasApiTokens, HasFactory, Notifiable;
 
-   
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -46,34 +47,61 @@ class User extends Authenticatable
         'nationality',
         'languages',
         'marital_status',
+        'is_amcob',
+        'duration',
     ];
 
     public function company()
     {
-        return $this->hasOne(Company::class);
+        return $this->hasOne(Company::class)->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        });
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class)->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        });
+    }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class)->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        });
+    }
+
 
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class);
+        return $this->hasMany(Subscription::class)->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        });
     }
 
     public function userEducations()
     {
-        return $this->hasMany(UserEducation::class);
-    } 
+        return $this->hasMany(UserEducation::class)->whereHas('user', function ($query) {
+            $query->whereNull('deleted_at');
+        });
+    }
+
     public function conversations()
     {
         return $this->hasMany(Conversation::class); // Assuming Conversation model exists
     }
 
-    
+
+
+
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-  
+
     protected function casts(): array
     {
         return [

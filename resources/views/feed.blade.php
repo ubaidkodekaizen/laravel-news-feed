@@ -13,10 +13,10 @@
             <h1 class="main_heading">
                 Build Your Network
             </h1>
-            <div class="filters">
+            {{-- <div class="filters">
                 <div class="row align-items-end">
                     <!-- Job Title Filter -->
-                    <div class="col-lg-3 col-6">
+                    <div class="col-lg-3 col-md-6 col-6">
                         <label for="job_titile">Select Job Title</label>
                         <div class="custom-select-dropdown">
                             <div class="dropdown">
@@ -44,7 +44,7 @@
                     </div>
 
                     <!-- Industry Filter -->
-                    <div class="col-lg-3 col-6">
+                    <div class="col-lg-3 col-md-6 col-6">
                         <label for="industry">Select Industry</label>
                         <div class="custom-select-dropdown">
                             <div class="dropdown">
@@ -110,14 +110,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
     </section>
 
-    <section class="event_slider">
+    {{-- <section class="event_slider">
         <div class="container">
-            <h2 class="mb-3">Events</h2>
+            <h2 class="mb-3">Products</h2>
             <div class="swiper">
                 <div class="swiper-wrapper">
 
@@ -167,7 +167,512 @@
             </div>
         </div>
 
+    </section> --}}
+
+    <section class="event_slider">
+        <div class="container">
+            <h2 class="mb-3">Products</h2>
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <img src="https://placehold.co/300x180" alt="Event Image">
+                            <div class="card-content">
+                                <div class="service_price_duration my-0 event_price_label">
+                                    <p class="service_price">
+                                        <span>
+                                            <span class="original_price">$ <span class="discounted_price">70</span>
+                                                90</span> / 10 Units
+                                        </span>
+                                    </p>
+                                </div>
+                                <!-- Event Title -->
+                                <div class="details">
+                                    <h3>Product 1</h3>
+                                    <p>
+                                        This is product description This is product description This is product description
+                                        This is product description This is product description.
+                                    </p>
+
+                                    <div class="service_posted_by mt-2">
+                                        <div class="person_profile">
+                                            <img src="https://placehold.co/50x50" alt="">
+                                        </div>
+                                        <div class="posted_name_date">
+                                            <h6>Jahanzaib Ansari</h6>
+                                            <p>13 Feb 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Now Button -->
+                                <a href="javascript:void(0);" class="view-more w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <img src="https://placehold.co/300x180" alt="Event Image">
+                            <div class="card-content">
+                                <div class="service_price_duration my-0 event_price_label">
+                                    <p class="service_price">
+                                        <span>
+                                            <span class="original_price">$ <span class="discounted_price">70</span>
+                                                90</span> / 10 Units
+                                        </span>
+                                    </p>
+                                </div>
+                                <!-- Event Title -->
+                                <div class="details">
+                                    <h3>Product 1</h3>
+                                    <p>
+                                        This is product description This is product description This is product description
+                                        This is product description This is product description.
+                                    </p>
+
+                                    <div class="service_posted_by mt-2">
+                                        <div class="person_profile">
+                                            <img src="https://placehold.co/50x50" alt="">
+                                        </div>
+                                        <div class="posted_name_date">
+                                            <h6>Jahanzaib Ansari</h6>
+                                            <p>13 Feb 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Now Button -->
+                                <a href="javascript:void(0);" class="view-more w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <img src="https://placehold.co/300x180" alt="Event Image">
+                            <div class="card-content">
+                                <div class="service_price_duration my-0 event_price_label">
+                                    <p class="service_price">
+                                        <span>
+                                            <span class="original_price">$ <span class="discounted_price">70</span>
+                                                90</span> / 10 Units
+                                        </span>
+                                    </p>
+                                </div>
+                                <!-- Event Title -->
+                                <div class="details">
+                                    <h3>Product 1</h3>
+                                    <p>
+                                        This is product description This is product description This is product description
+                                        This is product description This is product description.
+                                    </p>
+
+                                    <div class="service_posted_by mt-2">
+                                        <div class="person_profile">
+                                            <img src="https://placehold.co/50x50" alt="">
+                                        </div>
+                                        <div class="posted_name_date">
+                                            <h6>Jahanzaib Ansari</h6>
+                                            <p>13 Feb 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Now Button -->
+                                <a href="javascript:void(0);" class="view-more w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <img src="https://placehold.co/300x180" alt="Event Image">
+                            <div class="card-content">
+                                <div class="service_price_duration my-0 event_price_label">
+                                    <p class="service_price">
+                                        <span>
+                                            <span class="original_price">$ <span class="discounted_price">70</span>
+                                                90</span> / 10 Units
+                                        </span>
+                                    </p>
+                                </div>
+                                <!-- Event Title -->
+                                <div class="details">
+                                    <h3>Product 1</h3>
+                                    <p>
+                                        This is product description This is product description This is product description
+                                        This is product description This is product description.
+                                    </p>
+
+                                    <div class="service_posted_by mt-2">
+                                        <div class="person_profile">
+                                            <img src="https://placehold.co/50x50" alt="">
+                                        </div>
+                                        <div class="posted_name_date">
+                                            <h6>Jahanzaib Ansari</h6>
+                                            <p>13 Feb 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Now Button -->
+                                <a href="javascript:void(0);" class="view-more w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <img src="https://placehold.co/300x180" alt="Event Image">
+                            <div class="card-content">
+                                <div class="service_price_duration my-0 event_price_label">
+                                    <p class="service_price">
+                                        <span>
+                                            <span class="original_price">$ <span class="discounted_price">70</span>
+                                                90</span> / 10 Units
+                                        </span>
+                                    </p>
+                                </div>
+                                <!-- Event Title -->
+                                <div class="details">
+                                    <h3>Product 1</h3>
+                                    <p>
+                                        This is product description This is product description This is product description
+                                        This is product description This is product description.
+                                    </p>
+
+                                    <div class="service_posted_by mt-2">
+                                        <div class="person_profile">
+                                            <img src="https://placehold.co/50x50" alt="">
+                                        </div>
+                                        <div class="posted_name_date">
+                                            <h6>Jahanzaib Ansari</h6>
+                                            <p>13 Feb 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Now Button -->
+                                <a href="javascript:void(0);" class="view-more w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <img src="https://placehold.co/300x180" alt="Event Image">
+                            <div class="card-content">
+                                <div class="service_price_duration my-0 event_price_label">
+                                    <p class="service_price">
+                                        <span>
+                                            <span class="original_price">$ <span class="discounted_price">70</span>
+                                                90</span> / 10 Units
+                                        </span>
+                                    </p>
+                                </div>
+                                <!-- Event Title -->
+                                <div class="details">
+                                    <h3>Product 1</h3>
+                                    <p>
+                                        This is product description This is product description This is product description
+                                        This is product description This is product description.
+                                    </p>
+
+                                    <div class="service_posted_by mt-2">
+                                        <div class="person_profile">
+                                            <img src="https://placehold.co/50x50" alt="">
+                                        </div>
+                                        <div class="posted_name_date">
+                                            <h6>Jahanzaib Ansari</h6>
+                                            <p>13 Feb 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Now Button -->
+                                <a href="javascript:void(0);" class="view-more w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Add Pagination and Navigation -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+
     </section>
+
+    <section class="industries_sec">
+        <div class="container">
+            <h2 class="mb-3">Industries</h2>
+            <div class="row g-4" id="industries-container">
+                <!-- Technology -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ Route('industry') }}" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h2 class="industry_heading">Technology</h2>
+                    </a>
+                </div>
+
+                <!-- Healthcare -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h2 class="industry_heading">Healthcare</h2>
+                    </a>
+                </div>
+
+                <!-- Finance -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </div>
+                        <h2 class="industry_heading">Finance</h2>
+                    </a>
+                </div>
+
+                <!-- Retail -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h2 class="industry_heading">Retail</h2>
+                    </a>
+                </div>
+
+                <!-- Agriculture, Forestry, Fishing and Hunting -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-tractor"></i>
+                        </div>
+                        <h2 class="industry_heading">Agriculture, Forestry, Fishing and Hunting</h2>
+                    </a>
+                </div>
+
+                <!-- Mining, Quarrying, and Oil and Gas Extraction -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fa-solid fa-oil-well"></i>
+                        </div>
+                        <h2 class="industry_heading">Mining, Quarrying, and Oil and Gas Extraction</h2>
+                    </a>
+                </div>
+
+                <!-- Utilities -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h2 class="industry_heading">Utilities</h2>
+                    </a>
+                </div>
+
+                <!-- Construction -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fa-solid fa-person-digging"></i>
+                        </div>
+                        <h2 class="industry_heading">Construction</h2>
+                    </a>
+                </div>
+
+                <!-- Manufacturing -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <h2 class="industry_heading">Manufacturing</h2>
+                    </a>
+                </div>
+
+                <!-- Wholesale Trade -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <h2 class="industry_heading">Wholesale Trade</h2>
+                    </a>
+                </div>
+
+                <!-- Retail Trade -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h2 class="industry_heading">Retail Trade</h2>
+                    </a>
+                </div>
+
+                <!-- Transportation and Warehousing -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h2 class="industry_heading">Transportation and Warehousing</h2>
+                    </a>
+                </div>
+
+                <!-- Information -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h2 class="industry_heading">Information</h2>
+                    </a>
+                </div>
+
+                <!-- Finance and Insurance -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <h2 class="industry_heading">Finance and Insurance</h2>
+                    </a>
+                </div>
+
+                <!-- Real Estate and Rental and Leasing -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h2 class="industry_heading">Real Estate and Rental and Leasing</h2>
+                    </a>
+                </div>
+
+                <!-- Professional, Scientific, and Technical Services -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h2 class="industry_heading">Professional, Scientific, and Technical Services</h2>
+                    </a>
+                </div>
+
+                <!-- Management of Companies and Enterprises -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h2 class="industry_heading">Management of Companies and Enterprises</h2>
+                    </a>
+                </div>
+
+                <!-- Administrative and Support and Waste Management and Remediation Services -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <h2 class="industry_heading">Administrative and Support and Waste Management and Remediation
+                            Services</h2>
+                    </a>
+                </div>
+
+                <!-- Educational Services -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h2 class="industry_heading">Educational Services</h2>
+                    </a>
+                </div>
+
+                <!-- Health Care and Social Assistance -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <h2 class="industry_heading">Health Care and Social Assistance</h2>
+                    </a>
+                </div>
+
+                <!-- Arts, Entertainment, and Recreation -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-theater-masks"></i>
+                        </div>
+                        <h2 class="industry_heading">Arts, Entertainment, and Recreation</h2>
+                    </a>
+                </div>
+
+                <!-- Accommodation and Food Services -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h2 class="industry_heading">Accommodation and Food Services</h2>
+                    </a>
+                </div>
+
+                <!-- Other Services (except Public Administration) -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h2 class="industry_heading">Other Services (except Public Administration)</h2>
+                    </a>
+                </div>
+
+                <!-- Public Administration -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-landmark"></i>
+                        </div>
+                        <h2 class="industry_heading">Public Administration</h2>
+                    </a>
+                </div>
+
+                <!-- Navy -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fa-solid fa-ferry"></i>
+                        </div>
+                        <h2 class="industry_heading">Navy</h2>
+                    </a>
+                </div>
+
+                <!-- Other (Duplicate) -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="javascript:void(0);" class="industry_box">
+                        <div class="icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h2 class="industry_heading">Other</h2>
+                    </a>
+                </div>
+            </div>
+            <!-- Show More Button -->
+            <div class="text-center mt-4">
+                <button id="show-more-btn" class="btn btn-primary">Show More</button>
+            </div>
+        </div>
+    </section>
+
+
 
     <section class="why_choose">
         <div class="container">
@@ -237,8 +742,193 @@
 
         </div>
     </section>
-
     <section class="articles">
+        <div class="container">
+            <h2 class="mb-3">Services</h2>
+            <div class="services_slider overflow-hidden">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <div class="card-header p-0 border-0">
+                                <img src="https://placehold.co/420x250" alt="Service 1" class="img-fluid rounded">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="service_heading">Service 1</h3>
+                                <p>
+                                    This is service description This is service description This is service description
+                                    This is service description This is service description.
+                                </p>
+                                <div class="service_price_duration">
+                                    <div class="service_price">
+                                        <div class="service_posted_by">
+                                            <div class="person_profile">
+                                                <img src="https://placehold.co/50x50" alt="">
+                                            </div>
+                                            <div class="posted_name_date">
+                                                <h6>Jahanzaib Ansari</h6>
+                                                <p>13 Feb 2025</p>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <span>
+                                                <span class="original_price">$ <span class="discounted_price">70</span>
+                                                    90</span> / One Time
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="btn btn-primary w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <div class="card-header p-0 border-0">
+                                <img src="https://placehold.co/420x250" alt="Service 1" class="img-fluid rounded">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="service_heading">Service 1</h3>
+                                <p>
+                                    This is service description This is service description This is service description
+                                    This is service description This is service description.
+                                </p>
+                                <div class="service_price_duration">
+                                    <div class="service_price">
+                                        <div class="service_posted_by">
+                                            <div class="person_profile">
+                                                <img src="https://placehold.co/50x50" alt="">
+                                            </div>
+                                            <div class="posted_name_date">
+                                                <h6>Jahanzaib Ansari</h6>
+                                                <p>13 Feb 2025</p>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <span>
+                                                <span class="original_price">$ <span class="discounted_price">70</span>
+                                                    90</span> / One Time
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="btn btn-primary w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <div class="card-header p-0 border-0">
+                                <img src="https://placehold.co/420x250" alt="Service 1" class="img-fluid rounded">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="service_heading">Service 1</h3>
+                                <p>
+                                    This is service description This is service description This is service description
+                                    This is service description This is service description.
+                                </p>
+                                <div class="service_price_duration">
+                                    <div class="service_price">
+                                        <div class="service_posted_by">
+                                            <div class="person_profile">
+                                                <img src="https://placehold.co/50x50" alt="">
+                                            </div>
+                                            <div class="posted_name_date">
+                                                <h6>Jahanzaib Ansari</h6>
+                                                <p>13 Feb 2025</p>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <span>
+                                                <span class="original_price">$ <span class="discounted_price">70</span>
+                                                    90</span> / One Time
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="btn btn-primary w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <div class="card-header p-0 border-0">
+                                <img src="https://placehold.co/420x250" alt="Service 1" class="img-fluid rounded">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="service_heading">Service 1</h3>
+                                <p>
+                                    This is service description This is service description This is service description
+                                    This is service description This is service description.
+                                </p>
+                                <div class="service_price_duration">
+                                    <div class="service_price">
+                                        <div class="service_posted_by">
+                                            <div class="person_profile">
+                                                <img src="https://placehold.co/50x50" alt="">
+                                            </div>
+                                            <div class="posted_name_date">
+                                                <h6>Jahanzaib Ansari</h6>
+                                                <p>13 Feb 2025</p>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <span>
+                                                <span class="original_price">$ <span class="discounted_price">70</span>
+                                                    90</span> / One Time
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="btn btn-primary w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <div class="card-header p-0 border-0">
+                                <img src="https://placehold.co/420x250" alt="Service 1" class="img-fluid rounded">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="service_heading">Service 1</h3>
+                                <p>
+                                    This is service description This is service description This is service description
+                                    This is service description This is service description.
+                                </p>
+                                <div class="service_price_duration">
+                                    <div class="service_price">
+                                        <div class="service_posted_by">
+                                            <div class="person_profile">
+                                                <img src="https://placehold.co/50x50" alt="">
+                                            </div>
+                                            <div class="posted_name_date">
+                                                <h6>Jahanzaib Ansari</h6>
+                                                <p>13 Feb 2025</p>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <span>
+                                                <span class="original_price">$ <span class="discounted_price">70</span>
+                                                    90</span> / One Time
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="btn btn-primary w-100">Message Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+    </section>
+    {{-- <section class="articles">
         <div class="container">
             <h2 class="mb-3">Articles</h2>
             <div class="article_slider overflow-hidden">
@@ -279,7 +969,7 @@
                 <div class="swiper-button-next"></div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <section class="lp_footer">
         <div class="container">
@@ -418,6 +1108,28 @@
 @endsection
 @section('script')
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const industriesContainer = document.getElementById("industries-container");
+            const showMoreBtn = document.getElementById("show-more-btn");
+            const industries = industriesContainer.querySelectorAll(".col-lg-3");
+            const itemsPerRow = 4; // Number of items per row
+            const initialRows = 2; // Number of rows to show initially
+            let isExpanded = false;
+
+            // Hide all industries beyond the initial rows
+            for (let i = initialRows * itemsPerRow; i < industries.length; i++) {
+                industries[i].style.display = "none";
+            }
+
+            // Toggle visibility on button click
+            showMoreBtn.addEventListener("click", function() {
+                isExpanded = !isExpanded;
+                for (let i = initialRows * itemsPerRow; i < industries.length; i++) {
+                    industries[i].style.display = isExpanded ? "block" : "none";
+                }
+                showMoreBtn.textContent = isExpanded ? "Show Less" : "Show More";
+            });
+        });
         // Prevent dropdown menu from closing when clicking inside
         document.querySelectorAll('.dropdown-menu').forEach((dropdown) => {
             dropdown.addEventListener('click', (e) => {

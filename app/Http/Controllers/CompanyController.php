@@ -111,24 +111,6 @@ class CompanyController extends Controller
         $company->save();
 
 
-        if ($request->has('product_service_name')) {
-            foreach ($request->product_service_name as $index => $serviceName) {
-                if (!empty($serviceName)) {
-                    ProductService::updateOrCreate(
-                        [
-                            'company_id' => $company->id,
-                            'product_service_name' => $serviceName,
-                        ],
-                        [
-                            'product_service_description' => $request->product_service_description[$index] ?? '',
-                            'product_service_area' => $request->product_service_area[$index] ?? '',
-                        ]
-                    );
-                }
-            }
-        }
-
-
 
         if ($request->hasFile('company_logo')) {
             $photoPath = $request->file('company_logo')->store('profile_photos', 'public');
@@ -141,14 +123,6 @@ class CompanyController extends Controller
     }
 
 
-    public function showCompanyBySlug($companySlug)
-    {
-        $company = Company::where('company_slug', $companySlug)
-            ->with(['productServices'])
-            ->firstOrFail();
-
-        return view('company-profile', compact('company'));
-    }
 
 
 }

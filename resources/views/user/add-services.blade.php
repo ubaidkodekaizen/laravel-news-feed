@@ -7,59 +7,89 @@
                 <h2>Add Service</h2>
             </div>
             <div class="add_form">
-                <form action="">
+                <form action="{{ route('user.store.service', $service->id ?? '') }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+
                     <div class="row">
                         <div class="col-lg-12 mb-3">
                             <label for="title" class="form-label">Title:</label>
-                            <input type="text" name="title" id="title" class="form-control" required>
+                            <input type="text" name="title" id="title" class="form-control"
+                                value="{{ old('title', $service->title ?? '') }}" required>
                         </div>
+
                         <div class="col-lg-12 mb-3">
                             <label for="short_description">Short Description</label>
-                            <textarea name="short_description" id="short_description" rows="4" class="form-control"></textarea>
+                            <textarea name="short_description" id="short_description" rows="4" class="form-control">{{ old('short_description', $service->short_description ?? '') }}</textarea>
                         </div>
+
                         <div class="col-lg-6 mb-3">
                             <label for="original_price" class="form-label">Original Price:</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="original_price">$</span>
-                                <input type="number" name="original_price" class="form-control" aria-label="Original Price"
-                                    aria-describedby="original_price" required>
+                                <input type="number" name="original_price" class="form-control"
+                                    value="{{ old('original_price', $service->original_price ?? '') }}"
+                                    aria-label="Original Price" aria-describedby="original_price" required>
                             </div>
                         </div>
+
                         <div class="col-lg-6 mb-3">
                             <label for="discounted_price" class="form-label">Discounted Price:</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="discounted_price">$</span>
-                                <input type="number" name="discounted_price" class="form-control" aria-label="Discounted Price"
-                                    aria-describedby="discounted_price" required>
+                                <input type="number" name="discounted_price" class="form-control"
+                                    value="{{ old('discounted_price', $service->discounted_price ?? '') }}"
+                                    aria-label="Discounted Price" aria-describedby="discounted_price" required>
                             </div>
                         </div>
+
                         <div class="col-lg-12 mb-3">
                             <label for="duration" class="form-label">Duration</label>
                             <select name="duration" id="duration" class="form-select" required>
                                 <option value="">Select Duration</option>
-                                <option value="one time">One Time</option>
-                                <option value="Monthly">Monthly</option>
-                                <option value="Yearly">Yearly</option>
-                                <option value="Quarterly">Quarterly</option>
+                                <option value="one time"
+                                    {{ old('duration', $service->duration ?? '') == 'one time' ? 'selected' : '' }}>One Time
+                                </option>
+                                <option value="Monthly"
+                                    {{ old('duration', $service->duration ?? '') == 'Monthly' ? 'selected' : '' }}>Monthly
+                                </option>
+                                <option value="Yearly"
+                                    {{ old('duration', $service->duration ?? '') == 'Yearly' ? 'selected' : '' }}>Yearly
+                                </option>
+                                <option value="Quarterly"
+                                    {{ old('duration', $service->duration ?? '') == 'Quarterly' ? 'selected' : '' }}>
+                                    Quarterly</option>
                             </select>
                         </div>
+
                         <div class="col-12 mb-3">
                             <label for="service_image" class="form-label">Service Image:</label>
                             <div class="image-uploader">
-                                <input type="file" name="service_image" id="service_image" class="form-control" required accept="image/*" style="display: none;">
+                                <input type="file" name="service_image" id="service_image" class="form-control"
+                                    accept="image/*" style="display: none;">
                                 <div class="upload-area" id="upload-area">
                                     <span>Click to upload or drag and drop</span>
                                 </div>
                                 <div class="image-preview" id="image-preview">
-                                    <img id="preview-image" src="#" alt="Preview" style="display: none;">
-                                    <button type="button" id="remove-image" class="btn btn-danger btn-sm" style="display: none;">Remove</button>
+                                    @if (!empty($service->service_image))
+                                        <img id="preview-image" src="{{ asset('storage/' . $service->service_image) }}"
+                                            alt="Preview">
+                                        <button type="button" id="remove-image"
+                                            class="btn btn-danger btn-sm">Remove</button>
+                                    @else
+                                        <img id="preview-image" src="#" alt="Preview" style="display: none;">
+                                        <button type="button" id="remove-image" class="btn btn-danger btn-sm"
+                                            style="display: none;">Remove</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Submit</button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -67,71 +97,70 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const uploadArea = document.getElementById('upload-area');
-        const fileInput = document.getElementById('service_image');
-        const previewImage = document.getElementById('preview-image');
-        const removeImageButton = document.getElementById('remove-image');
-        const imagePreviewContainer = document.getElementById('image-preview');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('service_image');
+            const previewImage = document.getElementById('preview-image');
+            const removeImageButton = document.getElementById('remove-image');
+            const imagePreviewContainer = document.getElementById('image-preview');
 
-        // Open file dialog when upload area is clicked
-        uploadArea.addEventListener('click', function() {
-            fileInput.click();
-        });
+            // Open file dialog when upload area is clicked
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
 
-        // Handle file selection
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                    removeImageButton.style.display = 'block';
-                    uploadArea.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            // Handle file selection
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        removeImageButton.style.display = 'block';
+                        uploadArea.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-        // Handle drag and drop
-        uploadArea.addEventListener('dragover', function(event) {
-            event.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+            // Handle drag and drop
+            uploadArea.addEventListener('dragover', function(event) {
+                event.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
 
-        uploadArea.addEventListener('dragleave', function(event) {
-            event.preventDefault();
-            uploadArea.classList.remove('dragover');
-        });
+            uploadArea.addEventListener('dragleave', function(event) {
+                event.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
 
-        uploadArea.addEventListener('drop', function(event) {
-            event.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const file = event.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                fileInput.files = event.dataTransfer.files;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-                    removeImageButton.style.display = 'block';
-                    uploadArea.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            uploadArea.addEventListener('drop', function(event) {
+                event.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = event.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    fileInput.files = event.dataTransfer.files;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        removeImageButton.style.display = 'block';
+                        uploadArea.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-        // Remove image
-        removeImageButton.addEventListener('click', function() {
-            previewImage.src = '#';
-            previewImage.style.display = 'none';
-            removeImageButton.style.display = 'none';
-            uploadArea.style.display = 'block';
-            fileInput.value = '';
+            // Remove image
+            removeImageButton.addEventListener('click', function() {
+                previewImage.src = '#';
+                previewImage.style.display = 'none';
+                removeImageButton.style.display = 'none';
+                uploadArea.style.display = 'block';
+                fileInput.value = '';
+            });
         });
-    });
-</script>
+    </script>
 @endsection
-

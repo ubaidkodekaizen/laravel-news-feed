@@ -12,7 +12,7 @@
                 @php
                     $filters = \App\Helpers\DropDownHelper::searchFilter();
                 @endphp
-            <h5 class="filter_heading subheading_line">Professional</h5>
+                <h5 class="filter_heading subheading_line">Professional</h5>
 
                 <!-- Position Filter Section -->
                 <div class="filter-section">
@@ -26,7 +26,8 @@
 
                         <div id="positionFilterOptions" style="display: none">
                             @foreach ($filters['company_positions'] as $position)
-                                <div class="filter-option" onclick="addFilter('company_position', '{{ $position }}', 'selectedPositionFilters', 'positionSearchInput')">
+                                <div class="filter-option"
+                                    onclick="addFilter('company_position', '{{ $position }}', 'selectedPositionFilters', 'positionSearchInput')">
                                     {{ $position }}
                                 </div>
                             @endforeach
@@ -102,8 +103,9 @@
                     </div>
                     <div id="businessTypeFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedBusinessTypeFilters"></div>
-                        <input type="text" id="businessTypeSearchInput" name="company_business_type" class="filter-search"
-                            placeholder="Search Business Type..." oninput="filterOptions(this, 'businessTypeFilterOptions')">
+                        <input type="text" id="businessTypeSearchInput" name="company_business_type"
+                            class="filter-search" placeholder="Search Business Type..."
+                            oninput="filterOptions(this, 'businessTypeFilterOptions')">
                         <div id="businessTypeFilterOptions">
                             @foreach ($filters['company_business_types'] as $business_type)
                                 <div class="filter-option"
@@ -142,8 +144,9 @@
                     </div>
                     <div id="employeesFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedEmployeesFilters"></div>
-                        <input type="text" id="employeesSearchInput" name="company_no_of_employee" class="filter-search"
-                            placeholder="Search Employees..." oninput="filterOptions(this, 'employeesFilterOptions')">
+                        <input type="text" id="employeesSearchInput" name="company_no_of_employee"
+                            class="filter-search" placeholder="Search Employees..."
+                            oninput="filterOptions(this, 'employeesFilterOptions')">
                         <div id="employeesFilterOptions">
                             @foreach ($filters['company_no_of_employees'] as $employee_count)
                                 <div class="filter-option"
@@ -155,25 +158,46 @@
                     </div>
                 </div>
 
-                 <!-- Product/Service Filter Section -->
-                 <div class="filter-section">
-                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#productServiceFilter">
-                        Product/Service <span class="toggle-icon">+</span>
+                <!-- Product/Service Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#productFilter">
+                        Products <span class="toggle-icon">+</span>
                     </div>
-                    <div id="productServiceFilter" class="collapse">
-                        <div class="selected-filter-group" id="selectedProductServiceFilters"></div>
-                        <input type="text" id="productServiceSearchInput" name="product_service_name" class="filter-search"
-                            placeholder="Search Product/Service..." oninput="filterOptions(this, 'productServiceFilterOptions')">
-                        <div id="productServiceFilterOptions">
-                            @foreach ($filters['product_service_names'] as $product_service)
+                    <div id="productFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedProductFilters"></div>
+                        <input type="text" id="productSearchInput" name="product" class="filter-search"
+                            placeholder="Search Product..." oninput="filterOptions(this, 'productFilterOptions')">
+                        <div id="productFilterOptions">
+                            @foreach ($filters['products'] as $product)
                                 <div class="filter-option"
-                                    onclick="addFilter('product_service_name', '{{ $product_service }}', 'selectedProductServiceFilters', 'productServiceSearchInput')">
-                                    {{ $product_service }}
+                                    onclick="addFilter('product', '{{ $product }}', 'selectedProductFilters', 'productSearchInput')">
+                                    {{ $product }}
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
+
+                <div class="filter-section">
+                    <div class="filter-header" data-bs-toggle="collapse" data-bs-target="#serviceFilter">
+                        Services <span class="toggle-icon">+</span>
+                    </div>
+                    <div id="serviceFilter" class="collapse">
+                        <div class="selected-filter-group" id="selectedServiceFilters"></div>
+                        <input type="text" id="serviceSearchInput" name="service" class="filter-search"
+                            placeholder="Search Service..." oninput="filterOptions(this, 'serviceFilterOptions')">
+                        <div id="serviceFilterOptions">
+                            @foreach ($filters['services'] as $service)
+                                <div class="filter-option"
+                                    onclick="addFilter('service', '{{ $service }}', 'selectedServiceFilters', 'serviceSearchInput')">
+                                    {{ $service }}
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <h5 class="filter_heading subheading_line">Personal</h5>
 
@@ -186,7 +210,8 @@
                     <div id="userPositionFilter" class="collapse">
                         <div class="selected-filter-group" id="selectedUserPositionFilters"></div>
                         <input type="text" id="userPositionSearchInput" name="user_position" class="filter-search"
-                            placeholder="Search type of person you want to connect..." oninput="filterOptions(this, 'userPositionFilterOptions')">
+                            placeholder="Search type of person you want to connect..."
+                            oninput="filterOptions(this, 'userPositionFilterOptions')">
                         <div id="userPositionFilterOptions">
                             @foreach ($filters['user_position'] as $position)
                                 <div class="filter-option"
@@ -238,7 +263,7 @@
                             @endforeach
                         </div>
                     </div>
-                </div>  
+                </div>
 
                 {{-- Ethnicity Filter --}}
                 <div class="filter-section">
@@ -361,7 +386,7 @@
                     </div>
                 </div>
 
-               
+
 
             </div>
         </div>
@@ -379,30 +404,31 @@
 
     </div>
 
- <!-- Main Modal -->
- <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: var(--primary); color: #fff;">
-                <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="directMessageForm">
-                    <input type="hidden" name="receiver_id" id="receiver_id" value=""> <!-- Receiver ID will be set dynamically -->
+    <!-- Main Modal -->
+    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--primary); color: #fff;">
+                    <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="directMessageForm">
+                        <input type="hidden" name="receiver_id" id="receiver_id" value="">
+                        <!-- Receiver ID will be set dynamically -->
 
-                    <div class="mb-3">
-                        <label for="messageContent" class="form-label">Your Message</label>
-                        <textarea class="form-control" id="messageContent" name="content" rows="4" required></textarea>
-                    </div>
+                        <div class="mb-3">
+                            <label for="messageContent" class="form-label">Your Message</label>
+                            <textarea class="form-control" id="messageContent" name="content" rows="4" required></textarea>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
-                </form>
-                <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
+                        <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
+                    </form>
+                    <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -415,9 +441,9 @@
                 console.error("Sidebar element not found!");
             }
         }
-    
+
         let filters = {};
-    
+
         // Debounce function to delay execution
         function debounce(func, delay) {
             let timeout;
@@ -426,7 +452,7 @@
                 timeout = setTimeout(() => func.apply(this, args), delay);
             };
         }
-    
+
         // Sync header filters into the global filters object
         function syncHeaderFilters() {
             const headerForm = new FormData(document.getElementById('search_form'));
@@ -436,7 +462,7 @@
                 }
             }
         }
-    
+
         // Apply filters and refresh results
         function applyFilters() {
             syncHeaderFilters();
@@ -444,7 +470,7 @@
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
-    
+
             $.ajax({
                 url: window.location.pathname,
                 data: filters,
@@ -458,83 +484,86 @@
                 }
             });
         }
-    
+
         const debouncedApplyFilters = debounce(applyFilters, 300);
-    
-      // Add filter
-      function addFilter(category, value, targetId, inputId) {
-    const targetElement = document.getElementById(targetId);
-    const searchInput = document.getElementById(inputId);
 
-    if (!targetElement || !searchInput) {
-        console.error("Missing target element or search input:", { targetId, inputId });
-        return;
-    }
+        // Add filter
+        function addFilter(category, value, targetId, inputId) {
+            const targetElement = document.getElementById(targetId);
+            const searchInput = document.getElementById(inputId);
 
-    if (!document.getElementById(`${category}-${value}`)) {
-        const filter = document.createElement('div');
-        filter.className = 'selected-filter';
-        filter.id = `${category}-${value}`;
-        filter.innerHTML =
-            `${value} <i class="fa fa-times" onclick="removeFilter('${category}', '${value}', '${targetId}', '${inputId}')"></i>`;
-        targetElement.appendChild(filter);
+            if (!targetElement || !searchInput) {
+                console.error("Missing target element or search input:", {
+                    targetId,
+                    inputId
+                });
+                return;
+            }
 
-        if (!filters[category]) {
-            filters[category] = [];
-        }
-        filters[category].push(value);
+            if (!document.getElementById(`${category}-${value}`)) {
+                const filter = document.createElement('div');
+                filter.className = 'selected-filter';
+                filter.id = `${category}-${value}`;
+                filter.innerHTML =
+                    `${value} <i class="fa fa-times" onclick="removeFilter('${category}', '${value}', '${targetId}', '${inputId}')"></i>`;
+                targetElement.appendChild(filter);
 
-        // Hide the selected option from the dropdown
-        const option = document.querySelector(`.filter-option[onclick*="'${value}'"]`);
-        if (option) {
-            option.style.display = 'none';
-        } else {
-            console.warn("Option not found for hiding:", value);
-        }
+                if (!filters[category]) {
+                    filters[category] = [];
+                }
+                filters[category].push(value);
 
-        // Clear search input
-        searchInput.value = '';
-    }
+                // Hide the selected option from the dropdown
+                const option = document.querySelector(`.filter-option[onclick*="'${value}'"]`);
+                if (option) {
+                    option.style.display = 'none';
+                } else {
+                    console.warn("Option not found for hiding:", value);
+                }
 
-    debouncedApplyFilters();
-}
+                // Clear search input
+                searchInput.value = '';
+            }
 
-    // Remove filter
-    function removeFilter(category, value, targetId, inputId) {
-        const filter = document.getElementById(`${category}-${value}`);
-        if (filter) {
-            document.getElementById(targetId).removeChild(filter);
-        }
-        filters[category] = filters[category].filter(item => item !== value);
-        if (filters[category].length === 0) {
-            delete filters[category];
+            debouncedApplyFilters();
         }
 
-        // Show the option back in the dropdown
-        const option = document.querySelector(`.filter-option[onclick*="'${value}'"]`);
-        if (option) {
-            option.style.display = '';
-        } else {
-            console.warn("Option not found for showing back:", value);
+        // Remove filter
+        function removeFilter(category, value, targetId, inputId) {
+            const filter = document.getElementById(`${category}-${value}`);
+            if (filter) {
+                document.getElementById(targetId).removeChild(filter);
+            }
+            filters[category] = filters[category].filter(item => item !== value);
+            if (filters[category].length === 0) {
+                delete filters[category];
+            }
+
+            // Show the option back in the dropdown
+            const option = document.querySelector(`.filter-option[onclick*="'${value}'"]`);
+            if (option) {
+                option.style.display = '';
+            } else {
+                console.warn("Option not found for showing back:", value);
+            }
+
+            // Clear search input
+            const searchInput = document.getElementById(inputId);
+            if (searchInput) {
+                searchInput.value = '';
+            }
+
+            debouncedApplyFilters();
         }
 
-        // Clear search input
-        const searchInput = document.getElementById(inputId);
-        if (searchInput) {
-            searchInput.value = '';
-        }
 
-        debouncedApplyFilters();
-    }
-        
-
-// Filter dropdown options
+        // Filter dropdown options
         function filterOptions(input, optionsContainerId) {
             const filter = input.value.toLowerCase();
             const optionsContainer = document.getElementById(optionsContainerId);
             const options = optionsContainer.getElementsByClassName('filter-option');
             let hasVisibleOptions = false;
-    
+
             for (let option of options) {
                 const optionText = option.textContent.toLowerCase();
                 if (optionText.includes(filter)) {
@@ -544,10 +573,10 @@
                     option.style.display = 'none';
                 }
             }
-    
+
             optionsContainer.style.display = filter.length === 0 || !hasVisibleOptions ? 'none' : 'block';
         }
-    
+
         // Reset all filters
         function resetFilters() {
             filters = {};
@@ -555,17 +584,17 @@
             $('.filter-search').val('');
             applyFilters();
         }
-    
+
         // Handle pagination click with filters applied
         $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
             const pageUrl = $(this).attr('href');
             let newUrl = `${pageUrl}&${$.param(filters, true)}`;
-    
+
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
-    
+
             $.ajax({
                 url: pageUrl,
                 data: filters,
@@ -579,7 +608,7 @@
                 }
             });
         });
-    
+
         // Toggle filter sections
         document.querySelectorAll('.filter-header').forEach(header => {
             header.addEventListener('click', function() {
@@ -591,80 +620,82 @@
 @endsection
 
 
-@section("scripts")
-<script>
+@section('scripts')
+    <script>
+        function directMessageBtn(receiverId) {
+            $('#receiver_id').val(receiverId);
 
-function directMessageBtn(receiverId){ 
-        $('#receiver_id').val(receiverId);
 
-        
-        // Check if conversation exists
-        $.ajax({
-            url: '/api/check-conversation',
-            method: 'GET',
-            data: { receiver_id: receiverId },
-            headers: {
-                "Authorization": localStorage.getItem("sanctum-token")
-            },
-            success: function(response) {
-                if (response.conversation_exists) {
-                    // If conversation exists, open chat directly
-                    if (window.openChatWithUser) {
-                        window.openChatWithUser(receiverId);
-                    }
-                } else {
-                    // If no conversation, open the modal
-                    console.log(response.receiver);
-                    $('#receiver_id').val(receiverId);
-                            $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
+            // Check if conversation exists
+            $.ajax({
+                url: '/api/check-conversation',
+                method: 'GET',
+                data: {
+                    receiver_id: receiverId
+                },
+                headers: {
+                    "Authorization": localStorage.getItem("sanctum-token")
+                },
+                success: function(response) {
+                    if (response.conversation_exists) {
+                        // If conversation exists, open chat directly
+                        if (window.openChatWithUser) {
+                            window.openChatWithUser(receiverId);
+                        }
+                    } else {
+                        // If no conversation, open the modal
+                        console.log(response.receiver);
+                        $('#receiver_id').val(receiverId);
+                        $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
                         I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
                         Looking forward to connecting! 
                         Best Regards,
                         {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
-                    $('#mainModal').modal('show');
+                        $('#mainModal').modal('show');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error checking conversation:', xhr);
                 }
-            },
-            error: function(xhr) {
-                console.error('Error checking conversation:', xhr);
-            }
+            });
+        }
+        $(document).ready(function() {
+            // Check if conversation exists before opening modal
+
+
+            $('#directMessageForm').on('submit', function(e) {
+                e.preventDefault();
+
+                const formData = {
+                    receiver_id: $('#receiver_id').val(),
+                    content: $('#messageContent').val(),
+                    _token: '{{ csrf_token() }}'
+                };
+
+                $.ajax({
+                    url: '{{ route('sendMessage') }}',
+                    method: 'POST',
+                    data: formData,
+                    headers: {
+                        "Authorization": localStorage.getItem("sanctum-token")
+                    },
+                    success: function(response) {
+                        // Close the modal
+                        $('#mainModal').modal('hide');
+
+                        // Trigger opening the chat box and specific conversation
+                        if (window.openChatWithUser) {
+                            window.openChatWithUser(formData.receiver_id);
+                        }
+                    },
+                    error: function(xhr) {
+                        const errorMsg = xhr.responseJSON?.error ||
+                            'An error occurred. Please try again.';
+                        $('#messageStatus').html(
+                            `<div class="alert alert-danger">${errorMsg}</div>`);
+                    }
+                });
+            });
         });
-    }
-    $(document).ready(function () {  
-    // Check if conversation exists before opening modal
-     
-
-    $('#directMessageForm').on('submit', function (e) {
-        e.preventDefault();
-
-        const formData = {
-            receiver_id: $('#receiver_id').val(),
-            content: $('#messageContent').val(),
-            _token: '{{ csrf_token() }}'
-        };
-
-        $.ajax({
-            url: '{{ route("sendMessage") }}',
-            method: 'POST',
-            data: formData,
-            headers: {
-                "Authorization": localStorage.getItem("sanctum-token")
-            },
-            success: function (response) {
-                // Close the modal
-                $('#mainModal').modal('hide');
-                
-                // Trigger opening the chat box and specific conversation
-                if (window.openChatWithUser) {
-                    window.openChatWithUser(formData.receiver_id);
-                }
-            },
-            error: function (xhr) {
-                const errorMsg = xhr.responseJSON?.error || 'An error occurred. Please try again.';
-                $('#messageStatus').html(`<div class="alert alert-danger">${errorMsg}</div>`);
-            }
-        });
-    });
-});
-
-</script>
+    </script>
 @endsection

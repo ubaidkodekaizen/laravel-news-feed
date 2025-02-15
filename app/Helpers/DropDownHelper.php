@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 use App\Models\Company;
+use App\Models\Product;
+use App\Models\Service;
 use App\Models\User;
 use App\Models\Plan;
 use App\Models\ProductService;
@@ -9,9 +11,119 @@ use DB;
 
 class DropDownHelper
 {
+        
+    //Search Bar country Dropdown
+    public static function countryDropdown()
+    {
+        $countries = User::whereNotNull('country')->where('country', '!=', '')
+            ->distinct()->pluck('country', 'country')->sort();
+        $dropdown = '<select name="country" id="header_location" class="form-select select2">';
+        $dropdown .= '<option value="">Select Location</option>';
+        foreach ($countries as $country) {
+            $dropdown .= '<option value="' . $country . '">' . ucfirst($country) . '</option>';
+        }
+        $dropdown .= '</select>';
+
+        return $dropdown;
+    }
+
+    // SideBar Search Filters
+    public static function searchFilter()
+    {
 
 
-    // In your helper.php (or any helper file you include)
+        $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
+        $company_business_types = Company::pluck('company_business_type')->unique()->sort();
+        $company_no_of_employees = Company::pluck('company_no_of_employee')->unique()->sort();
+        $company_revenues = Company::pluck('company_revenue')->unique()->sort();
+        $company_experiences = Company::pluck('company_experience')->unique()->sort();
+
+        // From Users Table
+
+        $company_states = User::pluck('state')->unique()->sort();
+        $company_countries = User::pluck('country')->unique()->sort();
+
+        $user_city = User::pluck('city')->unique()->sort();
+        $user_county = User::pluck('county')->unique()->sort();
+        $user_gender = User::pluck('gender')->unique()->sort();
+        $user_age_group = User::pluck('age_group')->unique()->sort();
+        $user_age_group = User::pluck('marital_status')->unique()->sort();
+        $user_ethnicity = User::pluck('ethnicity')->unique()->sort();
+
+        $user_nationality = User::pluck('nationality')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_languages = User::pluck('languages')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_user_position = User::pluck('user_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+
+        $company_positions = Company::pluck('company_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $company_industries = Company::pluck('company_industry')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+
+
+        $product = Product::pluck('title')->unique()->sort();
+        $service = Service::pluck('title')->unique()->sort();
+
+        return [
+            'company_positions' => $company_positions,
+            'company_industries' => $company_industries,
+            'company_sub_categories' => $company_sub_categories,
+            'company_business_types' => $company_business_types,
+            'company_no_of_employees' => $company_no_of_employees,
+            'company_revenues' => $company_revenues,
+
+            'company_states' => $company_states,
+            'company_countries' => $company_countries,
+
+            'company_experiences' => $company_experiences,
+            'user_city' => $user_city,
+            'user_county' => $user_county,
+            'user_position' => $user_user_position,
+            'user_gender' => $user_gender,
+            'user_age_group' => $user_age_group,
+            'user_ethnicity' => $user_ethnicity,
+            'user_nationality' => $user_nationality,
+            'user_languages' => $user_languages,
+
+            'products' => $product,
+            'services' => $service,
+        ];
+    }
+
+
+    // Personal Tab Dropdown
     public static function nationalityDropdown($selected = null)
     {
         $nationalities = [
@@ -257,113 +369,7 @@ class DropDownHelper
     }
 
 
-    public static function countryDropdown()
-    {
-        $countries = User::whereNotNull('country')->where('country', '!=', '')
-            ->distinct()->pluck('country', 'country')->sort();
-        $dropdown = '<select name="country" id="header_location" class="form-select select2">';
-        $dropdown .= '<option value="">Select Location</option>';
-        foreach ($countries as $country) {
-            $dropdown .= '<option value="' . $country . '">' . ucfirst($country) . '</option>';
-        }
-        $dropdown .= '</select>';
-
-        return $dropdown;
-    }
-
-    public static function searchFilter()
-    {
-
-        //$company_positions = Company::pluck('company_position')->unique()->sort();
-        //$company_industries = Company::pluck('company_industry')->unique()->sort();
-        $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
-        $company_business_types = Company::pluck('company_business_type')->unique()->sort();
-        $company_no_of_employees = Company::pluck('company_no_of_employee')->unique()->sort();
-        $company_revenues = Company::pluck('company_revenue')->unique()->sort();
-        $company_experiences = Company::pluck('company_experience')->unique()->sort();
-
-        $company_states = User::pluck('state')->unique()->sort();
-        $company_countries = User::pluck('country')->unique()->sort();
-
-        $user_city = User::pluck('city')->unique()->sort();
-        $user_county = User::pluck('county')->unique()->sort();
-        // $user_user_position = User::pluck('user_position')->unique()->sort();
-        $user_gender = User::pluck('gender')->unique()->sort();
-        $user_age_group = User::pluck('age_group')->unique()->sort();
-        $user_ethnicity = User::pluck('ethnicity')->unique()->sort();
-        // $user_nationality = User::pluck('nationality')->unique()->sort();
-        // $user_languages = User::pluck('languages')->unique()->sort();
-
-        // Extract and split comma-separated values for user-related fields
-        $user_nationality = User::pluck('nationality')
-            ->flatMap(function ($item) {
-                return array_map('trim', explode(',', $item));
-            })
-            ->unique()
-            ->sort()
-            ->values();
-
-        $user_languages = User::pluck('languages')
-            ->flatMap(function ($item) {
-                return array_map('trim', explode(',', $item));
-            })
-            ->unique()
-            ->sort()
-            ->values();
-
-        $user_user_position = User::pluck('user_position')
-            ->flatMap(function ($item) {
-                return array_map('trim', explode(',', $item));
-            })
-            ->unique()
-            ->sort()
-            ->values();
-
-        // Extract and split comma-separated values for company-related fields
-        $company_positions = Company::pluck('company_position')
-            ->flatMap(function ($item) {
-                return array_map('trim', explode(',', $item));
-            })
-            ->unique()
-            ->sort()
-            ->values();
-
-        $company_industries = Company::pluck('company_industry')
-            ->flatMap(function ($item) {
-                return array_map('trim', explode(',', $item));
-            })
-            ->unique()
-            ->sort()
-            ->values();
-
-
-
-        $product_service_names = ProductService::pluck('product_service_name')->unique()->sort();
-
-        return [
-            'company_positions' => $company_positions,
-            'company_industries' => $company_industries,
-            'company_sub_categories' => $company_sub_categories,
-            'company_business_types' => $company_business_types,
-            'company_no_of_employees' => $company_no_of_employees,
-            'company_revenues' => $company_revenues,
-            'company_states' => $company_states,
-            'company_countries' => $company_countries,
-
-            'company_experiences' => $company_experiences,
-            'user_city' => $user_city,
-            'user_county' => $user_county,
-            'user_position' => $user_user_position,
-            'user_gender' => $user_gender,
-            'user_age_group' => $user_age_group,
-            'user_ethnicity' => $user_ethnicity,
-            'user_nationality' => $user_nationality,
-            'user_languages' => $user_languages,
-
-            'product_service_names' => $product_service_names,
-        ];
-    }
-
+    // Professional Tab Dropdown
     public static function industryDropdown($dropdownId = 'industryDropdownButton', $selectedValues = [])
     {
         $industries = DB::table('industries')->pluck('name');
@@ -403,67 +409,6 @@ class DropDownHelper
 
         return $html;
     }
-
-    // public static function renderIndustryDropdown($selectedValues = [])
-    // {
-    //     // Ensure $selectedValues is always an array
-    //     $selectedValues = is_array($selectedValues) ? $selectedValues : explode(',', $selectedValues);
-
-    //     // Fetch industries ordered by name, except "Other"
-    //     $industries = \DB::table('industries')
-    //         ->select('id', 'name')
-    //         ->where('name', '!=', 'Other')
-    //         ->orderBy('name', 'asc')
-    //         ->get();
-
-    //     // Add "Other" to the end of the list
-    //     $otherIndustry = \DB::table('industries')
-    //         ->where('name', 'Other')
-    //         ->select('id', 'name')
-    //         ->first();
-
-    //     if ($otherIndustry) {
-    //         $industries->push($otherIndustry);
-    //     }
-
-    //     // Start the dropdown HTML
-    //     $html = '<div class="dropdown">';
-    //     $html .= '<button class="btn btn-light dropdown-toggle w-100" type="button" id="industryDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">';
-    //     $html .= 'Select Industries';
-    //     $html .= '</button>';
-
-    //     $html .= '<ul id="industry-dropdown-menu" class="dropdown-menu position-dropdown-menu" aria-labelledby="industryDropdownButton">';
-    //     $html .= '<li class="mb-2">';
-    //     $html .= '<input type="text" id="search-industry-dropdown" class="form-control mb-2" placeholder="Search...">';
-    //     $html .= '</li>';
-
-    //     // Loop through industries to build the list items with checkboxes
-    //     foreach ($industries as $industry) {
-    //         $industryId = 'industry' . preg_replace('/[^a-zA-Z0-9]/', '', $industry->name);
-    //         $isChecked = in_array($industry->name, $selectedValues) ? 'checked' : '';
-
-    //         $html .= '<li>';
-    //         $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
-    //         $html .= '<label class="form-check-label" for="' . $industryId . '">' . htmlspecialchars($industry->name) . '</label>';
-    //         $html .= '<input class="form-check-input ms-2 industry-checkbox" type="checkbox" value="' . htmlspecialchars($industry->name) . '" id="' . $industryId . '" ' . $isChecked . '>';
-    //         $html .= '</div>';
-    //         $html .= '</li>';
-    //     }
-
-    //     // Option for "Other"
-    //     $html .= '<li>';
-    //     $html .= '<div class="form-check d-flex justify-content-between align-items-center">';
-    //     $html .= '<label class="form-check-label" for="industry_other_select">Other</label>';
-    //     $html .= '<input class="form-check-input ms-2 industry-checkbox" type="checkbox" value="Other" id="industry_other_select">';
-    //     $html .= '</div>';
-    //     $html .= '</li>';
-
-    //     $html .= '</ul>';
-    //     $html .= '</div>';
-
-    //     return $html;
-    // }
-
 
 
     public static function renderEmployeeSizeDropdown($selectedEmployeeSize = null)
@@ -516,49 +461,6 @@ class DropDownHelper
     }
 
 
-
-    public static function renderBusinessContributionsToMuslimCommunityDropdown($selectedContribution = null)
-    {
-        $selectedContribution = old('company_contribute_to_muslim_community', $selectedContribution);
-        $contributions = \DB::table('bussiness_contributions')
-            ->pluck('name', 'name')
-            ->toArray();
-
-        $html = '<select name="company_contribute_to_muslim_community" id="company_contribute_to_muslim_community" class="form-select">';
-        $html .= '<option value="">Select Business Contributions to Muslim Community</option>';
-
-        foreach ($contributions as $value => $label) {
-            $isSelected = $value == $selectedContribution ? 'selected' : '';
-            $html .= '<option value="' . $value . '" ' . $isSelected . '>' . $label . '</option>';
-        }
-
-        $html .= '</select>';
-
-        return $html;
-    }
-
-
-    public static function renderAffiliationToMuslimOrgDropdown($selectedAffiliation = null)
-    {
-        $selectedAffiliation = old('company_affiliation_to_muslim_org', $selectedAffiliation);
-        $affiliations = \DB::table('muslim_organizations')
-            ->pluck('name', 'name')
-            ->toArray();
-
-        $html = '<select name="company_affiliation_to_muslim_org" id="company_affiliation_to_muslim_org" class="form-select">';
-        $html .= '<option value="">Select Company Affiliation to Muslim Organization</option>';
-
-        foreach ($affiliations as $value => $label) {
-            $isSelected = $value == $selectedAffiliation ? 'selected' : '';
-            $html .= '<option value="' . $value . '" ' . $isSelected . '>' . $label . '</option>';
-        }
-
-        $html .= '</select>';
-
-        return $html;
-    }
-
-
     public static function renderRevenueDropdown($selectedRevenue = null)
     {
         $revenue_ranges = [
@@ -584,77 +486,18 @@ class DropDownHelper
 
 
 
-
-    // DropDown For User
-    public static function renderIndustryDropdownForUser($selectedIndustry = null, $selectedSubcategory = null)
-    {
-        // Get old input values for pre-selection
-        $selectedIndustry = old('industry_to_connect', $selectedIndustry);
-        $selectedSubcategory = old('sub_category_to_connect', $selectedSubcategory);
-
-        // Fetch industries ordered by name, except "Other" which should appear last
-        $industries = \DB::table('industries')
-            ->select('id', 'name')
-            ->where('name', '!=', 'Other')
-            ->orderBy('name', 'asc')
-            ->get();
-
-        // Add "Other" to the end of the list
-        $otherIndustry = \DB::table('industries')
-            ->where('name', 'Other')
-            ->select('id', 'name')
-            ->first();
-
-        if ($otherIndustry) {
-            $industries->push($otherIndustry);
-        }
-
-        // Start the dropdown HTML
-        $html = '<select name="industry_to_connect" id="industry_to_connect" class="form-select">';
-        $html .= '<option value="">Select Industry</option>';
-
-        // Loop through industries to build the options
-        foreach ($industries as $industry) {
-            $isSelected = $industry->name == $selectedIndustry ? 'selected' : '';
-            $html .= '<option value="' . $industry->name . '" ' . $isSelected . '>' . $industry->name . '</option>';
-        }
-
-        $html .= '</select>';
-
-        return $html;
-    }
-
-
-    public static function renderCommunityInterestDropdown($selectedInterest = null)
-    {
-        $selectedInterest = old('community_interest', $selectedInterest);
-        $communityInterests = \DB::table('community_interests')
-            ->pluck('name')
-            ->toArray();
-        $html = '<select name="community_interest" id="community_interest" class="form-select">';
-        $html .= '<option value="">Select Community Interest</option>';
-
-        foreach ($communityInterests as $interest) {
-            $isSelected = $interest == $selectedInterest ? 'selected' : '';
-            $html .= '<option value="' . $interest . '" ' . $isSelected . '>' . $interest . '</option>';
-        }
-
-        $html .= '</select>';
-
-        return $html;
-    }
-
+    // Sign Up Page Dropdown
     public static function getPlanDropdown()
     {
-        // Check if the URL contains the 'amcob' query parameter
+
         $urlHasAmcob = request()->has('amcob');
 
         $plans = Plan::all();
         $options = '<option value="" disabled selected>Choose a Plan</option>';
 
-        // If 'amcob' exists in the URL, add the "Test" plan (ID 3) first
+
         if ($urlHasAmcob) {
-            $testPlan = Plan::find(3); // Find the "Test" plan with ID 3
+            $testPlan = Plan::find(3);
             if ($testPlan) {
                 $options .= sprintf(
                     '<option value="%s">%s / %s</option>',
@@ -665,9 +508,8 @@ class DropDownHelper
             }
         }
 
-        // Add the other plans to the dropdown
+
         foreach ($plans as $plan) {
-            // Skip adding the "Test" plan again if it was already added
             if ($plan->id == 3) {
                 continue;
             }
