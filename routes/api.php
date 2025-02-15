@@ -13,5 +13,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('conversations/{conversation}/user', [ChatController::class, 'getUserForConversation']);
     Route::post('/typing', [ChatController::class, 'userIsTyping']); 
     Route::get('/check-conversation', [ChatController::class, 'checkConversation']);
+
+    // Add reaction to a message
+    Route::post('/messages/{message}/react', [ChatController::class, 'addReaction']);
+    // Remove reaction from a message
+    Route::delete('/messages/{message}/react', [ChatController::class, 'removeReaction']);
 });
  
