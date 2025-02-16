@@ -659,9 +659,8 @@
                 }
             });
         }
-        $(document).ready(function() {
-            // Check if conversation exists before opening modal
 
+        $(document).ready(function() {
 
             $('#directMessageForm').on('submit', function(e) {
                 e.preventDefault();

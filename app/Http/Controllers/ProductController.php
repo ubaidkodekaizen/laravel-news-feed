@@ -48,7 +48,7 @@ class ProductController extends Controller
         $product->title = $request->title;
         $product->short_description = $request->short_description;
         $product->original_price = $request->original_price;
-        $product->discounted_price = $request->discounted_price;
+        $product->discounted_price = $request->discounted_price ?? null;
         $product->quantity = $request->quantity;
         $product->unit_of_quantity = $request->unit_of_quantity;
         $product->product_image = $imagePath;

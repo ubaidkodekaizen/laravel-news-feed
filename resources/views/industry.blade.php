@@ -1,197 +1,60 @@
 @extends('layouts.main')
 @section('content')
 
-   
 
-   <section class="industry_specialist">
+
+    <section class="industry_specialist">
         <div class="container">
             <div class="industry-heading text-center mb-5">
                 <h1>Industry Experts</h1>
-           </div>
+            </div>
             <div class="row g-4">
-                <div class="col-md-3">
-                    <div class="industry-profile-card">
-                        <!-- Profile Picture -->
-                        <div class="profile-pic text-center">
-                            <img src="https://placehold.co/150" alt="Profile Picture" class="img-fluid rounded-circle">
+
+                @if ($users->isEmpty())
+                    <p>No experts found for {{ $industry }}.</p>
+                @else
+                    @foreach ($users as $user)
+                        <div class="col-md-3">
+                            <div class="industry-profile-card">
+                                <!-- Profile Picture -->
+                                
+                                <div class="profile-pic text-center">
+                                    <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://placehold.co/150' }}"
+                                        alt="{{ $user->first_name }}'s Profile Picture" class="img-fluid rounded-circle">
+                                </div>
+
+                                <!-- Profile Details -->
+                                <div class="profile-details text-center mt-3">
+                                    <h4 class="mb-1">{{ $user->first_name }} {{ $user->last_name }}</h4>
+                                    <p class="text-muted mb-1">{{ $user->company->company_position ?? 'N/A' }}</p>
+                                    <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i>
+                                        {{ $user->country ?? 'N/A' }}</p>
+                                    <p class="text-muted mb-1">{{ $user->company->company_industry ?? 'N/A' }}</p>
+                                    <p class="text-muted mb-3">Member since: {{ $user->created_at->format('M Y') }}</p>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons d-flex justify-content-center gap-3">
+                                    <a href="{{ route('user.profile', ['slug' => $user->slug]) }}"
+                                        class="btn btn-outline-primary btn-sm" title="View Profile">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="btn btn-outline-success btn-sm" title="Message">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                    <a href="https://www.linkedin.com/in/{{ $user->linkedin_url ?? '' }}" class="btn btn-outline-info btn-sm"
+                                        title="LinkedIn" target="_blank">
+                                        <i class="fab fa-linkedin"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                
-                        <!-- Profile Details -->
-                        <div class="profile-details text-center mt-3">
-                            <h4 class="mb-1">John Doe</h4>
-                            <p class="text-muted mb-1">Software Engineer</p>
-                            <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i> United States</p>
-                            <p class="text-muted mb-1">Technology</p>
-                            <p class="text-muted mb-3">Member since: Jan 2020</p>
-                        </div>
-                
-                        <!-- Action Buttons -->
-                        <div class="action-buttons d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-primary btn-sm" title="View Profile">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-success btn-sm" title="Message">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-info btn-sm" title="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="industry-profile-card">
-                        <!-- Profile Picture -->
-                        <div class="profile-pic text-center">
-                            <img src="https://placehold.co/150" alt="Profile Picture" class="img-fluid rounded-circle">
-                        </div>
-                
-                        <!-- Profile Details -->
-                        <div class="profile-details text-center mt-3">
-                            <h4 class="mb-1">John Doe</h4>
-                            <p class="text-muted mb-1">Software Engineer</p>
-                            <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i> United States</p>
-                            <p class="text-muted mb-1">Technology</p>
-                            <p class="text-muted mb-3">Member since: Jan 2020</p>
-                        </div>
-                
-                        <!-- Action Buttons -->
-                        <div class="action-buttons d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-primary btn-sm" title="View Profile">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-success btn-sm" title="Message">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-info btn-sm" title="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="industry-profile-card">
-                        <!-- Profile Picture -->
-                        <div class="profile-pic text-center">
-                            <img src="https://placehold.co/150" alt="Profile Picture" class="img-fluid rounded-circle">
-                        </div>
-                
-                        <!-- Profile Details -->
-                        <div class="profile-details text-center mt-3">
-                            <h4 class="mb-1">John Doe</h4>
-                            <p class="text-muted mb-1">Software Engineer</p>
-                            <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i> United States</p>
-                            <p class="text-muted mb-1">Technology</p>
-                            <p class="text-muted mb-3">Member since: Jan 2020</p>
-                        </div>
-                
-                        <!-- Action Buttons -->
-                        <div class="action-buttons d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-primary btn-sm" title="View Profile">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-success btn-sm" title="Message">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-info btn-sm" title="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="industry-profile-card">
-                        <!-- Profile Picture -->
-                        <div class="profile-pic text-center">
-                            <img src="https://placehold.co/150" alt="Profile Picture" class="img-fluid rounded-circle">
-                        </div>
-                
-                        <!-- Profile Details -->
-                        <div class="profile-details text-center mt-3">
-                            <h4 class="mb-1">John Doe</h4>
-                            <p class="text-muted mb-1">Software Engineer</p>
-                            <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i> United States</p>
-                            <p class="text-muted mb-1">Technology</p>
-                            <p class="text-muted mb-3">Member since: Jan 2020</p>
-                        </div>
-                
-                        <!-- Action Buttons -->
-                        <div class="action-buttons d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-primary btn-sm" title="View Profile">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-success btn-sm" title="Message">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-info btn-sm" title="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="industry-profile-card">
-                        <!-- Profile Picture -->
-                        <div class="profile-pic text-center">
-                            <img src="https://placehold.co/150" alt="Profile Picture" class="img-fluid rounded-circle">
-                        </div>
-                
-                        <!-- Profile Details -->
-                        <div class="profile-details text-center mt-3">
-                            <h4 class="mb-1">John Doe</h4>
-                            <p class="text-muted mb-1">Software Engineer</p>
-                            <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i> United States</p>
-                            <p class="text-muted mb-1">Technology</p>
-                            <p class="text-muted mb-3">Member since: Jan 2020</p>
-                        </div>
-                
-                        <!-- Action Buttons -->
-                        <div class="action-buttons d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-primary btn-sm" title="View Profile">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-success btn-sm" title="Message">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-info btn-sm" title="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="industry-profile-card">
-                        <!-- Profile Picture -->
-                        <div class="profile-pic text-center">
-                            <img src="https://placehold.co/150" alt="Profile Picture" class="img-fluid rounded-circle">
-                        </div>
-                
-                        <!-- Profile Details -->
-                        <div class="profile-details text-center mt-3">
-                            <h4 class="mb-1">John Doe</h4>
-                            <p class="text-muted mb-1">Software Engineer</p>
-                            <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i> United States</p>
-                            <p class="text-muted mb-1">Technology</p>
-                            <p class="text-muted mb-3">Member since: Jan 2020</p>
-                        </div>
-                
-                        <!-- Action Buttons -->
-                        <div class="action-buttons d-flex justify-content-center gap-3">
-                            <a href="#" class="btn btn-outline-primary btn-sm" title="View Profile">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-success btn-sm" title="Message">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-info btn-sm" title="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
             </div>
         </div>
-   </section>
+    </section>
 
     <section class="lp_footer">
         <div class="container">
@@ -328,3 +191,4 @@
         </div>
     </section>
 @endsection
+

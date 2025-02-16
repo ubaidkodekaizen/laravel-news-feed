@@ -52,7 +52,7 @@ class ServiceController extends Controller
         $service->title = $request->title;
         $service->short_description = $request->short_description;
         $service->original_price = $request->original_price;
-        $service->discounted_price = $request->discounted_price;
+        $service->discounted_price = $request->discounted_price ?? null;
         $service->duration = $request->duration;
         $service->service_image = $imagePath;
 

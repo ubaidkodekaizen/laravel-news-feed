@@ -57,6 +57,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('/search', [SearchController::class, 'SearchUserCompany'])->name('search');
     Route::get('/feed', [PageController::class, 'feed'])->name('feed');
+    Route::get('/industry-experts/{industry}', [PageController::class, 'industryExperts'])->name('industry');
+ 
+    
 
 
 
@@ -145,9 +148,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/industry', function () {
-    return view('industry');
-})->name('industry');
+
 
 Route::get('/getSubcategories/{industryId}', [SearchController::class, 'getSubcategories'])->name('get-category');
 
