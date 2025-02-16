@@ -89,7 +89,13 @@
 
 @section('scripts')
     <script>
+        // Flag to ensure event listeners are only attached once
+        let isInitialized = false;
+
         document.addEventListener('DOMContentLoaded', function() {
+            if (isInitialized) return; // Prevent duplicate initialization
+            isInitialized = true;
+
             const uploadArea = document.getElementById('upload-area');
             const fileInput = document.getElementById('product_image');
             const previewImage = document.getElementById('preview-image');
@@ -98,11 +104,13 @@
 
             // Open file dialog when upload area is clicked
             uploadArea.addEventListener('click', function() {
+                console.log('Upload area clicked');
                 fileInput.click();
             });
 
             // Handle file selection
             fileInput.addEventListener('change', function(event) {
+                console.log('File input changed');
                 const file = event.target.files[0];
                 if (file && file.type.startsWith('image/')) {
                     const reader = new FileReader();
@@ -146,11 +154,12 @@
 
             // Remove image
             removeImageButton.addEventListener('click', function() {
+                console.log('Remove image clicked');
                 previewImage.src = '#';
                 previewImage.style.display = 'none';
                 removeImageButton.style.display = 'none';
                 uploadArea.style.display = 'block';
-                fileInput.value = '';
+                fileInput.value = ''; // Reset the file input
             });
         });
     </script>

@@ -98,7 +98,11 @@
 
 @section('scripts')
     <script>
+         let isInitialized = false;
+
         document.addEventListener('DOMContentLoaded', function() {
+            if (isInitialized) return; // Prevent duplicate initialization
+            isInitialized = true;
             const uploadArea = document.getElementById('upload-area');
             const fileInput = document.getElementById('service_image');
             const previewImage = document.getElementById('preview-image');

@@ -52,8 +52,7 @@
                                         <a href="{{ route('user.edit.service', $service->id) }}" class="btn btn-primary">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
-                                        <form action="{{ route('user.delete.service', $service->id) }}" method="POST"
-                                            style="display:inline;">
+                                        <form action="{{ route('user.delete.service', $service->id) }}" method="POST" class="mb-0">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger"
