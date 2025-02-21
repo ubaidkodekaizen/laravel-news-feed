@@ -344,55 +344,68 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="contact_info_flex">
-                        <i class="fa-solid fa-venus-mars"></i>
-                        <div class="contact_name_info">
-                            <label for="gender" class="contact_heading">Gender</label>
-                            <p>{{ $user->gender ?? '' }}</p>
+                    @if(!empty($user->gender))
+                        <div class="contact_info_flex">
+                            <i class="fa-solid fa-venus-mars"></i>
+                            <div class="contact_name_info">
+                                <label for="gender" class="contact_heading">Gender</label>
+                                <p>{{ $user->gender }}</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="contact_info_flex">
-                        <i class="fa-regular fa-calendar-days"></i>
-                        <div class="contact_name_info">
-                            <label for="age_group" class="contact_heading">Age Group</label>
-                            <p>{{ $user->age_group ?? '' }}</p>
+                    @endif
+                
+                    @if(!empty($user->age_group))
+                        <div class="contact_info_flex">
+                            <i class="fa-regular fa-calendar-days"></i>
+                            <div class="contact_name_info">
+                                <label for="age_group" class="contact_heading">Age Group</label>
+                                <p>{{ $user->age_group }}</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="contact_info_flex">
-                        <i class="fa-solid fa-users-between-lines"></i>
-                        <div class="contact_name_info">
-                            <label for="ethnicity" class="contact_heading">Ethnicity</label>
-                            <p>{{ $user->ethnicity ?? '' }}</p>
+                    @endif
+                
+                    @if(!empty($user->ethnicity))
+                        <div class="contact_info_flex">
+                            <i class="fa-solid fa-users-between-lines"></i>
+                            <div class="contact_name_info">
+                                <label for="ethnicity" class="contact_heading">Ethnicity</label>
+                                <p>{{ $user->ethnicity }}</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="contact_info_flex">
-                        <i class="fa-solid fa-passport"></i>
-                        <div class="contact_name_info">
-                            <label for="nationality" class="contact_heading">Nationality</label>
-                            {{ $user->nationality ?? '' }}
+                    @endif
+                
+                    @if(!empty($user->nationality))
+                        <div class="contact_info_flex">
+                            <i class="fa-solid fa-passport"></i>
+                            <div class="contact_name_info">
+                                <label for="nationality" class="contact_heading">Nationality</label>
+                                <p>{{ $user->nationality }}</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="contact_info_flex">
-                        <i class="fa-solid fa-language"></i>
-                        <div class="contact_name_info">
-                            <label for="languages" class="contact_heading">Languages</label>
-                            {{ $user->languages ?? '' }}
+                    @endif
+                
+                    @if(!empty($user->languages))
+                        <div class="contact_info_flex">
+                            <i class="fa-solid fa-language"></i>
+                            <div class="contact_name_info">
+                                <label for="languages" class="contact_heading">Languages</label>
+                                <p>{{ $user->languages }}</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="contact_info_flex">
-                        <i class="fa-solid fa-person-circle-question"></i>
-                        <div class="contact_name_info">
-                            <label for="marital_status" class="contact_heading">Marital Status</label>
-                            {{ $user->marital_status ?? '' }}
+                    @endif
+                
+                    @if(!empty($user->marital_status))
+                        <div class="contact_info_flex">
+                            <i class="fa-solid fa-person-circle-question"></i>
+                            <div class="contact_name_info">
+                                <label for="marital_status" class="contact_heading">Marital Status</label>
+                                <p>{{ $user->marital_status }}</p>
+                            </div>
                         </div>
-                    </div>
-
+                    @endif
+                
                 </div>
+                
             </div>
         </div>
     </div>

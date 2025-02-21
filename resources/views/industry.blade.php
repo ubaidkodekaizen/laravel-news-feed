@@ -39,9 +39,9 @@
                                         class="btn btn-outline-primary btn-sm" title="View Profile">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="javascript:void(0)" class="btn btn-outline-success btn-sm" title="Message">
+                                    {{-- <a href="javascript:void(0)" class="btn btn-outline-success btn-sm" title="Message">
                                         <i class="fas fa-envelope"></i>
-                                    </a>
+                                    </a> --}}
                                     <a href="https://www.linkedin.com/in/{{ $user->linkedin_url ?? '' }}"
                                         class="btn btn-outline-info btn-sm" title="LinkedIn" target="_blank">
                                         <i class="fab fa-linkedin"></i>

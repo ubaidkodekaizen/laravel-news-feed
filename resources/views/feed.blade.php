@@ -218,7 +218,7 @@
                                     </div>
 
                                     <!-- Message Now Button -->
-                                    <a href="javascript:void(0);" class="view-more w-100">Message Now</a>
+                                    <a href="{{ route('user.profile', ['slug' => $product->user->slug]) }}" class="view-more w-100">Message Now</a>
                                 </div>
                             </div>
                         </div>
@@ -369,7 +369,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <a href="#" class="btn btn-primary w-100">Message Now</a>
+                                    <a href="{{ route('user.profile', ['slug' => $service->user->slug]) }}" class="btn btn-primary w-100">Message Now</a>
                                 </div>
                             </div>
                         </div>
