@@ -65,16 +65,14 @@ class UserController extends Controller
 
             $user = Auth::user();
 
-            // ✅ Generate Sanctum token
             $token = $user->createToken('chat_app')->plainTextToken;
 
-            // ✅ Store token in the session
             session(['sanctum_token' => $token]);
 
 
             if ($user->role_id === 4) {
                 if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
-                    return redirect()->route('search');
+                    return redirect()->route('feed');
                 } else {
                     return redirect()->route('user.details.show');
                 }
