@@ -209,23 +209,6 @@ class AdminController extends Controller
         $user->status = 'complete';
         $user->save();
 
-        if ($request->has('college_name') && is_array($request->college_name)) {
-            foreach ($request->college_name as $index => $college) {
-                if (!empty($college)) {
-                    UserEducation::updateOrCreate(
-                        [
-                            'user_id' => $user->id,
-                            'college_university' => $college,
-                            'degree_diploma' => $request->degree[$index] ?? null,
-                        ],
-                        [
-                            'year' => $request->year_graduated[$index] ?? null,
-                        ]
-                    );
-                }
-            }
-        }
-
         return redirect()->back()->with('success', 'User details updated successfully!');
     }
 
@@ -297,22 +280,7 @@ class AdminController extends Controller
         $company->save();
 
 
-        if ($request->has('product_service_name')) {
-            foreach ($request->product_service_name as $index => $serviceName) {
-                if (!empty($serviceName)) {
-                    ProductService::updateOrCreate(
-                        [
-                            'company_id' => $company->id,
-                            'product_service_name' => $serviceName,
-                        ],
-                        [
-                            'product_service_description' => $request->product_service_description[$index] ?? '',
-                            'product_service_area' => $request->product_service_area[$index] ?? '',
-                        ]
-                    );
-                }
-            }
-        }
+      
 
 
 

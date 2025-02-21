@@ -679,34 +679,7 @@
                                         </div>
 
 
-                                        <!-- Products/Services -->
-                                        <div class="col-12">
-                                            <label for="product_service_name">List of Services/Products</label>
-                                            <div class="row" id="product-service-row">
-                                                <div class="col-lg-5">
-                                                    <label for="product_service_name" class="mt-2">Name</label>
-                                                    <input type="text" name="product_service_name[]"
-                                                        id="product_service_name" class="form-control"
-                                                        value="{{ old('product_service_name[]', $company->productServices[0]->product_service_name ?? '') }}">
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <label for="product_service_description"
-                                                        class="mt-2">Description</label>
-                                                    <input type="text" name="product_service_description[]"
-                                                        id="product_service_description"
-                                                        value="{{ old('product_service_description[]', $company->productServices[0]->product_service_description ?? '') }}"class="form-control">
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <div class="flex_field_btn h-100">
-                                                        <button type="button" id="add-product-service"
-                                                            class="btn btn-primary">
-                                                            <i class="fas fa-plus"></i> Add
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                
 
                                         <div class="col-12 mt-4 text-end">
                                             <button type="submit" class="btn btn-primary w-100">Save</button>
