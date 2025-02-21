@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('emoji'); // Store the emoji (e.g., "👍", "❤️")
             $table->timestamps();
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.
