@@ -14,21 +14,21 @@
                                 @csrf
                                 <div class="row">
                                     <div class="col-lg-6 mb-3">
-                                        <label for="first_name" class="form-label w-100">AMCOB Member:</label>
+                                        <label for="amcob_member" class="form-label w-100">AMCOB Member:</label>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="amcob_member"
-                                                id="mcob-member-yes" value="MCOB Member Yes">
+                                                id="mcob-member-yes" value="Yes">
                                             <label class="form-check-label" for="mcob-member-yes">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="amcob_member"
-                                                id="mcob-member-no" value="MCOB Member No">
+                                                id="mcob-member-no" value="No">
                                             <label class="form-check-label" for="mcob-member-no">No</label>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 mb-3">
-                                        <label for="membership_duration" class="form-label">Membership Duration:</label>
-                                        <select name="membership_duration" id="membership_duration" class="form-select">
+                                        <label for="duration" class="form-label">Membership Duration:</label>
+                                        <select name="duration" id="duration" class="form-select">
                                             <option value="">Select Membership Duration</option>
                                             <option value="30">30 Days</option>
                                             <option value="60">60 Days</option>

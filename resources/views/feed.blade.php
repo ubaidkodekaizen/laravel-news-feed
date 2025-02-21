@@ -177,7 +177,7 @@
                     @forelse ($products as $product)
                         <div class="swiper-slide">
                             <div class="card">
-                                <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : asset('images/default-product.jpg') }}"
+                                <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
                                     alt="{{ $product->title }}">
 
                                 <div class="card-content">
@@ -265,24 +265,22 @@
 
     <section class="why_choose">
         <div class="container">
-            <h2 class="mb-3">Why to choose Care Hotels</h2>
+            <h2 class="mb-3">Muslim Lynk Redefines Lead Generation</h2>
             <div class="row">
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-up">
                                 <div class="card-img">
-                                    <i class="fa-solid fa-tag"></i>
+                                    <i class="fa-solid fa-clock"></i>
                                 </div>
                                 <div class="card-heading">
-                                    <h3>Special Discount</h3>
-                                    <span>Subtitle</span>
+                                    <h3>Real-Time Business Intelligence</h3>
+                                    {{-- <span>Subtitle</span> --}}
                                 </div>
                             </div>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris nisi ut aliquip ex ea commodo consequat.
+                                Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every connection is relevant and actionable.
                             </p>
                         </div>
                     </div>
@@ -292,17 +290,15 @@
                         <div class="card-body">
                             <div class="card-up">
                                 <div class="card-img">
-                                    <i class="fa-regular fa-calendar"></i>
+                                    <i class="fa-solid fa-message"></i>
                                 </div>
                                 <div class="card-heading">
-                                    <h3>AMCOB Peer Advisory</h3>
-                                    <span>Subtitle</span>
+                                    <h3>Seamless Direct Engagement With People</h3>
+                                    {{-- <span>Subtitle</span> --}}
                                 </div>
                             </div>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris nisi ut aliquip ex ea commodo consequat.
+                                Reach the right people effortlessly through integrated direct messaging and LinkedIn connectivity, eliminating barriers to impactful conversations.
                             </p>
                         </div>
                     </div>
@@ -312,17 +308,15 @@
                         <div class="card-body">
                             <div class="card-up">
                                 <div class="card-img">
-                                    <i class="fa-solid fa-leaf"></i>
+                                    <i class="fa-solid fa-user"></i>
                                 </div>
                                 <div class="card-heading">
-                                    <h3>Eco-friendly stays</h3>
-                                    <span>Subtitle</span>
+                                    <h3>Precision-Driven Lead Generation</h3>
+                                    {{-- <span>Subtitle</span> --}}
                                 </div>
                             </div>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris nisi ut aliquip ex ea commodo consequat.
+                                Secure a direct pathway to industry leaders, cutting through noise and delivering high-value opportunities with unmatched efficiency.
                             </p>
                         </div>
                     </div>
@@ -335,7 +329,7 @@
     <section class="articles">
         <div class="container">
             <h2 class="mb-3">Services Offered by Muslim Lynk Members</h2>
-            <div class="services_slider overflow-hidden">
+            <div class="services_slider_feed services_slider overflow-hidden">
                 <div class="swiper-wrapper">
                     @forelse($services as $service)
                         <div class="swiper-slide">
@@ -434,7 +428,7 @@
 
     <section class="lp_footer">
         <div class="container">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col">
                     <h3>STAYS</h3>
                     <ul class="footer_list">
@@ -560,38 +554,46 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div> --}}
             <p class="powered_by">
                 Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
     </section>
-@endsection
-@section('script')
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const industriesContainer = document.getElementById("industries-container");
             const showMoreBtn = document.getElementById("show-more-btn");
-            const industries = industriesContainer.querySelectorAll(".col-lg-3");
+            const industries = Array.from(industriesContainer.querySelectorAll(".col-lg-3, .col-md-6"));
             const itemsPerRow = 4; // Number of items per row
             const initialRows = 2; // Number of rows to show initially
             let isExpanded = false;
 
-            // Hide all industries beyond the initial rows
-            for (let i = initialRows * itemsPerRow; i < industries.length; i++) {
-                industries[i].style.display = "none";
+            function updateVisibility() {
+                industries.forEach((industry, index) => {
+                    if (index < initialRows * itemsPerRow) {
+                        industry.style.display = "block"; // Show initially visible items
+                    } else {
+                        industry.style.display = isExpanded ? "block" : "none"; // Toggle visibility
+                    }
+                });
+
+                showMoreBtn.textContent = isExpanded ? "Show Less" : "Show More";
             }
 
-            // Toggle visibility on button click
-            showMoreBtn.addEventListener("click", function() {
+            // Initial Setup
+            updateVisibility();
+
+            // Toggle on button click
+            showMoreBtn.addEventListener("click", function () {
                 isExpanded = !isExpanded;
-                for (let i = initialRows * itemsPerRow; i < industries.length; i++) {
-                    industries[i].style.display = isExpanded ? "block" : "none";
-                }
-                showMoreBtn.textContent = isExpanded ? "Show Less" : "Show More";
+                updateVisibility();
             });
         });
+
         // Prevent dropdown menu from closing when clicking inside
+       
         document.querySelectorAll('.dropdown-menu').forEach((dropdown) => {
             dropdown.addEventListener('click', (e) => {
                 e.stopPropagation();

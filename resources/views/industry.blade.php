@@ -17,14 +17,14 @@
                         <div class="col-md-3">
                             <div class="industry-profile-card">
                                 <!-- Profile Picture -->
-                                
+
                                 <div class="profile-pic text-center">
                                     <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://placehold.co/150' }}"
                                         alt="{{ $user->first_name }}'s Profile Picture" class="img-fluid rounded-circle">
                                 </div>
 
                                 <!-- Profile Details -->
-                                <div class="profile-details text-center mt-3">
+                                <div class="profile_details text-center mt-3">
                                     <h4 class="mb-1">{{ $user->first_name }} {{ $user->last_name }}</h4>
                                     <p class="text-muted mb-1">{{ $user->company->company_position ?? 'N/A' }}</p>
                                     <p class="text-muted mb-1"><i class="fas fa-map-marker-alt"></i>
@@ -39,12 +39,11 @@
                                         class="btn btn-outline-primary btn-sm" title="View Profile">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="javascript:void(0)"
-                                        class="btn btn-outline-success btn-sm" title="Message">
+                                    <a href="javascript:void(0)" class="btn btn-outline-success btn-sm" title="Message">
                                         <i class="fas fa-envelope"></i>
                                     </a>
-                                    <a href="https://www.linkedin.com/in/{{ $user->linkedin_url ?? '' }}" class="btn btn-outline-info btn-sm"
-                                        title="LinkedIn" target="_blank">
+                                    <a href="https://www.linkedin.com/in/{{ $user->linkedin_url ?? '' }}"
+                                        class="btn btn-outline-info btn-sm" title="LinkedIn" target="_blank">
                                         <i class="fab fa-linkedin"></i>
                                     </a>
                                 </div>
@@ -58,7 +57,7 @@
 
     <section class="lp_footer">
         <div class="container">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col">
                     <h3>STAYS</h3>
                     <ul class="footer_list">
@@ -184,11 +183,10 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div> --}}
             <p class="powered_by">
                 Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
     </section>
 @endsection
-

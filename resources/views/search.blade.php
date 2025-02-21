@@ -647,9 +647,9 @@
                         console.log(response.receiver);
                         $('#receiver_id').val(receiverId);
                         $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
-                        I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
-                        Looking forward to connecting! 
-                        Best Regards,
+I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
+Looking forward to connecting! 
+Best Regards,
                         {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
                         $('#mainModal').modal('show');
                     }

@@ -105,6 +105,8 @@ class AdminController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_amcob' => $request->amcob_member ?? 'No',
+            'duration' => $request->duration ?? '',
         ]);
 
 
@@ -175,6 +177,9 @@ class AdminController extends Controller
         $user->marital_status = $request->marital_status ?? $request->$request->other_marital_status;
         $user->tiktok_url = $request->tiktok_url ?? '';
         $user->youtube_url = $request->youtube_url ?? '';
+
+        $user->is_amcob = $request->amcob_member ?? 'No';
+        $user->duration = $request->duration ?? '';
         if ($request->has('are_you') && !empty($request->are_you)) {
             $user->user_position = implode(', ', $request->are_you);
         } else {

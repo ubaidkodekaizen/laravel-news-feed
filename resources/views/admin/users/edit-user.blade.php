@@ -74,23 +74,30 @@
                                             <label for="first_name" class="form-label w-100">AMCOB Member:</label>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="amcob_member"
-                                                    id="mcob-member-yes" value="MCOB Member Yes">
+                                                    id="mcob-member-yes" value="Yes"
+                                                    {{ $user->is_amcob === 'Yes' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="mcob-member-yes">Yes</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="amcob_member"
-                                                    id="mcob-member-no" value="MCOB Member No">
+                                                    id="mcob-member-no" value="No"
+                                                    {{ $user->is_amcob === 'No' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="mcob-member-no">No</label>
                                             </div>
                                         </div>
+
                                         <div class="col-lg-6">
-                                            <label for="membership_duration" class="form-label">Membership Duration:</label>
-                                            <select name="membership_duration" id="membership_duration" class="form-select">
+                                            <label for="duration" class="form-label">Membership Duration:</label>
+                                            <select name="duration" id="duration" class="form-select">
                                                 <option value="">Select Membership Duration</option>
-                                                <option value="30">30 Days</option>
-                                                <option value="60">60 Days</option>
-                                                <option value="90">90 Days</option>
+                                                <option value="30" {{ $user->duration == 30 ? 'selected' : '' }}>30 Days
+                                                </option>
+                                                <option value="60" {{ $user->duration == 60 ? 'selected' : '' }}>60 Days
+                                                </option>
+                                                <option value="90" {{ $user->duration == 90 ? 'selected' : '' }}>90 Days
+                                                </option>
                                             </select>
+
                                         </div>
                                         <div class="col-12">
                                             <label for="list_check_flex">Are You?<span class="text-danger">*</span> (Select
@@ -446,38 +453,7 @@
                                         </div>
 
 
-                                        <div class="col-12">
-                                            <label for="education">Education</label>
-                                            <div class="row" id="education-row">
-                                                <div class="col-lg-4">
-                                                    <label for="college_name" class="mt-2">Name of College/University
-                                                        Attended</label>
-                                                    <input type="text" name="college_name[]" id="college_name"
-                                                        class="form-control" placeholder="Enter college/university name"
-                                                        value="{{ $user->userEducations[0]->college_university ?? '' }}">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="degree" class="mt-2">Degree/Diploma</label>
-                                                    <input type="text" name="degree[]" id="degree"
-                                                        class="form-control" placeholder="Enter degree/diploma"
-                                                        value="{{ $user->userEducations[0]->degree_diploma ?? '' }}">
-                                                </div>
-                                                <div class="col-lg-3">
-                                                    <label for="year_graduated" class="mt-2">Year Graduated</label>
-                                                    <input type="text" name="year_graduated[]" id="year_graduated"
-                                                        class="form-control" placeholder="Enter year"
-                                                        value="{{ $user->userEducations[0]->year ?? '' }}">
-                                                </div>
-                                                <div class="col-lg-1">
-                                                    <div class="flex_field_btn h-100">
-                                                        <button type="button" id="add-education"
-                                                            class="btn btn-primary mt-4">
-                                                            <i class="fas fa-plus"></i> Add
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
 
 
 
@@ -753,102 +729,102 @@
 @endsection
 @section('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
-<script>
-    $("#user_details").validate({
-    rules: {
-        first_name: {
-            required: true,
-            minlength: 2
-        },
-        last_name: {
-            required: true,
-            minlength: 2
-        },
-        email: {
-            required: true,
-            email: true
-        },
-        phone: {
-            required: true,
-        },
-        linkedin_url: {
-            required: true,
-        },
-        x_url: {
-            url: true
-        },
-        instagram_url: {
-            url: true
-        },
-        facebook_url: {
-            url: true
-        },
-        address: {
-            required: true
-        },
-        city: {
-            required: true
-        },
-        country: {
-            required: true
-        },
-        industry_to_connect: {
-            required: true
-        },
-        sub_category_to_connect: {
-            required: true
-        },
-        community_interest: {
-            required: true
-        },
-        "are_you[]": {
-            required: function () {
-                return $(".list_check_flex input[type=checkbox]:checked").length === 0;
+    <script>
+        $("#user_details").validate({
+            rules: {
+                first_name: {
+                    required: true,
+                    minlength: 2
+                },
+                last_name: {
+                    required: true,
+                    minlength: 2
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                phone: {
+                    required: true,
+                },
+                linkedin_url: {
+                    required: true,
+                },
+                x_url: {
+                    url: true
+                },
+                instagram_url: {
+                    url: true
+                },
+                facebook_url: {
+                    url: true
+                },
+                address: {
+                    required: true
+                },
+                city: {
+                    required: true
+                },
+                country: {
+                    required: true
+                },
+                industry_to_connect: {
+                    required: true
+                },
+                sub_category_to_connect: {
+                    required: true
+                },
+                community_interest: {
+                    required: true
+                },
+                "are_you[]": {
+                    required: function() {
+                        return $(".list_check_flex input[type=checkbox]:checked").length === 0;
+                    }
+                }
+            },
+            messages: {
+                first_name: {
+                    required: "Please enter your first name",
+                    minlength: "First name must be at least 2 characters"
+                },
+                last_name: {
+                    required: "Please enter your last name",
+                    minlength: "Last name must be at least 2 characters"
+                },
+                email: {
+                    required: "Please enter your email",
+                    email: "Please enter a valid email address"
+                },
+                phone: {
+                    required: "Please enter your phone number",
+                    minlength: "Phone number must be at least 10 digits",
+                    digits: "Please enter only numbers"
+                },
+                linkedin_url: "Please enter a valid URL",
+                x_url: "Please enter a valid URL",
+                instagram_url: "Please enter a valid URL",
+                facebook_url: "Please enter a valid URL",
+                address: "Please enter your address",
+                city: "Please enter your city",
+                country: "Please enter your country",
+                zip_code: {
+                    required: "Please enter your zip code",
+                    digits: "Zip code must be a number"
+                },
+                industry_to_connect: "Please select an industry",
+                sub_category_to_connect: "Please select a sub-category",
+                community_interest: "Please select your community interest",
+                "are_you[]": "Please select at least one option"
+            },
+            submitHandler: function(form) {
+                form.submit(); // Only submit when form is valid
+            },
+            invalidHandler: function(event, validator) {
+                console.log("Form contains invalid fields. It won't submit.");
             }
-        }
-    },
-    messages: {
-        first_name: {
-            required: "Please enter your first name",
-            minlength: "First name must be at least 2 characters"
-        },
-        last_name: {
-            required: "Please enter your last name",
-            minlength: "Last name must be at least 2 characters"
-        },
-        email: {
-            required: "Please enter your email",
-            email: "Please enter a valid email address"
-        },
-        phone: {
-            required: "Please enter your phone number",
-            minlength: "Phone number must be at least 10 digits",
-            digits: "Please enter only numbers"
-        },
-        linkedin_url: "Please enter a valid URL",
-        x_url: "Please enter a valid URL",
-        instagram_url: "Please enter a valid URL",
-        facebook_url: "Please enter a valid URL",
-        address: "Please enter your address",
-        city: "Please enter your city",
-        country: "Please enter your country",
-        zip_code: {
-            required: "Please enter your zip code",
-            digits: "Zip code must be a number"
-        },
-        industry_to_connect: "Please select an industry",
-        sub_category_to_connect: "Please select a sub-category",
-        community_interest: "Please select your community interest",
-        "are_you[]": "Please select at least one option"
-    },
-    submitHandler: function (form) {
-        form.submit(); // Only submit when form is valid
-    },
-    invalidHandler: function (event, validator) {
-        console.log("Form contains invalid fields. It won't submit.");
-    }
-});
-</script>
+        });
+    </script>
     <script>
         $('#search_form').on('submit', function() {
             // Disable empty input fields

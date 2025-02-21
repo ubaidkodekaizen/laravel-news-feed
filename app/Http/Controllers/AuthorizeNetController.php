@@ -118,12 +118,13 @@ class AuthorizeNetController extends Controller
                 ]);
 
                 $token = Str::random(64);
+              
                 DB::table('password_reset_tokens')->updateOrInsert(
                     ['email' => $request->email],
                     ['token' => $token, 'created_at' => now()]
                 );
-
-                Mail::send('emails.confirmation-email', [
+              
+              	Mail::send('emails.confirmation-email', [
                     'token' => $token,
                     'user' => $user,
                     'subscription' => $subscription,
@@ -143,6 +144,8 @@ class AuthorizeNetController extends Controller
 
                     $message->subject('A new customer for Muslim Lynk');
                 });
+
+              
 
                 return back()->with('success', 'Please check your email to verify your account and set up your password.');
             } else {

@@ -13,6 +13,36 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthorizeNetController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\PusherController;
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-email', function () {
+    try {
+        Mail::raw('This is a test email from Laravel.', function ($message) {
+            $message->to('ubaid.syed@kodekaizen.com')
+                    ->subject('Laravel Test Email');
+        });
+
+        return 'Test email sent successfully!';
+    } catch (\Exception $e) {
+        return 'Error sending email: ' . $e->getMessage();
+    }
+});
+
+Route::get('/send-test-email', function () {
+    $to = 's.u.shah68@gmail.com';
+    $subject = 'Test Email from Laravel';
+    $message = 'This is a test email.';
+    $headers = "From: muslim.lynk@amcob.org\r\n";
+    $headers .= "Reply-To: muslim.lynk@amcob.org\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+
+    if (@mail($to, $subject, $message, $headers)) {
+        return 'PHP Mail sent successfully!';
+    } else {
+        return 'PHP Mail failed.';
+    }
+});
+
 
 
 

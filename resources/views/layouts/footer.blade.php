@@ -1,5 +1,3 @@
-
-
 @yield('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
@@ -17,7 +15,7 @@
     </script>
     <div id="chat-container"></div>
 @endauth
-@viteReactRefresh 
+@viteReactRefresh
 @vite(['resources/js/App.jsx'])
 <script>
     $(document).ready(function() {
@@ -127,7 +125,7 @@
 
             // Handle Enter key
             if (e.key === 'Enter') {
-                e.preventDefault(); 
+                e.preventDefault();
                 if (searchTerm) {
                     $('#product1').val(searchTerm);
                     $('#search_form').submit();
@@ -152,7 +150,8 @@
                     suggestionBox.empty();
 
                     // Only show suggestions if there's valid data
-                    if (response.products.length || response.services.length || response.company_industries
+                    if (response.products.length || response.services.length || response
+                        .company_industries
                         .length || response.first_name
                         .length) {
                         suggestionBox.show();
@@ -193,8 +192,7 @@
 
             if (dataType === 'product') {
                 $('#product1').val(selectedValue);
-            }
-            else if (dataType === 'service') {
+            } else if (dataType === 'service') {
                 $('#service1').val(selectedValue);
             } else if (dataType === 'company_industry') {
                 $('#company_industry1').val(selectedValue);
@@ -246,7 +244,7 @@
     });
 </script>
 <script>
-    document.querySelector(".logoutBtn").addEventListener("click", function(){
+    document.querySelector(".logoutBtn").addEventListener("click", function() {
         localStorage.setItem("sanctum-token", "");
     });
 </script>

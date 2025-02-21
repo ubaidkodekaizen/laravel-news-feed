@@ -583,6 +583,16 @@ body {
     margin-left: 20px;
     width: 75%;
 }
+.industry-profile-card .profile_details{
+    width: 100%;
+    margin: 0;
+    min-height: 180px;
+}
+.industry-profile-card .profile-pic {
+    height: 150px;
+    width: 150px;
+    margin: 0 auto;
+}
 
 .btn_flex {
     display: flex;
@@ -662,93 +672,7 @@ body {
 .navbar_d_flex{
     display: flex;
 }
-@media only screen and (max-width: 768px) {
-    .mobile_hide {
-        display: none;
-    }
-    .user-card-flex{
-        flex-wrap: wrap;
-        flex-direction: column;
-    }
-    .user-card .profile_name{
-        width: 100%;
-        flex-direction: column;
-    }
-    .profile_details {
-        margin-left: 0;
-        width: 100%;
-        margin-top: 20px;
-    }
-    .user-card .btn_flex{
-        justify-content: start;
-        gap: 10px;
-    }
-    .indus_member {
-        margin: 10px 0px 0px 0px;
-    }
-    .user-card{
-        padding: 10px;
-    }
-    .sidebar {
-        position: absolute;
-        left: -100%;
-        width: 75%;
-        transition: .5s all ease;
-    }
-    .sidebar-toggler {
-        display: block; /* Hide toggler button on desktop */
-    }
-    .navbar_d_flex{
-        display: inherit;
-    }
-    .main-content{
-        width: 100%;
-    }
-    div#userResults {
-        margin-top: 50px;
-    }
-    .user_company_profile .btn-flex .btn{
-        width: 100%;
-        padding: 10px 0px;
-    }
-    .user_company_profile .btn-flex{
-        flex-wrap: wrap;
-    }
-    .mobile_margin_30{
-        margin-top: 30px;
-    }
-    .flex_field_btn{
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .flex_field_btn .field.w-75{
-        width: 100%!important;
-    }
-    button#add-accreditation {
-        margin-top: 10px;
-    }
-    button.btn.btn-danger{
-        margin-top: 10px;
-    }
-    input#company_linkedin_user {
-        width: 100%;
-        margin-top: 10px;
-    }
-    input#linkedin_user {
-        width: 100%;
-        margin-top: 10px;
-    }
-    span.relative.z-0.inline-flex.rtl\:flex-row-reverse.shadow-sm.rounded-md{
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .flex.gap-3.justify-between.flex-1.sm\:hidden {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
+
 /* Toggler Button styles */
 .sidebar-toggler {
     position: fixed;
@@ -1392,7 +1316,8 @@ body {
 }
 .industry_specialist {
     padding: 40px 0;
-    background: linear-gradient(135deg, #f5f7fa, #e9eaeb)
+    background: linear-gradient(135deg, #f5f7fa, #e9eaeb);
+    min-height: calc(100vh - 200px);
 }
 
 .industry-profile-card {
@@ -1433,6 +1358,8 @@ body {
     border: 5px solid #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    object-fit: cover;
+    object-position: center;
 }
 
 .profile-pic img:hover {
@@ -1488,12 +1415,13 @@ body {
 .profile-container {
     margin: 50px auto;
     background: #fff;
-    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    border: 2px solid var(--secondary);
+    height: 1435px;
   }
   .cover-image {
-    height: 200px;
+    height: 150px;
     background: var(--secondary);
     position: relative;
   }
@@ -1514,8 +1442,8 @@ body {
     height: 100%;
     object-fit: cover;
   }
-  .profile-details {
-    padding: 20px 20px 20px;
+  .profile-container .profile-details {
+    padding: 0;
     text-align: center;
     position: relative;
     top: -75px;
@@ -1581,7 +1509,7 @@ body {
   .contact_info_flex {
     display: flex;
     align-items: start;
-    gap: 20px;
+    gap: 15px;
     margin-top: 20px;
 }
 
@@ -1617,9 +1545,284 @@ body {
     justify-content: space-between;
     padding: 0 15px;
     position: relative;
+    top: -70px;
+}
+
+/* .contact_social_flex .contact_info_flex {
+    margin: 5px;
+} */
+.contact_social_flex .contact_email {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.company_profile_section{
+    margin-left: 0px;
+    border-top: 2px solid var(--secondary);
+    position: relative;
     top: -60px;
 }
 
-.contact_social_flex .contact_info_flex {
-    margin: 5px;
+.company_profile_section .col-lg-3{
+    height: 100%;
+    border-right: 2px solid var(--secondary);
+    padding-right: 0px;
+}
+.company_profile_section .col-lg-9{
+    padding: 0;
+    height: 100%;
+}
+
+.company_card {
+    height: 950px;
+    overflow-y: auto;
+}
+
+
+.company_logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    height: 150px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--secondary);
+}
+
+.company_logo .logo_img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    padding: 10px;
+    max-height: 140px;
+}
+
+.company_card_details {
+    padding: 30px 10px;
+    padding-bottom: 10px;
+}
+.profile_qualification_sec{
+    padding: 30px 10px;
+    border-top: 1px solid var(--secondary);
+    padding-top: 10px;
+}
+.company_name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #33335a;
+    margin-bottom: 10px;
+}
+
+.company_position, .company_experience {
+    font-size: 17px;
+    color: #333333;
+    margin-bottom: 15px;
+}
+
+.company_link, .company_contact {
+    display: block;
+    font-size: 17px;
+    color: #333333;
+    text-decoration: none;
+    transition: color 0.3s;
+    text-align: start;
+    margin-bottom: 15px;
+}
+
+.company_link:hover, .company_contact:hover {
+    color: var(--secondary);
+}
+
+.company_name_icon_flex .icons_flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.company_name_icon_flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.company_card span i {
+    margin-right: 5px;
+    color: var(--secondary);
+}
+.company_profile_section .event_slider{
+    padding: 10px 0px;
+    min-height: 400px;
+}
+.company_profile_section .event_slider .event_price_label p{
+    font-size: 11px;
+}
+.company_profile_section .event_slider .event_price_label{
+    padding: 1px 6px;
+}
+.company_profile_section .event_slider .card img{
+    height: 150px;
+}
+.company_profile_section .event_slider .card-content .details{
+    margin: 0;
+}
+.company_profile_section .event_slider .card-content h3{
+    margin-top: 0;
+}
+.company_profile_section .event_slider .card-content{
+    padding: 5px;
+    gap: 5px;
+    min-height: 190px;
+}
+.company_profile_section .articles .card img {
+    height: 150px;
+}
+
+.company_profile_section .articles .card .card-body {
+    padding: 5px;
+}
+.company_profile_section .articles .card-body h3{
+    font-size: 1.2rem;
+    margin: 5px 0px;
+}
+.company_profile_section .articles .card-body p{
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+.company_profile_section .service_price_duration{
+    margin: 5px 0px;
+}
+.company_profile_section .profile_heading {
+    font-size: 20px;
+    
+}
+.company_profile_section .accordion-button{
+    padding: 7px 10px;
+}
+.company_profile_section .accordion-body{
+    padding: 7px 10px;
+}
+.company_profile_section .collapse.show{
+    margin-top: 0;
+}
+.services_profile_border{
+    border-top: 2px solid var(--secondary);
+    padding-top: 10px;
+    margin-top: 50px;
+}
+
+@media only screen and (max-width: 768px) {
+    .mobile_hide {
+        display: none;
+    }
+    .user-card-flex{
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+    .user-card .profile_name{
+        width: 100%;
+        flex-direction: column;
+    }
+    .profile_details {
+        margin-left: 0;
+        width: 100%;
+        margin-top: 20px;
+    }
+    .user-card .btn_flex{
+        justify-content: start;
+        gap: 10px;
+    }
+    .indus_member {
+        margin: 10px 0px 0px 0px;
+    }
+    .user-card{
+        padding: 10px;
+    }
+    .sidebar {
+        position: absolute;
+        left: -100%;
+        width: 75%;
+        transition: .5s all ease;
+    }
+    .sidebar-toggler {
+        display: block; /* Hide toggler button on desktop */
+    }
+    .navbar_d_flex{
+        display: inherit;
+    }
+    .main-content{
+        width: 100%;
+    }
+    div#userResults {
+        margin-top: 50px;
+    }
+    .user_company_profile .btn-flex .btn{
+        width: 100%;
+        padding: 10px 0px;
+    }
+    .user_company_profile .btn-flex{
+        flex-wrap: wrap;
+    }
+    .mobile_margin_30{
+        margin-top: 30px;
+    }
+    .flex_field_btn{
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .flex_field_btn .field.w-75{
+        width: 100%!important;
+    }
+    button#add-accreditation {
+        margin-top: 10px;
+    }
+    button.btn.btn-danger{
+        margin-top: 10px;
+    }
+    input#company_linkedin_user {
+        width: 100%;
+        margin-top: 10px;
+    }
+    input#linkedin_user {
+        width: 100%;
+        margin-top: 10px;
+    }
+    span.relative.z-0.inline-flex.rtl\:flex-row-reverse.shadow-sm.rounded-md{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .flex.gap-3.justify-between.flex-1.sm\:hidden {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .contact_social_flex{
+        flex-wrap: wrap;
+    }
+    .company_profile_section .col-lg-3{
+        padding-right: calc(var(--bs-gutter-x)* .5)!important;
+        padding-left: calc(var(--bs-gutter-x)* .5);
+    }
+    .company_card{
+        height: auto;
+    }
+    .company_profile_section .event_slider{
+        padding: 10px;
+    }
+    .services_profile_border{
+        padding: 10px;
+    }
+    .contact_social_flex .contact_email{
+        gap: 0;
+    }
+    .contact_info_flex{
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .profile-container{
+        height: auto;
+    }
 }

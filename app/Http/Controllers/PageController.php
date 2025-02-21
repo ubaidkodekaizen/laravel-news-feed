@@ -70,18 +70,27 @@ class PageController extends Controller
 
 
     public function industryExperts($industry)
-    {
-        $users = User::where('status', 'complete')
-            ->whereHas('company', function ($query) use ($industry) {
+{
+    $users = User::where('status', 'complete')
+        ->whereHas('company', function ($query) use ($industry) {
+            if (strtolower($industry) === 'other') {
+                $query->where(function ($q) {
+                    $q->whereNull('company_industry')
+                      ->orWhere('company_industry', '')
+                      ->orWhere('company_industry', 'N/A')
+                      ->orWhere('company_industry', 'Other')
+                      ->orWhere('company_industry', 'other');
+                });
+            } else {
                 $query->where('company_industry', 'LIKE', "%{$industry}%");
-            })
-            ->with('company')
-            ->get();
+            }
+        })
+        ->with('company')
+        ->get();
 
-        // dd($users);    
+    return view('industry', compact('users', 'industry'));
+}
 
-        return view('industry', compact('users', 'industry'));
-    }
 
 
 }

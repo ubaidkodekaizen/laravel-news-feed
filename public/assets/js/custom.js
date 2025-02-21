@@ -337,7 +337,7 @@ $(document).ready(function () {
             }
         },
     });
-    const services_slider = new Swiper('.services_slider', {
+    const services_slider_feed = new Swiper('.services_slider_feed', {
         slidesPerView: 1,
         spaceBetween: 20,
         loop: true,
@@ -356,6 +356,30 @@ $(document).ready(function () {
             1024: {
                 slidesPerView: 3,
             }
+        },
+    });
+    const services_profile_slider = new Swiper('.services_profile_slider', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            768: {
+                slidesPerView: 2,
+            },
+            1024: {
+                slidesPerView: 3,
+            },
+            1300: {
+                slidesPerView: 4,
+            },
         },
     });
 });
