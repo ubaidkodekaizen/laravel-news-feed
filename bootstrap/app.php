@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Register CORS middleware globally
         // $middleware->append(HandleCors::class);
+        // $middleware->group('web', [
+        //     \Illuminate\View\Middleware\ShareErrorsFromSession::class, // Ensure this is present
+        //     \App\Http\Middleware\TrackUserActivity::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

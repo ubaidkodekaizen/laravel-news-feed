@@ -3,6 +3,8 @@ use App\Http\Controllers\ChatController;
 
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 // Apply middleware at the route level
 Route::middleware('auth:sanctum')->group(function () { 
@@ -18,5 +20,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/messages/{message}/react', [ChatController::class, 'addReaction']);
     // Remove reaction from a message
     Route::delete('/messages/{message}/react', [ChatController::class, 'removeReaction']);
+
+    Route::post('/user/ping', function (Request $request) {
+        app(App\Services\UserOnlineService::class)->markUserActive(auth()->id());
+        return response()->json(['status' => 'success']);
+    });
+    
+    Route::post('/user/offline', function (Request $request) {
+        Redis::del('user:last_active:'.auth()->id());
+        return response()->json(['status' => 'success']);
+    });
 });
  

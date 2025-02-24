@@ -12,13 +12,19 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Jobs\BroadcastMessage;
 use App\Jobs\UserTypingJob;
-
+use App\Services\UserOnlineService;
+use App\Jobs\SendOfflineMessageNotification;
 
 class ChatController extends Controller
 {
     use AuthorizesRequests;
 
+    protected $userOnlineService;
 
+    public function __construct(UserOnlineService $userOnlineService)
+    {
+        $this->userOnlineService = $userOnlineService;
+    }
     public function createConversation(Request $request)
     {
         $request->validate([
@@ -236,6 +242,21 @@ class ChatController extends Controller
 
                 BroadcastMessage::dispatch($message);
                 \Log::info('Message broadcasted:', ['message' => $message]);
+
+
+                // Check if receiver is offline
+                if (!$this->userOnlineService->isUserOnline($receiverId)) {
+                    // Get receiver
+                    $receiver = User::find($receiverId);
+                    $sender = auth()->user();
+                    
+                    // Dispatch job to send email notification
+                    SendOfflineMessageNotification::dispatch($sender, $receiver, $message);
+                    \Log::info('Offline message email notification queued', [
+                        'receiver_id' => $receiverId,
+                        'sender_id' => $senderId
+                    ]);
+                }
 
                 return response()->json([
                     'id' => $message->id,
