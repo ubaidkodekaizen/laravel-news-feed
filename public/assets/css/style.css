@@ -528,7 +528,7 @@ body {
 .sidebar {
     width: 25%;
     background-color: var(--primary);
-    padding: 20px;
+    padding: 0px;
     border-right: 1px solid #ddd;
     height: calc(100vh - 105px);
     overflow-y: auto;
@@ -568,7 +568,9 @@ body {
     border-top: 0;
     padding: 0px;
 }
-
+#filterContainer {
+    padding: 20px;
+}
 .filterContainerInner .filter-section:first-child {
     border-radius: 5px 5px 0 0;
     border-top: 1px solid #eee;
@@ -657,7 +659,17 @@ body {
     padding: 3px 10px;
     font-size: 16px;
 }
-
+.top_filter_heading {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 30px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    margin: 0;
+    padding: 10px 20px;
+}
 .profile_name {
     display: flex;
     align-items: flex-start;

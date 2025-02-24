@@ -6,13 +6,13 @@
             Filters
         </button>
         <div class="sidebar" id="sidebar">
-            <h5 class="filter_heading">Filters</h5>
+            <h5 class="filter_heading top_filter_heading">Filters</h5>
             <div id="filterContainer">
 
                 @php
                     $filters = \App\Helpers\DropDownHelper::searchFilter();
                 @endphp
-                <h5 class="filter_heading subheading_line mt-5">Professional</h5>
+                <h5 class="filter_heading subheading_line mt-2">Professional</h5>
                 <div class="filterContainerInner">
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#positionFilter">
