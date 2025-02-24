@@ -1,7 +1,7 @@
 <!-- resources/views/partials/dashboard-sidebar.blade.php -->
 
 <div class="sidebar" id="dashboardSidebar">
-    <h5 class="filter_heading">Dashboard Menu</h5>
+    <h5 class="filter_heading top_filter_heading">Dashboard Menu</h5>
     <div id="dashboardMenu">
         <!-- Dashboard Menu Items -->
         <ul class="nav-list">
