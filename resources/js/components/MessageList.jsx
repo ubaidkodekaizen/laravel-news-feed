@@ -1,9 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
 
 const MessageList = ({ messages }) => {
   const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [messageList, setMessageList] = useState(messages);
+  const [showReactBtns, setReactBtns] = useState({});
 
+  useEffect(() => {
+    setMessageList(messages); // Update state when new messages arrive
+  }, [messages]);
+  
+  const toggleReactBtns = (messageId) => {
+    setReactBtns((prev) => ({
+      ...prev,
+      [messageId]: !prev[messageId], // Toggle visibility for this message
+    }));
+  };
   const handleReact = async (messageId, emoji) => {
     try {
       const response = await axios.post(`/api/messages/${messageId}/react`, {
@@ -13,6 +25,13 @@ const MessageList = ({ messages }) => {
           Authorization: localStorage.getItem("sanctum-token"),
         },
       });
+      setMessageList((prevMessages) => 
+        prevMessages.map((msg) => 
+          msg.id === messageId 
+            ? { ...msg, reactions: [...(msg.reactions || []), response.data] } 
+            : msg
+        )
+      );
       console.log("Reaction added:", response.data);
     } catch (error) {
       console.error("Error adding reaction:", error);
@@ -27,6 +46,14 @@ const MessageList = ({ messages }) => {
           Authorization: localStorage.getItem("sanctum-token"),
         },
       });
+
+      setMessageList((prevMessages) => 
+        prevMessages.map((msg) => 
+          msg.id === messageId 
+            ? { ...msg, reactions: msg.reactions.filter((r) => r.emoji !== emoji) } 
+            : msg
+        )
+      );
       console.log("Reaction removed:", response.data);
     } catch (error) {
       console.error("Error removing reaction:", error);
@@ -77,7 +104,7 @@ const MessageList = ({ messages }) => {
     }
   };
 
-  const messageGroups = groupMessagesByDate(messages);
+  const messageGroups = groupMessagesByDate(messageList);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -117,8 +144,9 @@ const MessageList = ({ messages }) => {
                     </div>
                   </div>
                   <div className="messageBoxListItemContentMsg">
-                    {msg.content}
+                    {msg.content} 
                   </div>
+                  
                   <div className="messageReactions">
                     {msg.reactions?.map((reaction) => (
                       <span
@@ -130,12 +158,15 @@ const MessageList = ({ messages }) => {
                       </span>
                     ))}
                   </div>
-                  <div className="messageReactionOptions">
-                    <button onClick={() => handleReact(msg.id, '👍')}>👍</button>
-                    <button onClick={() => handleReact(msg.id, '❤️')}>❤️</button>
-                    <button onClick={() => handleReact(msg.id, '😂')}>😂</button>
-                    <button onClick={() => handleReact(msg.id, '😮')}>😮</button>
-                    <button onClick={() => handleReact(msg.id, '😢')}>😢</button>
+                  <div className='messageReactIconBtn' onClick={() => toggleReactBtns(msg.id)}>
+                      <i className="fa-regular fa-face-smile"></i>
+                        <div className={`messageReactionOptions ${showReactBtns[msg.id] ? 'messageReactionOptionsShow' : 'messageReactionOptionsHide'}`}>
+                          <button onClick={() => handleReact(msg.id, '👍')}>👍</button>
+                          <button onClick={() => handleReact(msg.id, '❤️')}>❤️</button>
+                          <button onClick={() => handleReact(msg.id, '😂')}>😂</button>
+                          <button onClick={() => handleReact(msg.id, '😮')}>😮</button>
+                          <button onClick={() => handleReact(msg.id, '😢')}>😢</button>
+                        </div>
                   </div>
                 </div>
               </div>

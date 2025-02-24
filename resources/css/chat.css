@@ -37,9 +37,11 @@
 .chatBox.chatBoxClose .chatBoxHead {
     display: none;
 }
+
 .chatBox.chatBoxOpen .chatBoxMinIcon {
     display: none;
 }
+
 .chatBoxMinIcon {
     height: 50px;
     width: 50px;
@@ -79,10 +81,12 @@
     color: #fff;
     transition: .3s;
 }
+
 .chatBoxHead button:hover {
     background: #8f8f8f45;
     transition: .3s;
 }
+
 .chatBox {
     bottom: 0;
     transition: .3s;
@@ -271,6 +275,14 @@
     box-shadow: 0px 1px 4px rgba(0 0 0 / 25%);
 }
 
+.messageReactIconBtn {
+    position: relative;
+}
+
+.messageReactIconBtn i {
+    color: #8e8e8e;
+}
+
 .messageBoxHead {
     display: flex;
     align-items: center;
@@ -448,6 +460,7 @@
     bottom: 50px;
     right: 0;
 }
+
 .conversationBoxSearch {
     position: absolute;
     top: 0;
@@ -470,25 +483,48 @@
     display: flex;
     gap: 4px;
     margin-top: -10px;
-  }
-  
-  .reaction {
+}
+
+.reaction {
     cursor: pointer;
-    background: #f0f0f0;
-    padding: 4px 8px;
-    border-radius: 12px;
+    background: #dadada;
+    padding: 2px 5px;
+    border-radius: 10px;
     font-size: 14px;
-  }
-  
-  .messageReactionOptions {
+    box-shadow: 0px 1px 4px rgb(0 0 0 / 38%);
+}
+
+.messageReactionOptions {
     display: flex;
     gap: 4px;
-    margin-top: 8px;
-  }
-  
-  .messageReactionOptions button {
+    margin-top: 0px;
+    position: absolute;
+    top: 5px;
+    background: #eeeff4;
+    box-shadow: 0px 1px 4px rgba(0 0 0 / 25%);
+    padding: 0px 0px;
+    border-radius: 5px;
+}
+
+.messageReactionOptions.messageReactionOptionsShow {
+    display: flex
+}
+
+.messageReactionOptions.messageReactionOptionsHide {
+    display: none;
+}
+
+.messageBoxListItem.messageLeft .messageReactionOptions {
+    left: 20px;
+}
+
+.messageBoxListItem.messageRight .messageReactionOptions {
+    right: 20px;
+}
+
+.messageReactionOptions button {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 16px;
-  }
+}
