@@ -293,217 +293,219 @@
 
 
 
+@endsection
+
+@section('scripts')
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const industryDropdown = document.getElementById("company_industry");
+        const subCategoryDropdown = document.getElementById("company_sub_category");
+        const selectedSubcategory = "{{ $company->company_sub_category ?? '' }}";
 
 
-    <script>
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const industryDropdown = document.getElementById("company_industry");
-            const subCategoryDropdown = document.getElementById("company_sub_category");
-            const selectedSubcategory = "{{ $company->company_sub_category ?? '' }}";
-
-
-            industryDropdown.addEventListener("change", function() {
-                loadSubcategories(industryDropdown.value);
-            });
-
-            function loadSubcategories(industryName) {
-                subCategoryDropdown.innerHTML = "<option value=\'\'>Select Company Sub Industry</option>";
-
-                if (industryName) {
-                    fetch("{{ route('get-category', ['industryId' => '__industryName__']) }}".replace('__industryName__', industryName))
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(function(subCategory) {
-                                let option = document.createElement("option");
-                                option.value = subCategory.name;
-                                option.text = subCategory.name;
-                                option.selected = (subCategory.name === selectedSubcategory);
-                                subCategoryDropdown.appendChild(option);
-                            });
-                        })
-                        .catch(error => {
-                            console.error("Error fetching subcategories:", error);
-                        });
-                }
-            }
+        industryDropdown.addEventListener("change", function() {
             loadSubcategories(industryDropdown.value);
         });
-        
-        
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('select[name="company_business_type"]').addEventListener('change', function() {
-                toggleOtherField(this, 'business_type_other_field');
-            });
 
-            document.querySelector('select[name="company_industry"]').addEventListener('change', function() {
-                toggleOtherField(this, 'industry_other_field');
-            });
+        function loadSubcategories(industryName) {
+            subCategoryDropdown.innerHTML = "<option value=\'\'>Select Company Sub Industry</option>";
 
-            document.querySelector('select[name="company_sub_category"]').addEventListener('change', function() {
-                toggleOtherField(this, 'subcategory_other_field');
-            });
-
-            document.querySelector('select[name="company_contribute_to_muslim_community"]').addEventListener(
-                'change',
-                function() {
-                    toggleOtherField(this, 'contribution_other_field');
-                });
-
-            document.querySelector('select[name="company_affiliation_to_muslim_org"]').addEventListener('change',
-                function() {
-                    toggleOtherField(this, 'affiliation_other_field');
-                });
-
-            function toggleOtherField(dropdown, fieldId) {
-                const otherField = document.getElementById(fieldId);
-                if (dropdown.value.toLowerCase() === 'other') {
-                    otherField.style.display = 'block';
-                } else {
-                    otherField.style.display = 'none';
-                    otherField.querySelector('input').value = ''; // Clear the input field
-                }
+            if (industryName) {
+                fetch("{{ route('get-category', ['industryId' => '__industryName__']) }}".replace('__industryName__', industryName))
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(function(subCategory) {
+                            let option = document.createElement("option");
+                            option.value = subCategory.name;
+                            option.text = subCategory.name;
+                            option.selected = (subCategory.name === selectedSubcategory);
+                            subCategoryDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Error fetching subcategories:", error);
+                    });
             }
+        }
+        loadSubcategories(industryDropdown.value);
+    });
+    
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('select[name="company_business_type"]').addEventListener('change', function() {
+            toggleOtherField(this, 'business_type_other_field');
         });
 
-        document.querySelector('form').addEventListener('submit', function() {
-            const companyInput = document.getElementById('company_linkedin_user').value.trim();
-            const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
-            document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
+        document.querySelector('select[name="company_industry"]').addEventListener('change', function() {
+            toggleOtherField(this, 'industry_other_field');
         });
 
+        document.querySelector('select[name="company_sub_category"]').addEventListener('change', function() {
+            toggleOtherField(this, 'subcategory_other_field');
+        });
 
-        let accreditationCount = 1;
-
-        document.getElementById('add-accreditation').addEventListener('click', function() {
-            accreditationCount++;
-            const rowContainer = document.getElementById('accreditation-row');
-
-            // Create new row
-            const newRow = document.createElement('div');
-            newRow.classList.add('row', 'align-items-end', 'mt-2');
-
-            // Accreditation input column
-            const accredCol = document.createElement('div');
-            accredCol.classList.add('col-lg-6');
-            const accredLabel = document.createElement('label');
-            accredLabel.setAttribute('for', 'accreditation_' + accreditationCount);
-            accredLabel.innerText = 'Accreditation ' + accreditationCount;
-            const accredInput = document.createElement('input');
-            accredInput.type = 'text';
-            accredInput.name = 'accreditation[]';
-            accredInput.id = 'accreditation_' + accreditationCount;
-            accredInput.classList.add('form-control');
-            accredCol.appendChild(accredLabel);
-            accredCol.appendChild(accredInput);
-
-            // Delete button column
-            const deleteCol = document.createElement('div');
-            deleteCol.classList.add('col-lg-6');
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.classList.add('btn', 'btn-danger');
-            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i> Delete Accreditation';
-
-            // Delete button functionality
-            deleteButton.addEventListener('click', function() {
-                rowContainer.removeChild(newRow);
-                accreditationCount = accreditationCount - 1;
+        document.querySelector('select[name="company_contribute_to_muslim_community"]').addEventListener(
+            'change',
+            function() {
+                toggleOtherField(this, 'contribution_other_field');
             });
 
-            deleteCol.appendChild(deleteButton);
+        document.querySelector('select[name="company_affiliation_to_muslim_org"]').addEventListener('change',
+            function() {
+                toggleOtherField(this, 'affiliation_other_field');
+            });
 
-            // Append columns to new row
-            newRow.appendChild(accredCol);
-            newRow.appendChild(deleteCol);
+        function toggleOtherField(dropdown, fieldId) {
+            const otherField = document.getElementById(fieldId);
+            if (dropdown.value.toLowerCase() === 'other') {
+                otherField.style.display = 'block';
+            } else {
+                otherField.style.display = 'none';
+                otherField.querySelector('input').value = ''; // Clear the input field
+            }
+        }
+    });
 
-            // Add new row to container
-            rowContainer.appendChild(newRow);
+    document.querySelector('form').addEventListener('submit', function() {
+        const companyInput = document.getElementById('company_linkedin_user').value.trim();
+        const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
+        document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
+    });
+
+
+    let accreditationCount = 1;
+
+    document.getElementById('add-accreditation').addEventListener('click', function() {
+        accreditationCount++;
+        const rowContainer = document.getElementById('accreditation-row');
+
+        // Create new row
+        const newRow = document.createElement('div');
+        newRow.classList.add('row', 'align-items-end', 'mt-2');
+
+        // Accreditation input column
+        const accredCol = document.createElement('div');
+        accredCol.classList.add('col-lg-6');
+        const accredLabel = document.createElement('label');
+        accredLabel.setAttribute('for', 'accreditation_' + accreditationCount);
+        accredLabel.innerText = 'Accreditation ' + accreditationCount;
+        const accredInput = document.createElement('input');
+        accredInput.type = 'text';
+        accredInput.name = 'accreditation[]';
+        accredInput.id = 'accreditation_' + accreditationCount;
+        accredInput.classList.add('form-control');
+        accredCol.appendChild(accredLabel);
+        accredCol.appendChild(accredInput);
+
+        // Delete button column
+        const deleteCol = document.createElement('div');
+        deleteCol.classList.add('col-lg-6');
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.classList.add('btn', 'btn-danger');
+        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i> Delete Accreditation';
+
+        // Delete button functionality
+        deleteButton.addEventListener('click', function() {
+            rowContainer.removeChild(newRow);
+            accreditationCount = accreditationCount - 1;
         });
 
-        let count = 1;
+        deleteCol.appendChild(deleteButton);
 
-        document.getElementById('add-product-service').addEventListener('click', function() {
-            count++;
-            const rowContainer = document.getElementById('product-service-row');
-            const newRow = document.createElement('div');
-            newRow.classList.add('row', 'mt-2');
+        // Append columns to new row
+        newRow.appendChild(accredCol);
+        newRow.appendChild(deleteCol);
 
-            // Product/Service Name Column
-            const nameCol = document.createElement('div');
-            nameCol.classList.add('col-lg-4');
-            const nameLabel = document.createElement('label');
-            nameLabel.setAttribute('for', 'product_service_name_' + count);
-            nameLabel.innerText = 'Products/Services you offer Name ' + count;
-            const nameInput = document.createElement('input');
-            nameInput.type = 'text';
-            nameInput.name = 'product_service_name[]';
-            nameInput.id = 'product_service_name_' + count;
-            nameInput.classList.add('form-control');
-            nameCol.appendChild(nameLabel);
-            nameCol.appendChild(nameInput);
+        // Add new row to container
+        rowContainer.appendChild(newRow);
+    });
 
-            // Product/Service Description Column
-            const descCol = document.createElement('div');
-            descCol.classList.add('col-lg-4');
-            const descLabel = document.createElement('label');
-            descLabel.setAttribute('for', 'product_service_description_' + count);
-            descLabel.innerText = 'Products/Services you offer Description ' + count;
-            const descInput = document.createElement('input');
-            descInput.type = 'text';
-            descInput.name = 'product_service_description[]';
-            descInput.id = 'product_service_description_' + count;
-            descInput.classList.add('form-control');
-            descCol.appendChild(descLabel);
-            descCol.appendChild(descInput);
+    let count = 1;
 
-            // Product Service Area Column with Delete Button inside flex_field_btn
-            const areaCol = document.createElement('div');
-            areaCol.classList.add('col-lg-4');
+    document.getElementById('add-product-service').addEventListener('click', function() {
+        count++;
+        const rowContainer = document.getElementById('product-service-row');
+        const newRow = document.createElement('div');
+        newRow.classList.add('row', 'mt-2');
 
-            const flexFieldBtn = document.createElement('div');
-            flexFieldBtn.classList.add('flex_field_btn');
+        // Product/Service Name Column
+        const nameCol = document.createElement('div');
+        nameCol.classList.add('col-lg-4');
+        const nameLabel = document.createElement('label');
+        nameLabel.setAttribute('for', 'product_service_name_' + count);
+        nameLabel.innerText = 'Products/Services you offer Name ' + count;
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.name = 'product_service_name[]';
+        nameInput.id = 'product_service_name_' + count;
+        nameInput.classList.add('form-control');
+        nameCol.appendChild(nameLabel);
+        nameCol.appendChild(nameInput);
 
-            const fieldDiv = document.createElement('div');
-            fieldDiv.classList.add('field', 'w-75');
+        // Product/Service Description Column
+        const descCol = document.createElement('div');
+        descCol.classList.add('col-lg-4');
+        const descLabel = document.createElement('label');
+        descLabel.setAttribute('for', 'product_service_description_' + count);
+        descLabel.innerText = 'Products/Services you offer Description ' + count;
+        const descInput = document.createElement('input');
+        descInput.type = 'text';
+        descInput.name = 'product_service_description[]';
+        descInput.id = 'product_service_description_' + count;
+        descInput.classList.add('form-control');
+        descCol.appendChild(descLabel);
+        descCol.appendChild(descInput);
 
-            const areaLabel = document.createElement('label');
-            areaLabel.setAttribute('for', 'product_service_area_' + count);
-            areaLabel.innerText = 'Product Service Area ' + count;
+        // Product Service Area Column with Delete Button inside flex_field_btn
+        const areaCol = document.createElement('div');
+        areaCol.classList.add('col-lg-4');
 
-            const areaInput = document.createElement('input');
-            areaInput.type = 'text';
-            areaInput.name = 'product_service_area[]';
-            areaInput.id = 'product_service_area_' + count;
-            areaInput.classList.add('form-control');
+        const flexFieldBtn = document.createElement('div');
+        flexFieldBtn.classList.add('flex_field_btn');
 
-            fieldDiv.appendChild(areaLabel);
-            fieldDiv.appendChild(areaInput);
-            flexFieldBtn.appendChild(fieldDiv);
+        const fieldDiv = document.createElement('div');
+        fieldDiv.classList.add('field', 'w-75');
 
-            // Delete Button
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.classList.add('btn', 'btn-danger', 'ml-2');
-            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            deleteButton.onclick = function() {
-                rowContainer.removeChild(newRow);
-                count--;
-            };
-            flexFieldBtn.appendChild(deleteButton);
+        const areaLabel = document.createElement('label');
+        areaLabel.setAttribute('for', 'product_service_area_' + count);
+        areaLabel.innerText = 'Product Service Area ' + count;
 
-            areaCol.appendChild(flexFieldBtn);
+        const areaInput = document.createElement('input');
+        areaInput.type = 'text';
+        areaInput.name = 'product_service_area[]';
+        areaInput.id = 'product_service_area_' + count;
+        areaInput.classList.add('form-control');
 
-            // Append all columns to the new row
-            newRow.appendChild(nameCol);
-            newRow.appendChild(descCol);
-            newRow.appendChild(areaCol);
+        fieldDiv.appendChild(areaLabel);
+        fieldDiv.appendChild(areaInput);
+        flexFieldBtn.appendChild(fieldDiv);
 
-            // Add new row to container
-            rowContainer.appendChild(newRow);
-        });
+        // Delete Button
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.classList.add('btn', 'btn-danger', 'ml-2');
+        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        deleteButton.onclick = function() {
+            rowContainer.removeChild(newRow);
+            count--;
+        };
+        flexFieldBtn.appendChild(deleteButton);
 
-    </script>
+        areaCol.appendChild(flexFieldBtn);
+
+        // Append all columns to the new row
+        newRow.appendChild(nameCol);
+        newRow.appendChild(descCol);
+        newRow.appendChild(areaCol);
+
+        // Add new row to container
+        rowContainer.appendChild(newRow);
+    });
+
+</script>
 
 @endsection

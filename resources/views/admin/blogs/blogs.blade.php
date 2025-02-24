@@ -53,7 +53,9 @@
         </div>
 
     </main>
+@endsection
 
+@section('scripts')
     <script>
         function confirmDelete() {
             // Show confirmation alert

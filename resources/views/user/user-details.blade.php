@@ -1,5 +1,6 @@
-@extends('layouts.main')
-@section('content')
+@extends('layouts.dashboard-layout')
+
+@section('dashboard-content')
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />
 
@@ -30,7 +31,7 @@
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="user-details-pane" role="tabpanel"
                         aria-labelledby="user-details" tabindex="0">
-                        <div class="card_profile_first new_user_details">
+                        <div class="new_user_details">
                             <form action="{{ route('user.details.update') }}" method="POST" enctype="multipart/form-data"
                                 id="user_details">
                                 @csrf
@@ -116,6 +117,13 @@
                                                     {{ in_array('Govt/Public Sector Leader', $selectedAreYou) ? 'checked' : '' }}>
                                                 <label class="btn btn-outline-secondary custom_btn"
                                                     for="govt_public_sector_leader">Govt/Public Sector Leader</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" class="btn-check" id="industry_expert"
+                                                    name="are_you[]" value="Industry Expert"
+                                                    {{ in_array('Industry Expert', $selectedAreYou) ? 'checked' : '' }}>
+                                                <label class="btn btn-outline-secondary custom_btn"
+                                                    for="industry_expert">Industry Expert</label>
                                             </li>
                                             <li>
                                                 <input type="checkbox" class="btn-check" id="job_seeker"
@@ -403,40 +411,6 @@
                                     </div>
 
 
-                                    <div class="col-12">
-                                        <label for="education">Education</label>
-                                        <div class="row" id="education-row">
-                                            <div class="col-lg-4">
-                                                <label for="college_name" class="mt-2">Name of College/University
-                                                    Attended</label>
-                                                <input type="text" name="college_name[]" id="college_name"
-                                                    class="form-control" placeholder="Enter college/university name"
-                                                    value="{{ $user->userEducations[0]->college_university ?? '' }}">
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <label for="degree" class="mt-2">Degree/Diploma</label>
-                                                <input type="text" name="degree[]" id="degree"
-                                                    class="form-control" placeholder="Enter degree/diploma"
-                                                    value="{{ $user->userEducations[0]->degree_diploma ?? '' }}">
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <label for="year_graduated" class="mt-2">Year Graduated</label>
-                                                <input type="text" name="year_graduated[]" id="year_graduated"
-                                                    class="form-control" placeholder="Enter year"
-                                                    value="{{ $user->userEducations[0]->year ?? '' }}">
-                                            </div>
-                                            <div class="col-lg-1">
-                                                <div class="flex_field_btn h-100">
-                                                    <button type="button" id="add-education"
-                                                        class="btn btn-primary mt-4">
-                                                        <i class="fas fa-plus"></i> Add
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
 
                                     <div class="col-lg-6">
                                         <label for="linkedin_url">LinkedIn<span class="text-danger">*</span></label>
@@ -487,7 +461,7 @@
                     </div>
                     <div class="tab-pane fade" id="company-details-tab-pane" role="tabpanel"
                         aria-labelledby="company-details-tab" tabindex="0">
-                        <div class="card_profile_first new_user_details">
+                        <div class="new_user_details">
                             <form action="{{ route('user.company.update') }}" method="POST"
                                 enctype="multipart/form-data" id="user_company">
                                 @csrf
@@ -654,35 +628,6 @@
                                     </div>
 
 
-                                    <!-- Products/Services -->
-                                    <div class="col-12">
-                                        <label for="product_service_name">List of Services/Products</label>
-                                        <div class="row" id="product-service-row">
-                                            <div class="col-lg-5">
-                                                <label for="product_service_name" class="mt-2">Name</label>
-                                                <input type="text" name="product_service_name[]"
-                                                    id="product_service_name" class="form-control"
-                                                    value="{{ old('product_service_name[]', $company->productServices[0]->product_service_name ?? '') }}">
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label for="product_service_description"
-                                                    class="mt-2">Description</label>
-                                                <input type="text" name="product_service_description[]"
-                                                    id="product_service_description"
-                                                    value="{{ old('product_service_description[]', $company->productServices[0]->product_service_description ?? '') }}"class="form-control">
-                                            </div>
-                                            <div class="col-lg-1">
-                                                <div class="flex_field_btn h-100">
-                                                    <button type="button" id="add-product-service"
-                                                        class="btn btn-primary">
-                                                        <i class="fas fa-plus"></i> Add
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
                                     <div class="col-12 mt-4 text-end">
                                         <button type="submit" class="btn btn-primary w-100">Save</button>
                                     </div>
@@ -745,98 +690,20 @@
         });
     </script>
     <script>
-        let eduCount = 1;
-
-        document.getElementById('add-education').addEventListener('click', function() {
-            eduCount++;
-            const rowContainer = document.getElementById('education-row');
-            const newRow = document.createElement('div');
-            newRow.classList.add('row', 'mt-2');
-
-            // Name of College/University Attended Column
-            const collegeCol = document.createElement('div');
-            collegeCol.classList.add('col-lg-4');
-            const collegeLabel = document.createElement('label');
-            collegeLabel.setAttribute('for', 'college_name_' + eduCount);
-            collegeLabel.innerText = 'Name of College/University Attended ' + eduCount;
-            const collegeInput = document.createElement('input');
-            collegeInput.type = 'text';
-            collegeInput.name = 'college_name[]';
-            collegeInput.id = 'college_name_' + eduCount;
-            collegeInput.classList.add('form-control');
-            collegeInput.placeholder = 'Enter college/university name';
-            collegeInput.required = true;
-            collegeCol.appendChild(collegeLabel);
-            collegeCol.appendChild(collegeInput);
-
-            // Degree/Diploma Column
-            const degreeCol = document.createElement('div');
-            degreeCol.classList.add('col-lg-4');
-            const degreeLabel = document.createElement('label');
-            degreeLabel.setAttribute('for', 'degree_' + eduCount);
-            degreeLabel.innerText = 'Degree/Diploma ' + eduCount;
-            const degreeInput = document.createElement('input');
-            degreeInput.type = 'text';
-            degreeInput.name = 'degree[]';
-            degreeInput.id = 'degree_' + eduCount;
-            degreeInput.classList.add('form-control');
-            degreeInput.placeholder = 'Enter degree/diploma';
-            degreeInput.required = true;
-            degreeCol.appendChild(degreeLabel);
-            degreeCol.appendChild(degreeInput);
-
-            // Year Graduated Column
-            const yearCol = document.createElement('div');
-            yearCol.classList.add('col-lg-3');
-            const yearLabel = document.createElement('label');
-            yearLabel.setAttribute('for', 'year_graduated_' + eduCount);
-            yearLabel.innerText = 'Year Graduated ' + eduCount;
-            const yearInput = document.createElement('input');
-            yearInput.type = 'text';
-            yearInput.name = 'year_graduated[]';
-            yearInput.id = 'year_graduated_' + eduCount;
-            yearInput.classList.add('form-control');
-            yearInput.placeholder = 'Enter year';
-            yearInput.required = true;
-            yearCol.appendChild(yearLabel);
-            yearCol.appendChild(yearInput);
-
-            // Delete Button Column
-            const actionCol = document.createElement('div');
-            actionCol.classList.add('col-lg-1');
-            const flexFieldBtn = document.createElement('div');
-            flexFieldBtn.classList.add('flex_field_btn', 'h-100');
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.classList.add('btn', 'btn-danger', 'mt-4');
-            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            deleteButton.onclick = function() {
-                rowContainer.removeChild(newRow);
-                eduCount--;
-            };
-            flexFieldBtn.appendChild(deleteButton);
-            actionCol.appendChild(flexFieldBtn);
-
-            // Append all columns to the new row
-            newRow.appendChild(collegeCol);
-            newRow.appendChild(degreeCol);
-            newRow.appendChild(yearCol);
-            newRow.appendChild(actionCol);
-
-            // Add new row to container
-            rowContainer.appendChild(newRow);
-        });
-
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if the script has already run
+            if (window.languageScriptLoaded) {
+                return;
+            }
+            window.languageScriptLoaded = true;
+
             const languageInput = document.getElementById('language-input');
             const languagesList = document.getElementById('languages-list');
-            const languageHiddenInput = document.getElementById(
-                'languages-hidden'); // Get the existing hidden input
+            const languageHiddenInput = document.getElementById('languages-hidden'); // Get the existing hidden input
 
             // Initialize the languages array with the values from the backend
-            let languages = '{{ $user->languages }}'.split(',').map(lang => lang.trim()).filter(lang =>
-                lang); // Trim and split into an array
+            let languages = '{{ $user->languages }}'.split(',').map(lang => lang.trim()).filter(lang => lang); // Trim and split into an array
 
             // Display the existing languages as tags
             languages.forEach(language => {
@@ -899,9 +766,6 @@
 
 
 
-
-
-
         document.addEventListener('DOMContentLoaded', function() {
             const ethnicitySelect = document.getElementById('ethnicity');
             const otherEthnicityDiv = document.getElementById('other-ethnicity-div');
@@ -933,6 +797,7 @@
                 }
             });
         });
+
     </script>
 
     <script>
@@ -1232,90 +1097,5 @@
             document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
         });
 
-
-
-
-        let count = 1;
-
-        document.getElementById('add-product-service').addEventListener('click', function() {
-            count++;
-            const rowContainer = document.getElementById('product-service-row');
-            const newRow = document.createElement('div');
-            newRow.classList.add('row', 'mt-2');
-
-            // Product/Service Name Column
-            const nameCol = document.createElement('div');
-            nameCol.classList.add('col-lg-5');
-            const nameLabel = document.createElement('label');
-            nameLabel.setAttribute('for', 'product_service_name_' + count);
-            nameLabel.innerText = 'Name ' + count;
-            const nameInput = document.createElement('input');
-            nameInput.type = 'text';
-            nameInput.name = 'product_service_name[]';
-            nameInput.id = 'product_service_name_' + count;
-            nameInput.classList.add('form-control');
-            nameCol.appendChild(nameLabel);
-            nameCol.appendChild(nameInput);
-
-            // Product/Service Description Column
-            const descCol = document.createElement('div');
-            descCol.classList.add('col-lg-6');
-            const descLabel = document.createElement('label');
-            descLabel.setAttribute('for', 'product_service_description_' + count);
-            descLabel.innerText = 'Description ' + count;
-            const descInput = document.createElement('input');
-            descInput.type = 'text';
-            descInput.name = 'product_service_description[]';
-            descInput.id = 'product_service_description_' + count;
-            descInput.classList.add('form-control');
-            descCol.appendChild(descLabel);
-            descCol.appendChild(descInput);
-
-            // Product Service Area Column with Delete Button inside flex_field_btn
-            const areaCol = document.createElement('div');
-            areaCol.classList.add('col-lg-1');
-
-            const flexFieldBtn = document.createElement('div');
-            flexFieldBtn.classList.add('flex_field_btn');
-            flexFieldBtn.classList.add('h-100');
-
-            // const fieldDiv = document.createElement('div');
-            // fieldDiv.classList.add('field', 'w-75');
-
-            // const areaLabel = document.createElement('label');
-            // areaLabel.setAttribute('for', 'product_service_area_' + count);
-            // areaLabel.innerText = 'Product Service Area ' + count;
-
-            // const areaInput = document.createElement('input');
-            // areaInput.type = 'text';
-            // areaInput.name = 'product_service_area[]';
-            // areaInput.id = 'product_service_area_' + count;
-            // areaInput.classList.add('form-control');
-
-            // fieldDiv.appendChild(areaLabel);
-            // fieldDiv.appendChild(areaInput);
-            // flexFieldBtn.appendChild(fieldDiv);
-
-            // Delete Button
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.classList.add('btn', 'btn-danger', 'ml-2');
-            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            deleteButton.onclick = function() {
-                rowContainer.removeChild(newRow);
-                count--;
-            };
-            flexFieldBtn.appendChild(deleteButton);
-
-            areaCol.appendChild(flexFieldBtn);
-
-            // Append all columns to the new row
-            newRow.appendChild(nameCol);
-            newRow.appendChild(descCol);
-            newRow.appendChild(areaCol);
-
-            // Add new row to container
-            rowContainer.appendChild(newRow);
-        });
     </script>
 @endsection

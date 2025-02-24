@@ -436,9 +436,6 @@
             });
         });
     </script>
-
-
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const industryDropdown = document.getElementById("company_industry");
@@ -472,9 +469,6 @@
             }
             loadSubcategories(industryDropdown.value);
         });
-
-
-
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('select[name="company_business_type"]').addEventListener('change', function() {
                 toggleOtherField(this, 'business_type_other_field');
@@ -509,16 +503,12 @@
                 }
             }
         });
-
         document.querySelector('form').addEventListener('submit', function() {
             const companyInput = document.getElementById('company_linkedin_user').value.trim();
             const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
             document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
         });
-
-
         let accreditationCount = 1;
-
         document.getElementById('add-accreditation').addEventListener('click', function() {
             accreditationCount++;
             const rowContainer = document.getElementById('accreditation-row');
@@ -564,9 +554,7 @@
             // Add new row to container
             rowContainer.appendChild(newRow);
         });
-
         let count = 1;
-
         document.getElementById('add-product-service').addEventListener('click', function() {
             count++;
             const rowContainer = document.getElementById('product-service-row');

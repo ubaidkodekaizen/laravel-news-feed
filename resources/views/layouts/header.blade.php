@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muslim Link</title>
+    <title>Muslim Lynk</title>
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
@@ -48,7 +49,7 @@
             <div class="header_flex">
                 <div class="header_left">
                     <div class="logo">
-                        <a href="{{ route('search') }}">
+                        <a href="{{ route('feed') }}">
                             <img src="{{ asset('assets/images/logo_bg.png') }}" alt="" class="img-fluid">
                         </a>
                     </div>
@@ -65,7 +66,8 @@
                                 {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
 
                                 <input type="hidden" name="name" id="first_name1">
-                                <input type="hidden" name="product_service_name" id="product_service_name1">
+                                <input type="hidden" name="product" id="product1">
+                                <input type="hidden" name="service" id="service1">
                                 <input type="hidden" name="company_industry" id="company_industry1">
 
 
@@ -87,7 +89,7 @@
                                 {{ Auth::user()->first_name }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('user.details.show') }}">User Profile</a>
+                                <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
                                 {{-- <li><a class="dropdown-item" href="{{route('user.company.details')}}">User Company</a></li> --}}
                                 <li><a class="dropdown-item logoutBtn" href="{{ route('logout') }}">Logout</a></li>

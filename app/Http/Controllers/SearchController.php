@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Product;
 use App\Models\ProductService;
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -50,8 +52,11 @@ class SearchController extends Controller
     {
         $searchTerm = $request->input('term');
 
-        $product_services = ProductService::where('product_service_name', 'like', '%' . $searchTerm . '%')
-            ->get(['product_service_name']);
+        $products = Product::where('title', 'like', '%' . $searchTerm . '%')
+            ->get(['title']);
+
+        $services = Service::where('title', 'like', '%' . $searchTerm . '%')
+            ->get(['title']);
 
         $companies = Company::where('company_industry', 'like', '%' . $searchTerm . '%')
             ->get(['company_industry']);
@@ -60,7 +65,8 @@ class SearchController extends Controller
             ->get(['first_name', 'last_name']);
 
         $suggestions = [
-            'product_services' => $product_services,
+            'products' => $products,
+            'services' => $services,
             'company_industries' => $companies->pluck('company_industry'),
             'first_name' => $users,
         ];
@@ -76,11 +82,7 @@ class SearchController extends Controller
             ->whereHas('company', function ($query) {
                 $query->where('status', 'complete');
             })
-            ->with([
-                'company' => function ($query) {
-                    $query->with(['productServices']);
-                }
-            ]);
+            ->with(['company']);
 
 
         if ($request->filled('company_position')) {
@@ -106,15 +108,6 @@ class SearchController extends Controller
                 });
             });
         }
-
-
-
-        // if ($request->filled('company_sub_category')) {
-        //     $subCategories = is_array($request->company_sub_category) ? $request->company_sub_category : [$request->company_sub_category];
-        //     $query->whereHas('company', function ($query) use ($subCategories) {
-        //         $query->whereIn('company_sub_category', $subCategories);
-        //     });
-        // }
 
 
         if ($request->filled('company_business_type')) {
@@ -214,6 +207,21 @@ class SearchController extends Controller
             $productServices = is_array($request->product_service_name) ? $request->product_service_name : [$request->product_service_name];
             $query->whereHas('company.productServices', function ($query) use ($productServices) {
                 $query->whereIn('product_service_name', $productServices);
+            });
+        }
+
+        if ($request->filled('product')) {
+            $products = is_array($request->product) ? $request->product : [$request->product];
+            $query->whereHas('products', function ($q) use ($products) {
+                $q->whereIn('title', $products); // Assuming 'title' is the column in the products table
+            });
+        }
+
+
+        if ($request->filled('service')) {
+            $services = is_array($request->service) ? $request->service : [$request->service];
+            $query->whereHas('services', function ($q) use ($services) {
+                $q->whereIn('title', $services); // Assuming 'title' is the column in the products table
             });
         }
 
