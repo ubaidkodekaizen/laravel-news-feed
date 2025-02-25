@@ -19,12 +19,13 @@
 }
 
 #chat-container .chatBox {
-    border: 1px solid #273572;
+    border: 1px solid #ddd;
     background: #fff;
     border-radius: 5px 5px 0 0;
     max-width: 300px;
     width: 100%;
     min-width: 300px;
+    box-shadow: 0px 4px 15px rgba(0 0 0 / 25%);
 }
 
 .chatBox.chatBoxClose {
@@ -32,6 +33,7 @@
     min-width: max-content !important;
     border: none !important;
     background: none !important;
+    box-shadow: none !important;
 }
 
 .chatBox.chatBoxClose .chatBoxHead {
@@ -112,7 +114,7 @@
     height: 350px;
     overflow-y: scroll;
     position: relative;
-    padding-top: 35px;
+    padding-top: 45px;
 }
 
 
@@ -183,45 +185,75 @@
 }
 
 .messageBox {
-    border: 1px solid #273572;
+    border: 1px solid #dddddd;
+    border-bottom: none;
     background: #fff;
     border-radius: 5px 5px 0 0;
     max-width: 450px;
     width: 100%;
     min-width: 450px;
     position: relative;
+    overflow: hidden;
+    box-shadow: 0px 4px 15px rgba(0 0 0 / 25%);
 }
 
 .messageBoxInput .messageBoxInputInner {
     display: flex;
     align-items: stretch;
     justify-content: space-between;
-    border-top: 1px solid #273572;
-    border-bottom: 1px solid #273572;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;    
+    flex-direction: column;
 }
-
+.messageBoxInputInnerCol {
+    display: flex
+    ;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #dddddd;
+        padding: 10px;
+}
 .messageBoxInput {
     width: 100%;
 }
 
 .messageBoxInputField {
     width: 100%;
-    padding: 10px;
-    border: none;    
+    padding: 5px 10px;
     outline: none;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    resize: none;
+    background: #eeeff4;
+    font-size: 14px;
+    height: 80px;
 }
 
 .messageBoxInputBtn {
     border: none;
     background: #273572;
     color: #fff;
-    padding: 10px 15px;
+    padding: 2px 12px;
     cursor: pointer;
     transition: .3s;
+    border-radius: 5px;
+    display: flex
+    ;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px;
 }
 .messageBoxInputBtn:hover {
     background: #b8c034;
     transition: .3s;
+}
+.messageBoxInputBtn .messageBoxEmojiBtnIcon {
+    height: 10px;
+    width: 10px;
+}
+.messageBoxInputBtnIcon {
+    height: 16px;
+    width: 16px;
 }
 .messageBoxList {
     overflow-y: scroll;
@@ -467,7 +499,7 @@
 .messageBoxEmojiBox {
     position: absolute;
     bottom: 50px;
-    right: 0;
+    left: 0;
 }
 
 .conversationBoxSearch {
@@ -476,15 +508,17 @@
     left: 0;
     width: 100%;
     background: #fff;
-    height: 35px;
+    padding: 5px;
+    border-bottom: 1px solid #dddddd;
 }
 
 .conversationBoxSearch input {
     padding: 5px 10px;
     width: 100%;
-    border: none;
-    border-bottom: 1px solid #dddddd;
+    border: 1px solid #dddddd; 
     outline: none;
+    background: #eeeff4;
+    border-radius: 5px;
 }
 
 /* reactions */

@@ -294,7 +294,7 @@
                                                                                                 <tr>
                                                                                                     <td class="a-center pb-10"
                                                                                                         style="font-size:22px; line-height:30px; color:#303030; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; text-align:center; padding-bottom: 20px;">
-                                                                                                        You've received a new message on Muslim Linker:
+                                                                                                        You've received a new message on Muslim Lynk:
                                                                                                     </td>
                                                                                                 </tr>
 

@@ -29,34 +29,40 @@ const MessageInput = ({ onSendMessage, onTyping }) => {
   return (
     <div className="messageBoxInput relative">
       <div className="messageBoxInputInner">
+         <div className='messageBoxInputInnerCol'>
+          <textarea
+            value={message}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              onTyping?.();
+            }}
+            onKeyPress={handleKeyPress}
+            className="messageBoxInputField flex-1"
+            placeholder="Write a message..."
+          ></textarea>
+         </div>
+         <div className='messageBoxInputInnerCol'>
+          <button
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className="messageBoxEmojiBtn"
+            type="button"
+          >
+            <Smile className="messageBoxEmojiBtnIcon" />
+          </button>
+          
+          <button
+            onClick={handleSendMessage}
+            className="messageBoxInputBtn"
+            disabled={!message.trim()}
+          >
+          Send
+            <Send className="messageBoxInputBtnIcon" />
+          </button>
+         </div>
         
         
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => {
-            setMessage(e.target.value);
-            onTyping?.();
-          }}
-          onKeyPress={handleKeyPress}
-          className="messageBoxInputField flex-1"
-          placeholder="Write a message..."
-        />
-        <button
-          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-          className="messageBoxEmojiBtn"
-          type="button"
-        >
-          <Smile className="w-5 h-5" />
-        </button>
+
         
-        <button
-          onClick={handleSendMessage}
-          className="messageBoxInputBtn"
-          disabled={!message.trim()}
-        >
-          <Send className="w-5 h-5" />
-        </button>
       </div>
 
       {showEmojiPicker && (
