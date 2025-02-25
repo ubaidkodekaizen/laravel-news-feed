@@ -353,7 +353,7 @@ const ChatBox = () => {
        
       {/* Chat Header */}
       <div className="chatBoxHead" >
-        <span className="font-semibold">Messages</span>
+        <span className="font-semibold"><i class="fa-solid fa-comment-dots"></i> Messages</span>
         <div className="actionBtns">
           <button type='button' onClick={() => setIsOpen(!isOpen)}>
             <i className="fa-solid fa-window-minimize"></i>

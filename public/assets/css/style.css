@@ -629,7 +629,7 @@ body {
     border: none;
     border-radius: 3px;
     outline: none;
-    color: #fff;
+    color: #000;
     font-weight: 400;
     display: block;
 }
@@ -642,11 +642,12 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.3);
     font-size: 14px;
     text-transform: capitalize;
+    font-weight: 500;
     transition: .3s;
 }
 .filter-option:hover {
     background: var(--secondary);
-    color: #000;
+    color: #263473;
     transition: .3s;
 }
 .filterCollapseBox .filter-option:first-child {
