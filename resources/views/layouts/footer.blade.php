@@ -15,8 +15,10 @@
     </script>
     <div id="chat-container"></div>
 @endauth
-@viteReactRefresh
-@vite(['resources/js/App.jsx'])
+{{-- @viteReactRefresh
+@vite(['resources/js/App.jsx']) --}}
+<link rel="stylesheet" href="{{ asset('build/assets/App-Db5XVQeo.css') }}">
+<script src="{{ asset('build/assets/App-LLf9dT7M.js') }}" defer></script>
 <script>
     $(document).ready(function() {
 

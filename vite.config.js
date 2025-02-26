@@ -12,4 +12,7 @@ export default defineConfig({
             jsxRuntime: 'automatic',  // Ensure this setting is included for React 18
         }),
     ],
+    build: {
+        outDir: 'build', // Ensure this matches your Laravel public directory structure
+    },
 });
