@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
 // $.noConflict();
 jQuery(document).ready(function ($) {  
     // $("#user_company").validate({
@@ -381,7 +376,7 @@ jQuery(document).ready(function ($) {
                 slidesPerView: 3,
             },
             1300: {
-                slidesPerView: 3,
+                slidesPerView: 4,
             },
         },
     });

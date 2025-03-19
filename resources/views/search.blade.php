@@ -267,9 +267,7 @@
                             </div>
                         </div>
                     </div>
-
-<<<<<<< HEAD
-=======
+                    
                     {{-- Marital Status Filter --}}
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#maritalStatusFilter">
@@ -290,7 +288,6 @@
                         </div>
                     </div>
 
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
                     {{-- Ethnicity Filter --}}
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#ethnicityFilter">

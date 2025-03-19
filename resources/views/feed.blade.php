@@ -218,13 +218,8 @@
                                     </div>
 
                                     <!-- Message Now Button -->
-<<<<<<< HEAD
-                                    <a href="javascript:void(0)" class="view-more direct-message-btn w-100"
-                                        data-receiver-id="{{ $product->user->id }}">Message Now</a>
-=======
                                     <a href="javascript:void(0)"  class="view-more direct-message-btn w-100" 
                                     data-receiver-id="{{ $product->user->id }}">Message Now</a>
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
                                 </div>
                             </div>
                         </div>
@@ -286,8 +281,7 @@
                                 </div>
                             </div>
                             <p>
-                                Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every
-                                connection is relevant and actionable.
+                                Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every connection is relevant and actionable.
                             </p>
                         </div>
                     </div>
@@ -305,8 +299,7 @@
                                 </div>
                             </div>
                             <p>
-                                Reach the right people effortlessly through integrated direct messaging and LinkedIn
-                                connectivity, eliminating barriers to impactful conversations.
+                                Reach the right people effortlessly through integrated direct messaging and LinkedIn connectivity, eliminating barriers to impactful conversations.
                             </p>
                         </div>
                     </div>
@@ -324,8 +317,7 @@
                                 </div>
                             </div>
                             <p>
-                                Secure a direct pathway to industry leaders, cutting through noise and delivering high-value
-                                opportunities with unmatched efficiency.
+                                Secure a direct pathway to industry leaders, cutting through noise and delivering high-value opportunities with unmatched efficiency.
                             </p>
                         </div>
                     </div>
@@ -378,14 +370,8 @@
                                             </p>
                                         </div>
                                     </div>
-<<<<<<< HEAD
-                                    <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100"
-                                        data-receiver-id="{{ $service->user->id }}">Message Now</a>
-
-=======
                                     <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100"   data-receiver-id="{{ $service->user->id }}">Message Now</a>
                                      
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
                                 </div>
                             </div>
                         </div>
@@ -450,40 +436,35 @@
             </p>
         </div>
     </section>
-    <!-- Main Modal -->
-    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: var(--primary); color: #fff;">
-                    <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="directMessageForm">
-                        <input type="hidden" name="receiver_id" id="receiver_id" value="">
-                        <!-- Receiver ID will be set dynamically -->
+<!-- Main Modal -->
+<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: var(--primary); color: #fff;">
+                <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="directMessageForm">
+                    <input type="hidden" name="receiver_id" id="receiver_id" value="">
+                    <!-- Receiver ID will be set dynamically -->
 
-                        <div class="mb-3">
-                            <label for="messageContent" class="form-label">Your Message</label>
-                            <textarea class="form-control" id="messageContent" name="content" rows="4" required></textarea>
-                        </div>
+                    <div class="mb-3">
+                        <label for="messageContent" class="form-label">Your Message</label>
+                        <textarea class="form-control" id="messageContent" name="content" rows="4" required></textarea>
+                    </div>
 
-                        <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
-                    </form>
-                    <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
-                </div>
+                    <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
+                </form>
+                <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-@endsection
-=======
 </div>
      
 @endsection
 
 
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
 @section('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -609,8 +590,4 @@ Best Regards,
             });
         });
     </script>
-<<<<<<< HEAD
 @endsection
-=======
-@endsection
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
