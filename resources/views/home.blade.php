@@ -52,17 +52,10 @@
         }
 
         .userProfilePic {
-<<<<<<< HEAD
             width: 50px;
             border-radius: 50%;
             height: 50px;
             object-fit: cover;
-=======
-                width: 50px;
-    border-radius: 50%;
-    height: 50px;
-    object-fit: cover;
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
         }
 
         .profile_name_dd {
@@ -664,11 +657,7 @@
                             expertise and location.</p>
                     </div>
                     <div class="homeSec2ColInner">
-<<<<<<< HEAD
-                        <h4>Direct Messaging (Coming Soon)</h4>
-=======
                         <h4>Direct Messaging</h4>
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
                         <p>Build meaningful relationships with seamless, direct communication – no barriers, no delays.
                         </p>
                     </div>

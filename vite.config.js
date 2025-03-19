@@ -15,9 +15,4 @@ export default defineConfig({
     build: {
         outDir: 'public/build',
     } 
-<<<<<<< HEAD
 });
-
-=======
-});
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
