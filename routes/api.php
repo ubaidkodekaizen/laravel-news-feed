@@ -6,14 +6,9 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
-<<<<<<< HEAD
-// Apply middleware at the route level
-Route::middleware('auth:sanctum')->group(function () { 
-=======
  
   // Apply middleware at the route level
   Route::middleware('auth:sanctum')->group(function () { 
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
     Route::get('/conversations', [ChatController::class, 'getConversations'])->name('get.conversations');
     Route::post('/conversations/create', [ChatController::class, 'createConversation'])->name('create.conversation'); 
     Route::get('/conversations/{conversation}/messages', [ChatController::class, 'getMessages'])->name('get.message');
@@ -28,17 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/messages/{message}/react', [ChatController::class, 'removeReaction'])->name('remove.reaction');
 
     Route::post('/user/ping', function (Request $request) {
-<<<<<<< HEAD
-        app(App\Services\UserOnlineService::class)->markUserActive(auth()->id());
-        return response()->json(['status' => 'success']);
-    })->name('user.ping');
-    
-    Route::post('/user/offline', function (Request $request) {
-        Redis::del('user:last_active:'.auth()->id());
-        return response()->json(['status' => 'success']);
-    })->name('user.offline');
-});
-=======
       app(App\Services\UserOnlineService::class)->markUserActive(auth()->id());
       return response()->json(['status' => 'success']);
     })->name('user.ping');
@@ -49,5 +33,4 @@ Route::middleware('auth:sanctum')->group(function () {
     })->name('user.offline');
   });
  
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
  

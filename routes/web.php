@@ -100,10 +100,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('user/get-token', function () {
         return response()->json(['token' => session('sanctum_token')]);
     })->name("user.token");
-<<<<<<< HEAD
-    
-=======
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
     Route::post('/pusher/user-auth', [PusherController::class, 'pusherAuth']);
 });
 
