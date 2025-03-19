@@ -288,47 +288,56 @@
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
                                                                                                         style="font-size:35px; line-height:40px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; text-align:center; padding-bottom: 10px;">
-                                                                                                        <strong>New Message from {{ $senderName }}</strong>
+                                                                                                        <strong>Welcome, {{ $first_name }} {{ $last_name }}!</strong>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td class="a-center pb-10"
                                                                                                         style="font-size:22px; line-height:30px; color:#303030; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; text-align:center; padding-bottom: 20px;">
-                                                                                                        You've received a new message on Muslim Lynk:
+                                                                                                        Thank you for joining us. Here are your details:
                                                                                                     </td>
                                                                                                 </tr>
 
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
                                                                                                         style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:start;">
-                                                                                                        {{ $messagePreview }}
-                                                                                                    </td>
-                                                                                                </tr>
-
-                                                                                                <tr>
-                                                                                                    <td align="center">
-                                                                                                        <table border="0" cellspacing="0" cellpadding="0" style="min-width:200px;margin-top:10px;margin-bottom:10px">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td bgcolor="#b8c034" style="font-size:16px;line-height:20px;font-family:'PT Sans',Arial,sans-serif;text-align:center;font-weight:bold;text-transform:uppercase;border-radius:25px;min-width:auto!important;color:#ffffff">
-                                                                                                                        <!--<a href="{{ $messageUrl }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">-->
-                                                                                                                        <!--    <span style="text-decoration:none;color:#ffffff">View Message</span>-->
-                                                                                                                        <!--</a>-->
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
+                                                                                                        <table width="100%" border="1"
+                                                                                    cellspacing="0" cellpadding="0">
+                                                                                                            <tr>
+                                                                                                                <td>First Name:</td> 
+                                                                                                                <td>{{ $first_name }}</td> 
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>Last Name:</td> 
+                                                                                                                <td>{{ $last_name }}</td> 
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>Email:</td>
+                                                                                                                <td>{{ $email }}
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>AMCOB Member:</td>
+                                                                                                                <td>{{ $is_amcob }}</td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>Membership Duration:</td>
+                                                                                                                <td>{{ $duration }}</td>
+                                                                                                            </tr>
+                                                                                                            
                                                                                                         </table>
                                                                                                     </td>
                                                                                                 </tr>
 
+                                                                                                 
+
                                                                                                 <tr>
                                                                                                     <td align="center">
                                                                                                         <table border="0" cellspacing="0" cellpadding="0" style="min-width:200px;margin-top:10px;margin-bottom:10px">
                                                                                                             <tbody>
                                                                                                                 <tr>
                                                                                                                     <td bgcolor="#b8c034" style="font-size:16px;line-height:20px;font-family:'PT Sans',Arial,sans-serif;text-align:center;font-weight:bold;text-transform:uppercase;border-radius:25px;min-width:auto!important;color:#ffffff">
-                                                                                                                        <a href="{{ $senderProfileUrl }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
-                                                                                                                            <span style="text-decoration:none;color:#ffffff">View {{ explode(' ', $senderName)[0] }}'s Profile</span>
+                                                                                                                        <a href="{{ route('password.reset', ['token' => $token]) }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
+                                                                                                                            <span style="text-decoration:none;color:#ffffff"> Reset Password </span>
                                                                                                                         </a>
                                                                                                                     </td>
                                                                                                                 </tr>

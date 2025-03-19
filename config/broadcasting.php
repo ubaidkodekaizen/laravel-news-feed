@@ -12,10 +12,10 @@ return [
             'secret' => env('REVERB_APP_SECRET', 'local'),
             'app_id' => env('REVERB_APP_ID', 'local'),
             'options' => [
-                'host' => env('REVERB_HOST', '127.0.0.1'),
+                'host' => env('REVERB_HOST', 'muslimlynk.com'),
                 'port' => env('REVERB_PORT', 8080),
                 'scheme' => env('REVERB_SCHEME', 'http'),
-                'useTLS' => env('REVERB_USE_TLS', false),
+                'useTLS' => env('REVERB_USE_TLS', true),
             ],
         ],
 

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Mail;
 Route::get('/test-email', function () {
     try {
         Mail::raw('This is a test email from Laravel.', function ($message) {
-            $message->to('ubaid.syed@kodekaizen.com')
+            $message->to('s.u.shah68@gmail.com')
                     ->subject('Laravel Test Email');
         });
 
@@ -100,7 +100,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('user/get-token', function () {
         return response()->json(['token' => session('sanctum_token')]);
     })->name("user.token");
+<<<<<<< HEAD
     
+=======
+>>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
     Route::post('/pusher/user-auth', [PusherController::class, 'pusherAuth']);
 });
 
@@ -121,7 +124,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
     Route::post('/admin/company/update', [AdminController::class, 'updateCompanyDetails'])->name('admin.company.update');
     Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
-
+  	Route::post('/admin/admin-reset-link', [AdminController::class, 'adminResetLink'])->name('admin.reset.link');
+	
     //Blogs
     Route::get('/admin/blogs', [AdminController::class, 'adminBlogs'])->name('admin.blogs');
     Route::get('/admin/add-blog', [AdminController::class, 'addBlog'])->name('admin.add.blog');

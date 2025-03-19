@@ -34,9 +34,39 @@ class DropDownHelper
 
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
         $company_business_types = Company::pluck('company_business_type')->unique()->sort();
-        $company_no_of_employees = Company::pluck('company_no_of_employee')->unique()->sort();
-        $company_revenues = Company::pluck('company_revenue')->unique()->sort();
-        $company_experiences = Company::pluck('company_experience')->unique()->sort();
+        //$company_no_of_employees = Company::pluck('company_no_of_employee')->unique()->sort();
+      	$company_no_of_employees = collect([
+            '1-10',
+            '11-50',
+            '51-200',
+            '201-500',
+            '501-1000',
+            '1001-5000',
+            '5001-10,000',
+            '10,001+'
+        ]);
+      
+        //$company_revenues = Company::pluck('company_revenue')->unique()->sort();
+      	$company_revenues = collect([
+            '< 1M',
+            '1-5M',
+            '5-25M',
+            '25-100M',
+            '100M +'
+        ]);
+        //$company_experiences = Company::pluck('company_experience')->unique()->sort();
+
+		$company_experiences = collect([
+            'under 1',
+            '1-5 Years',
+            '5-10 Years',
+            '10-20 Years',
+            '20+ Years'
+        ]);
+
+
+
+
 
         // From Users Table
 
@@ -47,7 +77,7 @@ class DropDownHelper
         $user_county = User::pluck('county')->unique()->sort();
         $user_gender = User::pluck('gender')->unique()->sort();
         $user_age_group = User::pluck('age_group')->unique()->sort();
-        $user_age_group = User::pluck('marital_status')->unique()->sort();
+        $user_marital_status = User::pluck('marital_status')->unique()->sort();
         $user_ethnicity = User::pluck('ethnicity')->unique()->sort();
 
         $user_nationality = User::pluck('nationality')
@@ -113,6 +143,7 @@ class DropDownHelper
             'user_position' => $user_user_position,
             'user_gender' => $user_gender,
             'user_age_group' => $user_age_group,
+            'user_marital_status' => $user_marital_status,
             'user_ethnicity' => $user_ethnicity,
             'user_nationality' => $user_nationality,
             'user_languages' => $user_languages,

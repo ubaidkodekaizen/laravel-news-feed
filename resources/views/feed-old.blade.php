@@ -218,13 +218,8 @@
                                     </div>
 
                                     <!-- Message Now Button -->
-<<<<<<< HEAD
-                                    <a href="javascript:void(0)" class="view-more direct-message-btn w-100"
-                                        data-receiver-id="{{ $product->user->id }}">Message Now</a>
-=======
                                     <a href="javascript:void(0)"  class="view-more direct-message-btn w-100" 
-                                    data-receiver-id="{{ $product->user->id }}">Message Now</a>
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
+                                        onclick="directMessageBtn({{ $product->user->id }})">Message Now</a>
                                 </div>
                             </div>
                         </div>
@@ -286,8 +281,7 @@
                                 </div>
                             </div>
                             <p>
-                                Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every
-                                connection is relevant and actionable.
+                                Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every connection is relevant and actionable.
                             </p>
                         </div>
                     </div>
@@ -305,8 +299,7 @@
                                 </div>
                             </div>
                             <p>
-                                Reach the right people effortlessly through integrated direct messaging and LinkedIn
-                                connectivity, eliminating barriers to impactful conversations.
+                                Reach the right people effortlessly through integrated direct messaging and LinkedIn connectivity, eliminating barriers to impactful conversations.
                             </p>
                         </div>
                     </div>
@@ -324,8 +317,7 @@
                                 </div>
                             </div>
                             <p>
-                                Secure a direct pathway to industry leaders, cutting through noise and delivering high-value
-                                opportunities with unmatched efficiency.
+                                Secure a direct pathway to industry leaders, cutting through noise and delivering high-value opportunities with unmatched efficiency.
                             </p>
                         </div>
                     </div>
@@ -378,14 +370,8 @@
                                             </p>
                                         </div>
                                     </div>
-<<<<<<< HEAD
-                                    <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100"
-                                        data-receiver-id="{{ $service->user->id }}">Message Now</a>
-
-=======
-                                    <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100"   data-receiver-id="{{ $service->user->id }}">Message Now</a>
+                                    <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100" onclick="directMessageBtn({{ $service->user->id }})">Message Now</a>
                                      
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
                                 </div>
                             </div>
                         </div>
@@ -444,49 +430,165 @@
 
     <section class="lp_footer">
         <div class="container">
-             
+            {{-- <div class="row">
+                <div class="col">
+                    <h3>STAYS</h3>
+                    <ul class="footer_list">
+                        <li>
+                            <a href="javascript:void(0);">
+                                Hotels
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Resorts
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Villas
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Farm Stays
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Appartments
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h3>ABOUT US</h3>
+                    <ul class="footer_list">
+                        <li>
+                            <a href="javascript:void(0);">
+                                Our team
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Our branches
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Join us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                For a sustainable world
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Campaigns
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h3>SERVICES</h3>
+                    <ul class="footer_list">
+                        <li>
+                            <a href="javascript:void(0);">
+                                Holidays stays
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Conferences
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Conventions
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Presentations
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Team building
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h3>POLICY</h3>
+                    <ul class="footer_list">
+                        <li>
+                            <a href="javascript:void(0);">
+                                Terms and conditions
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Privacy
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Cookies
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Legal information
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Sustainablility
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                Safety Resources Center
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div> --}}
             <p class="powered_by">
                 Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
     </section>
-    <!-- Main Modal -->
-    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: var(--primary); color: #fff;">
-                    <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="directMessageForm">
-                        <input type="hidden" name="receiver_id" id="receiver_id" value="">
-                        <!-- Receiver ID will be set dynamically -->
+<!-- Main Modal -->
+<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: var(--primary); color: #fff;">
+                <h5 class="modal-title" id="mainModalLabel">Send Direct Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="directMessageForm">
+                    <input type="hidden" name="receiver_id" id="receiver_id" value="">
+                    <!-- Receiver ID will be set dynamically -->
 
-                        <div class="mb-3">
-                            <label for="messageContent" class="form-label">Your Message</label>
-                            <textarea class="form-control" id="messageContent" name="content" rows="4" required></textarea>
-                        </div>
+                    <div class="mb-3">
+                        <label for="messageContent" class="form-label">Your Message</label>
+                        <textarea class="form-control" id="messageContent" name="content" rows="4" required></textarea>
+                    </div>
 
-                        <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
-                    </form>
-                    <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
-                </div>
+                    <button type="submit" class="btn btn-primary w-100 ">Send Message</button>
+                </form>
+                <div id="messageStatus" class="mt-3 text-center"></div> <!-- Status Message -->
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-@endsection
-=======
 </div>
-     
-@endsection
-
-
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
-@section('scripts')
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const industriesContainer = document.getElementById("industries-container");
             const showMoreBtn = document.getElementById("show-more-btn");
             const industries = Array.from(industriesContainer.querySelectorAll(".col-lg-3, .col-md-6"));
@@ -510,14 +612,14 @@
             updateVisibility();
 
             // Toggle on button click
-            showMoreBtn.addEventListener("click", function() {
+            showMoreBtn.addEventListener("click", function () {
                 isExpanded = !isExpanded;
                 updateVisibility();
             });
         });
 
         // Prevent dropdown menu from closing when clicking inside
-
+       
         document.querySelectorAll('.dropdown-menu').forEach((dropdown) => {
             dropdown.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -525,92 +627,80 @@
         });
     </script>
 
-    <script>
-        jQuery(document).ready(function($) {
+<script>
+    function directMessageBtn(receiverId) {
+        $('#receiver_id').val(receiverId);
 
-            let directMessageBtn = document.querySelectorAll('.direct-message-btn');
-            console.log("directMessageBtn",directMessageBtn);
-            directMessageBtn.forEach(element => {
-                console.log("element", element);
-                element.addEventListener("click", function() {
-                    let receiverId = $(this).data('receiver-id');
+
+        // Check if conversation exists
+        $.ajax({
+            url: '/api/check-conversation',
+            method: 'GET',
+            data: {
+                receiver_id: receiverId
+            },
+            headers: {
+                "Authorization": localStorage.getItem("sanctum-token")
+            },
+            success: function(response) {
+                if (response.conversation_exists) {
+                    // If conversation exists, open chat directly
+                    if (window.openChatWithUser) {
+                        window.openChatWithUser(receiverId);
+                    }
+                } else {
+                    // If no conversation, open the modal
+                    console.log(response.receiver);
                     $('#receiver_id').val(receiverId);
-                    console.log("receiverId", receiverId);
-                    $.ajax({
-                        url: '/api/check-conversation',
-                        method: 'GET',
-                        data: {
-                            receiver_id: receiverId
-                        },
-                        headers: {
-                            "Authorization": localStorage.getItem("sanctum-token")
-                        },
-                        success: function(response) {
-                            if (response.conversation_exists) {
-                                // If conversation exists, open chat directly
-                                if (window.openChatWithUser) {
-                                    window.openChatWithUser(receiverId);
-                                }
-                            } else {
-                                // If no conversation, open the modal
-                                console.log(response.receiver);
-                                $('#receiver_id').val(receiverId);
-                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
+                    $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
 I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
 Looking forward to connecting! 
 Best Regards,
 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
-                                // $('#mainModal').modal('show');
-                                var myModal = new bootstrap.Modal(document.getElementById('mainModal'));
-                                myModal.show();
-                            }
-                        },
-                        error: function(xhr) {
-                            console.error('Error checking conversation:', xhr);
-                        }
-                    });
-                });
+                    $('#mainModal').modal('show');
+                }
+            },
+            error: function(xhr) {
+                console.error('Error checking conversation:', xhr);
+            }
+        });
+    }
 
+    $(document).ready(function() {
 
-            });
+        $('#directMessageForm').on('submit', function(e) {
+            e.preventDefault();
 
-            $('#directMessageForm').on('submit', function(e) {
-                e.preventDefault();
+            const formData = {
+                receiver_id: $('#receiver_id').val(),
+                content: $('#messageContent').val(),
+                _token: '{{ csrf_token() }}'
+            };
 
-                const formData = {
-                    receiver_id: $('#receiver_id').val(),
-                    content: $('#messageContent').val(),
-                    _token: '{{ csrf_token() }}'
-                };
+            $.ajax({
+                url: '{{ route('sendMessage') }}',
+                method: 'POST',
+                data: formData,
+                headers: {
+                    "Authorization": localStorage.getItem("sanctum-token")
+                },
+                success: function(response) {
+                    // Close the modal
+                    $('#mainModal').modal('hide');
 
-                $.ajax({
-                    url: '{{ route('sendMessage') }}',
-                    method: 'POST',
-                    data: formData,
-                    headers: {
-                        "Authorization": localStorage.getItem("sanctum-token")
-                    },
-                    success: function(response) {
-                        // Close the modal
-                        $('#mainModal').modal('hide');
-
-                        // Trigger opening the chat box and specific conversation
-                        if (window.openChatWithUser) {
-                            window.openChatWithUser(formData.receiver_id);
-                        }
-                    },
-                    error: function(xhr) {
-                        const errorMsg = xhr.responseJSON?.error ||
-                            'An error occurred. Please try again.';
-                        $('#messageStatus').html(
-                            `<div class="alert alert-danger">${errorMsg}</div>`);
+                    // Trigger opening the chat box and specific conversation
+                    if (window.openChatWithUser) {
+                        window.openChatWithUser(formData.receiver_id);
                     }
-                });
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error ||
+                        'An error occurred. Please try again.';
+                    $('#messageStatus').html(
+                        `<div class="alert alert-danger">${errorMsg}</div>`);
+                }
             });
         });
-    </script>
-<<<<<<< HEAD
+    });
+</script>
 @endsection
-=======
-@endsection
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde

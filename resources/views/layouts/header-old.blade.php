@@ -11,14 +11,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/App-Db5XVQeo.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<<<<<<< HEAD
-    <script src="{{ asset('build/assets/App-FWrcDScT.js') }}" defer></script>
-=======
-    <script src="{{ asset('build/assets/App-B-3kzgFe.js') }}" defer></script>
->>>>>>> 794ddee1221b0e9c3890b7b86ff18a53e88dabde
+
     <style>
         .suggestion-box {
             position: absolute;
@@ -44,7 +39,6 @@
             position: relative;
         }
     </style>
-
 
 </head>
 

@@ -47,8 +47,13 @@
                             <label for="duration" class="form-label">Duration</label>
                             <select name="duration" id="duration" class="form-select" required>
                                 <option value="">Select Duration</option>
-                                <option value="one time"
-                                    {{ old('duration', $service->duration ?? '') == 'one time' ? 'selected' : '' }}>One Time
+                              
+                              	 <option value="Starting"
+                                    {{ old('duration', $service->duration ?? '') == 'Starting' ? 'selected' : '' }}>Starting
+                                </option>
+                      
+                                <option value="One time"
+                                    {{ old('duration', $service->duration ?? '') == 'One time' ? 'selected' : '' }}>One Time
                                 </option>
                                 <option value="Monthly"
                                     {{ old('duration', $service->duration ?? '') == 'Monthly' ? 'selected' : '' }}>Monthly
