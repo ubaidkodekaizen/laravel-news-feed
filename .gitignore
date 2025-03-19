@@ -20,3 +20,5 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+/resources/js/echo.js
+/resources/js/bootstrap.js

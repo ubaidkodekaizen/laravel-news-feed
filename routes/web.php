@@ -13,7 +13,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthorizeNetController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\PusherController;
+use App\Models\Blog;
+use App\Models\Company;
+use App\Models\Event;
+use App\Models\Product;
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
+use Illuminate\Support\Facades\Response;
 
 Route::get('/test-email', function () {
     try {
@@ -208,3 +217,59 @@ Route::get('/privacy-policy', function () {
 Route::get('/confirmation-email', function () {
     return view('emails.confirmation-email');
 })->name('confirmation-email');
+
+
+Route::get('/sitemap.xml', function () {
+    $sitemap = Sitemap::create();
+
+    // **Static Pages**
+    $staticPages = [
+        '/' => 1.0,
+        '/terms' => 0.5,
+        '/privacy-policy' => 0.5,
+        '/feed' => 0.7,
+        '/search' => 0.7,
+        '/industry-experts' => 0.6,
+    ];
+
+    foreach ($staticPages as $page => $priority) {
+        $sitemap->add(Url::create($page)->setPriority($priority));
+    }
+
+    // **Dynamic Content**
+    $dynamicModels = [
+        'blogs' => Blog::all(),
+        'products' => Product::all(),
+        'services' => Service::all(),
+        'users' => User::whereNotNull('slug')->get(),
+        'companies' => Company::whereNotNull('company_slug')->get(),
+        'events' => Event::all(),
+    ];
+
+    foreach ($dynamicModels as $type => $items) {
+        foreach ($items as $item) {
+            $url = match ($type) {
+                'blogs' => '/blog/' . $item->slug,
+                'products' => '/products/' . $item->id, // Adjusted URL
+                'services' => '/services/' . $item->id, // Adjusted URL
+                'users' => '/user/profile/' . $item->slug,
+                'companies' => '/company/' . $item->company_slug,
+                'events' => '/events/' . $item->id, // Adjusted URL
+            };
+
+            $sitemap->add(
+                Url::create($url)
+                    ->setLastModificationDate($item->updated_at ?? now())
+                    ->setPriority(0.8)
+            );
+        }
+    }
+
+    return $sitemap->toResponse(request());
+});
+
+
+Route::get('/robots.txt', function () {
+    $content = "User-agent: *\nDisallow:\nSitemap: " . url('/sitemap.xml');
+    return Response::make($content, 200, ['Content-Type' => 'text/plain']);
+});

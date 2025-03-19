@@ -4,7 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muslim Lynk</title>
+    <title>Muslim Lynk | Empowering Connections, Amplifying Impact</title>
+    <meta name="description" content="Join Muslim Lynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Muslim Lynk – Where Connections Create Impact">
+    <meta property="og:description" content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
+    <meta property="og:url" content="{{url('/')}}">
+    <meta property="og:image" content="{{ asset('assets/images/logo_bg.png') }}">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+    {{-- <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Muslim Lynk – Where Connections Create Impact">
+    <meta name="twitter:description" content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
+    <meta name="twitter:image" content="{{ asset('assets/images/logo_bg.png') }}">
+    <meta name="twitter:site" content="@yourtwitterhandle"> --}}
+    
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
