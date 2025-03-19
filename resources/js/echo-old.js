@@ -16,13 +16,12 @@ function initializeEcho() {
   window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    host: import.meta.env.VITE_REVERB_HOST ,
-    port: import.meta.env.VITE_REVERB_PORT ,
+    host: import.meta.env.VITE_REVERB_HOST || window.location.hostname,
+    port: import.meta.env.VITE_REVERB_PORT || 8080,
     wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ,
-    wssPort: import.meta.env.VITE_REVERB_PORT , 
-    forceTLS: true, 
-    disableStats: true,
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+    wssPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+    forceTLS: false,
     auth: {
       headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -49,7 +48,7 @@ function initializeEcho() {
     
     // Also ping the server every 5 minutes to update last active timestamp
     setInterval(() => {
-      fetch(userPing, {
+      fetch('/api/user/ping', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +82,7 @@ window.addEventListener('beforeunload', () => {
       window.Echo.leave('presence-online');
       
       // Make a synchronous request to mark user offline
-      navigator.sendBeacon(userOffline, JSON.stringify({
+      navigator.sendBeacon('/api/user/offline', JSON.stringify({
         token: token
       }));
     } catch (e) {

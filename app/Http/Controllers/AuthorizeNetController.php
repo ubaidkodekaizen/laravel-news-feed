@@ -23,6 +23,8 @@ class AuthorizeNetController extends Controller
 
     public function paymentPost(Request $request): RedirectResponse
     {
+        //dd($request->all());
+        
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',

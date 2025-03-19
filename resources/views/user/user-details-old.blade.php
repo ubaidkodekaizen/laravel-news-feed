@@ -649,12 +649,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
 
     <script>
-        
-
-
-        jQuery(document).ready(function($) {
-
-            $('#search_form').on('submit', function() {
+        $('#search_form').on('submit', function() {
             // Disable empty input fields
             $(this).find('input').each(function() {
                 if (!$(this).val().trim()) {
@@ -671,6 +666,7 @@
         });
 
 
+        $(document).ready(function() {
             // Initialize intlTelInput on all elements with class 'phone_number'
             $(".phone_number").each(function() {
                 const phoneInput = $(this);

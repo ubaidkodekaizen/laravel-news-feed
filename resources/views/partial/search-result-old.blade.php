@@ -18,7 +18,7 @@
             <div class="btn_flex gap-2">
                 <a href="javascript:void(0)" 
                             class="btn btn-secondary  btn-sm direct-message-btn" 
-                              data-receiver-id="{{ $user->id }}">
+                            onclick="directMessageBtn({{ $user->id }})">
                             <i class="fa-solid fa-comment-dots"></i>
                             </a>
                 <a href="{{ route('user.profile', ['slug' => $user->slug]) }}" target="_blank"

@@ -68,9 +68,15 @@
     </div>
 @endsection
 @section('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#products-table').DataTable();
+   <script>
+    jQuery(document).ready(function($) {
+        $.fn.dataTable.ext.errMode = 'none'; // Suppress DataTable warnings
+        $('#products-table').DataTable({
+            language: {
+                emptyTable: "No products available" // Custom message instead of warning
+            }
         });
-    </script>
+    });
+</script>
+
 @endsection

@@ -76,9 +76,15 @@
     </div>
 @endsection
 @section('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#services-table').DataTable();
+   <script>
+    jQuery(document).ready(function($) {
+        $.fn.dataTable.ext.errMode = 'none'; // Suppress DataTable warnings
+        $('#services-table').DataTable({
+            language: {
+                emptyTable: "No services available" // Custom message instead of warning
+            }
         });
-    </script>
+    });
+</script>
+
 @endsection

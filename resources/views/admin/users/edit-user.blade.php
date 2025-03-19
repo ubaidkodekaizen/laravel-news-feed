@@ -718,10 +718,10 @@
                     email: true
                 },
                 phone: {
-                    required: true,
+                    required: false,
                 },
                 linkedin_url: {
-                    required: true,
+                    required: false,
                 },
                 x_url: {
                     url: true
@@ -736,10 +736,10 @@
                     required: true
                 },
                 city: {
-                    required: true
+                    required: false
                 },
                 country: {
-                    required: true
+                    required: false
                 },
                 industry_to_connect: {
                     required: true
@@ -750,11 +750,11 @@
                 community_interest: {
                     required: true
                 },
-                "are_you[]": {
-                    required: function() {
-                        return $(".list_check_flex input[type=checkbox]:checked").length === 0;
-                    }
-                }
+                // "are_you[]": {
+                //     required: function() {
+                //         return $(".list_check_flex input[type=checkbox]:checked").length === 0;
+                //     }
+                // }
             },
             messages: {
                 first_name: {
@@ -770,7 +770,6 @@
                     email: "Please enter a valid email address"
                 },
                 phone: {
-                    required: "Please enter your phone number",
                     minlength: "Phone number must be at least 10 digits",
                     digits: "Please enter only numbers"
                 },
@@ -788,7 +787,7 @@
                 industry_to_connect: "Please select an industry",
                 sub_category_to_connect: "Please select a sub-category",
                 community_interest: "Please select your community interest",
-                "are_you[]": "Please select at least one option"
+                // "are_you[]": "Please select at least one option"
             },
             submitHandler: function(form) {
                 form.submit(); // Only submit when form is valid
@@ -826,16 +825,22 @@
                 });
 
                 // Before form submission, update the input value to include the full number
-                phoneInput.closest("form").on("submit", function() {
-                    if (iti.intlTelInput("isValidNumber")) {
-                        const fullNumber = iti.intlTelInput(
-                            "getNumber"); // Get full number with country code
-                        phoneInput.val(fullNumber); // Update input value with the full number
-                    } else {
-                        alert("Invalid phone number entered!");
-                        return false; // Prevent form submission if the number is invalid
-                    }
-                });
+                 // Check if the input field is empty
+                if (phoneInput.val().trim() === "") {
+                    return; // Skip this iteration
+                }
+                   phoneInput.closest("form").on("submit", function() {
+                        if (iti.intlTelInput("isValidNumber")) {
+                            const fullNumber = iti.intlTelInput(
+                                "getNumber"); // Get full number with country code
+                            phoneInput.val(fullNumber); // Update input value with the full number
+                        } else {
+                            alert("Invalid phone number entered!");
+                            return false; // Prevent form submission if the number is invalid
+                        }
+                    }); 
+                
+                
             });
         });
     </script>
@@ -1035,6 +1040,10 @@
             event.preventDefault();
 
             const userInput = document.getElementById('linkedin_user').value.trim();
+            // Check if the input field is empty 
+            if (userInput === "") {
+                return; // Skip this iteration
+            }
             if (userInput) {
                 const combinedUrl = `https://www.linkedin.com/in/${userInput}`;
                 document.getElementById('linkedin_url_hidden').value = combinedUrl;

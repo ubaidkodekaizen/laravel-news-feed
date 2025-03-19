@@ -56,8 +56,14 @@
 @endsection
 @section('scripts')
     <script>
-        $(document).ready(function() {
-            $('#qualifications-table').DataTable();
+    jQuery(document).ready(function($) {
+        $.fn.dataTable.ext.errMode = 'none'; // Suppress warnings
+        $('#qualifications-table').DataTable({
+            language: {
+                emptyTable: "No qualifications available" // Custom message instead of warning
+            }
         });
-    </script>
+    });
+</script>
+
 @endsection

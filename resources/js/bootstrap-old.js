@@ -18,7 +18,8 @@ const fetchSanctumToken = async () => {
     try {
         console.log('Attempting to fetch Sanctum token');
         
-        const response = await axios.get(userTokenRoute);
+       const tempUrl = 'app/public';
+        const response = await axios.get(tempUrl+'/user/get-token');
         const token = response.data.token;
 
         console.log('Received raw token:', token);

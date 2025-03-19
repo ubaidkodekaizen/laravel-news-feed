@@ -9,10 +9,10 @@ export default defineConfig({
             refresh: true,
         }),
         react({
-            jsxRuntime: 'automatic',
+            jsxRuntime: 'automatic',  // Ensure this setting is included for React 18
         }),
     ],
     build: {
-        outDir: 'public/build',
-    } 
+        outDir: 'build', // Ensure this matches your Laravel public directory structure
+    },
 });

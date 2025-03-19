@@ -40,6 +40,12 @@
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
+                                      
+                                        <form action="{{ route('admin.reset.link') }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            <input type="hidden" name="email" value="{{ $user->email }}">
+                                            <button type="submit" class="btn btn-info btn-sm">Send Reset Link</button>
+                                        </form> 
                                         {{-- <a href="{{ route('admin.company.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit Company</a> --}}
                                         {{-- <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm"
                                         onclick="return confirm('Are you sure you want to delete this user?');">Delete</a> --}}

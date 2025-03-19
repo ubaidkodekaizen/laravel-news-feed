@@ -944,6 +944,11 @@ body {
 .articles .card-body h3 {
     font-size: 1.5rem;
     margin: 15px 0px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .articles {
@@ -1398,6 +1403,7 @@ body {
 
 .service_price p {
     margin-bottom: 0;
+	font-size: 0.9rem;
 }
 
 .service_price_duration {
@@ -1930,7 +1936,13 @@ body {
     padding-top: 10px;
     margin-top: 50px;
 }
-
+.services_slider_feed .card-body p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 @media only screen and (max-width: 768px) {
     .mobile_hide {
         display: none;

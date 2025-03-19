@@ -446,7 +446,7 @@ Best Regards,
 
 @section('scripts')
     <script>
-        jQuery(document).ready(function($) {
+        $(document).ready(function() {
             // Check if conversation exists before opening modal
             $('.direct-message-btn').on('click', function() {
                 const receiverId = $(this).data('receiver-id');

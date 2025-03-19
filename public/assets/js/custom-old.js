@@ -1,5 +1,7 @@
-// $.noConflict();
-jQuery(document).ready(function ($) {  
+
+
+
+$(document).ready(function () {  
     // $("#user_company").validate({
     //     rules: {
     //         company_logo: {

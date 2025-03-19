@@ -187,6 +187,11 @@ class SearchController extends Controller
             $query->whereIn('age_group', $user_age_groups); // Assuming 'age_group' is in the users table
         }
 
+        if ($request->filled('marital_status')) {
+            $marital_statuses = is_array($request->marital_status) ? $request->marital_status : [$request->marital_status];
+            $query->whereIn('marital_status', $marital_statuses); // Assuming 'marital_status' is in the users table
+        }
+
         if ($request->filled('user_ethnicity')) {
             $user_ethnicities = is_array($request->user_ethnicity) ? $request->user_ethnicity : [$request->user_ethnicity];
             $query->whereIn('ethnicity', $user_ethnicities); // Assuming 'ethnicity' is in the users table

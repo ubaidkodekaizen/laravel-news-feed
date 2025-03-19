@@ -14,14 +14,15 @@ use App\Models\User;
 use App\Models\CommunityInterest;
 use App\Models\SubCategory;
 use App\Models\Industry;
+use App\Models\Designation;
 use App\Models\UserEducation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-
-
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -61,7 +62,27 @@ class AdminController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
+	public function adminResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
 
+        $token = Str::random(64);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            ['token' => $token, 'created_at' => now()]
+        );
+
+
+        Mail::send('emails.password-reset', ['token' => $token], function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Reset Password Notification');
+        });
+
+        return back()->with('success', 'Password reset link sent to your email.');
+    }
     public function adminDashboard()
     {
         return view('admin.dashboard');
@@ -108,8 +129,20 @@ class AdminController extends Controller
             'is_amcob' => $request->amcob_member ?? 'No',
             'duration' => $request->duration ?? '',
         ]);
-
-
+        $token = Str::random(64);
+        $emailData = [
+            'token' => $token,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'is_amcob' => $request->amcob_member ?? 'No',
+            'duration' => $request->duration ?? ''
+            // 'reset_password' => url("/reset-password/{$token}")
+        ];
+        Mail::send('emails.welcome-new-user', $emailData, function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Welcome to MuslimLynk');
+        });
         return redirect()->route('admin.users')->with('success', 'User created successfully!');
 
 
@@ -161,7 +194,7 @@ class AdminController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->email = $request->email;
-        $user->phone = $request->phone;
+        $user->phone = $request->phone ?? '';
         $user->linkedin_url = $request->linkedin_url ?? $request->linkedin_user;
         $user->x_url = $request->x_url ?? '';
         $user->instagram_url = $request->instagram_url ?? '';
