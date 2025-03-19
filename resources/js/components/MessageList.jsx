@@ -18,7 +18,8 @@ const MessageList = ({ messages }) => {
   };
   const handleReact = async (messageId, emoji) => {
     try {
-      const response = await axios.post(`/api/messages/${messageId}/react`, {
+      const url = addReactionRoute(messageId);
+      const response = await axios.post(url, {
         emoji,
       }, {
         headers: {
@@ -40,7 +41,8 @@ const MessageList = ({ messages }) => {
 
   const handleRemoveReaction = async (messageId, emoji) => {
     try {
-      const response = await axios.delete(`/api/messages/${messageId}/react`, {
+      const url = removeReactionRoute(messageId);
+      const response = await axios.delete(url, {
         data: { emoji },
         headers: {
           Authorization: localStorage.getItem("sanctum-token"),

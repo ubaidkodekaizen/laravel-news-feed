@@ -48,7 +48,7 @@ function initializeEcho() {
     
     // Also ping the server every 5 minutes to update last active timestamp
     setInterval(() => {
-      fetch('/api/user/ping', {
+      fetch(userPing, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ window.addEventListener('beforeunload', () => {
       window.Echo.leave('presence-online');
       
       // Make a synchronous request to mark user offline
-      navigator.sendBeacon('/api/user/offline', JSON.stringify({
+      navigator.sendBeacon(userOffline, JSON.stringify({
         token: token
       }));
     } catch (e) {

@@ -56,7 +56,7 @@
 @endsection
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        jQuery(document).ready(function($) {
             $('#qualifications-table').DataTable();
         });
     </script>

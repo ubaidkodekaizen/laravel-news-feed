@@ -122,7 +122,7 @@ const ChatBox = () => {
     }
   
     try {
-      const response = await axios.get('/api/conversations', {
+      const response = await axios.get(getConversations, {
         headers: {
           "Authorization": token,
         },
@@ -135,10 +135,11 @@ const ChatBox = () => {
 
   const fetchMessages = async (conversationId) => {
     try {
-      const response = await window.axios.get(`/api/conversations/${conversationId}/messages`, {
-        headers: {
-          "Authorization": token
-        }
+      const url = getMessageRoute(conversationId);
+      const response = await window.axios.get(url, {
+          headers: {
+              "Authorization": token
+          }
       });
       console.log("messages", response.data);
       setMessages(response.data);
@@ -164,7 +165,7 @@ const ChatBox = () => {
   
     try {
       const response = await window.axios.post(
-        '/api/messages/send',
+        sendMsg,
         {
           content: messageContent,
           receiver_id: activeUser.id,
@@ -204,7 +205,7 @@ const ChatBox = () => {
     } else {
       // If no conversation exists, fetch or create a conversation
       try {
-        const response = await axios.post('/api/conversations/create',
+        const response = await axios.post(createConversation,
           { user_id: userId }, 
           {
             headers: {
@@ -230,7 +231,8 @@ const ChatBox = () => {
 
   const fetchUserDetails = async (conversationId) => {
     try {
-      const response = await window.axios.get(`/api/conversations/${conversationId}/user`, {
+      const url = getUserConversationRoute(conversationId);
+      const response = await window.axios.get(url, {
         headers: {
           "Authorization": token,
         },
@@ -284,7 +286,7 @@ const ChatBox = () => {
     if (!activeConversation) return;
 
     try {
-      await axios.post('/api/typing', {
+      await axios.post(userIsTyping, {
         conversation_id: activeConversation
       }, {
         headers: {

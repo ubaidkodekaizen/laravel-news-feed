@@ -99,7 +99,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('user/get-token', function () {
         return response()->json(['token' => session('sanctum_token')]);
-    });
+    })->name("user.token");
+    
     Route::post('/pusher/user-auth', [PusherController::class, 'pusherAuth']);
 });
 
@@ -175,7 +176,7 @@ Route::middleware('guest')->group(function () {
 // Unauthenticated Routes
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 

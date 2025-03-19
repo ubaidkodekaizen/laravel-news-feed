@@ -1,7 +1,7 @@
 
 
-
-$(document).ready(function () {  
+// $.noConflict();
+jQuery(document).ready(function ($) {  
     // $("#user_company").validate({
     //     rules: {
     //         company_logo: {
@@ -378,7 +378,7 @@ $(document).ready(function () {
                 slidesPerView: 3,
             },
             1300: {
-                slidesPerView: 4,
+                slidesPerView: 3,
             },
         },
     });

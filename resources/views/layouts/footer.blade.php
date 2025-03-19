@@ -1,4 +1,29 @@
+
 @yield('scripts')
+<script>
+    var userTokenRoute = "{{ route('user.token') }}";
+    var getConversations = "{{ route('get.conversations') }}";
+    function getMessageRoute(conversationId) {
+        return "{{ route('get.message', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);
+    }
+    var sendMsg = "{{ route('sendMessage') }}";
+    var createConversation = "{{ route('create.conversation') }}";
+    
+    function getUserConversationRoute(conversationId) {
+        return "{{ route('get.user.conversation', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);
+    }
+    var userIsTyping = "{{ route('user.is.typing') }}";
+    function addReactionRoute(messageId) {
+        return "{{ route('add.reaction', ['message' => '__ID__']) }}".replace('__ID__', messageId);
+    }
+    function removeReactionRoute(messageId) {
+        return "{{ route('add.reaction', ['message' => '__ID__']) }}".replace('__ID__', messageId);
+    }
+    var userPing = "{{ route('user.ping') }}";
+    var userOffline = "{{ route('user.offline') }}";
+    
+    
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
@@ -15,12 +40,10 @@
     </script>
     <div id="chat-container"></div>
 @endauth
-{{-- @viteReactRefresh
-@vite(['resources/js/App.jsx']) --}}
-<link rel="stylesheet" href="{{ asset('build/assets/App-Db5XVQeo.css') }}">
-<script src="{{ asset('build/assets/App-LLf9dT7M.js') }}" defer></script>
+ 
 <script>
-    $(document).ready(function() {
+    
+    jQuery(document).ready(function($) {
 
 
 
@@ -250,7 +273,10 @@
         localStorage.setItem("sanctum-token", "");
     });
 </script>
-@yield('scripts')
+
+
+{{-- @yield('scripts') --}}
+
 </body>
 
 </html>

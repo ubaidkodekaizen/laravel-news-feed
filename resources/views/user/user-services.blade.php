@@ -77,7 +77,7 @@
 @endsection
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        jQuery(document).ready(function($) {
             $('#services-table').DataTable();
         });
     </script>

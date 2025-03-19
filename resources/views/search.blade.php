@@ -22,7 +22,7 @@
                             <div class="selected-filter-group" id="selectedPositionFilters"></div>
                             <input type="text" id="positionSearchInput" name="company_position" class="filter-search"
                                 placeholder="Search Position..." oninput="filterOptions(this, 'positionFilterOptions')">
-    
+
                             <div id="positionFilterOptions" style="display: none">
                                 @foreach ($filters['company_positions'] as $position)
                                     <div class="filter-option"
@@ -33,7 +33,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Employees Filter Section -->
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#experienceFilter">
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Industry Filter Section -->
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#industryFilter">
@@ -73,8 +73,8 @@
                             </div>
                         </div>
                     </div>
-    
-    
+
+
                     <!-- Sub - Category Filter Section -->
                     {{-- <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#industrySubCategoryFilter">
@@ -94,7 +94,7 @@
                             </div>
                         </div>
                     </div> --}}
-    
+
                     <!-- Business Type Filter Section -->
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#businessTypeFilter">
@@ -115,7 +115,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Revenue Filter Section -->
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#revenueFilter">
@@ -135,7 +135,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Employees Filter Section -->
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#employeesFilter">
@@ -156,7 +156,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Product/Service Filter Section -->
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#productFilter">
@@ -176,7 +176,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="filter-section">
                         <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#serviceFilter">
                             Services <span class="toggle-icon">+</span>
@@ -195,204 +195,207 @@
                             </div>
                         </div>
                     </div>
-    
-    
+
+
                 </div>
                 <!-- Position Filter Section -->
-                
+
 
                 <h5 class="filter_heading  subheading_line mt-5">Personal</h5>
 
                 <div class="filterContainerInner">
-{{-- Position Filter --}}
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#userPositionFilter">
-        Person You're Looking To Connect <span class="toggle-icon">+</span>
-    </div>
-    <div id="userPositionFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedUserPositionFilters"></div>
-        <input type="text" id="userPositionSearchInput" name="user_position" class="filter-search"
-            placeholder="Search type of person you want to connect..."
-            oninput="filterOptions(this, 'userPositionFilterOptions')">
-        <div id="userPositionFilterOptions">
-            @foreach ($filters['user_position'] as $position)
-                <div class="filter-option"
-                    onclick="addFilter('user_position', '{{ $position }}', 'selectedUserPositionFilters', 'userPositionSearchInput')">
-                    {{ $position }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+                    {{-- Position Filter --}}
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#userPositionFilter">
+                            Person You're Looking To Connect <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="userPositionFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedUserPositionFilters"></div>
+                            <input type="text" id="userPositionSearchInput" name="user_position"
+                                class="filter-search" placeholder="Search type of person you want to connect..."
+                                oninput="filterOptions(this, 'userPositionFilterOptions')">
+                            <div id="userPositionFilterOptions">
+                                @foreach ($filters['user_position'] as $position)
+                                    <div class="filter-option"
+                                        onclick="addFilter('user_position', '{{ $position }}', 'selectedUserPositionFilters', 'userPositionSearchInput')">
+                                        {{ $position }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
 
 
-{{-- Gender Filter --}}
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#genderFilter">
-        Gender <span class="toggle-icon">+</span>
-    </div>
-    <div id="genderFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedGenderFilters"></div>
-        <input type="text" id="genderSearchInput" name="user_gender" class="filter-search"
-            placeholder="Search Gender..." oninput="filterOptions(this, 'genderFilterOptions')">
-        <div id="genderFilterOptions">
-            @foreach ($filters['user_gender'] as $gender)
-                <div class="filter-option"
-                    onclick="addFilter('user_gender', '{{ $gender }}', 'selectedGenderFilters', 'genderSearchInput')">
-                    {{ $gender }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+                    {{-- Gender Filter --}}
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#genderFilter">
+                            Gender <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="genderFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedGenderFilters"></div>
+                            <input type="text" id="genderSearchInput" name="user_gender" class="filter-search"
+                                placeholder="Search Gender..." oninput="filterOptions(this, 'genderFilterOptions')">
+                            <div id="genderFilterOptions">
+                                @foreach ($filters['user_gender'] as $gender)
+                                    <div class="filter-option"
+                                        onclick="addFilter('user_gender', '{{ $gender }}', 'selectedGenderFilters', 'genderSearchInput')">
+                                        {{ $gender }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
-{{-- Age Group Filter --}}
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#ageGroupFilter">
-        Age Group <span class="toggle-icon">+</span>
-    </div>
-    <div id="ageGroupFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedAgeGroupFilters"></div>
-        <input type="text" id="ageGroupSearchInput" name="user_age_group" class="filter-search"
-            placeholder="Search Age Group..." oninput="filterOptions(this, 'ageGroupFilterOptions')">
-        <div id="ageGroupFilterOptions">
-            @foreach ($filters['user_age_group'] as $ageGroup)
-                <div class="filter-option"
-                    onclick="addFilter('user_age_group', '{{ $ageGroup }}', 'selectedAgeGroupFilters', 'ageGroupSearchInput')">
-                    {{ $ageGroup }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+                    {{-- Age Group Filter --}}
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#ageGroupFilter">
+                            Age Group <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="ageGroupFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedAgeGroupFilters"></div>
+                            <input type="text" id="ageGroupSearchInput" name="user_age_group" class="filter-search"
+                                placeholder="Search Age Group..." oninput="filterOptions(this, 'ageGroupFilterOptions')">
+                            <div id="ageGroupFilterOptions">
+                                @foreach ($filters['user_age_group'] as $ageGroup)
+                                    <div class="filter-option"
+                                        onclick="addFilter('user_age_group', '{{ $ageGroup }}', 'selectedAgeGroupFilters', 'ageGroupSearchInput')">
+                                        {{ $ageGroup }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
-{{-- Ethnicity Filter --}}
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#ethnicityFilter">
-        Ethnicity <span class="toggle-icon">+</span>
-    </div>
-    <div id="ethnicityFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedEthnicityFilters"></div>
-        <input type="text" id="ethnicitySearchInput" name="user_ethnicity" class="filter-search"
-            placeholder="Search Ethnicity..." oninput="filterOptions(this, 'ethnicityFilterOptions')">
-        <div id="ethnicityFilterOptions">
-            @foreach ($filters['user_ethnicity'] as $ethnicity)
-                <div class="filter-option"
-                    onclick="addFilter('user_ethnicity', '{{ $ethnicity }}', 'selectedEthnicityFilters', 'ethnicitySearchInput')">
-                    {{ $ethnicity }}
+                    {{-- Ethnicity Filter --}}
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#ethnicityFilter">
+                            Ethnicity <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="ethnicityFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedEthnicityFilters"></div>
+                            <input type="text" id="ethnicitySearchInput" name="user_ethnicity" class="filter-search"
+                                placeholder="Search Ethnicity..." oninput="filterOptions(this, 'ethnicityFilterOptions')">
+                            <div id="ethnicityFilterOptions">
+                                @foreach ($filters['user_ethnicity'] as $ethnicity)
+                                    <div class="filter-option"
+                                        onclick="addFilter('user_ethnicity', '{{ $ethnicity }}', 'selectedEthnicityFilters', 'ethnicitySearchInput')">
+                                        {{ $ethnicity }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
-</div>
-                </div>
-                
+
                 <h5 class="filter_heading subheading_line mt-5">Geographical</h5>
                 <div class="filterContainerInner">
-{{-- Nationality Filter --}}
+                    {{-- Nationality Filter --}}
 
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#nationalityFilter">
-        Nationality <span class="toggle-icon">+</span>
-    </div>
-    <div id="nationalityFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedNationalityFilters"></div>
-        <input type="text" id="nationalitySearchInput" name="user_nationality" class="filter-search"
-            placeholder="Search Nationality..." oninput="filterOptions(this, 'nationalityFilterOptions')">
-        <div id="nationalityFilterOptions">
-            @foreach ($filters['user_nationality'] as $nationality)
-                <div class="filter-option"
-                    onclick="addFilter('user_nationality', '{{ $nationality }}', 'selectedNationalityFilters', 'nationalitySearchInput')">
-                    {{ $nationality }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#nationalityFilter">
+                            Nationality <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="nationalityFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedNationalityFilters"></div>
+                            <input type="text" id="nationalitySearchInput" name="user_nationality"
+                                class="filter-search" placeholder="Search Nationality..."
+                                oninput="filterOptions(this, 'nationalityFilterOptions')">
+                            <div id="nationalityFilterOptions">
+                                @foreach ($filters['user_nationality'] as $nationality)
+                                    <div class="filter-option"
+                                        onclick="addFilter('user_nationality', '{{ $nationality }}', 'selectedNationalityFilters', 'nationalitySearchInput')">
+                                        {{ $nationality }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
 
-<!-- Country Filter Section -->
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#countryFilter">
-        Country <span class="toggle-icon">+</span>
-    </div>
-    <div id="countryFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedCountryFilters"></div>
-        <input type="text" id="countrySearchInput" name="company_country" class="filter-search"
-            placeholder="Search Country..." oninput="filterOptions(this, 'countryFilterOptions')">
-        <div id="countryFilterOptions">
-            @foreach ($filters['company_countries'] as $country)
-                <div class="filter-option"
-                    onclick="addFilter('country', '{{ $country }}', 'selectedCountryFilters', 'countrySearchInput')">
-                    {{ $country }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+                    <!-- Country Filter Section -->
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#countryFilter">
+                            Country <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="countryFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedCountryFilters"></div>
+                            <input type="text" id="countrySearchInput" name="company_country" class="filter-search"
+                                placeholder="Search Country..." oninput="filterOptions(this, 'countryFilterOptions')">
+                            <div id="countryFilterOptions">
+                                @foreach ($filters['company_countries'] as $country)
+                                    <div class="filter-option"
+                                        onclick="addFilter('country', '{{ $country }}', 'selectedCountryFilters', 'countrySearchInput')">
+                                        {{ $country }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
-<!-- State Filter Section -->
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#stateFilter">
-        State <span class="toggle-icon">+</span>
-    </div>
-    <div id="stateFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedStateFilters"></div>
-        <input type="text" id="stateSearchInput" name="company_state" class="filter-search"
-            placeholder="Search State..." oninput="filterOptions(this, 'stateFilterOptions')">
-        <div id="stateFilterOptions">
-            @foreach ($filters['company_states'] as $state)
-                <div class="filter-option"
-                    onclick="addFilter('state', '{{ $state }}', 'selectedStateFilters', 'stateSearchInput')">
-                    {{ $state }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+                    <!-- State Filter Section -->
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#stateFilter">
+                            State <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="stateFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedStateFilters"></div>
+                            <input type="text" id="stateSearchInput" name="company_state" class="filter-search"
+                                placeholder="Search State..." oninput="filterOptions(this, 'stateFilterOptions')">
+                            <div id="stateFilterOptions">
+                                @foreach ($filters['company_states'] as $state)
+                                    <div class="filter-option"
+                                        onclick="addFilter('state', '{{ $state }}', 'selectedStateFilters', 'stateSearchInput')">
+                                        {{ $state }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
-{{-- City Filter --}}
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#cityFilter">
-        City <span class="toggle-icon">+</span>
-    </div>
-    <div id="cityFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedCityFilters"></div>
-        <input type="text" id="citySearchInput" name="user_city" class="filter-search"
-            placeholder="Search City..." oninput="filterOptions(this, 'cityFilterOptions')">
-        <div id="cityFilterOptions">
-            @foreach ($filters['user_city'] as $city)
-                <div class="filter-option"
-                    onclick="addFilter('user_city', '{{ $city }}', 'selectedCityFilters', 'citySearchInput')">
-                    {{ $city }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-</div>
+                    {{-- City Filter --}}
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#cityFilter">
+                            City <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="cityFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedCityFilters"></div>
+                            <input type="text" id="citySearchInput" name="user_city" class="filter-search"
+                                placeholder="Search City..." oninput="filterOptions(this, 'cityFilterOptions')">
+                            <div id="cityFilterOptions">
+                                @foreach ($filters['user_city'] as $city)
+                                    <div class="filter-option"
+                                        onclick="addFilter('user_city', '{{ $city }}', 'selectedCityFilters', 'citySearchInput')">
+                                        {{ $city }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
-{{-- County Filter --}}
-<div class="filter-section">
-    <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#countyFilter">
-        County <span class="toggle-icon">+</span>
-    </div>
-    <div id="countyFilter" class="filterCollapseBox collapse">
-        <div class="selected-filter-group" id="selectedCountyFilters"></div>
-        <input type="text" id="countySearchInput" name="user_county" class="filter-search"
-            placeholder="Search County..." oninput="filterOptions(this, 'countyFilterOptions')">
-        <div id="countyFilterOptions">
-            @foreach ($filters['user_county'] as $county)
-                <div class="filter-option"
-                    onclick="addFilter('user_county', '{{ $county }}', 'selectedCountyFilters', 'countySearchInput')">
-                    {{ $county }}
+                    {{-- County Filter --}}
+                    <div class="filter-section">
+                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#countyFilter">
+                            County <span class="toggle-icon">+</span>
+                        </div>
+                        <div id="countyFilter" class="filterCollapseBox collapse">
+                            <div class="selected-filter-group" id="selectedCountyFilters"></div>
+                            <input type="text" id="countySearchInput" name="user_county" class="filter-search"
+                                placeholder="Search County..." oninput="filterOptions(this, 'countyFilterOptions')">
+                            <div id="countyFilterOptions">
+                                @foreach ($filters['user_county'] as $county)
+                                    <div class="filter-option"
+                                        onclick="addFilter('user_county', '{{ $county }}', 'selectedCountyFilters', 'countySearchInput')">
+                                        {{ $county }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
-</div>
-                </div>
-                
+
 
 
 
@@ -474,17 +477,17 @@
         // Apply filters and refresh results
         function applyFilters() {
             syncHeaderFilters();
-            let newUrl = `${window.location.origin}${window.location.pathname}?${$.param(filters, true)}`;
+            let newUrl = `${window.location.origin}${window.location.pathname}?${jQuery.param(filters, true)}`;
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
 
-            $.ajax({
+            jQuery.ajax({
                 url: window.location.pathname,
                 data: filters,
                 method: 'GET',
                 success: function(response) {
-                    $('#userResults').html(response);
+                    jQuery('#userResults').html(response);
                 },
                 error: function(error) {
                     console.error('Error fetching results:', error);
@@ -588,27 +591,27 @@
         // Reset all filters
         function resetFilters() {
             filters = {};
-            $('.selected-filter-group').empty();
-            $('.filter-search').val('');
+            jQuery('.selected-filter-group').empty();
+            jQuery('.filter-search').val('');
             applyFilters();
         }
 
         // Handle pagination click with filters applied
-        $(document).on('click', '.pagination a', function(e) {
+        jQuery(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
-            const pageUrl = $(this).attr('href');
-            let newUrl = `${pageUrl}&${$.param(filters, true)}`;
+            const pageUrl = jQuery(this).attr('href');
+            let newUrl = `${pageUrl}&${jQuery.param(filters, true)}`;
 
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
 
-            $.ajax({
+            jQuery.ajax({
                 url: pageUrl,
                 data: filters,
                 method: 'GET',
                 success: function(response) {
-                    $('#userResults').html(response);
+                    jQuery('#userResults').html(response);
                 },
                 error: function(error) {
                     console.error('Error fetching paginated results:', error);
@@ -630,45 +633,52 @@
 
 @section('scripts')
     <script>
-        function directMessageBtn(receiverId) {
-            $('#receiver_id').val(receiverId);
+        jQuery(document).ready(function($) {
+            let directMessageBtn = document.querySelectorAll('.direct-message-btn');
 
+            directMessageBtn.forEach(element => {
+                element.addEventListener("click", function() {
+                    let receiverId = $(this).data('receiver-id');
+                    $('#receiver_id').val(receiverId);
+ 
 
-            // Check if conversation exists
-            $.ajax({
-                url: '/api/check-conversation',
-                method: 'GET',
-                data: {
-                    receiver_id: receiverId
-                },
-                headers: {
-                    "Authorization": localStorage.getItem("sanctum-token")
-                },
-                success: function(response) {
-                    if (response.conversation_exists) {
-                        // If conversation exists, open chat directly
-                        if (window.openChatWithUser) {
-                            window.openChatWithUser(receiverId);
+                    // Check if conversation exists
+                    $.ajax({
+                        url: '/api/check-conversation',
+                        method: 'GET',
+                        data: {
+                            receiver_id: receiverId
+                        },
+                        headers: {
+                            "Authorization": localStorage.getItem("sanctum-token")
+                        },
+                        success: function(response) {
+                            if (response.conversation_exists) {
+                                // If conversation exists, open chat directly
+                                if (window.openChatWithUser) {
+                                    window.openChatWithUser(receiverId);
+                                }
+                            } else {
+                                // If no conversation, open the modal
+                                console.log(response.receiver);
+                                $('#receiver_id').val(receiverId);
+                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
+    I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
+    Looking forward to connecting! 
+    Best Regards,
+                {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
+                                // $('#mainModal').modal('show');
+                                var myModal = new bootstrap.Modal(document.getElementById('mainModal'));
+                                myModal.show();
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error('Error checking conversation:', xhr);
                         }
-                    } else {
-                        // If no conversation, open the modal
-                        console.log(response.receiver);
-                        $('#receiver_id').val(receiverId);
-                        $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
-I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
-Looking forward to connecting! 
-Best Regards,
-                        {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
-                        $('#mainModal').modal('show');
-                    }
-                },
-                error: function(xhr) {
-                    console.error('Error checking conversation:', xhr);
-                }
+                    });
+                });
             });
-        }
 
-        $(document).ready(function() {
 
             $('#directMessageForm').on('submit', function(e) {
                 e.preventDefault();
