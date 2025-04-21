@@ -11,6 +11,132 @@
             display: block;
             border: 2px solid var(--primary);
         }
+
+        .company_link,
+        .company_contact,
+        .company_position,
+        .company_experience {
+            font-size: 14px;
+        }
+
+        .event_slider .card {
+            min-height: unset !important;
+            box-shadow: 0px 0px 10px 0px #0000001a;
+            border-radius: 10px;
+            border: 1px solid #e7e7e7;
+        }
+
+        .services_slider .card {
+            box-shadow: 0px 0px 10px 0px #0000001a;
+            border-radius: 10px;
+            border: 1px solid #e7e7e7;
+            overflow: hidden;
+        }
+
+        .company_card {
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: unset;
+        }
+
+        .profile_qualification_sec {
+            padding: 30px 20px;
+            padding-top: 15px;
+            background: #fff;
+            box-shadow: 0px 0px 10px 0px #0000001a;
+            border-radius: 10px;
+            border: 1px solid #e7e7e7;
+        }
+
+        .company_card_details {
+            padding: 20px 20px;
+            padding-bottom: 10px;
+            background: #fff;
+            box-shadow: 0px 0px 10px 0px #0000001a;
+            border-radius: 10px;
+            border: 1px solid #e7e7e7;
+        }
+
+        .company_logo {
+            background: #fff;
+            box-shadow: 0px 0px 10px 0px #0000001a;
+            border-radius: 10px;
+            border: 1px solid #e7e7e7;
+        }
+
+        .company_profile_section,
+        .company_profile_section .col-lg-3,
+        .services_profile_border {
+            border: none;
+        }
+
+        .profile-container {
+            border: none;
+            box-shadow: 0px 0px 10px 0px #0000001a;
+            border-radius: 10px;
+            border: 1px solid #e7e7e7;
+            overflow: hidden;
+            margin: 60px auto 50px auto;
+            height: unset;
+        }
+
+        .profile-image {
+            border-radius: 10px;
+            border: none;
+            bottom: 80px;
+        }
+
+        .profile-container .profile-details {
+            top: -60px;
+            padding-bottom: 10px;
+        }
+
+        .contact_social_flex { 
+            border-bottom: 1px solid #e7e7e7;
+            padding-bottom: 20px;
+            max-width: 98%;
+            margin: 0 auto 10px auto;
+        }
+
+        .event_slider h2,
+        .services_profile_border h2 {
+            font-size: 24px;
+            margin-bottom: 19px !important;
+        }
+
+        .services_profile_border {
+            margin-top: 15px;
+            padding-right: 20px;
+        }
+
+        .generalInfoHeading {
+            padding: 0 0px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            font-size: 20px;
+            max-width: max-content;
+            padding-bottom: 8px;
+        }
+
+        .direct-message-btn {
+            border-radius: 25px;
+            padding: 6px 20px;
+        }
+
+        .company_profile_section .articles .card .card-body {
+            padding: 10px;
+        }
+
+        .company_profile_section .event_slider .card-content {
+            padding: 10px;
+        }
+
+        .company_profile_section .event_slider {
+            padding: 10px 0px;
+            padding-right: 20px;
+        }
     </style>
 
     <section class="user_profile_view">
@@ -43,7 +169,7 @@
                             </a>
                         </div>
                     </div>
-    
+
                     <div class="contact_social_flex">
                         <div class="contact_email">
                             @if ($user->phone_public == 'Yes')
@@ -79,7 +205,7 @@
                                     </a>
                                 </li>
                             @endif
-    
+
                             @if ($user->x_url)
                                 <li>
                                     <a href="{{ $user->x_url }}" target="_blank" title="X (Formerly Twitter)">
@@ -87,7 +213,7 @@
                                     </a>
                                 </li>
                             @endif
-    
+
                             @if ($user->instagram_url)
                                 <li>
                                     <a href="{{ $user->instagram_url }}" target="_blank" title="Instagram">
@@ -95,7 +221,7 @@
                                     </a>
                                 </li>
                             @endif
-    
+
                             @if ($user->tiktok_url)
                                 <li>
                                     <a href="{{ $user->tiktok_url }}" target="_blank" title="TikTok">
@@ -103,7 +229,7 @@
                                     </a>
                                 </li>
                             @endif
-    
+
                             @if ($user->youtube_url)
                                 <li>
                                     <a href="{{ $user->youtube_url }}" target="_blank" title="YouTube">
@@ -117,6 +243,7 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="company_card">
+                                    <h2 class="generalInfoHeading service_heading">Company Info</h2>
                                     <div class="company_logo">
                                         <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
                                             alt="Company Logo" class="logo_img">
@@ -129,7 +256,7 @@
                                                     {{ $user->company->company_name }}
                                                 </h2>
                                             @endif
-    
+
                                             <div class="icons_flex">
                                                 @if (!empty($user->company->company_web_url))
                                                     <a href="{{ $user->company->company_web_url }}" class="company_link"
@@ -137,7 +264,7 @@
                                                         <i class="fa-solid fa-link"></i>
                                                     </a>
                                                 @endif
-    
+
                                                 @if (!empty($user->company->company_linkedin_url))
                                                     <a href="{{ $user->company->company_linkedin_url }}" target="_blank"
                                                         class="company_link" rel="noopener noreferrer">
@@ -146,49 +273,49 @@
                                                 @endif
                                             </div>
                                         </div>
-    
+
                                         @if (!empty($user->company->company_business_type))
                                             <p class="company_experience">
                                                 <span><i class="fa-solid fa-landmark"></i></span>
                                                 {{ $user->company->company_business_type }}
                                             </p>
                                         @endif
-    
+
                                         @if (!empty($user->company->company_position))
                                             <p class="company_position">
                                                 <span><i class="fa-solid fa-user-tie"></i></span>
                                                 {{ $user->company->company_position }}
                                             </p>
                                         @endif
-    
+
                                         @if (!empty($user->company->company_experience))
                                             <p class="company_experience">
                                                 <span><i class="fa-solid fa-business-time"></i></span>
                                                 {{ $user->company->company_experience }}
                                             </p>
                                         @endif
-    
+
                                         @if (!empty($user->company->company_phone))
                                             <a href="tel:{{ $user->company->company_phone }}" class="company_contact">
                                                 <span><i class="fa-solid fa-phone"></i></span>
                                                 {{ $user->company->company_phone }}
                                             </a>
                                         @endif
-    
+
                                         @if (!empty($user->company->company_revenue))
                                             <p class="company_experience">
                                                 <span><i class="fa-solid fa-money-bill-trend-up"></i></span>
                                                 ${{ $user->company->company_revenue }}
                                             </p>
                                         @endif
-    
+
                                         @if (!empty($user->company->company_no_of_employee))
                                             <p class="company_experience">
                                                 <span><i class="fa-solid fa-people-group"></i></span>
                                                 {{ $user->company->company_no_of_employee }}
                                             </p>
                                         @endif
-    
+
                                         @if (!empty($user->company->company_industry))
                                             <p class="company_experience">
                                                 <span><i class="fa-solid fa-industry"></i></span>
@@ -196,9 +323,9 @@
                                             </p>
                                         @endif
                                     </div>
-    
+
                                     <div class="profile_qualification_sec">
-                                        <h1 class="profile_data profile_heading">
+                                        <h1 class="profile_data profile_heading service_heading mb-3">
                                             Qualifications
                                         </h1>
                                         <div class="accordion" id="userEducation">
@@ -228,12 +355,12 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                             </div>
                             <div class="col-lg-9">
                                 <div class="event_slider">
                                     <div class="container">
-                                        <h2 class="mb-3">Products</h2>
+                                        <h2 class="mb-3 service_heading">Products</h2>
                                         <div class="swiper">
                                             <div class="swiper-wrapper">
                                                 @forelse($user->products as $product)
@@ -241,7 +368,7 @@
                                                         <div class="card">
                                                             <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : asset('https://placehold.co/420x250') }}"
                                                                 alt="{{ $product->title }}">
-    
+
                                                             <div class="card-content">
                                                                 <div class="service_price_duration my-0 event_price_label">
                                                                     <p class="service_price">
@@ -254,11 +381,12 @@
                                                                         </span>
                                                                     </p>
                                                                 </div>
-    
+
                                                                 <!-- Product Title -->
                                                                 <div class="details">
                                                                     <h3>{{ $product->title }}</h3>
-                                                                    <p>{{ Str::limit($product->short_description, 100, '...') }}</p>
+                                                                    <p>{{ Str::limit($product->short_description, 100, '...') }}
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -266,57 +394,59 @@
                                                 @empty
                                                     <p class="text-center text-muted">No products available.</p>
                                                 @endforelse
-    
+
                                             </div>
-    
+
                                             <!-- Add Pagination and Navigation -->
                                             <div class="swiper-button-prev"></div>
                                             <div class="swiper-button-next"></div>
                                         </div>
-    
-    
+
+
                                     </div>
-    
+
                                 </div>
                                 <div class="services_profile_border">
                                     <div class="container">
-                                        <h2 class="mb-3">Services</h2>
-                                        <div class="services_slider services_profile_slider articles overflow-hidden pt-0">
+                                        <h2 class="mb-3 service_heading">Services</h2>
+                                        <div
+                                            class="services_slider services_profile_slider articles overflow-hidden pb-0 pt-0">
                                             <div class="swiper-wrapper">
                                                 @forelse($user->services as $service)
-                                                <div class="swiper-slide">
-                                                    <div class="card">
-                                                        <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('https://placehold.co/420x250') }}"
+                                                    <div class="swiper-slide">
+                                                        <div class="card">
+                                                            <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('https://placehold.co/420x250') }}"
                                                                 alt="{{ $service->title }}">
-    
-                                                        <div class="card-body">
-                                                            <h3 class="service_heading">{{ $service->title }}</h3>
-                                                            <p>{{ Str::limit($service->short_description, 100, '...') }}</p>
-                                                            <div class="service_price_duration">
-                                                                <div class="service_price">
-                                                                    <p>
-                                                                        <span>
-                                                                            @if ($service->discounted_price && $service->discounted_price < $service->original_price)
-                                                                                <s>${{ $service->original_price }}</s>
-                                                                                ${{ $service->discounted_price }}
-                                                                            @else
-                                                                                ${{ $service->original_price }}
-                                                                            @endif
-                                                                            / {{ $service->duration }}
-                                                                        </span>
-    
-    
-                                                                    </p>
+
+                                                            <div class="card-body">
+                                                                <h3 class="">{{ $service->title }}</h3>
+                                                                <p>{{ Str::limit($service->short_description, 100, '...') }}
+                                                                </p>
+                                                                <div class="service_price_duration">
+                                                                    <div class="service_price">
+                                                                        <p>
+                                                                            <span>
+                                                                                @if ($service->discounted_price && $service->discounted_price < $service->original_price)
+                                                                                    <s>${{ $service->original_price }}</s>
+                                                                                    ${{ $service->discounted_price }}
+                                                                                @else
+                                                                                    ${{ $service->original_price }}
+                                                                                @endif
+                                                                                / {{ $service->duration }}
+                                                                            </span>
+
+
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
                                                 @empty
                                                     <p class="text-center text-muted">No services available.</p>
                                                 @endforelse
                                             </div>
-    
+
                                             <div class="swiper-button-prev"></div>
                                             <div class="swiper-button-next"></div>
                                         </div>
@@ -344,7 +474,7 @@
                 </div>
                 <div class="modal-body">
 
-                    @if(!empty($user->gender))
+                    @if (!empty($user->gender))
                         <div class="contact_info_flex">
                             <i class="fa-solid fa-venus-mars"></i>
                             <div class="contact_name_info">
@@ -353,8 +483,8 @@
                             </div>
                         </div>
                     @endif
-                
-                    @if(!empty($user->age_group))
+
+                    @if (!empty($user->age_group))
                         <div class="contact_info_flex">
                             <i class="fa-regular fa-calendar-days"></i>
                             <div class="contact_name_info">
@@ -363,8 +493,8 @@
                             </div>
                         </div>
                     @endif
-                
-                    @if(!empty($user->ethnicity))
+
+                    @if (!empty($user->ethnicity))
                         <div class="contact_info_flex">
                             <i class="fa-solid fa-users-between-lines"></i>
                             <div class="contact_name_info">
@@ -373,8 +503,8 @@
                             </div>
                         </div>
                     @endif
-                
-                    @if(!empty($user->nationality))
+
+                    @if (!empty($user->nationality))
                         <div class="contact_info_flex">
                             <i class="fa-solid fa-passport"></i>
                             <div class="contact_name_info">
@@ -383,8 +513,8 @@
                             </div>
                         </div>
                     @endif
-                
-                    @if(!empty($user->languages))
+
+                    @if (!empty($user->languages))
                         <div class="contact_info_flex">
                             <i class="fa-solid fa-language"></i>
                             <div class="contact_name_info">
@@ -393,8 +523,8 @@
                             </div>
                         </div>
                     @endif
-                
-                    @if(!empty($user->marital_status))
+
+                    @if (!empty($user->marital_status))
                         <div class="contact_info_flex">
                             <i class="fa-solid fa-person-circle-question"></i>
                             <div class="contact_name_info">
@@ -403,9 +533,9 @@
                             </div>
                         </div>
                     @endif
-                
+
                 </div>
-                
+
             </div>
         </div>
     </div>
