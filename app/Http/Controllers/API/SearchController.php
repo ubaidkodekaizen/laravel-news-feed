@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Models\Company;
 use App\Models\Product;
@@ -8,7 +8,8 @@ use App\Models\ProductService;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Controller;
+use App\Helpers\DropDownHelper;
 
 class SearchController extends Controller
 {
@@ -76,7 +77,7 @@ class SearchController extends Controller
 
 
     // For main search
-    public function SearchUserCompany(Request $request)
+    public function searchUserCompany(Request $request)
     {
         $query = User::where('status', 'complete')
             ->whereHas('company', function ($query) {
@@ -84,9 +85,10 @@ class SearchController extends Controller
             })
             ->with(['company']);
 
+        // === Apply Filters ===
 
         if ($request->filled('company_position')) {
-            $positions = is_array($request->company_position) ? $request->company_position : [$request->company_position];
+            $positions = (array) $request->company_position;
             $query->whereHas('company', function ($query) use ($positions) {
                 $query->where(function ($subQuery) use ($positions) {
                     foreach ($positions as $position) {
@@ -96,10 +98,8 @@ class SearchController extends Controller
             });
         }
 
-
-
         if ($request->filled('company_industry')) {
-            $industries = is_array($request->company_industry) ? $request->company_industry : [$request->company_industry];
+            $industries = (array) $request->company_industry;
             $query->whereHas('company', function ($query) use ($industries) {
                 $query->where(function ($q) use ($industries) {
                     foreach ($industries as $industry) {
@@ -109,139 +109,136 @@ class SearchController extends Controller
             });
         }
 
-
         if ($request->filled('company_business_type')) {
-            $businessTypes = is_array($request->company_business_type) ? $request->company_business_type : [$request->company_business_type];
-            $query->whereHas('company', function ($query) use ($businessTypes) {
-                $query->whereIn('company_business_type', $businessTypes);
+            $query->whereHas('company', function ($query) use ($request) {
+                $query->whereIn('company_business_type', (array) $request->company_business_type);
             });
         }
-
 
         if ($request->filled('company_no_of_employee')) {
-            $employeeCounts = is_array($request->company_no_of_employee) ? $request->company_no_of_employee : [$request->company_no_of_employee];
-            $query->whereHas('company', function ($query) use ($employeeCounts) {
-                $query->whereIn('company_no_of_employee', $employeeCounts);
+            $query->whereHas('company', function ($query) use ($request) {
+                $query->whereIn('company_no_of_employee', (array) $request->company_no_of_employee);
             });
         }
 
-
         if ($request->filled('company_revenue')) {
-            $revenues = is_array($request->company_revenue) ? $request->company_revenue : [$request->company_revenue];
-            $query->whereHas('company', function ($query) use ($revenues) {
-                $query->whereIn('company_revenue', $revenues);
+            $query->whereHas('company', function ($query) use ($request) {
+                $query->whereIn('company_revenue', (array) $request->company_revenue);
             });
         }
 
         if ($request->filled('company_experience')) {
-            $experiences = is_array($request->company_experience) ? $request->company_experience : [$request->company_experience];
-            $query->whereHas('company', function ($query) use ($experiences) {
-                $query->whereIn('company_experience', $experiences);
+            $query->whereHas('company', function ($query) use ($request) {
+                $query->whereIn('company_experience', (array) $request->company_experience);
             });
         }
 
-
         if ($request->filled('name')) {
-            $names = is_array($request->name) ? $request->name : [$request->name];
-            $query->whereIn('first_name', $names); // Assuming 'country' is in the users table
-        }
-        // Filter by Country in users table
-        if ($request->filled('country')) {
-            $countries = is_array($request->country) ? $request->country : [$request->country];
-            $query->whereIn('country', $countries); // Assuming 'country' is in the users table
+            $query->whereIn('first_name', (array) $request->name);
         }
 
-        // Filter by State in users table
+        if ($request->filled('country')) {
+            $query->whereIn('country', (array) $request->country);
+        }
+
         if ($request->filled('state')) {
-            $states = is_array($request->state) ? $request->state : [$request->state];
-            $query->whereIn('state', $states); // Assuming 'state' is in the users table
+            $query->whereIn('state', (array) $request->state);
         }
 
         if ($request->filled('user_county')) {
-            $counties = is_array($request->user_county) ? $request->user_county : [$request->user_county];
-            $query->whereIn('county', $counties); // Assuming 'county' is in the users table
+            $query->whereIn('county', (array) $request->user_county);
         }
 
         if ($request->filled('user_city')) {
-            $cities = is_array($request->user_city) ? $request->user_city : [$request->user_city];
-            $query->whereIn('city', $cities); // Assuming 'city' is in the users table
+            $query->whereIn('city', (array) $request->user_city);
         }
 
         if ($request->filled('user_position')) {
-            $user_positions = is_array($request->user_position) ? $request->user_position : [$request->user_position];
-            $query->where(function ($q) use ($user_positions) {
-                foreach ($user_positions as $position) {
+            $positions = (array) $request->user_position;
+            $query->where(function ($q) use ($positions) {
+                foreach ($positions as $position) {
                     $q->orWhere('user_position', 'LIKE', '%' . $position . '%');
                 }
             });
         }
 
         if ($request->filled('user_gender')) {
-            $user_genders = is_array($request->user_gender) ? $request->user_gender : [$request->user_gender];
-            $query->whereIn('gender', $user_genders); // Assuming 'gender' is in the users table
+            $query->whereIn('gender', (array) $request->user_gender);
         }
 
         if ($request->filled('user_age_group')) {
-            $user_age_groups = is_array($request->user_age_group) ? $request->user_age_group : [$request->user_age_group];
-            $query->whereIn('age_group', $user_age_groups); // Assuming 'age_group' is in the users table
+            $query->whereIn('age_group', (array) $request->user_age_group);
         }
 
         if ($request->filled('marital_status')) {
-            $marital_statuses = is_array($request->marital_status) ? $request->marital_status : [$request->marital_status];
-            $query->whereIn('marital_status', $marital_statuses); // Assuming 'marital_status' is in the users table
+            $query->whereIn('marital_status', (array) $request->marital_status);
         }
 
         if ($request->filled('user_ethnicity')) {
-            $user_ethnicities = is_array($request->user_ethnicity) ? $request->user_ethnicity : [$request->user_ethnicity];
-            $query->whereIn('ethnicity', $user_ethnicities); // Assuming 'ethnicity' is in the users table
+            $query->whereIn('ethnicity', (array) $request->user_ethnicity);
         }
 
         if ($request->filled('user_nationality')) {
-            $user_nationalities = is_array($request->user_nationality) ? $request->user_nationality : [$request->user_nationality];
-            $query->where(function ($q) use ($user_nationalities) {
-                foreach ($user_nationalities as $nationality) {
+            $nationalities = (array) $request->user_nationality;
+            $query->where(function ($q) use ($nationalities) {
+                foreach ($nationalities as $nationality) {
                     $q->orWhere('nationality', 'LIKE', '%' . $nationality . '%');
                 }
             });
         }
 
-
-        // Filter by Product/Service in product_services table
         if ($request->filled('product_service_name')) {
-            $productServices = is_array($request->product_service_name) ? $request->product_service_name : [$request->product_service_name];
-            $query->whereHas('company.productServices', function ($query) use ($productServices) {
-                $query->whereIn('product_service_name', $productServices);
+            $query->whereHas('company.productServices', function ($query) use ($request) {
+                $query->whereIn('product_service_name', (array) $request->product_service_name);
             });
         }
 
         if ($request->filled('product')) {
-            $products = is_array($request->product) ? $request->product : [$request->product];
-            $query->whereHas('products', function ($q) use ($products) {
-                $q->whereIn('title', $products); // Assuming 'title' is the column in the products table
+            $query->whereHas('products', function ($q) use ($request) {
+                $q->whereIn('title', (array) $request->product);
             });
         }
-
 
         if ($request->filled('service')) {
-            $services = is_array($request->service) ? $request->service : [$request->service];
-            $query->whereHas('services', function ($q) use ($services) {
-                $q->whereIn('title', $services); // Assuming 'title' is the column in the products table
+            $query->whereHas('services', function ($q) use ($request) {
+                $q->whereIn('title', (array) $request->service);
             });
         }
+
+        // === Order & Pagination ===
 
         $query->orderByRaw("CASE WHEN city IS NULL THEN 2 WHEN city = 'N/A' THEN 1 ELSE 0 END")
             ->orderBy('id', 'desc');
-        // Fetch filtered results
-        $users = $query->paginate(15);
 
-        // Return the updated user results
-        if ($request->ajax()) {
-            return view('partial.search-result', ['users' => $users]);
-        }
+        $perPage = $request->get('per_page', 10);
+        $page = $request->get('page', 1);
 
-        // Return the full view if not an AJAX request
-        return view('search', ['users' => $users]);
+        $users = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            'success' => true,
+            'data' => $users->items(),
+            'pagination' => [
+                'total_items' => $users->total(),
+                'per_page' => $users->perPage(),
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+            ],
+        ]);
     }
+
+
+    public function getDropdownFilters()
+    {
+        $filters = DropDownHelper::searchFilter();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Dropdown filters fetched successfully.',
+            'data' => $filters,
+        ]);
+    }
+
 
 
 

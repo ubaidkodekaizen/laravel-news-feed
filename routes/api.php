@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\PageController;
+use App\Http\Controllers\API\SearchController;
 
 
 // Apply middleware at the route level
@@ -40,6 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/industry-experts/{industry}', [PageController::class, 'getIndustryExperts']);
   Route::get('/products', [PageController::class, 'getProducts']);
   Route::get('/services', [PageController::class, 'getServices']);
+  Route::get('/search-filters', [SearchController::class, 'getDropdownFilters']);
+  Route::get('/search', [SearchController::class, 'searchUserCompany']);
 
 
 });
