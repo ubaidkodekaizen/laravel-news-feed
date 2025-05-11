@@ -34,7 +34,6 @@ class DropDownHelper
 
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
         $company_business_types = Company::pluck('company_business_type')->unique()->sort();
-        //$company_no_of_employees = Company::pluck('company_no_of_employee')->unique()->sort();
       	$company_no_of_employees = collect([
             '1-10',
             '11-50',
@@ -46,7 +45,6 @@ class DropDownHelper
             '10,001+'
         ]);
       
-        //$company_revenues = Company::pluck('company_revenue')->unique()->sort();
       	$company_revenues = collect([
             '< 1M',
             '1-5M',
@@ -54,7 +52,6 @@ class DropDownHelper
             '25-100M',
             '100M +'
         ]);
-        //$company_experiences = Company::pluck('company_experience')->unique()->sort();
 
 		$company_experiences = collect([
             'under 1',
@@ -63,10 +60,6 @@ class DropDownHelper
             '10-20 Years',
             '20+ Years'
         ]);
-
-
-
-
 
         // From Users Table
 
