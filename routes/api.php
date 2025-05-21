@@ -7,6 +7,9 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\SearchController;
+use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\ServiceController;
+use App\Http\Controllers\API\EducationController;
 
 
 // Apply middleware at the route level
@@ -37,10 +40,29 @@ Route::middleware('auth:sanctum')->group(function () {
   // Mobile API Routes
 
   Route::get('/user/profile/{slug}', [UserController::class, 'showUserBySlug']);
+  Route::delete('/user/delete', [UserController::class, 'deleteUser']);
+
+  Route::get('/user/products', [ProductController::class, 'apiIndex']);
+  Route::get('/user/products/{id}', [ProductController::class, 'apiShow']);
+  Route::post('/user/products/store/{id?}', [ProductController::class, 'apiStore']);
+  Route::delete('/user/products/delete/{id}', [ProductController::class, 'apiDelete']);
+
+  Route::get('/user/services', [ServiceController::class, 'apiIndex']);
+  Route::get('/user/services/{id}', [ServiceController::class, 'apiShow']);
+  Route::post('/user/services/store/{id?}', [ServiceController::class, 'apiStore']);
+  Route::delete('/user/services/delete/{id}', [ServiceController::class, 'apiDelete']);
+
+  Route::get('/user/qualifications', [EducationController::class, 'apiIndex']);
+  Route::get('/user/qualifications/{id}', [EducationController::class, 'apiShow']);
+  Route::post('/user/qualifications/store/{id?}', [EducationController::class, 'apiStore']);
+  Route::delete('/user/qualifications/delete/{id}', [EducationController::class, 'apiDelete']);
+
   Route::get('/industries', [PageController::class, 'getIndustries']);
   Route::get('/industry-experts/{industry}', [PageController::class, 'getIndustryExperts']);
+
   Route::get('/products', [PageController::class, 'getProducts']);
   Route::get('/services', [PageController::class, 'getServices']);
+
   Route::get('/search-filters', [SearchController::class, 'getDropdownFilters']);
   Route::get('/search', [SearchController::class, 'searchUserCompany']);
 

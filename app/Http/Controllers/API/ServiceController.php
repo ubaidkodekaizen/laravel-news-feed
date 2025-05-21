@@ -1,31 +1,40 @@
 <?php
-
-
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 
 class ServiceController extends Controller
 {
-
-
-    public function index()
+    // API: List all services
+    public function apiIndex()
     {
-        $services = Service::where('user_id', Auth::id())->get();
-        return view('user.user-services', compact('services'));
-    }
-    public function addEditService($id = null)
-    {
-        $service = $id ? Service::findOrFail($id) : new Service();
-        return view('user.add-services', compact('service'));
+        $services = Service::where('user_id', Auth::id())
+                           ->orderByDesc('id')
+                           ->get();
+
+        return response()->json(['success' => true, 'data' => $services]);
     }
 
+    // API: Show a specific service
+    public function apiShow($id)
+    {
+        $service = Service::where('user_id', Auth::id())
+                          ->where('id', $id)
+                          ->first();
 
-    public function storeService(Request $request, $id = null)
+        if (!$service) {
+            return response()->json(['success' => false, 'message' => 'Service not found.'], 404);
+        }
+
+        return response()->json(['success' => true, 'data' => $service]);
+    }
+
+    // API: Store or update service
+    public function apiStore(Request $request, $id = null)
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -36,8 +45,11 @@ class ServiceController extends Controller
             'service_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
         ]);
 
-        $service = $id ? Service::findOrFail($id) : new Service();
+        $service = $id ? Service::where('user_id', Auth::id())->find($id) : new Service();
 
+        if ($id && !$service) {
+            return response()->json(['success' => false, 'message' => 'Service not found.'], 404);
+        }
 
         if ($request->hasFile('service_image')) {
             if ($service->service_image && Storage::exists('public/' . $service->service_image)) {
@@ -58,20 +70,30 @@ class ServiceController extends Controller
 
         $service->save();
 
-        $message = $id ? 'Service updated successfully!' : 'Service created successfully!';
-        return redirect()->route('user.services')->with('success', $message);
+        return response()->json([
+            'success' => true,
+            'message' => $id ? 'Service updated successfully!' : 'Service created successfully!',
+            'data' => $service
+        ]);
     }
 
-
-    public function deleteService($id)
+    // API: Delete a service
+    public function apiDelete($id)
     {
-        $service = Service::findOrFail($id);
+        $service = Service::where('user_id', Auth::id())
+                          ->where('id', $id)
+                          ->first();
+
+        if (!$service) {
+            return response()->json(['success' => false, 'message' => 'Service not found.'], 404);
+        }
+
         if ($service->service_image && Storage::exists('public/' . $service->service_image)) {
             Storage::delete('public/' . $service->service_image);
         }
+
         $service->delete();
-        return redirect()->route('user.services')->with('success', 'Service deleted successfully!');
+
+        return response()->json(['success' => true, 'message' => 'Service deleted successfully!']);
     }
-
-
 }

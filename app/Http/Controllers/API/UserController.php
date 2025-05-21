@@ -67,7 +67,7 @@ class UserController extends Controller
 
     public function updateUserDetails(Request $request)
     {
-    
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -158,6 +158,26 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
+    public function deleteUser(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not authenticated.',
+            ], 401);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'User deleted successfully.',
+        ]);
+    }
+
 
 
 

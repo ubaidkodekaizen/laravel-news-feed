@@ -1,41 +1,35 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserEducation;
+use App\Http\Controllers\Controller;
 
 class EducationController extends Controller
 {
-    /**
-     * Display a list of user education records.
-     */
-    public function index()
+    // API: List all qualifications
+    public function apiIndex()
     {
-        $educations = UserEducation::where('user_id', Auth::id())->get();
-        return view('user.user-qualifications', compact('educations'));
+        $educations = UserEducation::where('user_id', Auth::id())->orderByDesc('id')->get();
+        return response()->json(['success' => true, 'data' => $educations]);
     }
 
-    /**
-     * Show the form for adding or editing an education record.
-     */
-    public function addEditEducation($id = null)
+    // API: Show single qualification by ID
+    public function apiShow($id)
     {
-        $education = $id ? UserEducation::findOrFail($id) : null;
+        $education = UserEducation::where('user_id', Auth::id())->find($id);
 
-        // Ensure the user owns the education record
-        if ($education && $education->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+        if (!$education) {
+            return response()->json(['success' => false, 'message' => 'Qualification not found.'], 404);
         }
 
-        return view('user.add-qualification', compact('education'));
+        return response()->json(['success' => true, 'data' => $education]);
     }
 
-    /**
-     * Store or update an education record.
-     */
-    public function storeEducation(Request $request, $id = null)
+    // API: Store or update a qualification
+    public function apiStore(Request $request, $id = null)
     {
         $request->validate([
             'college_name' => 'required|string|max:255',
@@ -44,11 +38,10 @@ class EducationController extends Controller
         ]);
 
         if ($id) {
-            $education = UserEducation::findOrFail($id);
-            
-         
-            if ($education->user_id !== Auth::id()) {
-                abort(403, 'Unauthorized action.');
+            $education = UserEducation::where('user_id', Auth::id())->find($id);
+
+            if (!$education) {
+                return response()->json(['success' => false, 'message' => 'Qualification not found.'], 404);
             }
 
             $education->update([
@@ -57,32 +50,30 @@ class EducationController extends Controller
                 'year' => $request->year_graduated,
             ]);
 
-            return redirect()->route('user.qualifications')->with('success', 'Education updated successfully.');
+            return response()->json(['success' => true, 'message' => 'Qualification updated successfully.', 'data' => $education]);
         } else {
-            UserEducation::create([
+            $education = UserEducation::create([
                 'user_id' => Auth::id(),
                 'college_university' => $request->college_name,
                 'degree_diploma' => $request->degree,
                 'year' => $request->year_graduated,
             ]);
 
-            return redirect()->route('user.qualifications')->with('success', 'Education added successfully.');
+            return response()->json(['success' => true, 'message' => 'Qualification added successfully.', 'data' => $education]);
         }
     }
 
-    /**
-     * Delete an education record.
-     */
-    public function deleteEducation($id)
+    // API: Delete a qualification
+    public function apiDelete($id)
     {
-        $education = UserEducation::findOrFail($id);
-        
-        // Ensure the user owns the education record
-        if ($education->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+        $education = UserEducation::where('user_id', Auth::id())->find($id);
+
+        if (!$education) {
+            return response()->json(['success' => false, 'message' => 'Qualification not found.'], 404);
         }
 
         $education->delete();
-        return redirect()->route('user.qualifications')->with('success', 'Education deleted successfully.');
+
+        return response()->json(['success' => true, 'message' => 'Qualification deleted successfully.']);
     }
 }
