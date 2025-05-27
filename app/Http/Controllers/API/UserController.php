@@ -12,6 +12,8 @@ use Password;
 use App\Models\UserEducation;
 use Str;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -175,6 +177,37 @@ class UserController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'User deleted successfully.',
+        ]);
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $token = Str::random(64);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            ['token' => $token, 'created_at' => now()]
+        );
+
+        Mail::send('emails.password-reset', ['token' => $token], function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Reset Password Notification');
+        });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password reset link sent to your email.',
         ]);
     }
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Company;
 use App\Models\Product;
-use App\Models\ProductService;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,66 +13,6 @@ use App\Helpers\DropDownHelper;
 class SearchController extends Controller
 {
 
-
-
-
-    // For Industries in user and company form
-    public function getSubcategories($industryName)
-    {
-
-        $industry = \DB::table('industries')
-            ->where('name', $industryName)
-            ->select('id')
-            ->first();
-        if (!$industry) {
-            return response()->json([]);
-        }
-        $subcategories = \DB::table('sub_categories')
-            ->where('industry_id', $industry->id)
-            ->where('name', '!=', 'Other')
-            ->select('id', 'name')
-            ->orderBy('name', 'asc')
-            ->get();
-
-        $otherSubcategory = \DB::table('sub_categories')
-            ->where('industry_id', $industry->id)
-            ->where('name', 'Other')
-            ->select('id', 'name')
-            ->first();
-
-        if ($otherSubcategory) {
-            $subcategories->push($otherSubcategory);
-        }
-        return response()->json($subcategories);
-    }
-
-
-    // For suggestions in search bar
-    public function getSuggestions(Request $request)
-    {
-        $searchTerm = $request->input('term');
-
-        $products = Product::where('title', 'like', '%' . $searchTerm . '%')
-            ->get(['title']);
-
-        $services = Service::where('title', 'like', '%' . $searchTerm . '%')
-            ->get(['title']);
-
-        $companies = Company::where('company_industry', 'like', '%' . $searchTerm . '%')
-            ->get(['company_industry']);
-
-        $users = User::where('first_name', 'like', '%' . $searchTerm . '%')
-            ->get(['first_name', 'last_name']);
-
-        $suggestions = [
-            'products' => $products,
-            'services' => $services,
-            'company_industries' => $companies->pluck('company_industry'),
-            'first_name' => $users,
-        ];
-
-        return response()->json($suggestions);
-    }
 
 
     // For main search
@@ -236,6 +175,45 @@ class SearchController extends Controller
             'status' => true,
             'message' => 'Dropdown filters fetched successfully.',
             'data' => $filters,
+        ]);
+    }
+
+    public function getSuggestions(Request $request)
+    {
+        $searchTerm = $request->input('term');
+
+        if (!$searchTerm) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Search term is required.',
+            ], 400);
+        }
+
+        $products = Product::where('title', 'like', '%' . $searchTerm . '%')
+            ->pluck('title');
+
+        $services = Service::where('title', 'like', '%' . $searchTerm . '%')
+            ->pluck('title');
+
+        $companies = Company::where('company_industry', 'like', '%' . $searchTerm . '%')
+            ->pluck('company_industry');
+
+        $users = User::where('first_name', 'like', '%' . $searchTerm . '%')
+            ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
+            ->get(['first_name', 'last_name'])
+            ->map(function ($user) {
+                return $user->first_name . ' ' . $user->last_name;
+            });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Suggestions fetched successfully.',
+            'data' => [
+                'products' => $products,
+                'services' => $services,
+                'company_industries' => $companies,
+                'users' => $users,
+            ]
         ]);
     }
 

@@ -65,8 +65,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
   Route::get('/search-filters', [SearchController::class, 'getDropdownFilters']);
   Route::get('/search', [SearchController::class, 'searchUserCompany']);
+  Route::get('/get-suggestions', [SearchController::class, 'getSuggestions']);
 
 
 });
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/forget-password', [UserController::class, 'sendResetLink']);
+
 
