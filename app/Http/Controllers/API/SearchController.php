@@ -169,7 +169,7 @@ class SearchController extends Controller
 
     public function getDropdownFilters()
     {
-        $filters = DropDownHelper::searchFilter();
+        $filters = DropDownHelper::searchFilterMobile();
 
         return response()->json([
             'status' => true,
