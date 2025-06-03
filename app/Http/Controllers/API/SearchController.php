@@ -209,10 +209,10 @@ class SearchController extends Controller
             'status' => true,
             'message' => 'Suggestions fetched successfully.',
             'data' => [
-                'products' => $products,
-                'services' => $services,
-                'company_industries' => $companies,
-                'users' => $users,
+                'product' => $products,
+                'service' => $services,
+                'company_industry' => $companies,
+                'name' => $users,
             ]
         ]);
     }

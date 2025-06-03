@@ -28,6 +28,124 @@ class DropDownHelper
     }
 
     // SideBar Search Filters
+
+    public static function searchFilterMobile()
+    {
+
+
+        $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
+        $company_business_types = Company::pluck('company_business_type')->unique()->sort();
+      	$company_no_of_employees = collect([
+            '1-10',
+            '11-50',
+            '51-200',
+            '201-500',
+            '501-1000',
+            '1001-5000',
+            '5001-10,000',
+            '10,001+'
+        ]);
+      
+      	$company_revenues = collect([
+            '< 1M',
+            '1-5M',
+            '5-25M',
+            '25-100M',
+            '100M +'
+        ]);
+
+		$company_experiences = collect([
+            'under 1',
+            '1-5 Years',
+            '5-10 Years',
+            '10-20 Years',
+            '20+ Years'
+        ]);
+
+        // From Users Table
+
+        $company_states = User::pluck('state')->unique()->sort();
+        $company_countries = User::pluck('country')->unique()->sort();
+
+        $user_city = User::pluck('city')->unique()->sort();
+        $user_county = User::pluck('county')->unique()->sort();
+        $user_gender = User::pluck('gender')->unique()->sort();
+        $user_age_group = User::pluck('age_group')->unique()->sort();
+        $user_marital_status = User::pluck('marital_status')->unique()->sort();
+        $user_ethnicity = User::pluck('ethnicity')->unique()->sort();
+
+        $user_nationality = User::pluck('nationality')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_languages = User::pluck('languages')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $user_user_position = User::pluck('user_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+
+        $company_positions = Company::pluck('company_position')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $company_industries = Company::pluck('company_industry')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+
+
+        $product = Product::pluck('title')->unique()->sort();
+        $service = Service::pluck('title')->unique()->sort();
+
+        return [
+            'company_position' => $company_positions,
+            'company_industry' => $company_industries,
+            'company_sub_category' => $company_sub_categories,
+            'company_business_type' => $company_business_types,
+            'company_no_of_employee' => $company_no_of_employees,
+            'company_revenue' => $company_revenues,
+
+            'company_state' => $company_states,
+            'company_country' => $company_countries,
+
+            'company_experiences' => $company_experiences,
+            'user_city' => $user_city,
+            'user_county' => $user_county,
+            'user_position' => $user_user_position,
+            'user_gender' => $user_gender,
+            'user_age_group' => $user_age_group,
+            'user_marital_status' => $user_marital_status,
+            'user_ethnicity' => $user_ethnicity,
+            'user_nationality' => $user_nationality,
+            'user_language' => $user_languages,
+
+            'product' => $product,
+            'service' => $service,
+        ];
+    }
     public static function searchFilter()
     {
 
