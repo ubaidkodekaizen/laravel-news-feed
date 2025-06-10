@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Privacy Policy</title>
-    <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
+@extends('layouts.main')
+@section('content')
     <style>
         .terms_of_service {
             padding: 30px 0px;
@@ -45,97 +37,128 @@
             color: #273572;
         }
     </style>
-</head>
 
-<body>
     <section class="terms_of_service">
         <div class="container">
             <h1>Privacy Policy</h1>
+            <p class="font-weight-bold"> <strong>Effective Date:</strong> Jun 10, 2025<br>
+                At Muslim Lynk, your privacy is our priority. This Privacy Policy outlines how we collect, use, and
+                protect your information when you use our mobile application and services.</p>
             <ol>
-                <li>
-                    <h3>Introduction</h3>
-                    This Privacy Policy explains how Muslim Lynk (“we,” “us,” “our”), operated as a DBA under AMCOB,
-                    LLC, collects, uses, and protects your personal information when you use our Service. AMCOB, LLC is
-                    a limited liability company incorporated in the State of California, United States, with its
-                    principal office located at: <br>
-                    300 Spectrum Center Drive, Suite 400, Irvine, CA 92618.
-
-                </li>
+               
                 <li>
                     <h3>Information We Collect</h3>
-                    Account Information: Name, email address, billing information, and other registration details. <br>
-                    Usage Data: IP address, browser type, device information, and activity logs. <br>
-                    Optional Information: Information you choose to share on your profile (e.g., professional details,
-                    interests).
+                    <ul>
+                        <li>Personal Information: Name, email address, phone number, gender, location, and other
+                            information you voluntarily provide.</li>
+                        <li>Usage Data: Pages visited, time spent on the app, interaction patterns.</li>
+                        <li>Device Information: Device ID, operating system, app version, IP address.</li>
+                    </ul>
 
                 </li>
                 <li>
                     <h3>How We Use Your Information</h3>
-                    We use your information to: <br>
-                    Provide and improve the Service. <br>
-                    Process payments and manage subscriptions. <br>
-                    Communicate updates, offers, and account-related information. <br>
-                    Comply with legal obligations.
+                    <p>We use your information to:</p>
+                    <ul>
+                        <li>Provide and personalize services</li>
+                        <li>Connect you with other users in meaningful and safe ways</li>
+                        <li>Send updates, notifications, or newsletters</li>
+                        <li>Improve app performance and user experience</li>
+                        <li>Enforce our terms and prevent abuse</li>
+                    </ul>
                 </li>
                 <li>
-                    <h3>Data Sharing</h3>
-                    We do not sell your data. We may share data: <br>
-                    With service providers (e.g., payment processors, hosting services). <br>
-                    To comply with legal obligations or protect our rights. <br>
-                    With your consent, for collaborations or partnerships.
+                    <h3>Sharing and Disclosure</h3>
+                    <p>We do not sell your personal information. We may share information:</p>
+                    <ul>
+                        <li>With third-party service providers (e.g., analytics, hosting)</li>
+                <li>When required by law or to protect our rights</li>
+                <li>With your consent</li>
+                    </ul>
                 </li>
                 <li>
-                    <h3>International Data Transfers</h3>
-                    Your data may be transferred to and stored in the United States. <br>
-                    By using the Service, you consent to this transfer.
-                </li>
-                <li>
-                    <h3>Data Retention</h3>
-                    We retain your information for as long as necessary to provide the Service or comply with legal
-                    obligations.
-
+                    <h3>Data Security</h3>
+                    <p>We use industry-standard security protocols to protect your information, including encryption,
+                        secure servers, and routine audits. However, no system is completely immune to risks.</p>
                 </li>
                 <li>
                     <h3>Your Rights</h3>
-                    Depending on your jurisdiction, you may have rights to: <br>
-                    Access, correct, or delete your personal data. <br>
-                    Opt-out of marketing communications. <br>
-                    Withdraw consent for data processing.
-                </li>
-                <li>
-                    <h3>Security</h3>
-                    We implement reasonable measures to protect your data. However, no method of transmission or storage
-                    is completely secure.
-                </li>
-                <li>
-                    <h3>Cookies and Tracking</h3>
-                    We use cookies to improve your experience and analyze usage. <br>
-                    You can manage cookies through your browser settings.
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access, edit, or delete your personal data</li>
+                        <li>Opt out of marketing communications</li>
+                        <li>Request information on how your data is used</li>
+                    </ul>
+                    <p>To make a request, contact us at: <a href="mailto:kashif.zubair@amcob.org">kashif.zubair@amcob.org</a>
+                    </p>
                 </li>
                 <li>
                     <h3>Children’s Privacy</h3>
-                    The Service is not intended for users under 18 years of age.
-
+                    <p>Muslim Lynk is not intended for children under the age of 13. We do not knowingly collect data from
+                        children.</p>
                 </li>
                 <li>
-                    <h3>Changes to this Policy</h3>
-                    We may update this Privacy Policy from time to time. Significant changes will be communicated via
-                    email or platform notifications.
+                    <h3>Changes to This Policy</h3>
+                    <p>We may update this policy. You will be notified of any significant changes via the app or email.</p>
+                    <h3>Safety Standards</h3>
+                    <p> Muslim Lynk is committed to maintaining a safe, respectful, and inclusive platform for all
+                        users.</p>
+                    <ol>
+                        <li>
+                            <h3>Community Guidelines</h3>
+                            <ul>
+                                <li>Respect all users regardless of background, gender, or belief.</li>
+                                <li>No hate speech, harassment, or discrimination.</li>
+                                <li>Do not share false, misleading, or harmful content.</li>
+                                <li>Business and networking engagements must be transparent and respectful.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h3> Account Safety</h3>
+                            <ul>
+                                <li>Users must provide accurate information.</li>
 
+
+                                <li>Impersonation or fake accounts will be removed.</li>
+
+
+                                <li>Report suspicious or harmful activity directly within the app or by emailing <a
+                                        href="mailto:kashif.zubair@amcob.org">kashif.zubair@amcob.org</a> </li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <h3>Moderation and Reporting</h3>
+                            <ul>
+                                <li>All reports are reviewed by our moderation team.</li>
+
+
+                                <li>We may suspend or ban users violating our guidelines without notice.</li>
+
+
+                                <li>Repeat offenders will be permanently removed from the platform.</li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <h3>Data Safety</h3>
+                            <ul>
+                                <li>Muslim Lynk collects only essential data and never shares it without consent.</li>
+
+
+                                <li>All user data is encrypted and stored on secure servers.</li>
+
+
+                                <li>Users can delete their data anytime from within the app or by contacting our team.
+                                </li>
+
+                            </ul>
+                        </li>
+
+                    </ol>
                 </li>
-              
-                <li>
-                    <h3>Contact Information</h3>
-                    For privacy-related inquiries, contact us at <a href="mailto:info@amcob.org">info@amcob.org</a> or
-                    write to: <br>
-                    AMCOB, LLC <br>
-                    300 Spectrum Center Drive, Suite 400 <br>
-                    Irvine, CA 92618 <br>
-                    United States
-                </li>
+
             </ol>
         </div>
     </section>
-</body>
-
-</html>
+@endsection

@@ -213,6 +213,9 @@ Route::get('/privacy-policy', function () {
     return view('privacy-policy');
 })->name('privacy.policy');
 
+Route::get('/child-safety-standard', function () {
+    return view('child-safety-standard');
+})->name('child-safety-standard');
 
 Route::get('/confirmation-email', function () {
     return view('emails.confirmation-email');
@@ -227,6 +230,7 @@ Route::get('/sitemap.xml', function () {
         '/' => 1.0,
         '/terms' => 0.5,
         '/privacy-policy' => 0.5,
+        '/child-safety-standard' => 0.5,
         '/feed' => 0.7,
         '/search' => 0.7,
         '/industry-experts' => 0.6,
