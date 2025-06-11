@@ -1,5 +1,13 @@
-@extends('layouts.main')
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Privacy Policy</title>
+    <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <style>
         .terms_of_service {
             padding: 30px 0px;
@@ -16,6 +24,14 @@
         .terms_of_service h3 {
             font-size: 1.3rem;
             color: #273572;
+        }
+
+        .terms_of_service h2 {
+            font-size: 1.3rem;
+            color: #273572;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #b8c034;
+            width: fit-content;
         }
 
         .terms_of_service li {
@@ -37,6 +53,9 @@
             color: #273572;
         }
     </style>
+</head>
+
+<body>
 
     <section class="terms_of_service">
         <div class="container">
@@ -45,7 +64,7 @@
                 At Muslim Lynk, your privacy is our priority. This Privacy Policy outlines how we collect, use, and
                 protect your information when you use our mobile application and services.</p>
             <ol>
-               
+
                 <li>
                     <h3>Information We Collect</h3>
                     <ul>
@@ -72,8 +91,8 @@
                     <p>We do not sell your personal information. We may share information:</p>
                     <ul>
                         <li>With third-party service providers (e.g., analytics, hosting)</li>
-                <li>When required by law or to protect our rights</li>
-                <li>With your consent</li>
+                        <li>When required by law or to protect our rights</li>
+                        <li>With your consent</li>
                     </ul>
                 </li>
                 <li>
@@ -89,17 +108,20 @@
                         <li>Opt out of marketing communications</li>
                         <li>Request information on how your data is used</li>
                     </ul>
-                    <p>To make a request, contact us at: <a href="mailto:kashif.zubair@amcob.org">kashif.zubair@amcob.org</a>
+                    <p>To make a request, contact us at: <a
+                            href="mailto:kashif.zubair@amcob.org">kashif.zubair@amcob.org</a>
                     </p>
                 </li>
                 <li>
                     <h3>Children’s Privacy</h3>
-                    <p>Muslim Lynk is not intended for children under the age of 13. We do not knowingly collect data from
+                    <p>Muslim Lynk is not intended for children under the age of 13. We do not knowingly collect data
+                        from
                         children.</p>
                 </li>
                 <li>
                     <h3>Changes to This Policy</h3>
-                    <p>We may update this policy. You will be notified of any significant changes via the app or email.</p>
+                    <p>We may update this policy. You will be notified of any significant changes via the app or email.
+                    </p>
                     <h3>Safety Standards</h3>
                     <p> Muslim Lynk is committed to maintaining a safe, respectful, and inclusive platform for all
                         users.</p>
@@ -161,4 +183,6 @@
             </ol>
         </div>
     </section>
-@endsection
+</body>
+
+</html>

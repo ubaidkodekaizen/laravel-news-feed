@@ -29,16 +29,19 @@
         .terms_of_service li {
             margin-bottom: 20px;
         }
+
         .terms_of_service li::marker {
             color: #b8c034;
             font-size: 1.3rem;
             font-weight: 500
         }
-        .terms_of_service li a{
+
+        .terms_of_service li a {
             color: #b8c034;
             font-weight: 500;
         }
-        .terms_of_service li a:hover{
+
+        .terms_of_service li a:hover {
             color: #273572;
         }
     </style>
