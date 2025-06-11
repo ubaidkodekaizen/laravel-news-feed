@@ -11,7 +11,7 @@ use DB;
 
 class DropDownHelper
 {
-        
+
     //Search Bar country Dropdown
     public static function countryDropdown()
     {
@@ -35,7 +35,7 @@ class DropDownHelper
 
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
         $company_business_types = Company::pluck('company_business_type')->unique()->sort();
-      	$company_no_of_employees = collect([
+        $company_no_of_employees = collect([
             '1-10',
             '11-50',
             '51-200',
@@ -45,8 +45,8 @@ class DropDownHelper
             '5001-10,000',
             '10,001+'
         ]);
-      
-      	$company_revenues = collect([
+
+        $company_revenues = collect([
             '< 1M',
             '1-5M',
             '5-25M',
@@ -54,7 +54,7 @@ class DropDownHelper
             '100M +'
         ]);
 
-		$company_experiences = collect([
+        $company_experiences = collect([
             'under 1',
             '1-5 Years',
             '5-10 Years',
@@ -152,7 +152,7 @@ class DropDownHelper
 
         $company_sub_categories = Company::pluck('company_sub_category')->unique()->sort();
         $company_business_types = Company::pluck('company_business_type')->unique()->sort();
-      	$company_no_of_employees = collect([
+        $company_no_of_employees = collect([
             '1-10',
             '11-50',
             '51-200',
@@ -162,8 +162,8 @@ class DropDownHelper
             '5001-10,000',
             '10,001+'
         ]);
-      
-      	$company_revenues = collect([
+
+        $company_revenues = collect([
             '< 1M',
             '1-5M',
             '5-25M',
@@ -171,7 +171,7 @@ class DropDownHelper
             '100M +'
         ]);
 
-		$company_experiences = collect([
+        $company_experiences = collect([
             'under 1',
             '1-5 Years',
             '5-10 Years',
@@ -631,12 +631,11 @@ class DropDownHelper
     // Sign Up Page Dropdown
     public static function getPlanDropdown()
     {
-
         $urlHasAmcob = request()->has('amcob');
 
-        $plans = Plan::all();
+        // Get all plans ordered by amount ascending
+        $plans = Plan::orderBy('plan_amount', 'asc')->get();
         $options = '<option value="" disabled selected>Choose a Plan</option>';
-
 
         if ($urlHasAmcob) {
             $testPlan = Plan::find(3);
@@ -649,7 +648,6 @@ class DropDownHelper
                 );
             }
         }
-
 
         foreach ($plans as $plan) {
             if ($plan->id == 3) {
@@ -666,6 +664,7 @@ class DropDownHelper
 
         return $options;
     }
+
 
 
 
