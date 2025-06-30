@@ -1,0 +1,17 @@
+.newFeedSec {
+    margin: 40px 0px;
+}
+button#openPostModal {
+    margin: .4rem 0;
+    font-size: 1.3rem;
+    flex-grow: 1;
+    max-width: none;
+    line-height: 1.5;
+    border: 1px solid rgb(210 210 210);
+    border-radius: 35px;
+    padding-left: 1.6rem;
+    transition: .3s all ease;
+}
+button#openPostModal:hover {
+    background: rgb(140 140 140 /.1);
+}
