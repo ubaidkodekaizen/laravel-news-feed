@@ -20,10 +20,10 @@
         </div>
     </section>
 
-
+    
 
     <!-- POST MODAL -->
-    <div class="modal modal-lg fade" id="postModal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="postModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-lg">
             <div class="modal-content">
                 <form id="postForm" enctype="multipart/form-data">
