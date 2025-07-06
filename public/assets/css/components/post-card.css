@@ -1,0 +1,79 @@
+.post-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.post-header .user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.post-header .user-info .user-img{
+    width: 50px;
+    height: 50px;
+}
+.post-text {
+  font-size: 1.1rem;
+  position: relative;
+  line-height: 2rem;
+  max-height: 4rem;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.post-text.expanded {
+  max-height: none;
+}
+.post-text .more { display: none; }
+.post-text.expanded .more { display: inline; }
+.post-text.expanded .dots { display: none; }
+.post-text-toggle {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #0a66c2;
+  cursor: pointer;
+}
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px solid #eee;
+  margin-top: 0.75rem;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+.post-actions i {
+  margin-right: 6px;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+.action-btn:hover {
+  color: #0073b1;
+}
+.cross_btn.post_btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #555555;
+    transition: .3s ease;
+    border-radius: 50%;
+    width: 33px;
+    height: 33px;
+}
+.cross_btn.post_btn:hover {
+    background: #aeb4b729;
+}

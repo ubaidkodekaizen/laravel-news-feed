@@ -1,0 +1,7 @@
+<div class="card mb-3">
+    <div class="card-body d-flex align-items-center">
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+             alt="User" class="rounded-circle me-2" width="40" height="40">
+        <button class="form-control text-start" id="openPostModal">Start a post</button>
+    </div>
+</div>
