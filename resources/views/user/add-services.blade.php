@@ -39,7 +39,7 @@
                                 <span class="input-group-text" id="discounted_price">$</span>
                                 <input type="number" name="discounted_price" class="form-control"
                                     value="{{ old('discounted_price', $service->discounted_price ?? '') }}"
-                                    aria-label="Discounted Price" aria-describedby="discounted_price" required>
+                                    aria-label="Discounted Price" aria-describedby="discounted_price">
                             </div>
                         </div>
 
