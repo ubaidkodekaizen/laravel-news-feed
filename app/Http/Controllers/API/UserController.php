@@ -18,6 +18,118 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
 
+
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+
+        $baseSlug = Str::slug($request->first_name . ' ' . $request->last_name);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (User::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'slug' => $slug,
+            'role_id' => 4,
+            'status' => 'pending',
+        ]);
+
+        $token = $user->createToken('api_token')->plainTextToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'User registered successfully.',
+            'token' => $token,
+            'user' => $user,
+        ]);
+    }
+
+    public function handleIapSubscription(Request $request)
+    {
+        $validated = $request->validate([
+            'startDate' => 'required|date',
+            'type' => 'required|string|in:monthly,yearly',
+            'transactionId' => 'required|string|unique:subscriptions,transaction_id',
+            'recieptData' => 'nullable|string',
+            'platform' => 'required|in:google,apple',
+        ]);
+
+        $user = Auth::user();
+
+        $iapPrice = number_format((float) $request->input('amount', 0), 2);
+
+        $planMapping = [
+            '2.99' => 4,     // Monthly (internal amount = 2.00)
+            '14.99' => 1,    // Monthly (internal amount = 15.00)
+            '149.99' => 2,   // Yearly (internal amount = 150.00)
+        ];
+
+        if (!isset($planMapping[$iapPrice])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No matching subscription plan for this IAP amount.',
+            ], 404);
+        }
+
+        $planId = $planMapping[$iapPrice];
+        $plan = \App\Models\Plan::find($planId);
+
+        if (!$plan) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Plan not found.',
+            ], 404);
+        }
+
+        $subscription = new \App\Models\Subscription();
+        $subscription->user_id = $user->id;
+        $subscription->plan_id = $plan->id;
+        $subscription->subscription_type = $request->type;
+        $subscription->subscription_amount = $plan->plan_amount;
+        $subscription->start_date = $request->startDate;
+        $subscription->renewal_date = now()->addDays($request->type === 'monthly' ? 30 : 365);
+        $subscription->status = 'active';
+        $subscription->transaction_id = $request->transactionId;
+        $subscription->receipt_data = $request->recieptData;
+        $subscription->platform = $request->platform;
+        $subscription->save();
+
+        // ✅ Update user's "paid" status
+        $user->paid = 'Yes';
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Subscription saved successfully.',
+            'subscription' => $subscription
+        ]);
+    }
+
+
+
     public function login(Request $request)
     {
 
