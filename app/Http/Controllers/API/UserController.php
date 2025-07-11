@@ -119,6 +119,7 @@ class UserController extends Controller
 
         // ✅ Update user's "paid" status
         $user->paid = 'Yes';
+        $user->status = 'complete';
         $user->save();
 
         return response()->json([
@@ -160,12 +161,12 @@ class UserController extends Controller
             ], 403);
         }
 
-        if ($user->status !== 'complete' || !$user->company || $user->company->status !== 'complete') {
-            return response()->json([
-                'status' => false,
-                'message' => 'User or company profile is incomplete.',
-            ], 403);
-        }
+        // if ($user->status !== 'complete' || !$user->company || $user->company->status !== 'complete') {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'User or company profile is incomplete.',
+        //     ], 403);
+        // }
 
         $token = $user->createToken('api_token')->plainTextToken;
 
