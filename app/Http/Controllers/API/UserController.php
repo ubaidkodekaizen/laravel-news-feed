@@ -257,7 +257,7 @@ class UserController extends Controller
     public function showUserBySlug($slug)
     {
         $user = User::where('slug', $slug)
-            ->with(['company', 'products', 'services', 'userEducations'])
+            ->with(['company', 'products', 'services', 'userEducations', 'subscriptions'])
             ->first();
 
         if (!$user) {
