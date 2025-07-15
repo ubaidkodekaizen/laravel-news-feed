@@ -447,7 +447,9 @@
             </div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
-
+            <div class="view_all_btn mt-4 d-flex justify-content-center align-items-center">
+                <a href="{{ route('products') }}" class="btn btn-primary rounded-pill">View All Products</a>
+            </div>
         </div>
 
     </section>
@@ -617,6 +619,10 @@
             </div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
+
+            <div class="view_all_btn mt-4 d-flex justify-content-center align-items-center">
+                <a href="{{ route('services') }}" class="btn btn-primary rounded-pill">View All Services</a>
+            </div>
         </div>
     </section>
     {{-- <section class="articles">

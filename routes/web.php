@@ -96,6 +96,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('/search', [SearchController::class, 'SearchUserCompany'])->name('search');
     Route::get('/feed', [PageController::class, 'feed'])->name('feed');
+    Route::get('/services', [PageController::class, 'services'])->name('services');
+    Route::get('/products', [PageController::class, 'products'])->name('products');
     Route::get('/industry-experts/{industry}', [PageController::class, 'industryExperts'])->name('industry');
  
     

@@ -68,6 +68,26 @@ class PageController extends Controller
         return view('feed', compact('blogs', 'events', 'products', 'services', 'industries'));
     }
 
+    public function products()
+    {
+        $products = Product::whereHas('user', function ($query) {
+            $query->where('status', 'complete');
+        })
+            ->orderByDesc('id')
+            ->get();
+        return view('products', compact('products'));
+    }
+
+    public function services()
+    {
+        $services = Service::whereHas('user', function ($query) {
+            $query->where('status', 'complete');
+        })
+            ->orderByDesc('id')
+            ->get();
+        return view('services', compact('services'));
+    }
+
 
     public function industryExperts($industry)
 {

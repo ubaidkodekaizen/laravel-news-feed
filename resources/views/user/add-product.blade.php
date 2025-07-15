@@ -38,7 +38,7 @@
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
                                 <input type="number" name="discounted_price" class="form-control"
-                                    value="{{ old('discounted_price', $product->discounted_price ?? '') }}" required>
+                                    value="{{ old('discounted_price', $product->discounted_price ?? '') }}">
                             </div>
                         </div>
 
