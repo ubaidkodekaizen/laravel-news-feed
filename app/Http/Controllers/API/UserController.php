@@ -71,7 +71,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'startDate' => 'required|date',
-            'type' => 'required|string|in:monthly,yearly',
+            'type' => 'required|string|in:Basic_Explorer_Monthly,Premium_Connect_Monthly,Premium_Connect_Yearly',
             'transactionId' => 'required|string|unique:subscriptions,transaction_id',
             'recieptData' => 'nullable|string',
             'platform' => 'required|in:google,apple',
@@ -79,23 +79,22 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        $iapPrice = number_format((float) $request->input('amount', 0), 2);
-
+        // ✅ Map enum types to plan_id and plan type
         $planMapping = [
-            '2.99' => 4,     // Monthly (internal amount = 2.00)
-            '14.99' => 1,    // Monthly (internal amount = 15.00)
-            '149.99' => 2,   // Yearly (internal amount = 150.00)
+            'Basic_Explorer_Monthly' => ['id' => 4, 'type' => 'monthly'],
+            'Premium_Connect_Monthly' => ['id' => 1, 'type' => 'monthly'],
+            'Premium_Connect_Yearly' => ['id' => 2, 'type' => 'yearly'],
         ];
 
-        if (!isset($planMapping[$iapPrice])) {
+        if (!isset($planMapping[$request->type])) {
             return response()->json([
                 'status' => false,
-                'message' => 'No matching subscription plan for this IAP amount.',
-            ], 404);
+                'message' => 'Invalid subscription type.',
+            ], 400);
         }
 
-        $planId = $planMapping[$iapPrice];
-        $plan = \App\Models\Plan::find($planId);
+        $planData = $planMapping[$request->type];
+        $plan = \App\Models\Plan::find($planData['id']);
 
         if (!$plan) {
             return response()->json([
@@ -104,20 +103,21 @@ class UserController extends Controller
             ], 404);
         }
 
+        // ✅ Save subscription
         $subscription = new \App\Models\Subscription();
         $subscription->user_id = $user->id;
         $subscription->plan_id = $plan->id;
-        $subscription->subscription_type = $request->type;
+        $subscription->subscription_type = $planData['type']; // Only monthly/yearly
         $subscription->subscription_amount = $plan->plan_amount;
         $subscription->start_date = $request->startDate;
-        $subscription->renewal_date = now()->addDays($request->type === 'monthly' ? 30 : 365);
+        $subscription->renewal_date = now()->addDays($planData['type'] === 'monthly' ? 30 : 365);
         $subscription->status = 'active';
         $subscription->transaction_id = $request->transactionId;
         $subscription->receipt_data = $request->recieptData;
         $subscription->platform = $request->platform;
         $subscription->save();
 
-        // ✅ Update user's "paid" status
+        // ✅ Update user
         $user->paid = 'Yes';
         $user->status = 'complete';
         $user->save();
@@ -128,6 +128,69 @@ class UserController extends Controller
             'subscription' => $subscription
         ]);
     }
+
+
+    // public function handleIapSubscription(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'startDate' => 'required|date',
+    //         'type' => 'required|string|in:monthly,yearly',
+    //         'transactionId' => 'required|string|unique:subscriptions,transaction_id',
+    //         'recieptData' => 'nullable|string',
+    //         'platform' => 'required|in:google,apple',
+    //     ]);
+
+    //     $user = Auth::user();
+
+    //     $iapPrice = number_format((float) $request->input('amount', 0), 2);
+
+    //     $planMapping = [
+    //         '2.99' => 4,     // Monthly (internal amount = 2.00)
+    //         '14.99' => 1,    // Monthly (internal amount = 15.00)
+    //         '149.99' => 2,   // Yearly (internal amount = 150.00)
+    //     ];
+
+    //     if (!isset($planMapping[$iapPrice])) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'No matching subscription plan for this IAP amount.',
+    //         ], 404);
+    //     }
+
+    //     $planId = $planMapping[$iapPrice];
+    //     $plan = \App\Models\Plan::find($planId);
+
+    //     if (!$plan) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Plan not found.',
+    //         ], 404);
+    //     }
+
+    //     $subscription = new \App\Models\Subscription();
+    //     $subscription->user_id = $user->id;
+    //     $subscription->plan_id = $plan->id;
+    //     $subscription->subscription_type = $request->type;
+    //     $subscription->subscription_amount = $plan->plan_amount;
+    //     $subscription->start_date = $request->startDate;
+    //     $subscription->renewal_date = now()->addDays($request->type === 'monthly' ? 30 : 365);
+    //     $subscription->status = 'active';
+    //     $subscription->transaction_id = $request->transactionId;
+    //     $subscription->receipt_data = $request->recieptData;
+    //     $subscription->platform = $request->platform;
+    //     $subscription->save();
+
+    //     // ✅ Update user's "paid" status
+    //     $user->paid = 'Yes';
+    //     $user->status = 'complete';
+    //     $user->save();
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Subscription saved successfully.',
+    //         'subscription' => $subscription
+    //     ]);
+    // }
 
 
 
