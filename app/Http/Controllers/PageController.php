@@ -42,7 +42,7 @@ class PageController extends Controller
             ['icon' => 'fas fa-question-circle', 'name' => 'Other'],
         ];
 
-     
+
         usort($industries, function ($a, $b) {
             if ($a['name'] === 'Other')
                 return 1;
@@ -90,26 +90,26 @@ class PageController extends Controller
 
 
     public function industryExperts($industry)
-{
-    $users = User::where('status', 'complete')
-        ->whereHas('company', function ($query) use ($industry) {
-            if (strtolower($industry) === 'other') {
-                $query->where(function ($q) {
-                    $q->whereNull('company_industry')
-                      ->orWhere('company_industry', '')
-                      ->orWhere('company_industry', 'N/A')
-                      ->orWhere('company_industry', 'Other')
-                      ->orWhere('company_industry', 'other');
-                });
-            } else {
-                $query->where('company_industry', 'LIKE', "%{$industry}%");
-            }
-        })
-        ->with('company')
-        ->get();
+    {
+        $users = User::where('status', 'complete')
+            ->whereHas('company', function ($query) use ($industry) {
+                if (strtolower($industry) === 'other') {
+                    $query->where(function ($q) {
+                        $q->whereNull('company_industry')
+                            ->orWhere('company_industry', '')
+                            ->orWhere('company_industry', 'N/A')
+                            ->orWhere('company_industry', 'Other')
+                            ->orWhere('company_industry', 'other');
+                    });
+                } else {
+                    $query->where('company_industry', 'LIKE', "%{$industry}%");
+                }
+            })
+            ->with('company')
+            ->get();
 
-    return view('industry', compact('users', 'industry'));
-}
+        return view('industry', compact('users', 'industry'));
+    }
 
 
 
