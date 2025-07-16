@@ -64,12 +64,12 @@
             <div class="header_flex">
                 <div class="header_left">
                     <div class="logo">
-                        <a href="{{ route('feed') }}">
+                        <a href="{{ route('home') }}">
                             <img src="{{ asset('assets/images/logo_bg.png') }}" alt="" class="img-fluid">
                         </a>
                     </div>
                     <div class="header-mid mobile_hide">
-                        <form method="GET" action="{{ route('search') }}" id="search_form">
+                        <form method="GET" action="{{ route('search') }}" class="mb-0" id="search_form">
                             <div class="search_area">
                                 <div class="suggestion_search w-50">
                                     <input type="text" id="header_search" autocomplete="off"
@@ -91,7 +91,13 @@
                             </div>
                         </form>
                     </div>
-
+                    <div class="top_header_links">
+                        <ul>
+                            <li>
+                                <a href="{{ route('our.community') }}" class="btn btn-primary">Our Community</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="header_right">

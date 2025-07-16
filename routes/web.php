@@ -95,7 +95,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/user/company/{companySlug}', [CompanyController::class, 'showCompanyBySlug'])->name('company.profile');
 
     Route::get('/search', [SearchController::class, 'SearchUserCompany'])->name('search');
-    Route::get('/feed', [PageController::class, 'feed'])->name('feed');
+    Route::get('/our-community', [PageController::class, 'ourCommunity'])->name('our.community');
     Route::get('/services', [PageController::class, 'services'])->name('services');
     Route::get('/products', [PageController::class, 'products'])->name('products');
     Route::get('/industry-experts/{industry}', [PageController::class, 'industryExperts'])->name('industry');
@@ -188,7 +188,7 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
 
 

@@ -72,7 +72,7 @@ class UserController extends Controller
 
             if ($user->role_id === 4) {
                 if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
-                    return redirect()->route('feed');
+                    return redirect()->route('our.community');
                 } else {
                     return redirect()->route('user.details.show');
                 }

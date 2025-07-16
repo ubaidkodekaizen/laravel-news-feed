@@ -7,11 +7,11 @@ use App\Models\Event;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
-
+use Illuminate\Http\Request;;
 
 class PageController extends Controller
 {
-    public function feed()
+    public function ourCommunity()
     {
         $industries = [
             ['icon' => 'fas fa-laptop-code', 'name' => 'Technology'],
@@ -68,23 +68,48 @@ class PageController extends Controller
         return view('feed', compact('blogs', 'events', 'products', 'services', 'industries'));
     }
 
-    public function products()
+    public function products(Request $request)
     {
-        $products = Product::whereHas('user', function ($query) {
+        $query = Product::whereHas('user', function ($query) {
             $query->where('status', 'complete');
-        })
-            ->orderByDesc('id')
-            ->get();
+        });
+
+        if ($request->ajax()) {
+            if ($request->has('search') && $request->search !== null) {
+                $search = $request->search;
+                $query->where('title', 'like', "%$search%");
+            }
+
+            $products = $query->orderByDesc('id')->get();
+
+            return response()->json([
+                'html' => view('partial.product_cards', compact('products'))->render()
+            ]);
+        }
+
+        $products = $query->orderByDesc('id')->get();
         return view('products', compact('products'));
     }
 
-    public function services()
+
+    public function services(Request $request)
     {
-        $services = Service::whereHas('user', function ($query) {
+        $query = Service::whereHas('user', function ($query) {
             $query->where('status', 'complete');
-        })
-            ->orderByDesc('id')
-            ->get();
+        });
+        if ($request->ajax()) {
+            if ($request->has('search') && $request->search !== null) {
+                $search = $request->search;
+                $query->where('title', 'like', "%$search%");
+            }
+
+            $services = $query->orderByDesc('id')->get();
+
+            return response()->json([
+                'html' => view('partial.service_cards', compact('services'))->render()
+            ]);
+        }
+        $services = $query->orderByDesc('id')->get();
         return view('services', compact('services'));
     }
 
