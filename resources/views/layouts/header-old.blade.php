@@ -49,7 +49,7 @@
             <div class="header_flex">
                 <div class="header_left">
                     <div class="logo">
-                        <a href="{{ route('feed') }}">
+                        <a href="{{ route('our.community') }}">
                             <img src="{{ asset('assets/images/logo_bg.png') }}" alt="" class="img-fluid">
                         </a>
                     </div>

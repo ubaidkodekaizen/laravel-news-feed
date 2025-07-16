@@ -114,19 +114,6 @@
             cursor: pointer;
         }
 
-        .articles .card {
-            min-height: 610px;
-        }
-
-        .articles .card .card-body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .articles .card .direct-message-btn {
-            padding: 10px 10px;
-        }
-
         .service_slider_img_box {
             height: 250px;
             position: relative;
@@ -151,12 +138,6 @@
             height: 5px;
             border-radius: 10px;
         }
-
-        .articles {
-            overflow: hidden;
-            position: relative;
-        }
-
 
         .service_search_area form{
             position: relative;
@@ -207,6 +188,9 @@
             background: var(--primary);
             color: white;
         }
+        .min_h_400{
+            min-height: calc(100vh - 400px);
+        }
     </style>
 
     <section class="feed_lp">
@@ -218,7 +202,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-6">
                         <form action="">
-                            <input type="search" placeholder="Search here ...">
+                            <input type="search" placeholder="Search by name...">
                             <button type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -230,78 +214,10 @@
 
     </section>
 
-    <section class="event_slider">
+    <section class="event_slider min_h_400">
         <div class="container">
             <div class="row g-4">
-                @forelse ($products as $product)
-                    <div class="col-lg-4 mb-3">
-                        <div class="card product-trigger-wrapper" data-id="{{ $product->user->id }}"
-                            data-title="{{ $product->title }}" data-description="{{ $product->short_description }}"
-                            data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
-                            data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
-                            data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
-                            data-user-name="{{ $product->user->first_name }}"
-                            data-user-photo="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
-                            data-date="{{ $product->created_at->format('d M Y') }}">
-                            <div class="event_slider_img_box">
-                                <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
-                                    alt="{{ $product->title }}" class="trigger-element">
-                                <div class="service_price_duration my-0 event_price_label">
-                                    <p class="service_price">
-
-                                        <span>
-                                            @if ($product->discounted_price && $product->discounted_price < $product->original_price)
-                                                <s>${{ $product->original_price }}</s>
-                                                ${{ $product->discounted_price }}
-                                            @else
-                                                ${{ $product->original_price }}
-                                            @endif
-                                            / {{ $product->quantity }}-{{ $product->unit_of_quantity }}
-                                        </span>
-
-
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="card-content">
-
-
-                                <!-- Product Title -->
-                                <div class="details">
-                                    <h3 class="trigger-element">{{ $product->title }}</h3>
-                                    <p>
-                                        {{ Str::limit($product->short_description, 100) }}
-                                    </p>
-                                    <button type="button"
-                                        class="btn btn-sm btn-primary mt-2 read-more-btn trigger-element">
-                                        Read More
-                                    </button>
-
-                                    <div class="service_posted_by mt-2">
-                                        <div class="person_profile">
-                                            <img src="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
-                                                alt="{{ $product->user->first_name }}">
-
-                                        </div>
-                                        <div class="posted_name_date">
-                                            <h6>{{ $product->user->first_name }}
-                                                <p>{{ $product->created_at->format('d M Y') }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Message Now Button -->
-                                <a href="javascript:void(0)" class="view-more direct-message-btn w-100"
-                                    data-receiver-id="{{ $product->user->id }}">Message Now</a>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-12">
-                        <p>No products available.</p>
-                    </div>
-                @endforelse
+                @include('partial.product_cards', ['products' => $products])
             </div>
         </div>
     </section>
@@ -381,6 +297,38 @@
 
 
 @section('scripts')
+    <script>
+        $(document).ready(function () {
+            const searchInput = $('input[type="search"]');
+            const resultsContainer = $('.event_slider .row');
+
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+                fetchProducts(searchInput.val());
+            });
+
+            searchInput.on('input', function () {
+                const value = $(this).val();
+                clearTimeout($.data(this, 'timer'));
+                const wait = setTimeout(() => fetchProducts(value), 500);
+                $(this).data('timer', wait);
+            });
+
+            function fetchProducts(searchTerm) {
+                $.ajax({
+                    url: "{{ route('products') }}", 
+                    method: "GET",
+                    data: { search: searchTerm },
+                    success: function (response) {
+                        resultsContainer.html(response.html);
+                    },
+                    error: function () {
+                        resultsContainer.html('<div class="col-12"><p>Error loading products.</p></div>');
+                    }
+                });
+            }
+        });
+    </script>
 
     <script>
         jQuery(document).ready(function($) {

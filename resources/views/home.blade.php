@@ -426,6 +426,105 @@
             margin: 0;
             padding: 20px 0;
         }
+        /* Download Banner css */
+        .home_banner_sec {
+            min-height: 500px;
+            width: 100%;
+            background-position: center;
+            background-size: cover;
+            overflow-x: hidden;
+            padding: 40px 0;
+        }
+
+        .home_banner_sec .banner_container .banner_right_image img {width: 100%;height: 100%;max-width: 100%;object-fit: contain;}
+
+        .home_banner_sec .banner_container img {
+            max-width: 200px;
+        }
+
+        .banner_right_image {
+            height: 500px;
+            width: 100%;
+        }
+
+        .home_banner_sec .content h1 {color: white;font-size: 4rem;font-weight: 800;text-transform: uppercase;}
+
+        .home_banner_sec .content p {
+            color: white;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .home_banner_sec .btn_flex {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .theme_color {
+            color: #b4be32;
+        }
+        .banner_container {
+            width: 100%
+        }
+
+        @media (min-width: 100%) {
+            .banner_container {
+                max-width:100%
+            }
+        }
+
+        @media (min-width: 767px) {
+            .banner_container {
+                max-width:767px
+            }
+        }
+
+        @media (min-width: 992px) {
+            .banner_container {
+                max-width:992px
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .banner_container {
+                max-width:1200px
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .banner_container {
+                max-width:1440px
+            }
+            .home_banner_sec .content h1{
+                font-size: 5rem;
+            }
+            .home_banner_sec .content p{
+                font-size: 1.75rem;
+            }
+        }
+
+        .banner_container {
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: .5rem;
+            padding-right: .5rem
+        }
+
+        @media (min-width: 575.98px) {
+            .banner_container {
+                padding-left:.5rem;
+                padding-right: .5rem
+            }
+        }
+
+        @media (min-width: 767.98px) {
+            .banner_container {
+                padding-left: 1.25rem;
+                padding-right: 1.25rem
+            }
+        }
+        /* Download Banner css  */
 
         @media(max-width: 992px) {
             .homeFirstSecRow {
@@ -462,6 +561,27 @@
         }
 
         @media(max-width: 768px) {
+            .banner_right_image{
+                display: none
+            }
+            .home_banner_sec .content h1 {
+                font-size: 2.25rem;
+            }
+
+            .home_banner_sec .content p {font-size: 1.25rem;}
+
+            .home_banner_sec {
+                min-height: fit-content;
+                text-align: center;
+            }
+
+            .home_banner_sec .banner_container .content {
+                padding: 20px 10px;
+            }
+
+            .home_banner_sec .btn_flex {
+                padding-bottom: 30px;
+            }
             #homeFirstSec .title {
                 font-size: 24px;
                 line-height: 1.3em;
@@ -599,7 +719,7 @@
 
     <nav class="mainNavbar">
         <div class="mainNavbarInner">
-            <a class="mainNavbarBrand" href="{{ url('/') }}">
+            <a class="mainNavbarBrand" href="{{ route('home') }}">
                 <img src="{{ asset('assets/images/logo_bg.png') }}" width="70" class="img-fluid" alt="">
             </a>
 
@@ -694,6 +814,7 @@
                 </div>
             </div>
         </div>
+        
         <div id="homeSec3">
             <h2 class="homeSec3Head">
                 Join the Movement
@@ -764,7 +885,7 @@
                             setting involves establishing connections that can lead to mutual benefits. These benefits
                             can range from sharing knowledge and resources to collaborating on projects. For Muslim
                             entrepreneurs and professionals, networking platforms like <a
-                                href="{{ url('/') }}"><strong>Muslim Lynk</strong></a> serve as a bridge
+                                href="{{ route('home') }}"><strong>Muslim Lynk</strong></a> serve as a bridge
                             to
                             <strong>networking groups</strong> that align with their values and ambitions.
                         </p>
@@ -910,7 +1031,31 @@
 
         </div>
     </div>
-
+    <div class="home_banner_sec" style="background-image: url('{{ asset('assets/images/home_banner_bg.png') }}');">
+        <div class="banner_container">
+            <div class="row align-items-center">        
+                <div class="col-lg-7">
+                    <div class="content">
+                        <h1>Download the Muslim Lynk App</h1>
+                        <p><span class="theme_color">Now available</span> on the App Store and Play Store</p>
+                    </div>
+                    <div class="btn_flex">
+                        <a href="javascript:void(0);">
+                            <img src="{{ asset('assets/images/home_banner_playstore.png') }}" alt="Playstore" class="img-fluid">
+                        </a>
+                        <a href="javascript:void(0);">
+                            <img src="{{ asset('assets/images/home_banner_appstore.png') }}" alt="Playstore" class="img-fluid">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="banner_right_image">
+                        <img src="{{ asset('assets/images/home_banner_right.png') }}" alt="Apps">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="footer">
         <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
