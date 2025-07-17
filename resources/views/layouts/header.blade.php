@@ -95,7 +95,7 @@
                         <ul>
                             <li>
                                 <a href="{{ route('our.community') }}" class="btn btn-primary">Our Community</a>
-                            </li>
+                            </li>   
                         </ul>
                     </div>
                 </div>

@@ -298,24 +298,24 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function () {
-            const searchInput = $('input[type="search"]');
-            const resultsContainer = $('.event_slider .row');
+        jQuery(document).ready(function () {
+            const searchInput = jQuery('input[type="search"]');
+            const resultsContainer = jQuery('.event_slider .row');
 
-            $('form').on('submit', function (e) {
+            jQuery('form').on('submit', function (e) {
                 e.preventDefault();
                 fetchProducts(searchInput.val());
             });
 
             searchInput.on('input', function () {
-                const value = $(this).val();
-                clearTimeout($.data(this, 'timer'));
+                const value = jQuery(this).val();
+                clearTimeout(jQuery.data(this, 'timer'));
                 const wait = setTimeout(() => fetchProducts(value), 500);
-                $(this).data('timer', wait);
+                jQuery(this).data('timer', wait);
             });
 
             function fetchProducts(searchTerm) {
-                $.ajax({
+                jQuery.ajax({
                     url: "{{ route('products') }}", 
                     method: "GET",
                     data: { search: searchTerm },

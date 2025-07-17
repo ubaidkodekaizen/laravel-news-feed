@@ -119,7 +119,7 @@ body {
     display: flex;
     align-items: center;
     gap: 50px;
-    width: 70%;
+    width: 85%;
 }
 
 .header .header_left .left-nav .nav {
@@ -2014,6 +2014,7 @@ body {
     background: transparent;
     border-radius: 4px;
     font-weight: 600;
+    white-space: nowrap;
 }
 .top_header_links ul li a:hover {
     background: var(--primary);
