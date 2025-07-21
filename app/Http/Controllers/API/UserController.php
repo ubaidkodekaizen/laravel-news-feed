@@ -130,70 +130,6 @@ class UserController extends Controller
     }
 
 
-    // public function handleIapSubscription(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'startDate' => 'required|date',
-    //         'type' => 'required|string|in:monthly,yearly',
-    //         'transactionId' => 'required|string|unique:subscriptions,transaction_id',
-    //         'recieptData' => 'nullable|string',
-    //         'platform' => 'required|in:google,apple',
-    //     ]);
-
-    //     $user = Auth::user();
-
-    //     $iapPrice = number_format((float) $request->input('amount', 0), 2);
-
-    //     $planMapping = [
-    //         '2.99' => 4,     // Monthly (internal amount = 2.00)
-    //         '14.99' => 1,    // Monthly (internal amount = 15.00)
-    //         '149.99' => 2,   // Yearly (internal amount = 150.00)
-    //     ];
-
-    //     if (!isset($planMapping[$iapPrice])) {
-    //         return response()->json([
-    //             'status' => false,
-    //             'message' => 'No matching subscription plan for this IAP amount.',
-    //         ], 404);
-    //     }
-
-    //     $planId = $planMapping[$iapPrice];
-    //     $plan = \App\Models\Plan::find($planId);
-
-    //     if (!$plan) {
-    //         return response()->json([
-    //             'status' => false,
-    //             'message' => 'Plan not found.',
-    //         ], 404);
-    //     }
-
-    //     $subscription = new \App\Models\Subscription();
-    //     $subscription->user_id = $user->id;
-    //     $subscription->plan_id = $plan->id;
-    //     $subscription->subscription_type = $request->type;
-    //     $subscription->subscription_amount = $plan->plan_amount;
-    //     $subscription->start_date = $request->startDate;
-    //     $subscription->renewal_date = now()->addDays($request->type === 'monthly' ? 30 : 365);
-    //     $subscription->status = 'active';
-    //     $subscription->transaction_id = $request->transactionId;
-    //     $subscription->receipt_data = $request->recieptData;
-    //     $subscription->platform = $request->platform;
-    //     $subscription->save();
-
-    //     // ✅ Update user's "paid" status
-    //     $user->paid = 'Yes';
-    //     $user->status = 'complete';
-    //     $user->save();
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'message' => 'Subscription saved successfully.',
-    //         'subscription' => $subscription
-    //     ]);
-    // }
-
-
-
     public function login(Request $request)
     {
 
@@ -223,13 +159,6 @@ class UserController extends Controller
                 'message' => 'Access denied. Only users are allowed.',
             ], 403);
         }
-
-        // if ($user->status !== 'complete' || !$user->company || $user->company->status !== 'complete') {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'User or company profile is incomplete.',
-        //     ], 403);
-        // }
 
         $token = $user->createToken('api_token')->plainTextToken;
 
@@ -330,12 +259,26 @@ class UserController extends Controller
             ], 404);
         }
 
+        $typeMapping = [
+            'monthly' => 'Premium_Connect_Monthly',
+            'yearly' => 'Premium_Connect_Yearly',
+        ];
+
+        foreach ($user->subscriptions as $subscription) {
+            if ($subscription->plan_id == 4) {
+                $subscription->subscription_type = 'Basic_Explorer_Monthly';
+            } else {
+                $subscription->subscription_type = $typeMapping[$subscription->subscription_type] ?? $subscription->subscription_type;
+            }
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'User profile fetched successfully.',
             'user' => $user,
         ]);
     }
+
 
     public function deleteUser(Request $request)
     {
