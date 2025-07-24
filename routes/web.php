@@ -100,12 +100,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/products', [PageController::class, 'products'])->name('products');
     Route::get('/industry-experts/{industry}', [PageController::class, 'industryExperts'])->name('industry');
  
-    
-
-
-
-
-
+    Route::get('/smart-suggestion', function(){
+        return view('user.smart-suggestion');
+    })->name('smart.suggestion');
 
 
     Route::get('user/get-token', function () {

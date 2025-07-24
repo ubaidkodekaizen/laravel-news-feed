@@ -383,3 +383,18 @@ jQuery(document).ready(function ($) {
 });
 
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggleDrawerBtn");
+    const closeBtn = document.getElementById("closeDrawerBtn");
+    const drawer = document.getElementById("sideDrawer");
+
+    toggleBtn.addEventListener("click", () => {
+        drawer.classList.add("active");
+    });
+
+    closeBtn.addEventListener("click", () => {
+        drawer.classList.remove("active");
+    });
+});
+
