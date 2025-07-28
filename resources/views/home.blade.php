@@ -1040,11 +1040,11 @@
                         <p><span class="theme_color">Now available</span> on the App Store and Play Store</p>
                     </div>
                     <div class="btn_flex">
-                        <a href="javascript:void(0);">
+                        <a href="https://play.google.com/store/apps/details?id=com.MuslimLynk" target="_blank">
                             <img src="{{ asset('assets/images/home_banner_playstore.png') }}" alt="Playstore" class="img-fluid">
                         </a>
-                        <a href="javascript:void(0);">
-                            <img src="{{ asset('assets/images/home_banner_appstore.png') }}" alt="Playstore" class="img-fluid">
+                        <a href="https://apps.apple.com/pk/app/muslimlynk/id6746872077" target="_blank">
+                            <img src="{{ asset('assets/images/home_banner_appstore.png') }}" alt="App Store" class="img-fluid">
                         </a>
                     </div>
                 </div>
