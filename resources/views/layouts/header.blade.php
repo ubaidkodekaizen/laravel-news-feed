@@ -17,12 +17,13 @@
     <meta name="twitter:description" content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
     <meta name="twitter:image" content="{{ asset('assets/images/logo_bg.png') }}">
     <meta name="twitter:site" content="@yourtwitterhandle"> --}}
-    
+
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
+    @yield('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
     <link rel="stylesheet" href="{{ asset('build/assets/App-Db5XVQeo.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
