@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Muslim Lynk | Empowering Connections, Amplifying Impact</title>
-    <meta name="description" content="Join Muslim Lynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
+    <meta name="description"
+        content="Join Muslim Lynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Muslim Lynk – Where Connections Create Impact">
-    <meta property="og:description" content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
-    <meta property="og:url" content="{{url('/')}}">
+    <meta property="og:description"
+        content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
+    <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:image" content="{{ asset('assets/images/logo_bg.png') }}">
     <meta property="og:site_name" content="{{ config('app.name') }}">
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
@@ -21,6 +23,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" />
     <style>
         *,
         body {
@@ -281,16 +284,31 @@
             opacity: 0;
         }
 
-        .tabs.active {
+        .tab-container.active {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
-            gap: 5px;
-            height: 80px;
+            gap: 20px;
         }
 
-        .tabs {
+        .tab-container {
             display: none;
+        }
+
+
+
+        .tabs {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            flex-direction: column;
+            gap: 5px;
+            padding: 50px;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 2px 2px 20px rgb(0 0 0 / 13%);
+            max-width: 45%;
+            width: 100%;
         }
 
         .tabs.active span {
@@ -301,18 +319,47 @@
             color: #B4BE32;
         }
 
-        .tabs.active h4 {
-            font-size: 30px;
-            font-family: "Inter", Sans-serif;
-            font-weight: 600;
+
+        .tabs h4 {
+            font-size: 40px;
+            font-family: "Inter", sans-serif;
+            font-weight: 900;
+            letter-spacing: 0.02em;
             color: #B4BE32;
-            margin: 0;
+            text-shadow: 1px 1px #233273;
         }
 
-        .tabs.active h2 {
+        .tabs h2 {
             font-family: "Inter", Sans-serif;
-            font-size: 40px;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+            color: #233273;
+            text-transform: uppercase;
+        }
+
+        .tabs p {
+            font-size: 18px;
+            font-weight: 500;
+            font-family: "Inter", sans-serif;
+        }
+
+        .tabs ul {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-left: 15px;
+        }
+
+        .tabs ul li {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            list-style: none;
+        }
+
+        .tabs ul li i {
+            font-size: 20px;
             color: #B4BE32;
         }
 
@@ -344,11 +391,10 @@
 
         .homeSec3Pricing .pricingOffer {
             font-family: "Inter", Sans-serif;
-            font-size: 22px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             color: #233273;
-            max-width: 320px;
-            text-align: center;
+            text-align: left;
             line-height: 1.3em;
             margin: 0;
             margin-top: 20px;
@@ -426,6 +472,7 @@
             margin: 0;
             padding: 20px 0;
         }
+
         /* Download Banner css */
         .home_banner_sec {
             min-height: 500px;
@@ -436,7 +483,12 @@
             padding: 40px 0;
         }
 
-        .home_banner_sec .banner_container .banner_right_image img {width: 100%;height: 100%;max-width: 100%;object-fit: contain;}
+        .home_banner_sec .banner_container .banner_right_image img {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
 
         .home_banner_sec .banner_container img {
             max-width: 200px;
@@ -447,7 +499,12 @@
             width: 100%;
         }
 
-        .home_banner_sec .content h1 {color: white;font-size: 4rem;font-weight: 800;text-transform: uppercase;}
+        .home_banner_sec .content h1 {
+            color: white;
+            font-size: 4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
 
         .home_banner_sec .content p {
             color: white;
@@ -461,45 +518,51 @@
             flex-direction: column;
             gap: 10px;
         }
+
         .theme_color {
             color: #b4be32;
         }
+
         .banner_container {
             width: 100%
         }
 
         @media (min-width: 100%) {
             .banner_container {
-                max-width:100%
+                max-width: 100%
             }
         }
 
         @media (min-width: 767px) {
             .banner_container {
-                max-width:767px
+                max-width: 767px
             }
         }
 
         @media (min-width: 992px) {
             .banner_container {
-                max-width:992px
+                max-width: 992px
             }
+
+
         }
 
         @media (min-width: 1200px) {
             .banner_container {
-                max-width:1200px
+                max-width: 1200px
             }
         }
 
         @media (min-width: 1440px) {
             .banner_container {
-                max-width:1440px
+                max-width: 1440px
             }
-            .home_banner_sec .content h1{
+
+            .home_banner_sec .content h1 {
                 font-size: 5rem;
             }
-            .home_banner_sec .content p{
+
+            .home_banner_sec .content p {
                 font-size: 1.75rem;
             }
         }
@@ -513,7 +576,7 @@
 
         @media (min-width: 575.98px) {
             .banner_container {
-                padding-left:.5rem;
+                padding-left: .5rem;
                 padding-right: .5rem
             }
         }
@@ -524,6 +587,7 @@
                 padding-right: 1.25rem
             }
         }
+
         /* Download Banner css  */
 
         @media(max-width: 992px) {
@@ -558,17 +622,46 @@
             .homeSec2Col:last-child .stickySec {
                 width: 100%;
             }
+
+            .tabs {
+                padding: 35px;
+            }
+
+            .tabs h2 {
+                font-size: 20px;
+            }
+
+            .tabs h4 {
+                font-size: 30px;
+            }
+
+            .tabs p {
+                font-size: 16px;
+            }
+
+            .tabs ul li {
+                font-size: 16px;
+            }
+
+            .homeSec3Pricing .signUpBtn {
+                font-size: 18px;
+                border-radius: 10px;
+                padding: 8px 20px 8px 20px;
+            }
         }
 
         @media(max-width: 768px) {
-            .banner_right_image{
+            .banner_right_image {
                 display: none
             }
+
             .home_banner_sec .content h1 {
                 font-size: 2.25rem;
             }
 
-            .home_banner_sec .content p {font-size: 1.25rem;}
+            .home_banner_sec .content p {
+                font-size: 1.25rem;
+            }
 
             .home_banner_sec {
                 min-height: fit-content;
@@ -582,6 +675,7 @@
             .home_banner_sec .btn_flex {
                 padding-bottom: 30px;
             }
+
             #homeFirstSec .title {
                 font-size: 24px;
                 line-height: 1.3em;
@@ -651,8 +745,7 @@
             }
 
             .homeSec3Pricing .pricingOffer {
-                font-size: 16px;
-                max-width: 250px;
+                font-size: 14px;
             }
 
             #readMoreAccordion h2 {
@@ -669,6 +762,17 @@
 
             #footer p {
                 font-size: 16px;
+            }
+
+            .tab-container.active {
+                flex-direction: column;
+                align-items: center;
+                gap: 0px;
+            }
+
+            .tabs {
+                width: 100%;
+                max-width: 70%;
             }
         }
 
@@ -710,6 +814,41 @@
 
             .mainNavbar .loginBtn {
                 padding: 12px 30px 12px 30px !important;
+            }
+
+            .tabs {
+                width: 100%;
+                max-width: 100%;
+                padding: 25px;
+            }
+
+            .tabs h4 {
+                font-size: 24px;
+            }
+
+            .tabs h2 {
+                font-size: 18px;
+                margin: 0;
+            }
+
+            .tabs ul li i {
+                font-size: 14px;
+                color: #B4BE32;
+            }
+
+            .tabs p {
+                font-size: 14px;
+                line-height: 1.3em;
+            }
+
+            .tabs ul li {
+                font-size: 14px;
+                line-height: 1.3em;
+            }
+
+            .homeSec3Pricing .signUpBtn {
+                font-size: 16px;
+                padding: 8px 15px 8px 15px;
             }
         }
     </style>
@@ -814,7 +953,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="homeSec3">
             <h2 class="homeSec3Head">
                 Join the Movement
@@ -835,19 +974,81 @@
                     </label>
                 </div>
 
-                <div id="monthlyTab" class="tabs active">
-                    <h2>$15</h2>
-                    <h4>per month</h4>
+                <div id="monthlyTab" class="tab-container active">
+                    <div class="tabs">
+                        <h2>Basic</h2>
+                        <h4>$1.99 / month</h4>
+                        <p>Explore the Muslim Lynk App with core features at an affordable price.</p>
+                        <ul>
+                            <li><i class="fa-solid fa-circle-check"></i> Limited search filters</li>
+                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles (without contact
+                                details)</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Messaging not available</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Add your products and services to be
+                                discovered by others</li>
+                        </ul>
+
+                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
+                        <p class="pricingOffer">Ideal for: New users looking to browse and build their presence.</p>
+                    </div>
+                    <div class="tabs">
+                        <h2>Pro</h2>
+                        <h4>$4.99 / month</h4>
+                        <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.</p>
+                        <ul>
+                            <li><i class="fa-solid fa-circle-check"></i> Access to all advanced filters</li>
+                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles, including contact
+                                information</li>
+                            <li><i class="fa-solid fa-circle-check"></i> In-app messaging to connect directly with
+                                other users</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Add and promote your products and services
+                                within the app</li>
+                        </ul>
+                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
+                        <p class="pricingOffer">Ideal for: Professionals, business owners, and users ready to grow
+                            their network.</p>
+                    </div>
+
                 </div>
 
-                <div id="yearlyTab" class="tabs">
-                    <span>$180</span>
-                    <h2>$150</h2>
-                    <h4>per year</h4>
+                <div id="yearlyTab" class="tab-container">
+                    <div class="tabs">
+                        <h2>Basic</h2>
+                        <h4>$19.99 / year</h4>
+                        <p>Explore the Muslim Lynk App with core features at an affordable price.</p>
+                        <ul>
+                            <li><i class="fa-solid fa-circle-check"></i> Limited search filters</li>
+                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles (without contact
+                                details)</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Messaging not available</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Add your products and services to be
+                                discovered by others</li>
+                        </ul>
+
+                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
+                        <p class="pricingOffer">Ideal for: New users looking to browse and build their presence.</p>
+                    </div>
+                    <div class="tabs">
+                        <h2>Pro</h2>
+                        <h4>$49.99 / year</h4>
+                        <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.</p>
+                        <ul>
+                            <li><i class="fa-solid fa-circle-check"></i> Access to all advanced filters</li>
+                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles, including contact
+                                information</li>
+                            <li><i class="fa-solid fa-circle-check"></i> In-app messaging to connect directly with
+                                other users</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Add and promote your products and services
+                                within the app</li>
+                        </ul>
+                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
+                        <p class="pricingOffer">Ideal for: Professionals, business owners, and users ready to grow
+                            their network.</p>
+                    </div>
+
                 </div>
 
-                <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
-                <p class="pricingOffer">Go annual & save 17% - just $150 for the year!</p>
+
             </div>
 
         </div>
@@ -1033,7 +1234,7 @@
     </div>
     <div class="home_banner_sec" style="background-image: url('{{ asset('assets/images/home_banner_bg.png') }}');">
         <div class="banner_container">
-            <div class="row align-items-center">        
+            <div class="row align-items-center">
                 <div class="col-lg-7">
                     <div class="content">
                         <h1>Download the Muslim Lynk App</h1>
@@ -1041,10 +1242,12 @@
                     </div>
                     <div class="btn_flex">
                         <a href="https://play.google.com/store/apps/details?id=com.MuslimLynk" target="_blank">
-                            <img src="{{ asset('assets/images/home_banner_playstore.png') }}" alt="Playstore" class="img-fluid">
+                            <img src="{{ asset('assets/images/home_banner_playstore.png') }}" alt="Playstore"
+                                class="img-fluid">
                         </a>
                         <a href="https://apps.apple.com/pk/app/muslimlynk/id6746872077" target="_blank">
-                            <img src="{{ asset('assets/images/home_banner_appstore.png') }}" alt="App Store" class="img-fluid">
+                            <img src="{{ asset('assets/images/home_banner_appstore.png') }}" alt="App Store"
+                                class="img-fluid">
                         </a>
                     </div>
                 </div>
