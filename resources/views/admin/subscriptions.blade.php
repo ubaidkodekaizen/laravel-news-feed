@@ -30,10 +30,10 @@
                                     @forelse($subscriptions as $subscription)
                                         <tr>
                                             <td>{{ $subscription->id }}</td>
-                                            <td>{{ $subscription->user->first_name }} {{ $subscription->user->last_name }}
+                                            <td>{{ $subscription->user?->first_name }} {{ $subscription->user?->last_name }}
                                             </td>
-                                            <td>{{ $subscription->user->email }}</td>
-                                            <td>{{ $subscription->user->phone }}</td>
+                                            <td>{{ $subscription->user?->email }}</td>
+                                            <td>{{ $subscription->user?->phone }}</td>
                                             <td>{{ $subscription->transaction_id }}</td>
                                             <td>{{ $subscription->subscription_type }}</td>
                                             <td>${{ $subscription->subscription_amount }}</td>
