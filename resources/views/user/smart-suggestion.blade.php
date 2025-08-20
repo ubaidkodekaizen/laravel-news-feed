@@ -32,14 +32,6 @@
                                 <p class="text-muted mb-1">
                                     {{ $company->company_industry ?? 'N/A' }}
                                 </p>
-
-                                {{-- Show education if available --}}
-                                @if ($education)
-                                    <p class="text-muted small">
-                                        🎓 {{ $education->college_university }} ({{ $education->degree_diploma }})
-                                    </p>
-                                @endif
-
                                 <p class="text-muted mb-3">Member since: {{ $user->created_at->format('M Y') }}</p>
 
                                 {{-- Match Score with hover tooltip --}}
