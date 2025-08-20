@@ -7,7 +7,9 @@ use App\Models\Event;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
-use Illuminate\Http\Request;;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class PageController extends Controller
 {
@@ -134,6 +136,74 @@ class PageController extends Controller
             ->get();
 
         return view('industry', compact('users', 'industry'));
+    }
+
+    public function smartSuggestion()
+    {
+        $authUser = Auth::user();
+        $authCompany = $authUser->company;
+
+        // preload userEducations for efficiency
+        $users = User::with(['company', 'userEducations'])
+            ->where('id', '!=', $authUser->id)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $authEducations = $authUser->userEducations;
+
+        $suggestions = $users->map(function ($user) use ($authUser, $authCompany, $authEducations) {
+            $score = 0;
+
+            // 📍 Location
+            if ($authUser->country && $user->country == $authUser->country)
+                $score += 2;
+            if ($authUser->state && $user->state == $authUser->state)
+                $score += 2;
+            if ($authUser->city && $user->city == $authUser->city)
+                $score += 3;
+
+            // 🏢 Industry
+            if ($authCompany && $user->company && $authCompany->company_industry && $user->company->company_industry) {
+                if (stripos($authCompany->company_industry, $user->company->company_industry) !== false) {
+                    $score += 5;
+                }
+            }
+
+            // 🏢 Company type
+            if ($authCompany && $user->company && $authCompany->company_business_type == $user->company->company_business_type) {
+                $score += 2;
+            }
+
+            // 👔 Role
+            if ($authCompany && $user->company && $authCompany->company_position && $user->company->company_position) {
+                if (stripos($authCompany->company_position, $user->company->company_position) !== false) {
+                    $score += 3;
+                }
+            }
+
+            // 🎓 Education
+            foreach ($authEducations as $edu) {
+                foreach ($user->userEducations as $uEdu) {
+                    if ($edu->college_university && $edu->college_university == $uEdu->college_university) {
+                        $score += 3; // same uni
+                    }
+                    if ($edu->degree_diploma && $edu->degree_diploma == $uEdu->degree_diploma) {
+                        $score += 2; // same degree
+                    }
+                    if ($edu->year && $uEdu->year && abs((int) $edu->year - (int) $uEdu->year) <= 2) {
+                        $score += 1; // same grad year range
+                    }
+                }
+            }
+
+            return [
+                'user' => $user,
+                'company' => $user->company,
+                'score' => $score,
+            ];
+        })->sortByDesc('score')->filter(fn($s) => $s['score'] > 0)->values();
+
+        return view('user.smart-suggestion', compact('suggestions'));
     }
 
 
