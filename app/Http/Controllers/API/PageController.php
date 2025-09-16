@@ -175,5 +175,98 @@ class PageController extends Controller
 
 
 
+    public function smartSuggestions()
+    {
+        $authUser = Auth::user();
+        $authCompany = $authUser->company;
+
+        // preload userEducations for efficiency
+        $users = User::with(['company', 'userEducations'])
+            ->where('id', '!=', $authUser->id)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $authEducations = $authUser->userEducations;
+
+        $suggestions = $users->map(function ($user) use ($authUser, $authCompany, $authEducations) {
+            $score = 0;
+
+            // 📍 Location
+            if ($authUser->country && $user->country == $authUser->country)
+                $score += 2;
+            if ($authUser->state && $user->state == $authUser->state)
+                $score += 2;
+            if ($authUser->city && $user->city == $authUser->city)
+                $score += 3;
+
+            // 🏢 Industry
+            if ($authCompany && $user->company && $authCompany->company_industry && $user->company->company_industry) {
+                if (stripos($authCompany->company_industry, $user->company->company_industry) !== false) {
+                    $score += 5;
+                }
+            }
+
+            // 🏢 Company type
+            if ($authCompany && $user->company && $authCompany->company_business_type == $user->company->company_business_type) {
+                $score += 2;
+            }
+
+            // 👔 Role
+            if ($authCompany && $user->company && $authCompany->company_position && $user->company->company_position) {
+                if (stripos($authCompany->company_position, $user->company->company_position) !== false) {
+                    $score += 3;
+                }
+            }
+
+            // 🎓 Education
+            foreach ($authEducations as $edu) {
+                foreach ($user->userEducations as $uEdu) {
+                    if ($edu->college_university && $edu->college_university == $uEdu->college_university) {
+                        $score += 3; // same uni
+                    }
+                    if ($edu->degree_diploma && $edu->degree_diploma == $uEdu->degree_diploma) {
+                        $score += 2; // same degree
+                    }
+                    if ($edu->year && $uEdu->year && abs((int) $edu->year - (int) $uEdu->year) <= 2) {
+                        $score += 1; // same grad year range
+                    }
+                }
+            }
+
+            return [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
+                'country' => $user->country,
+                'state' => $user->state,
+                'city' => $user->city,
+                'company' => $user->company ? [
+                    'name' => $user->company->company_name,
+                    'industry' => $user->company->company_industry,
+                    'position' => $user->company->company_position,
+                    'business_type' => $user->company->company_business_type,
+                ] : null,
+                'education' => $user->userEducations->map(function ($edu) {
+                    return [
+                        'college_university' => $edu->college_university,
+                        'degree_diploma' => $edu->degree_diploma,
+                        'year' => $edu->year,
+                    ];
+                }),
+                'score' => $score,
+            ];
+        })->sortByDesc('score')->filter(fn($s) => $s['score'] > 0)->values();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Smart suggestions fetched successfully.',
+            'data' => $suggestions,
+        ]);
+    }
+
+
+
+
 
 }

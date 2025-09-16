@@ -59,6 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   Route::get('/industries', [PageController::class, 'getIndustries']);
   Route::get('/industry-experts/{industry}', [PageController::class, 'getIndustryExperts']);
+  Route::get('/smart-suggestions', [PageController::class, 'smartSuggestions']);
 
   Route::get('/products', [PageController::class, 'getProducts']);
   Route::get('/services', [PageController::class, 'getServices']);

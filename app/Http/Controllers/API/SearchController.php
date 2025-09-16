@@ -198,12 +198,10 @@ class SearchController extends Controller
         $companies = Company::where('company_industry', 'like', '%' . $searchTerm . '%')
             ->pluck('company_industry');
 
+        // fetch first_name and last_name separately
         $users = User::where('first_name', 'like', '%' . $searchTerm . '%')
             ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
-            ->get(['first_name', 'last_name'])
-            ->map(function ($user) {
-                return $user->first_name . ' ' . $user->last_name;
-            });
+            ->get(['first_name', 'last_name']);
 
         return response()->json([
             'status' => true,
@@ -212,10 +210,11 @@ class SearchController extends Controller
                 'product' => $products,
                 'service' => $services,
                 'company_industry' => $companies,
-                'name' => $users,
+                'name' => $users // keep key as "name", but value is array of {first_name, last_name}
             ]
         ]);
     }
+
 
 
 
