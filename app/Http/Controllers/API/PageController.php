@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 
 class PageController extends Controller
@@ -177,6 +178,8 @@ class PageController extends Controller
 
     public function smartSuggestions()
     {
+        //dd('coming here');
+        
         $authUser = Auth::user();
         $authCompany = $authUser->company;
 
@@ -258,6 +261,8 @@ class PageController extends Controller
             ];
         })->sortByDesc('score')->filter(fn($s) => $s['score'] > 0)->values();
 
+
+       
         return response()->json([
             'status' => true,
             'message' => 'Smart suggestions fetched successfully.',

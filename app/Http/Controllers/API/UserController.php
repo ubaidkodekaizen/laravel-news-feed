@@ -81,9 +81,10 @@ class UserController extends Controller
 
         // ✅ Map enum types to plan_id and plan type
         $planMapping = [
-            'Basic_Explorer_Monthly' => ['id' => 4, 'type' => 'monthly'],
-            'Premium_Connect_Monthly' => ['id' => 1, 'type' => 'monthly'],
-            'Premium_Connect_Yearly' => ['id' => 2, 'type' => 'yearly'],
+            'Basic_Monthly' => ['id' => 4, 'type' => 'monthly'],
+            'Premium_Monthly' => ['id' => 1, 'type' => 'monthly'],
+            'Basic_Yearly' => ['id' => 5, 'type' => 'yearly'],
+            'Premium_Yearly' => ['id' => 2, 'type' => 'yearly'],
         ];
 
         if (!isset($planMapping[$request->type])) {
