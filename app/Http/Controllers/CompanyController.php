@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Accreditation;
 use App\Models\Company;
 use App\Models\Designation;
-use App\Models\MuslimOrganization;
 use App\Models\Industry;
-use App\Models\SubCategory;
-use App\Models\CommunityInterest;
 use App\Models\BusinessType;
-use App\Models\BusinessContribution;
-use App\Models\ProductService;
 use Auth;
 use Illuminate\Http\Request;
 use Str;
@@ -30,23 +24,7 @@ class CompanyController extends Controller
 
     public function storeCompanyDetails(Request $request)
     {
-        // //dd($request->all());
-        // $request->validate([
-        //     'company_name' => 'required|string|max:255',
-        //     'company_web_url' => 'nullable|url|max:255',
-        //     'company_linkedin_url' => 'nullable|url|max:255',
-        //     'company_position' => 'nullable|string',
-        //     'company_revenue' => 'nullable|string|max:255',
-        //     'company_no_of_employee' => 'nullable|string|max:255',
-        //     'company_business_type' => 'nullable|string|max:255',
-        //     'company_industry' => 'nullable|string|max:255',
-        //     'product_service_name' => 'nullable|array',
-        //     'product_service_name.*' => 'nullable|string|max:255',
-        //     'product_service_description' => 'nullable|array',
-        //     'product_service_description.*' => 'nullable|string|max:500',
-        //     'company_logo' => 'nullable|file|image|max:2048',
-        // ]);
-
+        
         $capitalize = function ($value) {
             return $value ? ucwords(strtolower($value)) : null;
         };

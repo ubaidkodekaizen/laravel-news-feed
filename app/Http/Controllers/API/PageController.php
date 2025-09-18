@@ -123,7 +123,7 @@ class PageController extends Controller
                 $query->where('status', 'complete');
             })
             ->orderByDesc('id')
-            ->get();
+            ->paginate(10); // 👈 change 10 to whatever page size you want
 
         return response()->json([
             'status' => true,
@@ -138,15 +138,13 @@ class PageController extends Controller
                 $query->where('status', 'complete');
             })
             ->orderByDesc('id')
-            ->get();
+            ->paginate(10);
 
         return response()->json([
             'status' => true,
             'services' => $services,
         ]);
     }
-
-
 
     public function getIndustryExperts($industry)
     {
@@ -165,7 +163,7 @@ class PageController extends Controller
                 }
             })
             ->with('company')
-            ->get();
+            ->paginate(10);
 
         return response()->json([
             'status' => true,
@@ -174,16 +172,11 @@ class PageController extends Controller
         ]);
     }
 
-
-
     public function smartSuggestions()
     {
-        //dd('coming here');
-        
         $authUser = Auth::user();
         $authCompany = $authUser->company;
 
-        // preload userEducations for efficiency
         $users = User::with(['company', 'userEducations'])
             ->where('id', '!=', $authUser->id)
             ->whereNull('deleted_at')
@@ -194,7 +187,7 @@ class PageController extends Controller
         $suggestions = $users->map(function ($user) use ($authUser, $authCompany, $authEducations) {
             $score = 0;
 
-            // 📍 Location
+            // 📍 Location match
             if ($authUser->country && $user->country == $authUser->country)
                 $score += 2;
             if ($authUser->state && $user->state == $authUser->state)
@@ -202,73 +195,65 @@ class PageController extends Controller
             if ($authUser->city && $user->city == $authUser->city)
                 $score += 3;
 
-            // 🏢 Industry
+            // 🏢 Industry match
             if ($authCompany && $user->company && $authCompany->company_industry && $user->company->company_industry) {
                 if (stripos($authCompany->company_industry, $user->company->company_industry) !== false) {
                     $score += 5;
                 }
             }
 
-            // 🏢 Company type
+            // 🏢 Company type match
             if ($authCompany && $user->company && $authCompany->company_business_type == $user->company->company_business_type) {
                 $score += 2;
             }
 
-            // 👔 Role
+            // 👔 Position match
             if ($authCompany && $user->company && $authCompany->company_position && $user->company->company_position) {
                 if (stripos($authCompany->company_position, $user->company->company_position) !== false) {
                     $score += 3;
                 }
             }
 
-            // 🎓 Education
+            // 🎓 Education match
             foreach ($authEducations as $edu) {
                 foreach ($user->userEducations as $uEdu) {
                     if ($edu->college_university && $edu->college_university == $uEdu->college_university) {
-                        $score += 3; // same uni
+                        $score += 3;
                     }
                     if ($edu->degree_diploma && $edu->degree_diploma == $uEdu->degree_diploma) {
-                        $score += 2; // same degree
+                        $score += 2;
                     }
                     if ($edu->year && $uEdu->year && abs((int) $edu->year - (int) $uEdu->year) <= 2) {
-                        $score += 1; // same grad year range
+                        $score += 1;
                     }
                 }
             }
 
-            return [
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
-                'country' => $user->country,
-                'state' => $user->state,
-                'city' => $user->city,
-                'company' => $user->company ? [
-                    'name' => $user->company->company_name,
-                    'industry' => $user->company->company_industry,
-                    'position' => $user->company->company_position,
-                    'business_type' => $user->company->company_business_type,
-                ] : null,
-                'education' => $user->userEducations->map(function ($edu) {
-                    return [
-                        'college_university' => $edu->college_university,
-                        'degree_diploma' => $edu->degree_diploma,
-                        'year' => $edu->year,
-                    ];
-                }),
-                'score' => $score,
-            ];
-        })->sortByDesc('score')->filter(fn($s) => $s['score'] > 0)->values();
+            return $user->setAttribute('score', $score);
+        })
+            ->sortByDesc('score')
+            ->filter(fn($u) => $u->score > 0)
+            ->values();
 
+        // 👇 Manual pagination for collections
+        $perPage = 10;
+        $page = request()->get('page', 1);
+        $offset = ($page - 1) * $perPage;
+        $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
+            $suggestions->slice($offset, $perPage)->values(),
+            $suggestions->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
 
-       
         return response()->json([
             'status' => true,
-            'message' => 'Smart suggestions fetched successfully.',
-            'data' => $suggestions,
+            'users' => $paginated,
         ]);
     }
+
+
 
 
 

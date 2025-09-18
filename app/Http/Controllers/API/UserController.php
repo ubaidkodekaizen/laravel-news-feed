@@ -8,12 +8,14 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Password;
 use App\Models\UserEducation;
 use Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Designation;
+use App\Models\Industry;
+use App\Models\BusinessType;
 
 class UserController extends Controller
 {
@@ -173,9 +175,8 @@ class UserController extends Controller
     }
 
 
-    public function updateUserDetails(Request $request)
+    public function updatePersonal(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -188,12 +189,7 @@ class UserController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $capitalize = function ($value) {
-            return $value ? ucwords(strtolower($value)) : null;
-        };
-
-        $user = User::find(Auth::id());
-
+        $user = User::findOrFail(Auth::id());
 
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
@@ -211,41 +207,124 @@ class UserController extends Controller
         $user->age_group = $request->age_group ?? '';
         $user->ethnicity = $request->ethnicity ?? $request->other_ethnicity;
         $user->nationality = $request->nationality ?? '';
-        $user->marital_status = $request->marital_status ?? $request->$request->other_marital_status;
+        $user->marital_status = $request->marital_status ?? $request->other_marital_status ?? '';
         $user->tiktok_url = $request->tiktok_url ?? '';
         $user->youtube_url = $request->youtube_url ?? '';
+        $user->languages = $request->languages ?? '';
+        $user->email_public = $request->email_public ?? 'No';
+        $user->phone_public = $request->phone_public ?? 'No';
+
+        // user positions (checkboxes)
         if ($request->has('are_you') && !empty($request->are_you)) {
             $user->user_position = implode(', ', $request->are_you);
         } else {
             $user->user_position = null;
         }
 
-        $user->languages = $request->languages ?? '';
-        $user->email_public = $request->email_public ?? 'No';
-        $user->phone_public = $request->phone_public ?? 'No';
-
-
+        // Unique slug
         $slug = Str::slug($request->first_name . ' ' . $request->last_name);
         $originalSlug = $slug;
         $counter = 1;
-
         while (User::where('slug', $slug)->where('id', '!=', $user->id)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
+            $slug = $originalSlug . '-' . $counter++;
         }
-
         $user->slug = $slug;
 
+        // profile photo
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('profile_photos', 'public');
             $user->photo = $photoPath;
-
         }
+
         $user->status = 'complete';
         $user->save();
 
-        return redirect()->back()->with('success', 'User details updated successfully!');
+        return response()->json([
+            'status' => true,
+            'message' => 'User personal details updated successfully!',
+            'user' => $user,
+        ]);
     }
+
+    /**
+     * Update Professional Details
+     */
+    public function updateProfessional(Request $request)
+    {
+        $capitalize = fn($value) => $value ? ucwords(strtolower($value)) : null;
+
+        if ($request->company_position_other) {
+            Designation::updateOrCreate(
+                ['name' => $capitalize($request->company_position_other)],
+                ['name' => $capitalize($request->company_position_other)]
+            );
+        }
+
+        if ($request->company_business_type_other) {
+            $businessType = BusinessType::updateOrCreate(
+                ['name' => $capitalize($request->company_business_type_other)],
+                ['name' => $capitalize($request->company_business_type_other)]
+            );
+            $companyBusinessType = $businessType->name;
+        } else {
+            $companyBusinessType = $request->company_business_type;
+        }
+
+        if ($request->company_industry_other) {
+            $industry = Industry::updateOrCreate(
+                ['name' => $capitalize($request->company_industry_other)],
+                ['name' => $capitalize($request->company_industry_other)]
+            );
+            $companyIndustry = $industry->name;
+        } else {
+            $companyIndustry = $request->company_industry;
+        }
+
+        $user = Auth::user();
+
+        $company = Company::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'company_name' => $request->company_name ?? '',
+                'company_web_url' => $request->company_web_url ?? '',
+                'company_linkedin_url' => $request->company_linkedin_url ?? $request->company_linkedin_user,
+                'company_position' => $request->company_position ?? '',
+                'company_revenue' => $request->company_revenue ?? '',
+                'company_no_of_employee' => $request->company_no_of_employee ?? '',
+                'company_community_service' => $request->company_community_service ?? '',
+                'company_business_type' => $companyBusinessType ?? '',
+                'company_industry' => $companyIndustry ?? '',
+                'company_experience' => $request->company_experience ?? '',
+                'company_phone' => $request->company_phone ?? '',
+            ]
+        );
+
+        // Unique company slug
+        $companySlug = Str::slug($request->company_name);
+        $originalSlug = $companySlug;
+        $counter = 1;
+        while (Company::where('company_slug', $companySlug)->where('id', '!=', $company->id)->exists()) {
+            $companySlug = $originalSlug . '-' . $counter++;
+        }
+        $company->company_slug = $companySlug ?? '';
+        $company->status = "complete";
+
+        // company logo
+        if ($request->hasFile('company_logo')) {
+            $photoPath = $request->file('company_logo')->store('profile_photos', 'public');
+            $company->company_logo = $photoPath;
+        }
+
+        $company->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Professional details updated successfully!',
+            'company' => $company,
+        ]);
+    }
+
+
 
     public function showUserBySlug($slug)
     {
@@ -328,6 +407,233 @@ class UserController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Password reset link sent to your email.',
+        ]);
+    }
+
+    public function getDropdowns()
+    {
+        $nationalities = [
+            "Afghan",
+            "Albanian",
+            "Algerian",
+            "American",
+            "Andorran",
+            "Angolan",
+            "Antiguans",
+            "Argentine",
+            "Armenian",
+            "Australian",
+            "Austrian",
+            "Azerbaijani",
+            "Bahamian",
+            "Bahraini",
+            "Bangladeshi",
+            "Barbadian",
+            "Barbudans",
+            "Bashkir",
+            "Belgian",
+            "Belizean",
+            "Beninese",
+            "Bhutanese",
+            "Bolivian",
+            "Bosnian",
+            "Botswanan",
+            "Brazilian",
+            "British",
+            "Bruneian",
+            "Bulgarian",
+            "Burkinese",
+            "Burmese",
+            "Burundian",
+            "Cambodian",
+            "Cameroonian",
+            "Canadian",
+            "Cape Verdean",
+            "Central African",
+            "Chadian",
+            "Chilean",
+            "Chinese",
+            "Colombian",
+            "Comorian",
+            "Congolese",
+            "Costa Rican",
+            "Croatian",
+            "Cuban",
+            "Cypriot",
+            "Czech",
+            "Danish",
+            "Djiboutian",
+            "Dominican",
+            "East Timorese",
+            "Ecuadorean",
+            "Egyptian",
+            "Emirati",
+            "Equatorial Guinean",
+            "Eritrean",
+            "Estonian",
+            "Ethiopian",
+            "Fijian",
+            "Filipino",
+            "Finnish",
+            "French",
+            "Gabonese",
+            "Gambian",
+            "Georgian",
+            "German",
+            "Ghanaian",
+            "Greek",
+            "Grenadian",
+            "Guatemalan",
+            "Guinean",
+            "Guinea-Bissauan",
+            "Guyanese",
+            "Haitian",
+            "Honduran",
+            "Hungarian",
+            "Icelander",
+            "Indian",
+            "Indonesian",
+            "Iranian",
+            "Iraqi",
+            "Irish",
+            "Israeli",
+            "Italian",
+            "Ivorian",
+            "Jamaican",
+            "Japanese",
+            "Jordanian",
+            "Kazakh",
+            "Kenyan",
+            "Kittian and Nevisian",
+            "Korean",
+            "Kuwaiti",
+            "Kyrgyz",
+            "Laotian",
+            "Latvian",
+            "Lebanese",
+            "Liberian",
+            "Libyan",
+            "Liechtensteiner",
+            "Lithuanian",
+            "Luxembourgian",
+            "Macedonian",
+            "Malagasy",
+            "Malawian",
+            "Malaysian",
+            "Maldivian",
+            "Malian",
+            "Malta",
+            "Marshallese",
+            "Mauritian",
+            "Mexican",
+            "Micronesian",
+            "Moldovan",
+            "Monacan",
+            "Mongolian",
+            "Moroccan",
+            "Mozambican",
+            "Namibian",
+            "Nauruan",
+            "Nepalese",
+            "New Zealander",
+            "Nicaraguan",
+            "Nigerian",
+            "Nigerien",
+            "Norwegian",
+            "Omani",
+            "Pakistani",
+            "Palauan",
+            "Panamanian",
+            "Papua New Guinean",
+            "Paraguayan",
+            "Peruvian",
+            "Polish",
+            "Portuguese",
+            "Qatari",
+            "Romanian",
+            "Russian",
+            "Rwandan",
+            "Saint Lucian",
+            "Salvadoran",
+            "Samoan",
+            "San Marinese",
+            "Sao Tomean",
+            "Saudi",
+            "Senegalese",
+            "Serbian",
+            "Seychellois",
+            "Sierra Leonean",
+            "Singaporean",
+            "Slovak",
+            "Slovene",
+            "Solomon Islander",
+            "Somali",
+            "South African",
+            "South Korean",
+            "Spanish",
+            "Sri Lankan",
+            "Sudanese",
+            "Surinamese",
+            "Swazi",
+            "Swedish",
+            "Swiss",
+            "Syrian",
+            "Taiwanese",
+            "Tajikistani",
+            "Tanzanian",
+            "Thai",
+            "Togolese",
+            "Tongan",
+            "Trinidadian or Tobagonian",
+            "Tunisian",
+            "Turkish",
+            "Turkmen",
+            "Tuvaluan",
+            "Ugandan",
+            "Ukrainian",
+            "Uruguayan",
+            "Uzbekistani",
+            "Vanuatu",
+            "Venezuelan",
+            "Vietnamese",
+            "Yemeni",
+            "Zambian",
+            "Zimbabwean"
+        ];
+
+        $designations = DB::table('designations')->pluck('name');
+        $industries = DB::table('industries')->pluck('name');
+        $business_types = DB::table('bussiness_types')->pluck('name');
+
+        $employee_sizes = [
+            '1-10' => '1-10 employees',
+            '11-50' => '11-50 employees',
+            '51-200' => '51-200 employees',
+            '201-500' => '201-500 employees',
+            '501-1000' => '501-1000 employees',
+            '1001-5000' => '1001-5000 employees',
+            '5001-10,000' => '5001-10,000 employees',
+            '10,001+' => '10,001+ employees',
+        ];
+
+        $revenue_ranges = [
+            '< 1M' => '< $1M',
+            '1-5M' => '$1M -$5M',
+            '5-25M' => '$5M - $25M',
+            '25-100M' => '$25M - $100M',
+            '100M +' => '$100M+',
+        ];
+
+        return response()->json([
+            'status' => true,
+            'dropdowns' => [
+                'nationalities' => $nationalities,
+                'designations' => $designations,
+                'industries' => $industries,
+                'employee_sizes' => $employee_sizes,
+                'business_types' => $business_types,
+                'revenue_ranges' => $revenue_ranges,
+            ],
         ]);
     }
 

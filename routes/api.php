@@ -39,8 +39,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Mobile API Routes
 
+  Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
+  Route::post('/user/update/personal', [UserController::class, 'updatePersonal']);
+  Route::post('/user/update/professional', [UserController::class, 'updateProfessional']);
+
   Route::get('/user/profile/{slug}', [UserController::class, 'showUserBySlug']);
   Route::delete('/user/delete', [UserController::class, 'deleteUser']);
+
+
 
   Route::get('/user/products', [ProductController::class, 'apiIndex']);
   Route::get('/user/products/{id}', [ProductController::class, 'apiShow']);
