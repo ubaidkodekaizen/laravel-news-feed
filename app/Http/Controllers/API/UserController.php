@@ -73,8 +73,8 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'startDate' => 'required|date',
-            'type' => 'required|string|in:Basic_Explorer_Monthly,Premium_Connect_Monthly,Premium_Connect_Yearly',
-            'transactionId' => 'required|string|unique:subscriptions,transaction_id',
+            'type' => 'required|string|in:Basic_Monthly,Premium_Monthly,Basic_Yearly,Premium_Yearly',
+            'transactionId' => 'required|string',
             'recieptData' => 'nullable|string',
             'platform' => 'required|in:google,apple',
         ]);
@@ -106,19 +106,28 @@ class UserController extends Controller
             ], 404);
         }
 
-        // ✅ Save subscription
-        $subscription = new \App\Models\Subscription();
-        $subscription->user_id = $user->id;
-        $subscription->plan_id = $plan->id;
-        $subscription->subscription_type = $planData['type']; // Only monthly/yearly
-        $subscription->subscription_amount = $plan->plan_amount;
-        $subscription->start_date = $request->startDate;
-        $subscription->renewal_date = now()->addDays($planData['type'] === 'monthly' ? 30 : 365);
-        $subscription->status = 'active';
-        $subscription->transaction_id = $request->transactionId;
-        $subscription->receipt_data = $request->recieptData;
-        $subscription->platform = $request->platform;
-        $subscription->save();
+        // ✅ Cancel all previous active subscriptions for this user
+        \App\Models\Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->update(['status' => 'cancelled']);
+
+        // ✅ Create or update the new subscription
+        $subscription = \App\Models\Subscription::updateOrCreate(
+            [
+                'transaction_id' => $request->transactionId,
+                'user_id' => $user->id,
+            ],
+            [
+                'plan_id' => $plan->id,
+                'subscription_type' => $planData['type'],
+                'subscription_amount' => $plan->plan_amount,
+                'start_date' => $request->startDate,
+                'renewal_date' => now()->addDays($planData['type'] === 'monthly' ? 30 : 365),
+                'status' => 'active',
+                'receipt_data' => $request->recieptData,
+                'platform' => $request->platform,
+            ]
+        );
 
         // ✅ Update user
         $user->paid = 'Yes';
@@ -127,10 +136,74 @@ class UserController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Subscription saved successfully.',
-            'subscription' => $subscription
+            'message' => 'Subscription saved successfully. Previous subscriptions cancelled.',
+            'subscription' => $subscription,
         ]);
     }
+
+
+    // public function handleIapSubscription(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'startDate' => 'required|date',
+    //         'type' => 'required|string|in:Basic_Monthly,Premium_Monthly,Basic_Yearly,Premium_Yearly',
+    //         'transactionId' => 'required|string|unique:subscriptions,transaction_id',
+    //         'recieptData' => 'nullable|string',
+    //         'platform' => 'required|in:google,apple',
+    //     ]);
+
+    //     $user = Auth::user();
+
+    //     // ✅ Map enum types to plan_id and plan type
+    //     $planMapping = [
+    //         'Basic_Monthly' => ['id' => 4, 'type' => 'monthly'],
+    //         'Premium_Monthly' => ['id' => 1, 'type' => 'monthly'],
+    //         'Basic_Yearly' => ['id' => 5, 'type' => 'yearly'],
+    //         'Premium_Yearly' => ['id' => 2, 'type' => 'yearly'],
+    //     ]; 
+
+    //     if (!isset($planMapping[$request->type])) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Invalid subscription type.',
+    //         ], 400);
+    //     }
+
+    //     $planData = $planMapping[$request->type];
+    //     $plan = \App\Models\Plan::find($planData['id']);
+
+    //     if (!$plan) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'Plan not found.',
+    //         ], 404);
+    //     }
+
+    //     // ✅ Save subscription
+    //     $subscription = new \App\Models\Subscription();
+    //     $subscription->user_id = $user->id;
+    //     $subscription->plan_id = $plan->id;
+    //     $subscription->subscription_type = $planData['type']; // Only monthly/yearly
+    //     $subscription->subscription_amount = $plan->plan_amount;
+    //     $subscription->start_date = $request->startDate;
+    //     $subscription->renewal_date = now()->addDays($planData['type'] === 'monthly' ? 30 : 365);
+    //     $subscription->status = 'active';
+    //     $subscription->transaction_id = $request->transactionId;
+    //     $subscription->receipt_data = $request->recieptData;
+    //     $subscription->platform = $request->platform;
+    //     $subscription->save();
+
+    //     // ✅ Update user
+    //     $user->paid = 'Yes';
+    //     $user->status = 'complete';
+    //     $user->save();
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Subscription saved successfully.',
+    //         'subscription' => $subscription
+    //     ]);
+    // }
 
 
     public function login(Request $request)
