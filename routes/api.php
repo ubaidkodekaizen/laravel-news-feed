@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Mobile API Routes
 
-  Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
+ 
   Route::post('/user/update/personal', [UserController::class, 'updatePersonal']);
   Route::post('/user/update/professional', [UserController::class, 'updateProfessional']);
 
@@ -77,6 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/subscribe/iap', [UserController::class, 'handleIapSubscription']);
 
 });
+Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/forget-password', [UserController::class, 'sendResetLink']);
