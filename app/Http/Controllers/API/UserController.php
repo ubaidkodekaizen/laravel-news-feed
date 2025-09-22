@@ -402,7 +402,15 @@ class UserController extends Controller
     public function showUserBySlug($slug)
     {
         $user = User::where('slug', $slug)
-            ->with(['company', 'products', 'services', 'userEducations', 'subscriptions'])
+            ->with([
+                'company',
+                'products',
+                'services',
+                'userEducations',
+                'subscriptions' => function ($query) {
+                    $query->where('status', 'active');
+                }
+            ])
             ->first();
 
         if (!$user) {
@@ -412,7 +420,6 @@ class UserController extends Controller
             ], 404);
         }
 
-        // Plan mapping: maps subscription_type string to plan_id and type
         $planMapping = [
             'Basic_Monthly' => ['id' => 4, 'type' => 'monthly'],
             'Premium_Monthly' => ['id' => 1, 'type' => 'monthly'],
@@ -420,13 +427,7 @@ class UserController extends Controller
             'Premium_Yearly' => ['id' => 2, 'type' => 'yearly'],
         ];
 
-        // Keep only active subscriptions
-        $user->subscriptions = $user->subscriptions->filter(function ($subscription) {
-            return $subscription->status === 'active';
-        })->values(); // reset array keys
-
         foreach ($user->subscriptions as $subscription) {
-            // Find which plan key matches this subscription
             foreach ($planMapping as $planName => $planDetails) {
                 if (
                     $subscription->plan_id == $planDetails['id'] &&
@@ -444,6 +445,7 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
 
 
 
