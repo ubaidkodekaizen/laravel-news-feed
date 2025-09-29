@@ -28,7 +28,7 @@ Route::get('/test-email', function () {
     try {
         Mail::raw('This is a test email from Laravel.', function ($message) {
             $message->to('s.u.shah68@gmail.com')
-                    ->subject('Laravel Test Email');
+                ->subject('Laravel Test Email');
         });
 
         return 'Test email sent successfully!';
@@ -94,6 +94,11 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
     Route::get('/user/profile/{slug}', [UserController::class, 'showUserBySlug'])->name('user.profile');
 
+    // Search mosques by zip, city, or state
+    Route::get('/user/mosque/search', [UserController::class, 'searchMosque'])->name('user.mosque.search');
+    Route::post('/user/mosque/store', [UserController::class, 'storeMosque'])->name('user.mosque.store');
+
+
     Route::get('/user/company/details', [CompanyController::class, 'showUserCompanyForm'])->name('user.company.details');
     Route::post('/user/company/update', [CompanyController::class, 'storeCompanyDetails'])->name('user.company.update');
     Route::get('/user/company/{companySlug}', [CompanyController::class, 'showCompanyBySlug'])->name('company.profile');
@@ -103,7 +108,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/services', [PageController::class, 'services'])->name('services');
     Route::get('/products', [PageController::class, 'products'])->name('products');
     Route::get('/industry-experts/{industry}', [PageController::class, 'industryExperts'])->name('industry');
- 
+
     Route::get('/smart-suggestion', [PageController::class, 'smartSuggestion'])->name('smart.suggestion');
 
 
@@ -131,8 +136,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
     Route::post('/admin/company/update', [AdminController::class, 'updateCompanyDetails'])->name('admin.company.update');
     Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
-  	Route::post('/admin/admin-reset-link', [AdminController::class, 'adminResetLink'])->name('admin.reset.link');
-	
+    Route::post('/admin/admin-reset-link', [AdminController::class, 'adminResetLink'])->name('admin.reset.link');
+
     //Blogs
     Route::get('/admin/blogs', [AdminController::class, 'adminBlogs'])->name('admin.blogs');
     Route::get('/admin/add-blog', [AdminController::class, 'addBlog'])->name('admin.add.blog');

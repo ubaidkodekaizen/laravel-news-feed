@@ -7,10 +7,8 @@ use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Password;
-use App\Models\UserEducation;
 use Str;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -179,6 +177,103 @@ class UserController extends Controller
 
         return view('user.user-profile', compact('user'));
     }
+
+
+
+    public function searchMosque(Request $request)
+    {
+        $request->validate([
+            'term' => 'required|string|max:255',
+        ]);
+
+        $term = trim($request->term);
+        $mosques = collect(); // start empty
+
+        // 1. Search by zip (exact match)
+        $mosques = DB::table('mosques')->where('zip', $term)->get();
+
+        // 2. If not found, search by city (case-insensitive)
+        if ($mosques->isEmpty()) {
+            $mosques = DB::table('mosques')
+                ->whereRaw('LOWER(city) = ?', [strtolower($term)])
+                ->get();
+        }
+
+        // 3. If still not found, search by state (2-letter exact match)
+        if ($mosques->isEmpty() && strlen($term) === 2) {
+            $mosques = DB::table('mosques')
+                ->where('state', strtoupper($term))
+                ->get();
+        }
+
+        // 4. If still not found, return message
+        if ($mosques->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No mosque available, please suggest.',
+                'data' => [],
+            ]);
+        }
+
+        // Found mosques
+        return response()->json([
+            'status' => true,
+            'message' => 'Mosques found successfully.',
+            'data' => $mosques,
+        ]);
+    }
+
+    public function storeMosque(Request $request)
+    {
+        $request->validate([
+            'mosque_id' => 'nullable|exists:mosques,id',
+            'mosque' => 'nullable|string|max:255',
+            'amount' => 'nullable|numeric|min:0',
+        ]);
+
+        $userId = Auth::id();
+
+        // ✅ Case 1: If mosque_id is provided
+        if ($request->filled('mosque_id')) {
+            \DB::table('user_mosque')->updateOrInsert(
+                ['user_id' => $userId, 'mosque_id' => $request->mosque_id],
+                ['amount' => $request->amount]
+            );
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Mosque linked successfully.',
+            ]);
+        }
+
+        // ✅ Case 2: If mosque name is provided instead
+        if ($request->filled('mosque')) {
+            // Create mosque entry
+            $mosqueId = \DB::table('mosques')->insertGetId([
+                'mosque' => $request->mosque,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Add pivot entry
+            \DB::table('user_mosque')->updateOrInsert(
+                ['user_id' => $userId, 'mosque_id' => $mosqueId],
+                ['amount' => $request->amount]
+            );
+
+            return response()->json([
+                'status' => true,
+                'message' => 'New mosque created and linked successfully.',
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Please provide either mosque_id or mosque name.',
+        ], 422);
+    }
+
+
 
 
 
