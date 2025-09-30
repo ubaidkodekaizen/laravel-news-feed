@@ -183,30 +183,33 @@ class UserController extends Controller
     public function searchMosque(Request $request)
     {
         $request->validate([
-            'term' => 'required|string|max:255',
+            'zip' => 'nullable|string|max:20',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:2', // state is 2 alphabets
         ]);
 
-        $term = trim($request->term);
-        $mosques = collect(); // start empty
+        $mosques = collect();
 
-        // 1. Search by zip (exact match)
-        $mosques = DB::table('mosques')->where('zip', $term)->get();
+        // 1. Prioritize zip (exact match)
+        if ($request->filled('zip')) {
+            $mosques = DB::table('mosques')->where('zip', $request->zip)->get();
+        }
 
-        // 2. If not found, search by city (case-insensitive)
-        if ($mosques->isEmpty()) {
+        // 2. If not found, try city (case-insensitive)
+        if ($mosques->isEmpty() && $request->filled('city')) {
             $mosques = DB::table('mosques')
-                ->whereRaw('LOWER(city) = ?', [strtolower($term)])
+                ->whereRaw('LOWER(city) = ?', [strtolower($request->city)])
                 ->get();
         }
 
-        // 3. If still not found, search by state (2-letter exact match)
-        if ($mosques->isEmpty() && strlen($term) === 2) {
+        // 3. If still not found, try state (2-letter exact match)
+        if ($mosques->isEmpty() && $request->filled('state')) {
             $mosques = DB::table('mosques')
-                ->where('state', strtoupper($term))
+                ->where('state', strtoupper($request->state))
                 ->get();
         }
 
-        // 4. If still not found, return message
+        // 4. If still not found, return "please suggest"
         if ($mosques->isEmpty()) {
             return response()->json([
                 'status' => false,
@@ -215,13 +218,15 @@ class UserController extends Controller
             ]);
         }
 
-        // Found mosques
+        // ✅ Found mosques
         return response()->json([
             'status' => true,
             'message' => 'Mosques found successfully.',
             'data' => $mosques,
         ]);
     }
+
+
 
     public function storeMosque(Request $request)
     {
