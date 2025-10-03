@@ -185,7 +185,7 @@ class UserController extends Controller
         $request->validate([
             'zip' => 'nullable|string|max:20',
             'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:2', // state is 2 alphabets
+            // 'state' => 'nullable|string|max:2', // state is 2 alphabets
         ]);
 
         $mosques = collect();
@@ -203,11 +203,11 @@ class UserController extends Controller
         }
 
         // 3. If still not found, try state (2-letter exact match)
-        if ($mosques->isEmpty() && $request->filled('state')) {
-            $mosques = DB::table('mosques')
-                ->where('state', strtoupper($request->state))
-                ->get();
-        }
+        // if ($mosques->isEmpty() && $request->filled('state')) {
+        //     $mosques = DB::table('mosques')
+        //         ->where('state', strtoupper($request->state))
+        //         ->get();
+        // }
 
         // 4. If still not found, return "please suggest"
         if ($mosques->isEmpty()) {

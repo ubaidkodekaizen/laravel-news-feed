@@ -3,7 +3,7 @@
 @section('dashboard-content')
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css" />
     <section class="user_company_profile">
         <div class="container">
             <div class="custom_card_profile">
@@ -230,12 +230,39 @@
                                     </div>
 
                                     <div class="col-lg-6">
+                                        <label for="zip_code">Zip Code</label>
+                                        <input type="text" name="zip_code" id="zip_code" class="form-control"
+                                            value="{{ old('zip_code', $user->zip_code) }}">
+                                        {{-- {!! \App\Helpers\DropDownHelper::renderStateDropdownForUser($user->country, $user->state) !!} --}}
+                                    </div>
+
+                                    <div class="col-lg-6">
                                         <label for="country">Country<span class="text-danger">*</span></label>
                                         <input type="text" name="country" id="country" class="form-control"
                                             value="{{ old('country', $user->country) }}">
                                         {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!} --}}
                                     </div>
 
+
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label for="mosque_id">Mosque<span class="text-danger">*</span></label>
+                                        <select name="mosque_id" id="mosque_id" class="form-select">
+                                            <option value="">Select Mosque</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-lg-6 newMosqueCol d-none">
+                                        <label for="mosque">Suggest New Mosque<span class="text-danger">*</span></label>
+                                        <input type="text" name="mosque" id="mosque" class="form-control"
+                                            value="{{ old('mosque', $user->mosque) }}">
+                                        {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!} --}}
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-lg-6">
                                         <label for="gender">Gender</label>
                                         <select name="gender" id="gender" class="form-select">
@@ -647,28 +674,150 @@
 
 @section('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
     <script>
-        
-
-
         jQuery(document).ready(function($) {
 
-            $('#search_form').on('submit', function() {
-            // Disable empty input fields
-            $(this).find('input').each(function() {
-                if (!$(this).val().trim()) {
-                    $(this).prop('disabled', true);
+            let typingTimer;
+            const typingDelay = 1000; // ms delay after typing stops
+
+            // --- Search Mosque API ---
+            function searchMosque() {
+                let zip_code = $("#zip_code").val();
+                let city = $("#city").val();
+
+                $.ajax({
+                    url: "{{ route('user.mosque.search') }}",
+                    method: "GET",
+                    data: {
+                        zip: zip_code,
+                        city: city,
+                    },
+                    success: function(data) {
+                        let $mosqueSelect = $("#mosque_id");
+                        $mosqueSelect.empty();
+
+                        if (data.status && data.data.length > 0) {
+                            $mosqueSelect.append('<option value="">-- Select Mosque --</option>');
+                            $.each(data.data, function(index, mosque) {
+                                $mosqueSelect.append(
+                                    '<option value="' + mosque.id + '">' +
+                                    mosque.mosque + '</option>'
+                                );
+                            });
+                            $mosqueSelect.append('<option value="other">-- Other --</option>');
+                        } else {
+                            $mosqueSelect.append('<option value="">No mosques found</option>');
+                            $mosqueSelect.append('<option value="other">-- Other --</option>');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error("Error:", xhr.responseText);
+                        $("#mosque_id").empty().append(
+                            '<option value="">Error loading mosques</option>'
+                        );
+                    }
+                });
+            }
+
+            // --- Store Mosque API ---
+            function storeMosque({
+                mosqueId = null,
+                newMosque = null
+            }) {
+                let amount = 100;
+
+                $.ajax({
+                    url: "{{ route('user.mosque.store') }}",
+                    method: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        mosque_id: mosqueId,
+                        mosque: newMosque,
+                        amount: amount,
+                    },
+                    success: function(response) {
+                        console.log("Stored:", response);
+                        Swal.fire({
+                            icon: response.status ? "success" : "error",
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    },
+                    error: function(xhr) {
+                        console.error("Error saving mosque:", xhr.responseText);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error saving mosque",
+                            text: xhr.responseJSON?.message || "Something went wrong",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                });
+            }
+
+            // --- Debounce for zip & city ---
+            $("#zip_code, #city").on("input", function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(searchMosque, typingDelay);
+            });
+
+            // --- Dropdown change ---
+            $("#mosque_id").on("change", function() {
+                let selected = $(this).val();
+
+                if (selected === "other") {
+                    $(".newMosqueCol").removeClass("d-none");
+                } else if (selected) {
+                    $(".newMosqueCol").addClass("d-none");
+                    // ✅ Store existing mosque immediately
+                    storeMosque({
+                        mosqueId: selected
+                    });
+                } else {
+                    $(".newMosqueCol").addClass("d-none");
                 }
             });
 
-            // Disable unselected select fields
-            $(this).find('select').each(function() {
-                if (!$(this).val()) { // Check if no value is selected
-                    $(this).prop('disabled', true);
-                }
+            // --- Free-text mosque field ---
+            $("#mosque").on("input", function() {
+                clearTimeout(typingTimer);
+                let newMosque = $(this).val();
+
+                typingTimer = setTimeout(function() {
+                    if (newMosque.length > 2) {
+                        // ✅ Store new mosque only when typing stops
+                        storeMosque({
+                            newMosque: newMosque
+                        });
+                    }
+                }, typingDelay);
             });
-        });
+
+            // Run search once on page load
+            searchMosque();
+
+
+
+
+
+
+            $('#search_form').on('submit', function() {
+                // Disable empty input fields
+                $(this).find('input').each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).prop('disabled', true);
+                    }
+                });
+
+                // Disable unselected select fields
+                $(this).find('select').each(function() {
+                    if (!$(this).val()) { // Check if no value is selected
+                        $(this).prop('disabled', true);
+                    }
+                });
+            });
 
 
             // Initialize intlTelInput on all elements with class 'phone_number'
@@ -694,7 +843,6 @@
         });
     </script>
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
             // Check if the script has already run
             if (window.languageScriptLoaded) {
@@ -704,10 +852,12 @@
 
             const languageInput = document.getElementById('language-input');
             const languagesList = document.getElementById('languages-list');
-            const languageHiddenInput = document.getElementById('languages-hidden'); // Get the existing hidden input
+            const languageHiddenInput = document.getElementById(
+                'languages-hidden'); // Get the existing hidden input
 
             // Initialize the languages array with the values from the backend
-            let languages = '{{ $user->languages }}'.split(',').map(lang => lang.trim()).filter(lang => lang); // Trim and split into an array
+            let languages = '{{ $user->languages }}'.split(',').map(lang => lang.trim()).filter(lang =>
+                lang); // Trim and split into an array
 
             // Display the existing languages as tags
             languages.forEach(language => {
@@ -801,7 +951,6 @@
                 }
             });
         });
-
     </script>
 
     <script>
@@ -1100,6 +1249,5 @@
             const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
             document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
         });
-
     </script>
 @endsection
