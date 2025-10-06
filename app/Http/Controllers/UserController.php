@@ -261,8 +261,8 @@ class UserController extends Controller
 
             // Add pivot entry
             \DB::table('user_mosque')->updateOrInsert(
-                ['user_id' => $userId, 'mosque_id' => $mosqueId],
-                ['amount' => $request->amount]
+                ['user_id' => $userId],
+                ['mosque_id' => $mosqueId, 'amount' => $request->amount]
             );
 
             return response()->json([
