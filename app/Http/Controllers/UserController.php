@@ -251,7 +251,6 @@ class UserController extends Controller
             ]);
         }
 
-        // ✅ Case 2: If mosque name is provided instead
         if ($request->filled('mosque')) {
             // Create mosque entry
             $mosqueId = \DB::table('mosques')->insertGetId([
