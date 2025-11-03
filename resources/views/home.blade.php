@@ -307,7 +307,7 @@
             margin: 20px 0;
             border-radius: 15px;
             box-shadow: 2px 2px 20px rgb(0 0 0 / 13%);
-            max-width: 45%;
+            max-width: 70%;
             width: 100%;
         }
 
@@ -940,7 +940,7 @@
                             Muslim community.</p>
                     </div>
                     <div class="homeSec2ColInner">
-                        <h4>Mobile Access (Coming Soon)</h4>
+                        <h4>Mobile Access</h4>
                         <p>Stay connected anytime, anywhere, with our upcoming mobile app designed for seamless
                             engagement
                             on the go.</p>
@@ -975,7 +975,7 @@
                 </div>
 
                 <div id="monthlyTab" class="tab-container active">
-                    <div class="tabs">
+                    {{-- <div class="tabs">
                         <h2>Basic</h2>
                         <h4>$1.99 / month</h4>
                         <p>Explore the Muslim Lynk App with core features at an affordable price.</p>
@@ -990,7 +990,7 @@
 
                         <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
                         <p class="pricingOffer">Ideal for: New users looking to browse and build their presence.</p>
-                    </div>
+                    </div> --}}
                     <div class="tabs">
                         <h2>Pro</h2>
                         <h4>$4.99 / month</h4>
@@ -1012,7 +1012,7 @@
                 </div>
 
                 <div id="yearlyTab" class="tab-container">
-                    <div class="tabs">
+                    {{-- <div class="tabs">
                         <h2>Basic</h2>
                         <h4>$19.99 / year</h4>
                         <p>Explore the Muslim Lynk App with core features at an affordable price.</p>
@@ -1027,7 +1027,7 @@
 
                         <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
                         <p class="pricingOffer">Ideal for: New users looking to browse and build their presence.</p>
-                    </div>
+                    </div> --}}
                     <div class="tabs">
                         <h2>Pro</h2>
                         <h4>$49.99 / year</h4>
