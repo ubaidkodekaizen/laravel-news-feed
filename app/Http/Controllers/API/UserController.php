@@ -84,9 +84,9 @@ class UserController extends Controller
         // ✅ Map enum types to plan_id and plan type
         $planMapping = [
             // 'Basic_Monthly' => ['id' => 4, 'type' => 'monthly'],
-            'Premium_Monthly' => ['id' => 1, 'type' => 'monthly'],
+            'Premium_Monthly' => ['id' => 1, 'type' => 'Monthly'],
             // 'Basic_Yearly' => ['id' => 5, 'type' => 'yearly'],
-            'Premium_Yearly' => ['id' => 2, 'type' => 'yearly'],
+            'Premium_Yearly' => ['id' => 2, 'type' => 'Yearly'],
         ];
 
         if (!isset($planMapping[$request->type])) {
@@ -122,7 +122,7 @@ class UserController extends Controller
                 'subscription_type' => $planData['type'],
                 'subscription_amount' => $plan->plan_amount,
                 'start_date' => $request->startDate,
-                'renewal_date' => now()->addDays($planData['type'] === 'monthly' ? 30 : 365),
+                'renewal_date' => now()->addDays($planData['type'] === 'Monthly' ? 30 : 365),
                 'status' => 'active',
                 'receipt_data' => $request->recieptData,
                 'platform' => $request->platform,
@@ -422,9 +422,9 @@ class UserController extends Controller
 
         $planMapping = [
             // 'Basic_Monthly' => ['id' => 4, 'type' => 'monthly'],
-            'Premium_Monthly' => ['id' => 1, 'type' => 'monthly'],
+            'Premium_Monthly' => ['id' => 1, 'type' => 'Monthly'],
             // 'Basic_Yearly' => ['id' => 5, 'type' => 'yearly'],
-            'Premium_Yearly' => ['id' => 2, 'type' => 'yearly'],
+            'Premium_Yearly' => ['id' => 2, 'type' => 'Yearly'],
         ];
 
         foreach ($user->subscriptions as $subscription) {
