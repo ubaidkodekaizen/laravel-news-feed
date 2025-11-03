@@ -940,7 +940,7 @@
                             Muslim community.</p>
                     </div>
                     <div class="homeSec2ColInner">
-                        <h4>Mobile Access (Coming Soon)</h4>
+                        <h4>Mobile Access</h4>
                         <p>Stay connected anytime, anywhere, with our upcoming mobile app designed for seamless
                             engagement
                             on the go.</p>
