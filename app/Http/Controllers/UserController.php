@@ -241,7 +241,7 @@ class UserController extends Controller
         // ✅ Case 1: If mosque_id is provided
         if ($request->filled('mosque_id')) {
             \DB::table('user_mosque')->updateOrInsert(
-                ['user_id' => $userId, 'mosque_id' => $request->mosque_id],
+                ['user_id' => $userId],
                 ['amount' => $request->amount]
             );
 

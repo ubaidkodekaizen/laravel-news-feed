@@ -4,14 +4,7 @@
     xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
-    <!--[if gte mso 9]>
- <xml>
-  <o:OfficeDocumentSettings>
-  <o:AllowPNG/>
-  <o:PixelsPerInch>96</o:PixelsPerInch>
-  </o:OfficeDocumentSettings>
- </xml>
- <![endif]-->
+
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -319,7 +312,7 @@
                                                                                                 <br>
 
 
-                                                                
+
 
 
 
@@ -341,31 +334,69 @@
                                                                                                 <br>
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
-                                                                                                        style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:start;">
+                                                                                                        style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; 
+           min-width:auto !important; padding-bottom:10px; text-align:start;">
+
                                                                                                         <strong>Subscription
                                                                                                             Information:</strong><br>
                                                                                                         Product: Muslim
                                                                                                         Lynk<br>
-                                                                                                        Quantity: 1
+                                                                                                        Quantity: 1<br>
                                                                                                         Price:
-                                                                                                        ${{ number_format($subscription['subscription_amount'], 2) }}.<br>
+                                                                                                        ${{ number_format($subscription['subscription_amount'], 2) }}<br>
                                                                                                         Subtotal:
-                                                                                                        ${{ number_format($subscription['subscription_amount'], 2) }}.<br>
-                                                                                                        Payment method:
-                                                                                                        <a href="authorize.net"
-                                                                                                            target="_blank"
-                                                                                                            rel="noopener noreferrer"
-                                                                                                            style="color: #b8c034; text-decoration:underline;">authorize.net</a>
-                                                                                                        Muslim Lynk
-                                                                                                        Gateway.<br>
+                                                                                                        ${{ number_format($subscription['subscription_amount'], 2) }}<br>
+
+                                                                                                        @php
+                                                                                                            $platform = strtolower(
+                                                                                                                $subscription[
+                                                                                                                    'platform'
+                                                                                                                ] ??
+                                                                                                                    'authorize',
+                                                                                                            );
+                                                                                                        @endphp
+
+                                                                                                        @if ($platform === 'apple')
+                                                                                                            Payment
+                                                                                                            method:
+                                                                                                            <a href="https://www.apple.com/apple-pay/"
+                                                                                                                target="_blank"
+                                                                                                                rel="noopener noreferrer"
+                                                                                                                style="color:#b8c034; text-decoration:underline;">Apple
+                                                                                                                In-App
+                                                                                                                Purchase</a>
+                                                                                                            via iOS
+                                                                                                            Store.<br>
+                                                                                                        @elseif($platform === 'google')
+                                                                                                            Payment
+                                                                                                            method:
+                                                                                                            <a href="https://play.google.com/"
+                                                                                                                target="_blank"
+                                                                                                                rel="noopener noreferrer"
+                                                                                                                style="color:#b8c034; text-decoration:underline;">Google
+                                                                                                                Play
+                                                                                                                Billing</a>
+                                                                                                            via Android
+                                                                                                            Store.<br>
+                                                                                                        @else
+                                                                                                            Payment
+                                                                                                            method:
+                                                                                                            <a href="https://authorize.net"
+                                                                                                                target="_blank"
+                                                                                                                rel="noopener noreferrer"
+                                                                                                                style="color:#b8c034; text-decoration:underline;">Authorize.Net</a>
+                                                                                                            Muslim Lynk
+                                                                                                            Gateway.<br>
+                                                                                                        @endif
 
                                                                                                         Subscription ID:
-                                                                                                        #{{ $subscription['transaction_id'] }}.<br>
+                                                                                                        #{{ $subscription['transaction_id'] }}<br>
                                                                                                         Start date:
-                                                                                                        {{ date('F d, Y', strtotime($subscription['start_date'])) }}.<br>
+                                                                                                        {{ date('F d, Y', strtotime($subscription['start_date'])) }}<br>
                                                                                                         Next payment:
-                                                                                                        {{ date('F d, Y', strtotime($subscription['renewal_date'])) }}.<br>
+                                                                                                        {{ date('F d, Y', strtotime($subscription['renewal_date'])) }}<br>
                                                                                                     </td>
+
                                                                                                 </tr>
 
 
