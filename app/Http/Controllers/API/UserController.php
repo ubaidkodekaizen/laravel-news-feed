@@ -139,6 +139,7 @@ class UserController extends Controller
                 $message->to([
                     'kashif.zubair@amcob.org',
                     'ubaid.syed@kodekaizen.com',
+                    'samar.naeem@amcob.org',
                     'kashif.zubair@myadroit.com'
                 ]);
                 $message->subject('A new customer for Muslim Lynk');
