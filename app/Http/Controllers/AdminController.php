@@ -207,7 +207,7 @@ class AdminController extends Controller
         $user->age_group = $request->age_group ?? '';
         $user->ethnicity = $request->ethnicity ?? $request->other_ethnicity;
         $user->nationality = $request->nationality ?? '';
-        $user->marital_status = $request->marital_status ?? $request->$request->other_marital_status;
+        $user->marital_status = $request->marital_status ?? $request->other_marital_status;
         $user->tiktok_url = $request->tiktok_url ?? '';
         $user->youtube_url = $request->youtube_url ?? '';
 
