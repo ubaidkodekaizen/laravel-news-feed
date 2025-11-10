@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'google_play' => [
+        'package_name' => env('GOOGLE_PLAY_PACKAGE_NAME'),
+        'credentials_path' => env('GOOGLE_PLAY_CREDENTIALS_PATH', storage_path('app/google/google-play-service-account.json')),
+        'products' => [
+            'Premium_Monthly' => env('GOOGLE_PLAY_PREMIUM_MONTHLY_PRODUCT_ID'),
+            'Premium_Yearly' => env('GOOGLE_PLAY_PREMIUM_YEARLY_PRODUCT_ID'),
+        ],
+    ],
+
 ];

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Company;
+use App\Models\Subscription;
 use App\Models\User;
+use App\Services\GooglePlayService;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,10 +14,12 @@ use App\Models\UserEducation;
 use Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Designation;
 use App\Models\Industry;
 use App\Models\BusinessType;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -108,7 +112,6 @@ class UserController extends Controller
             ->where('status', 'active')
             ->update(['status' => 'cancelled']);
 
-
         $subscription = \App\Models\Subscription::updateOrCreate(
             [
                 'transaction_id' => $request->transactionId,
@@ -125,6 +128,29 @@ class UserController extends Controller
                 'platform' => $request->platform,
             ]
         );
+
+        if ($request->platform === 'google') {
+            try {
+                $this->acknowledgeGoogleSubscription($subscription, $request->type, $request->recieptData);
+            } catch (ValidationException $exception) {
+                throw $exception;
+            } catch (\RuntimeException $exception) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $exception->getMessage(),
+                ], 500);
+            } catch (\Throwable $exception) {
+                Log::error('Failed to acknowledge Google Play subscription: ' . $exception->getMessage(), [
+                    'user_id' => $user->id,
+                    'plan' => $request->type,
+                ]);
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unable to verify Google Play subscription at this time.',
+                ], 502);
+            }
+        }
 
         // ✅ Update user
         $user->paid = 'Yes';
@@ -155,6 +181,67 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Acknowledge a Google Play subscription purchase and flag the stored receipt.
+     *
+     * @throws \RuntimeException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function acknowledgeGoogleSubscription(Subscription $subscription, string $planType, ?string $rawReceipt): void
+    {
+        $productId = data_get(config('services.google_play.products'), $planType);
+
+        if (!$productId) {
+            throw new \RuntimeException('Google Play product id is not configured.');
+        }
+
+        $decodeReceipt = function (?string $payload) use ($subscription) {
+            if (empty($payload)) {
+                return null;
+            }
+
+            $decoded = json_decode($payload, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::warning('Invalid receipt data JSON for Google acknowledgement.', [
+                    'subscription_id' => $subscription->id,
+                    'error' => json_last_error_msg(),
+                ]);
+
+                return null;
+            }
+
+            return $decoded;
+        };
+
+        $receiptData = $decodeReceipt($subscription->receipt_data) ?? [];
+        $newReceiptData = $decodeReceipt($rawReceipt);
+
+        if (is_array($newReceiptData)) {
+            $receiptData = array_merge($receiptData, $newReceiptData);
+        }
+
+        $purchaseToken = $receiptData['purchaseToken'] ?? $subscription->transaction_id;
+
+        if (!$purchaseToken) {
+            throw ValidationException::withMessages([
+                'transactionId' => ['Purchase token is required for Google Play acknowledgement.'],
+            ]);
+        }
+
+        $packageName = $receiptData['packageName'] ?? config('services.google_play.package_name');
+        $developerPayload = $receiptData['developerPayload'] ?? null;
+
+        /** @var GooglePlayService $googlePlay */
+        $googlePlay = app(GooglePlayService::class);
+        $googlePlay->acknowledgeSubscription($productId, $purchaseToken, $developerPayload, $packageName);
+
+        $receiptData['purchaseToken'] = $purchaseToken;
+        $receiptData['acknowledged'] = true;
+
+        $subscription->receipt_data = json_encode($receiptData);
+        $subscription->save();
+    }
 
     public function login(Request $request)
     {

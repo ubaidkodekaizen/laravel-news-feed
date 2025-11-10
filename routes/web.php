@@ -23,6 +23,26 @@ use Illuminate\Support\Facades\Mail;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 use Illuminate\Support\Facades\Response;
+use App\Services\GooglePlayService;
+use Illuminate\Support\Facades\Log;
+
+
+Route::get('/subscribe/iap/google-ping', function () {
+    try {
+      app(GooglePlayService::class);
+      return response()->json([
+        'status' => true,
+        'message' => 'Google Play service instantiated successfully. Credentials and configuration look good.',
+      ]);
+    } catch (\Throwable $exception) {
+      Log::error('Google Play ping failed: ' . $exception->getMessage());
+  
+      return response()->json([
+        'status' => false,
+        'message' => 'Unable to instantiate Google Play service. Check configuration and credentials.',
+      ], 500);
+    }
+  });
 
 Route::get('/test-email', function () {
     try {

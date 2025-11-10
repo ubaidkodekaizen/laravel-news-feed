@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\ChatController;
@@ -10,6 +9,78 @@ use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\EducationController;
+use App\Services\GooglePlayService;
+use Illuminate\Support\Facades\Log;
+
+
+Route::get('/subscribe/iap/google-ping', function () {
+  try {
+    app(GooglePlayService::class);
+    return response()->json([
+      'status' => true,
+      'message' => 'Google Play service instantiated successfully. Credentials and configuration look good.',
+    ]);
+  } catch (\Throwable $exception) {
+    Log::error('Google Play ping failed: ' . $exception->getMessage());
+
+    return response()->json([
+      'status' => false,
+      'message' => 'Unable to instantiate Google Play service. Check configuration and credentials.',
+    ], 500);
+  }
+});
+
+Route::get('/subscribe/iap/google-test', function (Request $request) {
+  $validated = $request->validate([
+    'product' => 'required|string',
+    'purchaseToken' => 'required|string',
+    'packageName' => 'nullable|string',
+  ]);
+
+  $productId = config('services.google_play.products.' . $validated['product']) ?? $validated['product'];
+  $packageName = $validated['packageName'] ?? config('services.google_play.package_name');
+
+  if (empty($productId)) {
+    return response()->json([
+      'status' => false,
+      'message' => 'Google Play product id is not configured.',
+    ], 422);
+  }
+
+  if (empty($packageName)) {
+    return response()->json([
+      'status' => false,
+      'message' => 'Google Play package name is not configured.',
+    ], 422);
+  }
+
+  try {
+    /** @var GooglePlayService $googlePlay */
+    $googlePlay = app(GooglePlayService::class);
+    $purchase = $googlePlay->getSubscriptionPurchase($productId, $validated['purchaseToken'], $packageName);
+
+    return response()->json([
+      'status' => true,
+      'message' => 'Google Play connection successful.',
+      'data' => [
+        'acknowledgementState' => (int) $purchase->getAcknowledgementState(),
+        'paymentState' => (int) $purchase->getPaymentState(),
+        'expiryTimeMillis' => $purchase->getExpiryTimeMillis(),
+        'startTimeMillis' => $purchase->getStartTimeMillis(),
+      ],
+    ]);
+  } catch (\Throwable $exception) {
+    Log::error('Google Play connection test failed: ' . $exception->getMessage(), [
+      'product_id' => $productId,
+      'package_name' => $packageName,
+    ]);
+
+    return response()->json([
+      'status' => false,
+      'message' => 'Unable to confirm Google Play connection. See logs for details.',
+    ], 502);
+  }
+});
 
 
 // Apply middleware at the route level
@@ -75,6 +146,73 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/get-suggestions', [SearchController::class, 'getSuggestions']);
 
   Route::post('/subscribe/iap', [UserController::class, 'handleIapSubscription']);
+  Route::get('/subscribe/iap/google-ping', function () {
+    try {
+      app(GooglePlayService::class);
+      return response()->json([
+        'status' => true,
+        'message' => 'Google Play service instantiated successfully. Credentials and configuration look good.',
+      ]);
+    } catch (\Throwable $exception) {
+      Log::error('Google Play ping failed: ' . $exception->getMessage());
+
+      return response()->json([
+        'status' => false,
+        'message' => 'Unable to instantiate Google Play service. Check configuration and credentials.',
+      ], 500);
+    }
+  });
+  Route::get('/subscribe/iap/google-test', function (Request $request) {
+    $validated = $request->validate([
+      'product' => 'required|string',
+      'purchaseToken' => 'required|string',
+      'packageName' => 'nullable|string',
+    ]);
+
+    $productId = config('services.google_play.products.' . $validated['product']) ?? $validated['product'];
+    $packageName = $validated['packageName'] ?? config('services.google_play.package_name');
+
+    if (empty($productId)) {
+      return response()->json([
+        'status' => false,
+        'message' => 'Google Play product id is not configured.',
+      ], 422);
+    }
+
+    if (empty($packageName)) {
+      return response()->json([
+        'status' => false,
+        'message' => 'Google Play package name is not configured.',
+      ], 422);
+    }
+
+    try {
+      /** @var GooglePlayService $googlePlay */
+      $googlePlay = app(GooglePlayService::class);
+      $purchase = $googlePlay->getSubscriptionPurchase($productId, $validated['purchaseToken'], $packageName);
+
+      return response()->json([
+        'status' => true,
+        'message' => 'Google Play connection successful.',
+        'data' => [
+          'acknowledgementState' => (int) $purchase->getAcknowledgementState(),
+          'paymentState' => (int) $purchase->getPaymentState(),
+          'expiryTimeMillis' => $purchase->getExpiryTimeMillis(),
+          'startTimeMillis' => $purchase->getStartTimeMillis(),
+        ],
+      ]);
+    } catch (\Throwable $exception) {
+      Log::error('Google Play connection test failed: ' . $exception->getMessage(), [
+        'product_id' => $productId,
+        'package_name' => $packageName,
+      ]);
+
+      return response()->json([
+        'status' => false,
+        'message' => 'Unable to confirm Google Play connection. See logs for details.',
+      ], 502);
+    }
+  });
 
 });
 Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
