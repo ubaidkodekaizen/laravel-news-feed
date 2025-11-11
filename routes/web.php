@@ -27,22 +27,73 @@ use App\Services\GooglePlayService;
 use Illuminate\Support\Facades\Log;
 
 
+// 🔹 Static test data from your purchase
+Route::get('/iap/manual-ack', function () {
+    // 🔹 Static test data from your purchase
+    $productId = 'premium_monthly';
+    $purchaseToken = 'pfadblhdjleglpmfiglhokec.AO-J1OyUikJydQcgusdUbomZ44NrIS9Z-MTGX3qgW5vBw_XzDp9R1_1aQMOB4NlM_H1PWXVSNdo0-uY4gajhAp-OKbw8t6TDVw';
+    $packageName = 'com.MuslimLynk';
+
+    try {
+        /** @var GooglePlayService $googlePlay */
+        $googlePlay = app(GooglePlayService::class);
+
+        // Step 1: Fetch subscription details
+        $subscription = $googlePlay->getSubscriptionPurchase($productId, $purchaseToken, $packageName);
+        $ackState = (int) $subscription->getAcknowledgementState();
+        $isAcknowledged = $ackState === 1;
+
+        // Step 2: Acknowledge only if not already acknowledged
+        if (!$isAcknowledged) {
+            $googlePlay->acknowledgeSubscription($productId, $purchaseToken, null, $packageName);
+            $ackMsg = 'Acknowledgment sent successfully ✅';
+        } else {
+            $ackMsg = 'Already acknowledged ✅';
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => $ackMsg,
+            'subscription_details' => [
+                'orderId' => $subscription->getOrderId(),
+                'acknowledgementState' => $subscription->getAcknowledgementState(),
+                'expiryTimeMillis' => $subscription->getExpiryTimeMillis(),
+                'autoRenewing' => $subscription->getAutoRenewing(),
+                'priceAmountMicros' => $subscription->getPriceAmountMicros(),
+                'countryCode' => $subscription->getCountryCode(),
+            ],
+        ]);
+    } catch (\Throwable $e) {
+        Log::error('Manual acknowledgment failed: ' . $e->getMessage(), [
+            'product_id' => $productId,
+            'package_name' => $packageName,
+        ]);
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Acknowledgment failed ❌',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+});
+
+
 Route::get('/subscribe/iap/google-ping', function () {
     try {
-      app(GooglePlayService::class);
-      return response()->json([
-        'status' => true,
-        'message' => 'Google Play service instantiated successfully. Credentials and configuration look good.',
-      ]);
+        app(GooglePlayService::class);
+        return response()->json([
+            'status' => true,
+            'message' => 'Google Play service instantiated successfully. Credentials and configuration look good.',
+        ]);
     } catch (\Throwable $exception) {
-      Log::error('Google Play ping failed: ' . $exception->getMessage());
-  
-      return response()->json([
-        'status' => false,
-        'message' => 'Unable to instantiate Google Play service. Check configuration and credentials.',
-      ], 500);
+        Log::error('Google Play ping failed: ' . $exception->getMessage());
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Unable to instantiate Google Play service. Check configuration and credentials.',
+        ], 500);
     }
-  });
+});
 
 Route::get('/test-email', function () {
     try {
