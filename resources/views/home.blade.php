@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" />
     <style>
@@ -33,13 +33,20 @@
         }
 
         .mainNavbar {
-            background-color: #b8c034;
+            background-color: #fff;
             padding: 10px 20px;
+            border-radius: 0px 0px 24px 24px;
+            box-shadow: 0 4px 19.1px rgba(0, 0, 0, 12%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
         }
 
 
         .mainNavbarInner {
-            max-width: 1140px;
+            max-width: 1516px;
             margin: auto;
             display: flex;
             align-items: center;
@@ -59,6 +66,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .mainNavbarListCenter {
+            max-width: max-content;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .mainNavbarListRight {
+            padding: 0;
+            margin: 0;
         }
 
         .userProfilePic {
@@ -89,375 +112,446 @@
         .mainNavbar .loginBtn {
             background-color: #263473;
             font-family: "Inter", Sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            color: #FFFFFF !important;
-            border-radius: 10px 10px 10px 10px;
-            padding: 15px 35px 15px 35px !important;
-        }
-
-        #homeWrapper {
-            max-width: 1140px;
-            margin: auto;
-            padding: 0 20px;
-        }
-
-        #homeFirstSec {
-            background-color: #b8c034 !important;
-
-            margin: 50px auto;
-            border-radius: 40px;
-            padding: 40px;
-        }
-
-        .homeFirstSecRow {
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-        }
-
-        #homeFirstSec .title {
-            font-family: "Inter", Sans-serif;
-            font-size: 40px;
-            font-weight: 500;
-            text-transform: uppercase;
-            line-height: 44px;
-            color: #233273;
-        }
-
-        #homeFirstSec .para {
-            color: #FFFFFF;
-            font-family: "Inter", Sans-serif;
-            font-size: 19px;
-            font-weight: 400;
-            line-height: 40px;
-        }
-
-        #homeSec2 {
-            margin: auto;
-        }
-
-        .homeSec2Row2 {
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-            gap: 25px;
-            margin: auto;
-            margin-top: 20px;
-            max-width: 97%;
-        }
-
-        .homeSec2Head {
-            font-family: "Inter", Sans-serif;
-            font-size: 40px;
-            font-weight: 600;
-            color: #FFFFFF;
-            background-color: #233273;
-            border-radius: 20px;
-            padding: 14px 20px;
-        }
-
-        .homeFirstSecRow .homeFirstSecCol {}
-
-        .homeSec2Col:last-child {
-            max-width: 30%;
-        }
-
-        .homeSec2ColInner h4 {
-            text-align: left;
-            color: #233273;
-            font-family: "Inter", Sans-serif;
-            font-size: 19px;
-            font-weight: 600;
-            line-height: 25px;
-        }
-
-        .homeSec2ColInner p {
-            text-align: left;
-            color: #233273;
-            font-family: "Inter", Sans-serif;
-            font-size: 19px;
-            font-weight: 400;
-            line-height: 25px;
-        }
-
-        #homeSec3 {
-            margin: 30px auto;
-        }
-
-        #homeSec3 .homeSec3Head {
-            font-family: "Inter", Sans-serif;
-            font-size: 40px;
-            font-weight: 600;
-            color: #FFFFFF;
-            background-color: #b8c034;
-            border-radius: 20px;
-            padding: 14px 20px;
-            text-align: center;
-        }
-
-        #homeSec3 .homeSec3Para {
-            text-align: center;
-            color: #233273;
-            font-family: "Inter", Sans-serif;
-            font-size: 30px;
-            font-weight: 400;
-            line-height: 40px;
-            max-width: 95%;
-            margin: auto;
-        }
-
-        .switch-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 100px;
-            height: 30px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #2196f3;
-            transition: .4s;
-            border-radius: 30px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 24px;
-            width: 24px;
-            left: 3px;
-            bottom: 3px;
-            background-color: #fff;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(70px);
-        }
-
-        .slider .text {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            font-size: 12px;
+            font-size: 18px;
             font-weight: 700;
-            color: #fff;
-            top: 50%;
-            transform: translateY(-50%);
-            transition: .4s;
-        }
-
-        .monthly-text {
-            left: 10px;
-            opacity: 1;
-        }
-
-        .yearly-text {
-            right: 10px;
-            opacity: 0;
-        }
-
-        input:checked+.slider .yearly-text {
-            opacity: 1;
-        }
-
-        input:checked+.slider .monthly-text {
-            opacity: 0;
-        }
-
-        .tab-container.active {
+            color: #FFFFFF !important;
+            border-radius: 50px;
+            padding: 15px 68px 15px 68px !important;
             display: flex;
-            align-items: stretch;
+            align-items: center;
+            justify-content: center;
+            min-height: 61px;
+            line-height: 34.67px;
+            letter-spacing: 0.7px;
+        }
+
+        .mainNavbarListCenter .mainNavbarListItem .mainNavbarLink {
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 25.6px;
+            text-transform: capitalize;
+            color: #333333;
+        }
+
+        #homeHeroSec {
+            background: linear-gradient(180deg, #0E1948 0%, #213BAE 100%);
+            padding: 171px 20px 75px 20px;
+        }
+
+        #homeHeroSec .homeHeroSecInner {
+            max-width: 1340px;
+            width: 100%;
+            margin: auto;
+            text-align: center;
+        }
+
+        #homeHeroSec .homeHeroSecInner h2 {
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-size: 128px;
+            line-height: 100%;
+            text-align: center;
+            text-transform: capitalize;
+            color: #FFFFFF;
+        }
+
+        #homeHeroSec .homeHeroSecInner p {
+            font-family: "Inter", sans-serif;
+            font-weight: 300;
+            font-size: 22.21px;
+            text-align: center;
+            vertical-align: middle;
+            text-transform: capitalize;
+            color: #FFFFFF;
+        }
+
+        #homeHeroSec .homeHeroSecInner p strong {
+            font-weight: 700;
+        }
+
+        #homeHeroSec .homeHeroSecInnerActionBtns {
+            display: flex;
+            align-items: center;
             justify-content: center;
             gap: 20px;
-        }
-
-        .tab-container {
-            display: none;
-        }
-
-
-
-        .tabs {
-            display: flex;
-            align-items: center;
-            justify-content: start;
-            flex-direction: column;
-            gap: 5px;
-            padding: 50px;
-            margin: 20px 0;
-            border-radius: 15px;
-            box-shadow: 2px 2px 20px rgb(0 0 0 / 13%);
-            max-width: 70%;
-            width: 100%;
-        }
-
-        .tabs.active span {
-            text-decoration: line-through;
-            font-size: 30px;
-            font-family: "Inter", Sans-serif;
-            font-weight: 600;
-            color: #B4BE32;
-        }
-
-
-        .tabs h4 {
-            font-size: 40px;
-            font-family: "Inter", sans-serif;
-            font-weight: 900;
-            letter-spacing: 0.02em;
-            color: #B4BE32;
-            text-shadow: 1px 1px #233273;
-        }
-
-        .tabs h2 {
-            font-family: "Inter", Sans-serif;
-            font-size: 24px;
-            font-weight: 900;
-            letter-spacing: 0.02em;
-            color: #233273;
-            text-transform: uppercase;
-        }
-
-        .tabs p {
-            font-size: 18px;
-            font-weight: 500;
-            font-family: "Inter", sans-serif;
-        }
-
-        .tabs ul {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-left: 15px;
-        }
-
-        .tabs ul li {
-            font-family: 'Inter', sans-serif;
-            font-size: 18px;
-            font-weight: 500;
-            list-style: none;
-        }
-
-        .tabs ul li i {
-            font-size: 20px;
-            color: #B4BE32;
-        }
-
-        .homeSec3Pricing {
-            margin: 25px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .homeSec3Pricing .signUpBtn {
-            background-color: #233273;
-            font-family: "Inter", Sans-serif;
-            font-size: 22px;
-            font-weight: 500;
-            fill: #FFFFFF;
-            color: #FFFFFF;
-            border-radius: 15px 15px 15px 15px;
-            padding: 12px 25px 12px 25px;
-            text-decoration: none;
-            transition: .3s;
-        }
-
-        .homeSec3Pricing .signUpBtn:hover {
-            background: #b4be32;
-            transition: .3s;
-        }
-
-        .homeSec3Pricing .pricingOffer {
-            font-family: "Inter", Sans-serif;
-            font-size: 16px;
-            font-weight: 700;
-            color: #233273;
-            text-align: left;
-            line-height: 1.3em;
-            margin: 0;
-            margin-top: 20px;
-        }
-
-        .stickySec {
-            position: sticky;
-            top: 10px;
-        }
-
-        #readMoreAccordion {
-            margin: auto;
-            margin-bottom: 20px;
             margin-top: 50px;
         }
 
-        #readMoreAccordion h2 {
-            font-family: "Inter", Sans-serif;
-            color: #233273;
-            font-size: 26px;
-            font-weight: 600;
-        }
-
-        #readMoreAccordion h3 {
-            font-family: "Inter", Sans-serif;
-            color: #233273;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        #readMoreAccordion p {
-            font-family: "Inter", Sans-serif;
-            color: #233273;
-            font-size: 18px;
-            font-weight: 300;
-        }
-
-        #readMoreAccordion a {
-            color: #2196f3;
-        }
-
-        #readMoreAccordion .accordion-button {
+        #homeHeroSec .homeHeroSecInnerActionBtns .homeHeroSecInnerActionBtn {
+            max-width: 245px;
+            width: 100%;
+            min-height: 84px;
+            opacity: 1;
+            border: 1px solid #fff;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: "Inter", sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #fff;
-            background-color: #b4be32;
-            box-shadow: none;
-            border-radius: 10px !important;
-            padding: 20px 20px;
-            font-weight: 600;
+            letter-spacing: 1.7px;
         }
 
-        #readMoreAccordion .accordion-item {
-            border: none;
+        #homeHeroSec .homeHeroSecInnerActionBtns .homeHeroSecInnerActionBtn.active {
+            background: #B8C034;
+            border: 1px solid #B8C034;
+            color: #273572;
         }
 
-        #readMoreAccordion .accordion-button::after {
-            filter: invert(1) brightness(100);
+        .homeHeroSecInnerMobileStoreActionBtns {
+            display: flex;
+            flex-direction: column;
+            margin: 65px 0 0 0;
+            gap: 30px;
         }
 
-        #readMoreAccordion .accordion-body {
-            border: 1px solid #b4be32;
+        .homeHeroSecInnerMobileStoreActionBtns h4 {
+            font-family: "Inter", sans-serif;
+            font-weight: 500;
+            font-size: 32px;
+            text-align: center;
+            vertical-align: middle;
+            text-transform: capitalize;
+            color: #fff;
+            margin: 0;
+        }
+
+        .homeHeroSecInnerMobileStoreActionBtns .homeHeroSecInnerMobileStoreActionBtnsInner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .homeHeroSecInnerMobileStoreActionBtns .homeHeroSecInnerMobileStoreActionBtn {}
+
+        #advantageSec {
+            padding: 120px 20px;
+        }
+
+        #advantageSec .advantageSecInnerHeading {
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-size: 64px;
+            text-align: center;
+            text-transform: capitalize;
+            color: #273572;
+        }
+
+        #advantageSec .advantageSecInnerHeading span {
+            color: #B8C034;
+        }
+
+        #advantageSec .advantageSecInner {
+            max-width: 1516px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+        }
+
+        .advantageSecInnerBoxOuterRow {
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            gap: 30px;
+            margin: 80px 0 0 0;
+        }
+
+        #advantageSec .advantageSecInnerBoxRow:first-child {
+            max-width: 768px;
+            display: flex;
+            align-items: start;
+            justify-content: start;
+            flex-wrap: wrap;
+        }
+
+        #advantageSec .advantageSecInnerBoxRow:last-child {
+            max-width: 734px;
+        }
+
+        #advantageSec .advantageSecInnerBoxes {
+            max-width: 50%;
+            width: 100%;
+            padding: 26px 23px 26px 32px;
+            border: 1px solid #F2F2F2;
+            transition: .3s ease-in-out;
+        }
+
+        #advantageSec .advantageSecInnerBoxes span {
+            font-family: "Poppins", sans-serif;
+            font-weight: 900;
+            font-size: 31.22px;
+            text-transform: capitalize;
+            color: #848baf;
+            transition: .3s ease-in-out;
+
+        }
+
+        #advantageSec .advantageSecInnerBoxes h4 {
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-size: 42.15px;
+            text-transform: capitalize;
+            color: #273572;
+            transition: .3s ease-in-out;
+        }
+
+        #advantageSec .advantageSecInnerBoxes p {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 15.61px;
+            text-transform: capitalize;
+            color: #273572;
+            transition: .3s ease-in-out;
+        }
+
+        #advantageSec .advantageSecInnerBoxes:last-child {
+            max-width: 100%;
+        }
+
+        #advantageSec .advantageSecInnerBoxes.active {
+            background: #273572;
+            transition: .3s ease-in-out;
+        }
+
+        #advantageSec .advantageSecInnerBoxes.active span,
+        #advantageSec .advantageSecInnerBoxes.active h4,
+        #advantageSec .advantageSecInnerBoxes.active p {
+            color: #fff;
+            transition: .3s ease-in-out;
+        }
+
+        #advantageSec .advantageSecInnerBoxes:hover {
+            background: #273572;
+            transition: .3s ease-in-out;
+        }
+
+        /* #advantageSec .advantageSecInnerBoxes:hover span, */
+        #advantageSec .advantageSecInnerBoxes:hover h4,
+        #advantageSec .advantageSecInnerBoxes:hover p {
+            color: #fff;
+            transition: .3s ease-in-out;
+        }
+
+        #pricingSec {
+            background: linear-gradient(180deg, rgba(14, 25, 72, 0.87) 0%, rgba(33, 59, 174, 0.87) 100%);
+
+            padding: 92px 20px 90px 20px;
+        }
+
+        #pricingSec .pricingSecHead h2 {
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-size: 64px;
+            text-align: center;
+            text-transform: capitalize;
+            color: #fff;
+        }
+
+        #pricingSec .pricingSecHead p {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 22.21px;
+            text-align: center;
+            text-transform: capitalize;
+            color: #fff;
+        }
+
+        #pricingSec .pricingSecInner {
+            max-width: 1220px;
+            width: 100%;
+            margin: auto;
+        }
+
+        #pricingSec .nav.nav-pills {
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0 47px 0;
+        }
+
+        #pricingSec .nav.nav-pills .nav-item .nav-link {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 24px;
+            color: #fff;
+            max-width: 189px;
+            min-height: 53px;
+            border-radius: 50px;
+            padding: 14px 60px;
+            border: 1px solid #fff;
+            background: transparent;
+        }
+
+        #pricingSec .nav.nav-pills .nav-item .nav-link.active {
+            background: rgba(59, 88, 212, 1);
+            border: 1px solid rgba(59, 88, 212, 1);
+        }
+
+        .pricingSecBox {
+            max-width: 600px;
+            border-radius: 25px;
+            border: 12px solid #7881aa;
+            padding: 39px 42px 28px 42px;
+            background: rgba(255, 255, 255, 1);
+            margin: auto;
+        }
+
+        .pricingSecBox h4 {
+            max-width: 141px;
+            min-height: 81px;
             border-radius: 10px;
-            margin-top: 10px;
+            background: rgba(39, 53, 114, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-size: 48px;
+            text-align: center;
         }
+
+        .pricingSecBox h2 {
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-size: 84px;
+            line-height: 50px;
+            color: rgba(39, 53, 114, 1);
+            margin: 45px 0 36px 0;
+        }
+
+        .pricingSecBox p {
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 20px;
+            color: rgba(39, 53, 114, 1);
+            margin: 0 0 30px 0;
+        }
+
+        .pricingSecBox ul {
+            padding: 0;
+        }
+
+        .pricingSecBox ul li {
+            list-style: none;
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 18px;
+            color: rgba(39, 53, 114, 1);
+            margin: 5px 0;
+        }
+
+        .pricingSecBox a {
+            width: 100%;
+            min-height: 75px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(39, 53, 114, 1);
+            font-family: Inter;
+            font-weight: 700;
+            font-size: 24.85px;
+            letter-spacing: 1.5px;
+            color: #fff;
+            text-decoration: none;
+            margin: 30px 0 0 0;
+        }
+
+        #faqSec {
+            padding: 120px 20px;
+        }
+
+        #faqSec .faqSecInnerHeading {
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-size: 64px;
+            text-align: center;
+            text-transform: capitalize;
+            color: #273572;
+        }
+
+        #faqSec .faqSecInnerHeading span {
+            color: #B8C034;
+        }
+
+        #faqSec .faqSecInner {
+            max-width: 1516px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+        }
+
+        #faqSec .faqSecInnerRow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin: 38px 0 0 0;
+        }
+
+        #faqSec .faqSecInnerBox {
+            max-width: 50%;
+            width: 100%;
+        }
+
+        #faqSec .accordion-flush .accordion-item {
+            margin: 0 0 34px 0;
+            box-shadow: 0px 27.8px 37.06px -16.68px rgba(149, 149, 149, 0.25);
+            border: none;
+            padding: 37px 46px 24px 46px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        #faqSec .accordion-item:has(.accordion-button:not(.collapsed)) {
+            background: linear-gradient(180deg, #0E1948 0%, #213BAE 100%) !important;
+        }
+
+        #faqSec .accordion-item:has(.accordion-button:not(.collapsed)) .accordion-body {
+            color: #fff;
+        }
+
+        #faqSec .accordion-flush .accordion-item .accordion-button {
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            font-size: 20.37px;
+            line-height: 130%;
+            letter-spacing: 0px;
+            border: none !important;
+            background: transparent;
+            outline: none;
+        }
+
+        #faqSec .accordion-button::after {
+            position: absolute;
+            left: -20px;
+            top: 18px;
+            background-image: url('assets/images/plusIcon.png');
+        }
+
+        #faqSec .accordion-button:not(.collapsed)::after {
+            background-image: url('assets/images/minusIcon.png');
+            transform: rotate(-180deg);
+            top: 10px;
+        }
+
+        #faqSec .accordion-button:focus {
+            box-shadow: none;
+        }
+
+        #faqSec .accordion-button:not(.collapsed) {
+            color: #fff;
+        }
+
 
         #footer {
             background-color: #2880FE;
@@ -863,7 +957,22 @@
             </a>
 
 
-            <ul class="mainNavbarList">
+
+            <ul class="mainNavbarListCenter">
+                <li class="mainNavbarListItem">
+                    <a class="mainNavbarLink" href="{{ route('login.form') }}">Home</a>
+                </li>
+                <li class="mainNavbarListItem">
+                    <a class="mainNavbarLink" href="{{ route('login.form') }}">Advantage</a>
+                </li>
+                <li class="mainNavbarListItem">
+                    <a class="mainNavbarLink" href="{{ route('login.form') }}">Pricing</a>
+                </li>
+                <li class="mainNavbarListItem">
+                    <a class="mainNavbarLink" href="{{ route('login.form') }}">FAQs</a>
+                </li>
+            </ul>
+            <ul class="mainNavbarListRight">
                 <li class="mainNavbarListItem">
                     @if (Auth::check())
                         <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
@@ -885,353 +994,308 @@
                 </li>
             </ul>
 
+
+
+
         </div>
     </nav>
-    <div id="homeWrapper">
-        <div id="homeFirstSec">
-            <div class="homeFirstSecRow">
-                <div class="homeFirstSecCol">
-                    <h4 class="title">Connecting Muslims Worldwide</h4>
-                    <p class="para">Muslim Lynk is your gateway to empowerment, collaboration, and success within the
-                        Muslim community. Whether you’re an educator, student, entrepreneur, or professional, we are
-                        here to
-                        unlock a world of opportunity for you. Built on the trusted foundation of AMCOB’s network,
-                        Muslim
-                        Lynk is more than a platform – it’s a movement to help you thrive in your career, business, and
-                        life.</p>
-                    <p class="para">Together, we can ensure that <strong>every dollar spent in our community
-                            multiplies
-                            its impact at least sevenfold before it leaves.</strong> By connecting, collaborating, and
-                        supporting one another, we can foster economic empowerment and strengthen our shared values.</p>
-                </div>
-                <div class="homeFirstSecCol">
-                    <img src="{{ asset('assets/images/logo_bg.png') }}" class="img-fluid stickySec" alt="">
+    <div id="homeHeroSec">
+        <div class="homeHeroSecInner">
+            <h2>Connecting Muslims Worldwide</h2>
+            <p><strong>Muslim Lynk</strong> is your gateway to empowerment, collaboration, and success within the Muslim
+                community.
+                Whether you’re an educator, student, entrepreneur, or professional, we are here to unlock a world of
+                opportunity for you. Built on the trusted foundation of AMCOB’s network, Muslim Lynk is more than a
+                platform – it’s a movement to help you thrive in your career, business, and life.</p>
+            <p>
+                Together, we can ensure that every dollar spent in our community multiplies its impact at least
+                sevenfold before it leaves. By connecting, collaborating, and supporting one another, we can foster
+                economic empowerment and strengthen our shared values.
+            </p>
+            <div class="homeHeroSecInnerActionBtns">
+                <a href="#" class="homeHeroSecInnerActionBtn active">Login</a>
+                <a href="#" class="homeHeroSecInnerActionBtn">Sign Up</a>
+            </div>
+            <div class="homeHeroSecInnerMobileStoreActionBtns">
+                <h4>Download the Muslim Lynk App</h4>
+                <div class="homeHeroSecInnerMobileStoreActionBtnsInner">
+                    <a href="#" class="homeHeroSecInnerMobileStoreActionBtn">
+                        <img src="{{ asset('assets/images/playStoreIcon.png') }}" class="img-fluid" alt="">
+                    </a>
+                    <a href="#" class="homeHeroSecInnerMobileStoreActionBtn">
+                        <img src="{{ asset('assets/images/appleStoreIcon.png') }}" class="img-fluid" alt="">
+                    </a>
                 </div>
             </div>
-        </div>
 
-        <div id="homeSec2">
-            <div class="homeSec2Head">
-                The Muslim Lynk Advantage
-            </div>
-            <div class="homeSec2Row2">
-                <div class="homeSec2Col">
-                    <div class="homeSec2ColInner">
+        </div>
+    </div>
+
+    <div id="advantageSec">
+        <div class="advantageSecInner">
+            <h4 class="advantageSecInnerHeading">The Muslim Lynk <span>Advantage</span></h4>
+            <div class="advantageSecInnerBoxOuterRow">
+                <div class="advantageSecInnerBoxRow">
+                    <div class="advantageSecInnerBoxes active">
+                        <span>01</span>
                         <h4>Connect & Network</h4>
                         <p>Discover and connect with professionals who share your vision, industry, or goals, organized
-                            by
-                            expertise and location.</p>
+                            by expertise and location.</p>
                     </div>
-                    <div class="homeSec2ColInner">
+                    <div class="advantageSecInnerBoxes">
+                        <span>02</span>
                         <h4>Direct Messaging</h4>
                         <p>Build meaningful relationships with seamless, direct communication – no barriers, no delays.
                         </p>
                     </div>
-                    <div class="homeSec2ColInner">
-                        <h4>Smart Suggestions (Coming Soon) </h4>
+                    <div class="advantageSecInnerBoxes">
+                        <span>03</span>
+                        <h4>Smart Suggestions</h4>
                         <p>Let our technology guide you to valuable connections, resources, and opportunities tailored
-                            to
-                            your needs.</p>
+                            to your needs.</p>
                     </div>
-                    <div class="homeSec2ColInner">
-                        <h4>Marketplace (Coming Soon) </h4>
+                    <div class="advantageSecInnerBoxes">
+                        <span>04</span>
+                        <h4>Marketplace</h4>
                         <p>A vibrant space to buy and sell services and products, driving growth and prosperity within
-                            the
-                            Muslim community.</p>
+                            the Muslim community.</p>
                     </div>
-                    <div class="homeSec2ColInner">
+                    <div class="advantageSecInnerBoxes">
+                        <span>05</span>
                         <h4>Mobile Access</h4>
-                        <p>Stay connected anytime, anywhere, with our upcoming mobile app designed for seamless
-                            engagement
-                            on the go.</p>
+                        <p>Build meaningful relationships with seamless, direct communication – no barriers, no delays.
+                        </p>
                     </div>
                 </div>
-                <div class="homeSec2Col">
-                    <img src="{{ asset('assets/images/muslim-link-dashboard.png') }}" class="img-fluid stickySec"
+                <div class="advantageSecInnerBoxRow">
+                    <img src="{{ asset('assets/images/homeAdvantageSecImg.png') }}" class="img-fluid"
                         alt="">
-
                 </div>
-            </div>
-        </div>
-
-        <div id="homeSec3">
-            <h2 class="homeSec3Head">
-                Join the Movement
-            </h2>
-            <p class="homeSec3Para">
-                Join Muslim Lynk today, and let’s shape a future where the collective strength of our community uplifts
-                every individual. Together, we’ll ensure the principle of “a dollar revolves seven times within the
-                community before it goes out” becomes a reality. Let’s Lynk and grow!
-            </p>
-            <div class="homeSec3Pricing">
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" id="toggleSwitch">
-                        <span class="slider">
-                            <span class="text monthly-text">Monthly</span>
-                            <span class="text yearly-text">Yearly</span>
-                        </span>
-                    </label>
-                </div>
-
-                <div id="monthlyTab" class="tab-container active">
-                    {{-- <div class="tabs">
-                        <h2>Basic</h2>
-                        <h4>$1.99 / month</h4>
-                        <p>Explore the Muslim Lynk App with core features at an affordable price.</p>
-                        <ul>
-                            <li><i class="fa-solid fa-circle-check"></i> Limited search filters</li>
-                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles (without contact
-                                details)</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Messaging not available</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Add your products and services to be
-                                discovered by others</li>
-                        </ul>
-
-                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
-                        <p class="pricingOffer">Ideal for: New users looking to browse and build their presence.</p>
-                    </div> --}}
-                    <div class="tabs">
-                        <h2>Pro</h2>
-                        <h4>$4.99 / month</h4>
-                        <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.</p>
-                        <ul>
-                            <li><i class="fa-solid fa-circle-check"></i> Access to all advanced filters</li>
-                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles, including contact
-                                information</li>
-                            <li><i class="fa-solid fa-circle-check"></i> In-app messaging to connect directly with
-                                other users</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Add and promote your products and services
-                                within the app</li>
-                        </ul>
-                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
-                        <p class="pricingOffer">Ideal for: Professionals, business owners, and users ready to grow
-                            their network.</p>
-                    </div>
-
-                </div>
-
-                <div id="yearlyTab" class="tab-container">
-                    {{-- <div class="tabs">
-                        <h2>Basic</h2>
-                        <h4>$19.99 / year</h4>
-                        <p>Explore the Muslim Lynk App with core features at an affordable price.</p>
-                        <ul>
-                            <li><i class="fa-solid fa-circle-check"></i> Limited search filters</li>
-                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles (without contact
-                                details)</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Messaging not available</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Add your products and services to be
-                                discovered by others</li>
-                        </ul>
-
-                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
-                        <p class="pricingOffer">Ideal for: New users looking to browse and build their presence.</p>
-                    </div> --}}
-                    <div class="tabs">
-                        <h2>Pro</h2>
-                        <h4>$49.99 / year</h4>
-                        <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.</p>
-                        <ul>
-                            <li><i class="fa-solid fa-circle-check"></i> Access to all advanced filters</li>
-                            <li><i class="fa-solid fa-circle-check"></i> View full user profiles, including contact
-                                information</li>
-                            <li><i class="fa-solid fa-circle-check"></i> In-app messaging to connect directly with
-                                other users</li>
-                            <li><i class="fa-solid fa-circle-check"></i> Add and promote your products and services
-                                within the app</li>
-                        </ul>
-                        <a href="{{ route('register.form') }}" class="signUpBtn">Sign-Up Now!</a>
-                        <p class="pricingOffer">Ideal for: Professionals, business owners, and users ready to grow
-                            their network.</p>
-                    </div>
-
-                </div>
-
-
             </div>
 
         </div>
-        <div class="accordion" id="readMoreAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Read More
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                    data-bs-parent="#readMoreAccordion">
-                    <div class="accordion-body">
-                        <h2>Muslim Lynk: Empowering Muslim Professionals through Networking
-                            and Leadership</h2>
-                        <p>In today’s interconnected world, networking has become a crucial
-                            aspect of professional success. Among various platforms,<strong>Muslim Lynk</strong> stands
-                            out
-                            as a beacon for Muslim professionals, offering a space
-                            to connect, collaborate, and grow. This article delves into how <strong>Muslim
-                                Lynk</strong> empowers its members, fosters relationships, and
-                            contributes to the global professional community.</p>
-                        <h3>The Power of Networking for Muslim Professionals</h3>
-                        <p><strong>Networking</strong> is the cornerstone of professional growth. It
-                            is about building meaningful relationships that can help individuals achieve their career
-                            and personal goals. For Muslim professionals, platforms like <strong>Muslim Lynk</strong>
-                            provide a culturally sensitive environment to connect with
-                            like-minded individuals and expand their reach. By leveraging <strong>business networking
-                                groups</strong>, Muslim professionals can gain access to
-                            mentorship, job opportunities, and industry insights.</p>
-                        <h3>What is Networking? A Business Perspective</h3>
-                        <p>Understanding the <strong>definition of networking in
-                                business</strong> is essential. Networking in a professional
-                            setting involves establishing connections that can lead to mutual benefits. These benefits
-                            can range from sharing knowledge and resources to collaborating on projects. For Muslim
-                            entrepreneurs and professionals, networking platforms like <a
-                                href="{{ route('home') }}"><strong>Muslim Lynk</strong></a> serve as a bridge
-                            to
-                            <strong>networking groups</strong> that align with their values and ambitions.
-                        </p>
-                        <h3>The Role of Business Networking Groups in Career
-                            Advancement</h3>
-                        <p><strong>Business networking groups</strong> play a pivotal role in
-                            fostering professional relationships. Groups like <strong>Muslim Lynk</strong> offer more
-                            than
-                            just a platform; they provide a structured
-                            environment where professionals can share their expertise and learn from others. Such
-                            platforms encourage the exchange of ideas and resources, ultimately benefiting both
-                            individuals and their respective industries.</p>
-                        <h3>Muslim Lynk: A Global Leadership Network</h3>
-                        <p>As a part of the <strong>global leadership network</strong>, <strong>Muslim Lynk</strong>
-                            connects professionals across borders. This network is not confined to a single industry or
-                            region; instead, it spans the globe, bringing together leaders, innovators, and
-                            entrepreneurs. The aim is to create a <strong>professionals network</strong> that is
-                            inclusive,
-                            supportive, and growth-oriented.</p>
-                        <h3>The Importance of a Strong Professionals Network</h3>
-                        <p>A robust <strong>professionals network</strong> is essential for career growth and personal
-                            development. Through
-                            platforms like <strong>Muslim Lynk</strong>, individuals can
-                            access a diverse pool of talent and expertise. This not only helps in expanding one’s
-                            horizons but also fosters a sense of community among professionals who share similar values
-                            and goals.</p>
-                        <h3>Understanding Networking Groups and Their Impact</h3>
-                        <p><strong>Networking groups</strong> are communities designed to connect
-                            professionals who share common interests or objectives. These groups can be
-                            industry-specific or open to professionals from various fields. For Muslim professionals,
-                            <strong>Muslim Lynk</strong> offers a unique platform where they
-                            can engage with peers, seek mentorship, and explore new opportunities.
-                        </p>
-                        <h3>Entrepreneurs Organization: Supporting Business Leaders
-                        </h3>
-                        <p>The <strong>entrepreneurs organization</strong> is another key aspect of professional
-                            networking.
-                            This type of
-                            organization supports business leaders by providing resources, mentorship, and a network of
-                            like-minded individuals. <strong>Muslim Lynk</strong>
-                            incorporates similar principles, offering a space for Muslim entrepreneurs to thrive and
-                            collaborate.</p>
-                        <h3>What is a Business Network? Defining the Concept</h3>
-                        <p>To <strong>define business network</strong>, it is a group of interconnected individuals or
-                            organizations
-                            that collaborate to achieve mutual goals. A business network can be formal or informal, and
-                            its success relies on the active participation of its members. Platforms like
-                            <strong>Muslim Lynk</strong> emphasize the importance of creating
-                            an <strong>elevated network</strong> that fosters professional
-                            growth and innovation.
-                        </p>
-                        <h3>Elevated Network: Taking Professional Connections to the Next
-                            Level</h3>
-                        <p>An <strong>elevated network</strong> goes beyond basic connections. It involves cultivating
-                            deep,
-                            meaningful relationships that can drive significant impact. <strong>Muslim Lynk</strong>
-                            exemplifies this concept by offering tools and resources that
-                            enable its members to build impactful relationships and achieve their career
-                            aspirations.</p>
-                        <h3>How Muslim Lynk Stands Out Among Networking Groups</h3>
-                        <p>Among various <strong>networking groups</strong>, <strong>Muslim Lynk</strong> is
-                            distinguished by its focus on empowering Muslim professionals. By addressing the unique
-                            challenges and opportunities faced by its members, the platform creates an environment where
-                            individuals can thrive. Its emphasis on cultural understanding and shared values sets it
-                            apart.</p>
-                        <h3>Building a Global Community through Networking</h3>
-                        <p>In the era of globalization, networking has taken on a new
-                            dimension. <strong>Muslim Lynk</strong> is part of the larger
-                            </span><strong>global leadership network</strong>, facilitating
-                            connections between professionals from diverse backgrounds. This global approach ensures
-                            that its members have access to a wealth of opportunities and perspectives.</p>
-                        <h3>Professionals Network: A Path to Success</h3>
-                        <p>A strong <strong>professionals network</strong> is often the key to success in any career.
-                            Through
-                            <strong>Muslim Lynk</strong>, members can access a vast network of
-                            professionals who are eager to share their knowledge and expertise. This collaborative
-                            approach fosters innovation and drives growth.
-                        </p>
-                        <h3>Networking Group: A Gateway to Opportunities</h3>
-                        <p>Joining a <strong>networking group</strong> can be a transformative experience for
-                            professionals.
-                            Platforms
-                            like <strong>Muslim Lynk</strong> provide a structured
-                            environment where individuals can meet peers, mentors, and potential collaborators. These
-                            connections often lead to new opportunities, from job offers to partnerships.</p>
-                        <h3>The Significance of Network Groups in Professional
-                            Growth</h3>
-                        <p><strong>Network groups</strong> serve as a catalyst for professional
-                            development. By participating in such groups, individuals can enhance their skills, gain
-                            insights into industry trends, and expand their professional horizons. <strong>Muslim
-                                Lynk</strong> offers these benefits and more, making it an
-                            invaluable resource for Muslim professionals.</p>
-                        <h3>Entrepreneurs Organization: Fostering Innovation and
-                            Growth</h3>
-                        <p>The <strong>entrepreneurs organization</strong> within <strong>Muslim Lynk</strong> is
-                            designed
-                            to support business leaders in their journey. By
-                            providing access to resources, mentorship, and a vibrant community, the platform helps
-                            entrepreneurs overcome challenges and achieve their goals.</p>
-                        <h3>Global Leadership Network: Connecting Visionaries</h3>
-                        <p>As part of the <strong>global leadership network</strong>, <strong>Muslim Lynk</strong>
-                            brings together visionaries from around the world. This network is not just about making
-                            connections; it is about creating a community of leaders who can inspire and support one
-                            another in their endeavors.</p>
-                        <h3>Professionals Network: The Power of Collaboration</h3>
-                        <p>The strength of a <strong>professionals network</strong> lies in its ability to bring
-                            together
-                            diverse talents and
-                            perspectives. Through <strong>Muslim Lynk</strong>, members
-                            can collaborate on projects, share insights, and build relationships that drive success.
-                            This spirit of collaboration is at the heart of the platform.</p>
-                        <h3>Networking Groups: A Platform for Growth</h3>
-                        <p>Participating in <strong>networking groups</strong> is one of the most effective ways to grow
-                            professionally.
-                            <strong>Muslim Lynk</strong> offers a platform where members can
-                            connect with industry leaders, share their experiences, and gain valuable insights. These
-                            interactions often lead to meaningful opportunities and collaborations.
-                        </p>
-                        <h3>Network Groups: Strength in Numbers</h3>
-                        <p>The power of <strong>network groups</strong> lies in their ability to create a supportive
-                            community.
-                            <strong>Muslim Lynk</strong> leverages this concept to build a
-                            network that empowers its members. By fostering connections and encouraging collaboration,
-                            the platform helps professionals achieve their goals.
-                        </p>
-                        <h3>Conclusion: The Future of Networking for Muslim
-                            Professionals</h3>
-                        <p><strong>Muslim Lynk</strong> is more than just a platform; it is a
-                            movement aimed at empowering Muslim professionals worldwide. By providing access to
-                            <strong>business networking groups</strong>, a <strong>global
-                                leadership network</strong>, and a vibrant
-                            <strong>professionals network</strong>, it creates opportunities
-                            for growth and success. Whether you are an entrepreneur, a business leader, or a
-                            professional looking to expand your horizons, <strong>Muslim Lynk</strong> is your gateway
-                            to an
-                            <strong>elevated network</strong> of opportunities. Powered By <a
-                                href="https://www.amcob.org/">AMCOB</a>
-                        </p>
+    </div>
 
+    <div id="pricingSec">
+        <div class="pricingSecInner">
+            <div class="pricingSecHead">
+                <h2>Join the Movement</h2>
+                <p>Join Muslim Lynk today, and let’s shape a future where the collective strength of our community
+                    uplifts
+                    every individual. Together, we’ll ensure the principle of “a dollar revolves seven times within the
+                    community before it goes out” becomes a reality. Let’s Lynk and grow!</p>
+            </div>
+
+
+            <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-monthly-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-monthly" type="button" role="tab" aria-controls="pills-monthly"
+                        aria-selected="true">Monthly</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-yearly-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-yearly" type="button" role="tab" aria-controls="pills-yearly"
+                        aria-selected="false">Yearly</button>
+                </li>
+
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-monthly" role="tabpanel"
+                    aria-labelledby="pills-monthly-tab">
+                    <div class="pricingSecBox">
+                        <h4>PRO</h4>
+                        <h2>$4.99 / month</h2>
+                        <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.</p>
+                        <ul>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>Access to all advanced filters</span>
+                            </li>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>View full user profiles, including contact information</span>
+                            </li>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>In-app messaging to connect directly with other users</span>
+                            </li>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>Add and promote your products and services within the app</span>
+                            </li>
+                        </ul>
+                        <a href="{{ route('register.form') }}">Sign Up</a>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-yearly" role="tabpanel" aria-labelledby="pills-yearly-tab">
+                    <div class="pricingSecBox">
+                        <h4>PRO</h4>
+                        <h2>$49.99 / year</h2>
+                        <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.</p>
+                        <ul>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>Access to all advanced filters</span>
+                            </li>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>View full user profiles, including contact information</span>
+                            </li>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>In-app messaging to connect directly with other users</span>
+                            </li>
+                            <li>
+                                <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid"
+                                    alt="">
+                                <span>Add and promote your products and services within the app</span>
+                            </li>
+                        </ul>
+                        <a href="{{ route('register.form') }}">Sign Up</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="faqSec">
+        <div class="faqSecInner">
+            <h2 class="faqSecInnerHeading">Got Questions? <span>We’ve Got Answers!</span></h2>
+
+            <div class="faqSecInnerRow">
+                <div class="faqSecInnerBox">
+                    <div class="accordion accordion-flush" id="faqSecAccordion1">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                    aria-controls="flush-collapseOne">
+                                    Accordion Item #1
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingOne" data-bs-parent="#faqSecAccordion1">
+                                <div class="accordion-body">Placeholder content for this accordion, which is intended
+                                    to
+                                    demonstrate the <code>.accordion-flush</code> class. This is the first item's
+                                    accordion
+                                    body.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                                    aria-controls="flush-collapseTwo">
+                                    Accordion Item #2
+                                </button>
+                            </h2>
+                            <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingTwo" data-bs-parent="#faqSecAccordion1">
+                                <div class="accordion-body">Placeholder content for this accordion, which is intended
+                                    to
+                                    demonstrate the <code>.accordion-flush</code> class. This is the second item's
+                                    accordion
+                                    body. Let's imagine this being filled with some actual content.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseThree" aria-expanded="false"
+                                    aria-controls="flush-collapseThree">
+                                    Accordion Item #3
+                                </button>
+                            </h2>
+                            <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingThree" data-bs-parent="#faqSecAccordion1">
+                                <div class="accordion-body">Placeholder content for this accordion, which is intended
+                                    to
+                                    demonstrate the <code>.accordion-flush</code> class. This is the third item's
+                                    accordion
+                                    body. Nothing more exciting happening here in terms of content, but just filling up
+                                    the
+                                    space to make it look, at least at first glance, a bit more representative of how
+                                    this would
+                                    look in a real-world application.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faqSecInnerBox">
+                    <div class="accordion accordion-flush" id="faqSecAccordion2">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseFour" aria-expanded="false"
+                                    aria-controls="flush-collapseFour">
+                                    Accordion Item #1
+                                </button>
+                            </h2>
+                            <div id="flush-collapseFour" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingFour" data-bs-parent="#faqSecAccordion2">
+                                <div class="accordion-body">Placeholder content for this accordion, which is intended
+                                    to
+                                    demonstrate the <code>.accordion-flush</code> class. This is the first item's
+                                    accordion
+                                    body.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseFive" aria-expanded="false"
+                                    aria-controls="flush-collapseFive">
+                                    Accordion Item #2
+                                </button>
+                            </h2>
+                            <div id="flush-collapseFive" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingFive" data-bs-parent="#faqSecAccordion2">
+                                <div class="accordion-body">Placeholder content for this accordion, which is intended
+                                    to
+                                    demonstrate the <code>.accordion-flush</code> class. This is the second item's
+                                    accordion
+                                    body. Let's imagine this being filled with some actual content.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingSix">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseSix" aria-expanded="false"
+                                    aria-controls="flush-collapseSix">
+                                    Accordion Item #3
+                                </button>
+                            </h2>
+                            <div id="flush-collapseSix" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingSix" data-bs-parent="#faqSecAccordion2">
+                                <div class="accordion-body">Placeholder content for this accordion, which is intended
+                                    to
+                                    demonstrate the <code>.accordion-flush</code> class. This is the third item's
+                                    accordion
+                                    body. Nothing more exciting happening here in terms of content, but just filling up
+                                    the
+                                    space to make it look, at least at first glance, a bit more representative of how
+                                    this would
+                                    look in a real-world application.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+
+
     <div class="home_banner_sec" style="background-image: url('{{ asset('assets/images/home_banner_bg.png') }}');">
         <div class="banner_container">
             <div class="row align-items-center">
