@@ -543,7 +543,7 @@ div#sidebarMain {
 }
 
 .sidebar {
-        width: 100%;
+    width: 100%;
     padding: 0px;
     height: calc(96.8vh - 100px);
     overflow-y: auto;
@@ -2087,7 +2087,7 @@ div.selected-filter-group {
 
 .profile-pic img {
     width: 167px;
-    height: 232px;
+    height: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     object-fit: cover;
@@ -2629,6 +2629,10 @@ p.industryProfileMemberSince {
 .industryProfileDetails p {
     margin: 0;
     padding: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 p.industryProfileRole {
@@ -2672,7 +2676,29 @@ div#userResults {
     width: 100% !important;
 }
 
+
+
+@media (max-width: 1280px) {
+
+    .industry_specialist .container .row.g-3 .col-md-4 {
+        width: 50.001%;
+    }
+
+    .industry-profile-card .profile-pic {
+        width: 249px;
+    }
+}
+
 @media (max-width: 1080px) {
+
+    .industry_specialist .container .row.g-3 .col-md-4 {
+        width: 50.001%;
+    }
+
+    .industry-profile-card .profile-pic {
+        width: 249px;
+    }
+
     .mobile_toggle {
         display: block;
     }
@@ -2748,7 +2774,53 @@ div#userResults {
 }
 
 
+
+@media (max-width: 1399px) {
+    .user-results {
+        flex: 0 0 auto;
+        width: 33.33%;
+    }
+}
+
+@media (max-width: 1004px) {
+    .user-results {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+
+
 @media only screen and (max-width: 768px) {
+
+    .user-results {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .RecordAndPagination {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-self: center;
+        gap: 22px;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+
+    .industry-heading p {
+        width: 90%;
+    }
+
+    .industry_specialist .container .row.g-3 .col-md-4 {
+        width: 100%;
+    }
+
+    #filterContainer {
+        padding: 20px 20px;
+        background: #fff;
+    }
+
+
+
     .mobile_hide {
         display: none;
     }
@@ -2770,7 +2842,7 @@ div#userResults {
     }
 
     .user-card .btn_flex {
-        justify-content: start;
+        justify-content: center;
         gap: 10px;
     }
 
@@ -2786,6 +2858,7 @@ div#userResults {
         position: absolute;
         left: -100%;
         width: 75%;
+        height: 90vh;
         transition: .5s all ease;
     }
 
