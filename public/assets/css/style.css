@@ -534,6 +534,23 @@ body {
     border: 2px solid var(--primary);
 }
 
+.sidebar {
+    width: 25%;
+    background-color: var(--primary);
+    padding: 0px;
+    border-right: 1px solid #ddd;
+    height: calc(100vh - 105px);
+    overflow-y: auto;
+    color: var(--white);
+}
+
+.main-content {
+    width: 75%;
+    padding: 20px;
+    height: calc(100vh - 105px);
+    overflow-y: auto;
+}
+
 /* search styling */
 
 div#sidebarMain {
@@ -542,12 +559,13 @@ div#sidebarMain {
     padding: 20px 10px 0 10px;
 }
 
-.sidebar {
+#sidebarMain .sidebar {
     width: 100%;
     padding: 0px;
     height: calc(96.8vh - 100px);
     overflow-y: auto;
     color: #000;
+    background-color: transparent;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -1039,6 +1057,7 @@ div.selected-filter-group {
 /* Sidebar visible state for mobile */
 .sidebar.open {
     left: 0;
+    z-index: 99;
 }
 
 .sidebar-toggler {
@@ -2669,12 +2688,12 @@ p.industryProfileRole {
 }
 
 /* search page main content  */
-div#userResults {
+/* div#userResults {
     display: grid !important;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 20px;
     width: 100% !important;
-}
+} */
 
 
 
@@ -2692,6 +2711,10 @@ div#userResults {
 @media (max-width: 1080px) {
 
     .industry_specialist .container .row.g-3 .col-md-4 {
+        width: 50.001%;
+    }
+
+    .industry_specialist #industryContainer .row.g-4 .col-md-3{
         width: 50.001%;
     }
 
@@ -2792,6 +2815,10 @@ div#userResults {
 
 @media only screen and (max-width: 768px) {
 
+    .industry_specialist #industryContainer .row.g-4 .col-md-3{
+        width: 100%;
+    }
+
     .user-results {
         flex: 0 0 auto;
         width: 100%;
@@ -2873,11 +2900,12 @@ div#userResults {
 
     .main-content {
         width: 100%;
+        padding-top: 40px;
     }
 
-    div#userResults {
+    /* div#userResults {
         margin-top: 50px;
-    }
+    } */
 
     .user_company_profile .btn-flex .btn {
         width: 100%;
@@ -2963,5 +2991,13 @@ div#userResults {
 
     .profile-container {
         height: auto;
+    }
+
+    .data_table_user .btn_flex {
+        height: 90px;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        gap: 0;
     }
 }

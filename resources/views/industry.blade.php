@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container" id="industryContainer">
             <div class="row g-4">
 
                 @if ($users->isEmpty())

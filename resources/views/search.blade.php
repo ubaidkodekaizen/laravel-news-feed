@@ -522,7 +522,7 @@
         <!-- Main Content Area -->
         <div class="main-content">
             <!-- User Details Card -->
-            <div class="row g-4">
+            <div class="row g-4" id="userResults">
                 {{-- <div class="col-md-12 userResults" id="userResults"> --}}
                     @include('partial.search-result', ['users' => $users])
                 {{-- </div> --}}
