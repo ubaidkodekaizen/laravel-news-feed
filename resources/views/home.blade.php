@@ -51,9 +51,11 @@
              }
 
              .mainNavbarMenu {
-                 display: flex;
-                 align-items: center;
-                 gap: 50px;
+                display: flex;
+                align-items: center;
+                gap: 50px;
+                width: 100%;
+                justify-content: space-between;
              }
 
              .mainNavbarListCenter,
@@ -102,6 +104,14 @@
 
              .dropdown-menu {
                  min-width: 150px;
+             }
+
+             #bigDeviceLogo{
+                display: block;
+             }
+
+             #smallDeviceLogo{
+                display: none;
              }
 
              /* Mobile Menu Toggle Button */
@@ -856,10 +866,24 @@
                  }
              }
 
+             @media (max-width: 992px) {
+
+             #bigDeviceLogo{
+               
+                display: none;
+             }
+
+             #smallDeviceLogo{
+                display: block;
+             }
+            }
+
              @media (min-width: 992px) {
                  .banner_container {
                      max-width: 992px
                  }
+
+                 
 
 
              }
@@ -1320,7 +1344,7 @@
 
          <nav class="mainNavbar">
              <div class="mainNavbarInner">
-                 <a class="mainNavbarBrand" href="{{ route('home') }}">
+                 <a id="smallDeviceLogo" class="mainNavbarBrand" href="{{ route('home') }}">
                      <img src="{{ asset('assets/images/logo.png') }}" width="70" class="img-fluid" alt="">
                  </a>
 
@@ -1332,19 +1356,22 @@
                  </button>
 
                  <!-- Navigation Menu -->
-                 <div class="mainNavbarMenu">
+                 <div  class="mainNavbarMenu">
+                    <a id="bigDeviceLogo" class="mainNavbarBrand" href="{{ route('home') }}">
+                     <img src="{{ asset('assets/images/logo.png') }}" width="70" class="img-fluid" alt="">
+                 </a>
                      <ul class="mainNavbarListCenter">
                          <li class="mainNavbarListItem">
-                             <a class="mainNavbarLink" href="{{ route('login.form') }}">Home</a>
+                             <a class="mainNavbarLink" href="{{ route('home') }}">Home</a>
                          </li>
                          <li class="mainNavbarListItem">
-                             <a class="mainNavbarLink" href="{{ route('login.form') }}">Advantage</a>
+                             <a class="mainNavbarLink" href="#advantageSec">Advantage</a>
                          </li>
                          <li class="mainNavbarListItem">
-                             <a class="mainNavbarLink" href="{{ route('login.form') }}">Pricing</a>
+                             <a class="mainNavbarLink" href="#pricingSec">Pricing</a>
                          </li>
                          <li class="mainNavbarListItem">
-                             <a class="mainNavbarLink" href="{{ route('login.form') }}">FAQs</a>
+                             <a class="mainNavbarLink" href="#faqSec">FAQs</a>
                          </li>
                      </ul>
 
