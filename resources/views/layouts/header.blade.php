@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-   
+
 
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
@@ -97,7 +97,7 @@
                 <div class="header-mid mobile_hide">
                     <form method="GET" action="{{ route('search') }}" class="mb-0" id="search_form">
                         <div class="search_area">
-                            
+
 
                             {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
 
@@ -113,13 +113,13 @@
                             <input type="hidden" name="company_industry" id="company_industry1">
 
                             <button class="btn btn-primary search_btn">
-                                <img src="assets/images/fe_search.svg" alt="Search">
+                                <img src="{{asset('assets/images/fe_search.svg')}}" alt="Search">
                             </button>
                         </div>
                     </form>
                 </div>
 
-               
+
             </div>
 
             <div class="header_right">
@@ -127,12 +127,12 @@
                     <ul>
                         <li>
                             <a href="{{ route('our.community') }}" class="btn btn-primary">
-                                 <img src="assets/images/Vector.svg" alt="community">
+                                 <img src="{{asset('assets/images/Vector.svg')}}" alt="community">
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('smart.suggestion') }}" class="btn btn-primary">
-                                <img src="assets/images/suggestion.svg" alt="Suggestions">
+                                <img src="{{asset('assets/images/suggestion.svg')}}" alt="Suggestions">
                             </a>
                         </li>
                     </ul>
@@ -144,7 +144,7 @@
                         <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"
                             data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="user_profile_name_h"> {{ Auth::user()->first_name }} </span>
-                        <img id="userProfileDropdown" src="assets/images/whiteChevron.svg" alt="DropDown">
+                        <img id="userProfileDropdown" src="{{asset('assets/images/whiteChevron.svg')}}" alt="DropDown">
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
