@@ -869,7 +869,7 @@
              @media (max-width: 992px) {
 
              #bigDeviceLogo{
-               
+
                 display: none;
              }
 
@@ -883,7 +883,7 @@
                      max-width: 992px
                  }
 
-                 
+
 
 
              }
@@ -1466,8 +1466,8 @@
                      economic empowerment and strengthen our shared values.
                  </p>
                  <div class="homeHeroSecInnerActionBtns">
-                     <a href="#" class="homeHeroSecInnerActionBtn active">Login</a>
-                     <a href="#" class="homeHeroSecInnerActionBtn">Sign Up</a>
+                     <a href="{{ route('login.form') }}" class="homeHeroSecInnerActionBtn active">Login</a>
+                     <a href="{{ route('register.form') }}" class="homeHeroSecInnerActionBtn">Sign Up</a>
                  </div>
                  <div class="homeHeroSecInnerMobileStoreActionBtns">
                      <h4>Download the Muslim Lynk App</h4>
