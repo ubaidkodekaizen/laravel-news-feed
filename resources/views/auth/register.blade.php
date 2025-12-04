@@ -221,9 +221,6 @@
             padding-top: 5px;
             color: #b8c034;
         }
-
-       
-
     </style>
 </head>
 

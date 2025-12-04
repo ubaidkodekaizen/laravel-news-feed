@@ -305,6 +305,15 @@
     position: relative;
     background: #fff;
 }
+
+@media only screen and (max-width: 768px) {
+  
+mainHeadingCon {
+            flex-direction: column-reverse;}
+
+            .img_side_width {
+    min-width: 100%;}
+            }
     </style>
 </head>
 

@@ -2116,6 +2116,7 @@ div.selected-filter-group {
 /* new card testing end  */
 
 .industry-profile-card {
+    height: 100%;
     display: flex;
     gap: 26px;
     background: #273572;
@@ -2880,10 +2881,44 @@ p.industryProfileRole {
         flex: 0 0 auto;
         width: 50%;
     }
+
+    .profile_details .userInfo {
+    flex-direction: column;
+    align-items: self-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 0;
+    margin-bottom: 8px;
+    }
+
+    .profile-pic img { width: 200px;}
+
+    .userProfileMemberSince {margin-bottom: 4px !important;}
 }
 
+@media (max-width: 894px) {
+.profile-pic img {
+        width: 162px;
+    }
+}
+
+@media (max-width: 698px) {
+    .profile-pic img {
+        width: 176px;
+    }
+}
 
 @media only screen and (max-width: 768px) {
+
+    .top-controls {
+    align-self: center;}
+
+    .pagination .page-btn:first-child,
+    .pagination .page-btn:last-child {
+    font-size: 14.33px;}
+
+    .pagination button.active {
+    font-size: 12.33px;}
 
     .industry_specialist #industryContainer .row.g-4 .col-md-3{
         width: 100%;
@@ -3070,4 +3105,28 @@ p.industryProfileRole {
         justify-content: start;
         gap: 0;
     }
+    .top-controls label {
+    font-size: 12.33px;}
+    .record-info{font-size: 12.33px;}
+}
+
+@media (max-width: 412px) {
+    .industry-profile-card {flex-direction: column;  padding: 8px 20px;}
+    .industry-profile-card .profile-pic {width: -webkit-fill-available;}
+        .profile-pic img {
+        width: 100%;
+        height: 300px;
+        margin-top: 10px;
+    }
+
+    .profile-pic::before {top: 44px;}
+
+    /* .industry-profile-card .profile_details {
+    text-align: center;
+    justify-items: center;
+    }
+    .profile_details .userInfo {
+        align-items: center;
+        justify-content: center;
+        text-align: center;} */
 }
