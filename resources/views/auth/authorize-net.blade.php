@@ -216,10 +216,10 @@
             justify-content: space-between;
         }
 
-.mainHeadingConInner {
-    align-content: center;
-    width: 100%;
-}
+        .mainHeadingConInner {
+            align-content: center;
+            width: 100%;
+        }
 
         div#innerImage {
             display: flex;
@@ -296,24 +296,40 @@
             background: #fff;
         }
 
-.bxs-calendar:before {
-    content: "\ed00";
-    font-size: 22px;
-    top: 6px;
-    right: 9px;
-    color: #273572;
-    position: relative;
-    background: #fff;
-}
+        .bxs-calendar:before {
+            content: "\ed00";
+            font-size: 22px;
+            top: 6px;
+            right: 9px;
+            color: #273572;
+            position: relative;
+            background: #fff;
+        }
 
-@media only screen and (max-width: 768px) {
-  
-mainHeadingCon {
-            flex-direction: column-reverse;}
+        @media(max-width: 992px) {
+            .mainHeadingCon {
+                flex-direction: column-reverse;
+                align-items: center;
+                text-align: center;
+            }
+
+            div#innerImage {
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+
+
+            .custom-btn {
+                width: 100%;
+            }
 
             .img_side_width {
-    min-width: 100%;}
+                min-width: 100%;
             }
+        }
     </style>
 </head>
 
@@ -336,7 +352,7 @@ mainHeadingCon {
                             </div>
 
                             <div id="innerImage" class="img_side_width mainHeadingConInner">
-                                <a href="{{route('home')}}">
+                                <a href="{{ route('home') }}">
                                     <img src="{{ asset('assets/images/logo.png') }}" alt="" class="img-fluid">
                                 </a>
                             </div>
@@ -472,8 +488,8 @@ mainHeadingCon {
                                     maxlength="100">
                                 @error('email')
     <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
 @enderror
                                 <label>{{ __('Email Address') }}</label>
                             </div> -->
@@ -485,8 +501,8 @@ mainHeadingCon {
                                     maxlength="100">
                                 @error('phone')
     <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
 @enderror
                                 <label>{{ __('Phone Number') }}</label>
                             </div> -->
@@ -643,8 +659,8 @@ mainHeadingCon {
                                     value="{{ old('card_number') }}" required autocomplete="off" maxlength="16">
                                 @error('card_number')
     <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
 @enderror
                                 <label>{{ __('Card Number (16 digits)') }}</label>
                             </div> -->
@@ -659,8 +675,8 @@ mainHeadingCon {
                                             autocomplete="off" maxlength="5">
                                         @error('expiration_date')
     <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
+                                                                                <strong>{{ $message }}</strong>
+                                                                            </span>
 @enderror
                                         <label>{{ __('Expiration Date (MM/YY)') }}</label>
                                     </div>
@@ -674,8 +690,8 @@ mainHeadingCon {
                                             value="{{ old('cvv') }}" required autocomplete="off" maxlength="4">
                                         @error('cvv')
     <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
+                                                                                <strong>{{ $message }}</strong>
+                                                                            </span>
 @enderror
                                         <label>{{ __('CVV') }}</label>
                                     </div>
