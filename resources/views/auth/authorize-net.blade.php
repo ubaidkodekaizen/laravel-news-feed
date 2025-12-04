@@ -214,9 +214,10 @@
     justify-content: space-between;
 }
 
-.mainHeadingConInner {
-    align-content: center;
-}
+    .mainHeadingConInner {
+        align-content: center;
+        width: 100%;
+    }
 
     div#innerImage{
         display: flex;
@@ -299,6 +300,40 @@
     position: relative;
     background: #fff;
 }
+
+@media (max-width: 1247px) {
+  div#innerImage {
+    width: 100% !important;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .mainHeadingCon {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .custom-btn {
+    width: 100%;}
+
+    .img_side_width {
+     min-width: 100%;}
+
+     h2 {
+    font-size: 34.7px;}
+
+    .para {
+    font-size: 16.35px;}
+
+     .form-section {
+    padding: 0;}
+
+    .col-lg-12{
+        padding: 0;
+    }
+}
+
+
     </style>
 </head>
 

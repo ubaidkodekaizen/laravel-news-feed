@@ -224,6 +224,57 @@
     object-position: center;
 }
 
+@media (max-width: 1280px) {
+  
+
+  .custom-btn {
+    width: 100%;}
+
+    .img_side_width {
+     min-width: 100%;}
+
+     h2 {
+    font-size: 42.7px;}
+
+    p {
+    font-size: 18.35px;}
+
+     .form-section {
+    padding: 0;}
+
+    form.form {
+    width: 482.18px;}
+}
+
+@media (max-width: 992px) {
+
+    body {
+    background: #FFF;}
+    .col-lg-5.mobile_hide {
+        display: none;
+    }
+    .col-lg-7 {
+        width: 100%;
+    }
+
+        form.form {
+        width: 100%;
+        padding: 20px;
+    }
+
+    div#innerImage {
+        margin-top: 30px;
+    margin-bottom: 30px;}
+
+    h2 {
+    font-size: 32.7px;}
+
+    p {
+    font-size: 16.35px;}
+    
+}
+
+
 </style>
 
 </head>
