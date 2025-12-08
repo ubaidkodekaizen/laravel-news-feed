@@ -217,6 +217,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
 Route::post('/register', [UserController::class, 'register']);
+Route::post('/register-amcob', [UserController::class, 'registerAmcob']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/forget-password', [UserController::class, 'sendResetLink']);
 

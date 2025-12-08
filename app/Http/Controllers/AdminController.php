@@ -91,6 +91,7 @@ class AdminController extends Controller
     public function showSubscriptions()
     {
         $subscriptions = Subscription::with('user')
+            ->whereNotIn('platform', ['DB', 'Amcob'])
             ->orderByDesc('id')
             ->get();
 
