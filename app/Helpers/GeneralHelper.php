@@ -24,7 +24,10 @@ class GeneralHelper
 
     public static function getSubscriberCount(): int
     {
-        return Subscription::whereNotIn('platform', ['DB', 'Amcob'])->count();
+        return Subscription::where(function($query) {
+            $query->whereNotIn('platform', ['DB', 'Amcob'])
+                  ->orWhereNull('platform');
+        })->count();
     }
 
     public static function getBlogCount(): int

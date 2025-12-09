@@ -62,7 +62,7 @@ class AdminController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
-	public function adminResetLink(Request $request)
+    public function adminResetLink(Request $request)
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
@@ -91,7 +91,10 @@ class AdminController extends Controller
     public function showSubscriptions()
     {
         $subscriptions = Subscription::with('user')
-            ->whereNotIn('platform', ['DB', 'Amcob'])
+            ->where(function($query) {
+                $query->whereNotIn('platform', ['DB', 'Amcob'])
+                      ->orWhereNull('platform');
+            })
             ->orderByDesc('id')
             ->get();
 
@@ -314,7 +317,7 @@ class AdminController extends Controller
         $company->save();
 
 
-      
+
 
 
 
