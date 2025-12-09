@@ -11,6 +11,22 @@
     <link rel="icon" href="http://127.0.0.1:8000/assets/images/logo_bg.png" type="image/x-icon">
     <title>@yield('title', 'Muslim Lynk | Empowering Connections, Amplifying Impact')</title>
 </head>
+<style>
+
+    #footer {
+        background-color: #B8C034;
+    }
+    #footer p {
+    text-align: center;
+    color: #273572;
+    font-family: "Inter", Sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    padding: 20px 0;
+}
+    
+</style>
 <body>
 
     @include('layouts.header')

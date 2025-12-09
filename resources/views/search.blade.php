@@ -1,4 +1,6 @@
 @extends('layouts.main')
+
+
 @section('content')
     <div class="navbar_d_flex">
         <!-- Toggler Button -->

@@ -854,6 +854,13 @@
                  width: 100%
              }
 
+             img#advantageMainImg {
+                width: 734px;
+                height: 756px;
+                object-fit: cover;
+                object-position: center;
+            }
+
              @media (min-width: 100%) {
                  .banner_container {
                      max-width: 100%
@@ -1493,35 +1500,35 @@
                  <h4 class="advantageSecInnerHeading">The Muslim Lynk <span>Advantage</span></h4>
                  <div class="advantageSecInnerBoxOuterRow">
                      <div class="advantageSecInnerBoxRow">
-                         <div class="advantageSecInnerBoxes active">
+                         <div class="advantageSecInnerBoxes active" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
                              <span>01</span>
                              <h4>Connect & Network</h4>
                              <p>Discover and connect with professionals who share your vision, industry, or goals,
                                  organized
                                  by expertise and location.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/logo_jpg.jpg') }}">
                              <span>02</span>
                              <h4>Direct Messaging</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
                                  delays.
                              </p>
                          </div>
-                         <div class="advantageSecInnerBoxes">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/muslim-link-dashboard.png') }}">
                              <span>03</span>
                              <h4>Smart Suggestions</h4>
                              <p>Let our technology guide you to valuable connections, resources, and opportunities
                                  tailored
                                  to your needs.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/kodeReachLogo.png') }}">
                              <span>04</span>
                              <h4>Marketplace</h4>
                              <p>A vibrant space to buy and sell services and products, driving growth and prosperity
                                  within
                                  the Muslim community.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/image1.png') }}">
                              <span>05</span>
                              <h4>Mobile Access</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
@@ -1530,7 +1537,7 @@
                          </div>
                      </div>
                      <div class="advantageSecInnerBoxRow">
-                         <img src="{{ asset('assets/images/homeAdvantageSecImg.png') }}" class="img-fluid"
+                         <img id="advantageMainImg" src="{{ asset('assets/images/homeAdvantageSecImg.png') }}" class="img-fluid"
                              alt="">
                      </div>
                  </div>
@@ -2009,6 +2016,58 @@
                  });
              });
          </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const boxes = Array.from(document.querySelectorAll('.advantageSecInnerBoxes'));
+                const mainImg = document.getElementById('advantageMainImg');
+
+                if (!mainImg || boxes.length === 0) return; // safety guard
+
+                // Helper to change image and active class
+                function activateBox(box) {
+                boxes.forEach(b => b.classList.remove('active'));
+                box.classList.add('active');
+
+                const newImg = box.dataset.img || box.getAttribute('data-img');
+                if (newImg) {
+                    // optional: fade effect
+                    mainImg.style.transition = 'opacity 200ms ease';
+                    mainImg.style.opacity = 0;
+                    // small timeout to allow fade-out
+                    setTimeout(() => {
+                    mainImg.src = newImg;
+                    mainImg.style.opacity = 1;
+                    }, 180);
+                }
+                }
+
+                // Set initial image from the active box (if any)
+                const initial = boxes.find(b => b.classList.contains('active'));
+                if (initial && (initial.dataset.img || initial.getAttribute('data-img'))) {
+                mainImg.src = initial.dataset.img || initial.getAttribute('data-img');
+                }
+
+                // Preload images to avoid flicker
+                boxes.forEach(b => {
+                const url = b.dataset.img || b.getAttribute('data-img');
+                if (url) {
+                    const img = new Image();
+                    img.src = url;
+                }
+                });
+
+                // Add listeners for hover and touch/click
+                boxes.forEach(box => {
+                box.addEventListener('mouseenter', () => activateBox(box));
+                box.addEventListener('focus', () => activateBox(box)); // keyboard accessibility
+                // support taps on mobile
+                box.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    activateBox(box);
+                });
+                });
+            });
+        </script>
      </body>
 
      </html>

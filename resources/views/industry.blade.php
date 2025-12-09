@@ -137,7 +137,11 @@
         </div> --}}
     </section>
 
-    <section class="lp_footer">
+    <div id="footer">
+             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+         </div>
+
+    <!-- <section class="lp_footer">
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -270,7 +274,7 @@
                 Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
-    </section>
+    </section> -->
 
 
 

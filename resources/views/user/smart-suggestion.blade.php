@@ -1,5 +1,6 @@
 @extends('layouts.main')
 
+
 @section('content')
     <section class="industry_specialist">
         <div class="container">
@@ -99,13 +100,16 @@
         </div>
     </section>
 
-    <section class="lp_footer">
+    <!-- <section class="lp_footer">
         <div class="container">
             <p class="powered_by">
                 Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
-    </section>
+    </section> -->
+    <div id="footer">
+             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+         </div>
 
 
     <script>

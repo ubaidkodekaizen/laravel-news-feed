@@ -73,6 +73,41 @@
             font-size: 16px;
             color: #273572;
         }
+
+         .custom-tooltip {
+            position: absolute;
+            background: linear-gradient(180deg, #0e1948, #213bae);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 400;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99999999;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .custom-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 7px solid transparent;
+            border-bottom-color: #0e1948;
+        }
     </style>
 
 
@@ -126,12 +161,13 @@
                  <div class="top_header_links mobile_hide">
                     <ul>
                         <li>
-                            <a href="{{ route('our.community') }}" class="btn btn-primary">
+                            <a href="{{ route('our.community') }}" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Our Community">
                                  <img src="{{asset('assets/images/Vector.svg')}}" alt="community">
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('smart.suggestion') }}" class="btn btn-primary">
+                            <a href="{{ route('smart.suggestion') }}" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Smart Suggestions">
+
                                 <img src="{{asset('assets/images/suggestion.svg')}}" alt="Suggestions">
                             </a>
                         </li>
@@ -190,4 +226,66 @@
         </div>
     </div>
 </div>
+
+
+
+
+     <script>
+        // ===== FRESH TOOLTIP JS - No Bugs =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const triggers = document.querySelectorAll('[data-toggle="tooltip"]');
+            let activeTooltip = null;
+            
+            triggers.forEach(function(trigger) {
+                trigger.addEventListener('mouseenter', function() {
+                    const text = trigger.getAttribute('title') || trigger.getAttribute('data-original-title');
+                    
+                    if (!text) return;
+                    
+                    if (!trigger.getAttribute('data-original-title')) {
+                        trigger.setAttribute('data-original-title', text);
+                        trigger.removeAttribute('title');
+                    }
+                    
+                    if (activeTooltip) {
+                        activeTooltip.remove();
+                    }
+                    
+                    activeTooltip = document.createElement('div');
+                    activeTooltip.className = 'custom-tooltip';
+                    activeTooltip.textContent = text;
+                    document.body.appendChild(activeTooltip);
+                    
+                    const triggerRect = trigger.getBoundingClientRect();
+                    const tooltipRect = activeTooltip.getBoundingClientRect();
+                    
+                    const left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2) + window.scrollX;
+                    const top = triggerRect.bottom + 10 + window.scrollY;
+                    
+                    activeTooltip.style.left = left + 'px';
+                    activeTooltip.style.top = top + 'px';
+                    
+                    setTimeout(function() {
+                        if (activeTooltip) {
+                            activeTooltip.classList.add('show');
+                        }
+                    }, 10);
+                });
+                
+                trigger.addEventListener('mouseleave', function() {
+                    if (activeTooltip) {
+                        activeTooltip.classList.remove('show');
+                        const tooltipToRemove = activeTooltip;
+                        setTimeout(function() {
+                            tooltipToRemove.remove();
+                        }, 300);
+                        activeTooltip = null;
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
 
