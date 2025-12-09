@@ -1,6 +1,9 @@
 @extends('layouts.main')
 @section('content')
-    <style>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
         .text-danger {
             font-size: 12px;
             margin-bottom: 5px;
@@ -196,6 +199,20 @@
             color: #fff;
         }
 
+        #footer {
+            background-color: #B8C034;
+        }
+
+        #footer p {
+            text-align: center;
+            color: #273572;
+            font-family: "Inter", Sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            padding: 20px 0;
+        }
+
         @media(max-width: 768px) {
             .swiper-button-prev {
                 left:  0px;
@@ -210,11 +227,12 @@
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
-               Products Offered by MuslimLynk Members
+               Products Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span> 
             </h1>
+            <p class="feedLpPara">MuslimLynk members offer a diverse range of products and services designed to support businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance solutions, the community provides reliable, professional offerings that empower growth and scalability. Featured products include:</p>
             {{-- <div class="filters">
                 <div class="row align-items-end">
-                    <!-- Job Title Filter -->
+
                     <div class="col-lg-3 col-md-6 col-6">
                         <label for="job_titile">Select Job Title</label>
                         <div class="custom-select-dropdown">
@@ -242,7 +260,6 @@
                         </div>
                     </div>
 
-                    <!-- Industry Filter -->
                     <div class="col-lg-3 col-md-6 col-6">
                         <label for="industry">Select Industry</label>
                         <div class="custom-select-dropdown">
@@ -271,7 +288,6 @@
                         </div>
                     </div>
 
-                    <!-- Sub-Industry Filter -->
                     <div class="col-lg-3 col-6">
                         <label for="sub_industry">Select Sub Industry</label>
                         <div class="custom-select-dropdown">
@@ -302,7 +318,6 @@
                         </div>
                     </div>
 
-                    <!-- Search Button -->
                     <div class="col-lg-3 col-6">
                         <div class="text-center">
                             <button class="btn btn-primary w-50">Search</button>
@@ -313,6 +328,158 @@
         </div>
 
     </section>
+
+    <!-- <section class="productSliderSection">
+        <div class="container">
+
+            <div class="productSliderSecInnerCol">
+                <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
+                <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
+                <div class="sliderUserAndPricingInfo">
+                    <div class="sliderPricing">
+                        <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
+                    </div>
+                    
+                    <div class="author-info">
+                        <div class="author-avatar"> 
+                            <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+                        </div>
+                        <div class="author-details">
+                            <div class="author-name">Akbar</div>
+                            <div class="author-date">22 Aug 2025</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
+
+                <div class="sliderArrows">
+                    <div class="sliderPreviousArrow"><</div>
+                    <div class="sliderNextArrow">></div>
+                </div>
+
+            </div>
+            <div class="productSliderSecInnerCol">
+                <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
+            </div>
+            
+        </div>
+    </section> -->
+
+    <section class="productSliderSection">
+        <div class="slider-wrapper">
+            <div class="slider-track" id="sliderTrack">
+                
+                <!-- Slide 1 -->
+                <div class="slide">
+                    <div class="container">
+                        <div class="productSliderSecInnerCol">
+                            <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
+                            <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
+                            <div class="sliderUserAndPricingInfo">
+                                <div class="sliderPricing">
+                                    <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
+                                </div>
+                                
+                                <div class="author-info">
+                                    <div class="author-avatar"> 
+                                        <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+                                    </div>
+                                    <div class="author-details">
+                                        <div class="author-name">Akbar</div>
+                                        <div class="author-date">22 Aug 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
+
+                        </div>
+                        <div class="productSliderSecInnerCol">
+                           <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
+                        </div>
+                    </div>
+                </div>
+
+<!-- Slide 1 -->
+                <div class="slide">
+                    <div class="container">
+                        <div class="productSliderSecInnerCol">
+                            <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
+                            <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
+                            <div class="sliderUserAndPricingInfo">
+                                <div class="sliderPricing">
+                                    <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
+                                </div>
+                                
+                                <div class="author-info">
+                                    <div class="author-avatar"> 
+                                        <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+                                    </div>
+                                    <div class="author-details">
+                                        <div class="author-name">Akbar</div>
+                                        <div class="author-date">22 Aug 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
+
+                        </div>
+                        <div class="productSliderSecInnerCol">
+                           <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 1 -->
+                <div class="slide">
+                    <div class="container">
+                        <div class="productSliderSecInnerCol">
+                            <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
+                            <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
+                            <div class="sliderUserAndPricingInfo">
+                                <div class="sliderPricing">
+                                    <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
+                                </div>
+                                
+                                <div class="author-info">
+                                    <div class="author-avatar"> 
+                                        <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+                                    </div>
+                                    <div class="author-details">
+                                        <div class="author-name">Akbar</div>
+                                        <div class="author-date">22 Aug 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
+
+                        </div>
+                        <div class="productSliderSecInnerCol">
+                           <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Slider Dots -->
+            <div class="container">
+                <div class="sliderArrows">
+                    <div class="sliderPreviousArrow" data-action="prev">
+                        <svg fill="#000000" width="20px" height="20px" viewBox="-78.5 0 512 512" xmlns="http://www.w3.org/2000/svg" ><title>left</title><path d="M257 64L291 98 128 262 291 426 257 460 61 262 257 64Z" /></svg>
+                    </div>
+                    <div class="sliderNextArrow" data-action="next">
+                        <svg fill="#000000" width="20px" height="20px" viewBox="-77 0 512 512" xmlns="http://www.w3.org/2000/svg" ><title>right</title><path d="M98 460L64 426 227 262 64 98 98 64 294 262 98 460Z" /></svg>
+                    </div>
+                </div>
+            </div>
+                <div class="slider-dots" id="sliderDots"></div>
+        </div>
+    </section>
+
+    
 
     {{-- <section class="event_slider">
         <div class="container">
@@ -368,7 +535,7 @@
 
     </section> --}}
 
-    <section class="event_slider">
+    <!-- <section class="event_slider">
         <div class="container">
             <h2 class="mb-3">Products Offered by Muslim Lynk Members</h2>
             <div class="swiper">
@@ -407,7 +574,6 @@
                                 <div class="card-content">
 
 
-                                    <!-- Product Title -->
                                     <div class="details">
                                         <h3 class="trigger-element">{{ $product->title }}</h3>
                                         <p>
@@ -431,7 +597,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Message Now Button -->
                                     <a href="javascript:void(0)" class="view-more direct-message-btn w-100"
                                         data-receiver-id="{{ $product->user->id }}">Message Now</a>
                                 </div>
@@ -442,7 +607,6 @@
                     @endforelse
                 </div>
 
-                <!-- Add Pagination and Navigation -->
 
             </div>
             <div class="swiper-button-prev"></div>
@@ -452,13 +616,43 @@
             </div>
         </div>
 
+    </section> -->
+
+    <section class="leadGenSec">
+       <div class="container">
+         <h1 class="main_heading">
+               Muslim Lynk Redefines<span class="leadGenSecHeading"> Lead Generation</span> 
+            </h1>
+            <p class="leadGenPara">MuslimLynk empowers its members through cutting-edge lead generation tools and strategies. By leveraging advanced business intelligence and seamless communication platforms, Muslim Lynk enables professionals to connect meaningfully and grow their network effectively. The key offerings include:</p>
+
+       </div>
+
+        <div class="container"> 
+            <div class="leadGenBoxMain">
+                <div class="leadGenBox">
+                    <img src="assets/images/realTimeBusinessIntelligent.svg" alt="">
+                    <h3>Real-Time Business Intelligence</h3>
+                    <p>Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every connection is relevant and actionable.</p>
+                </div>
+                 <div class="leadGenBox">
+                    <img src="assets/images/seamlessDirectEngagementWithPeople.svg" alt="">
+                    <h3>Seamless Direct Engagement With People</h3>
+                    <p>Reach the right people effortlessly through integrated direct messaging and LinkedIn connectivity, eliminating barriers to impactful conversations.</p>
+                </div>
+                 <div class="leadGenBox">
+                    <img src="assets/images/precisionDrivenLeadGeneration.svg" alt="">
+                    <h3>Precision-Driven Lead Generation</h3>
+                    <p>Secure a direct pathway to industry leaders, cutting through noise and delivering high-value opportunities with unmatched efficiency.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section class="industries_sec">
         <div class="container">
-            <h2 class="mb-3">Industries</h2>
+            <h2 class="mb-3 industriesMainHeading">MUSLIMLYNK  <span class="industriesSecHeading">INDUSTRIES</span></h2>
             <div class="row g-4" id="industries-container">
-                @foreach ($industries as $industry)
+                <!-- @foreach ($industries as $industry)
                     <div class="col-lg-3 col-md-6">
                         <a href="{{ route('industry', ['industry' => $industry['name']]) }}" class="industry_box">
                             <div class="icon">
@@ -467,20 +661,33 @@
                             <h2 class="industry_heading">{{ $industry['name'] }}</h2>
                         </a>
                     </div>
+                @endforeach -->
+                @foreach($industries as $index => $industry)
+                <div class="col-lg-3 col-md-6 ">
+                    <a href="{{ route('industry', ['industry' => $industry['name']]) }}" class="industry_box">
+                        <div class="icon">
+                            <span class="industry_number">
+                                {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                        </div>
+                        <h2 class="industry_heading">{{ $industry['name'] }}</h2>
+                    </a>
+                </div>
                 @endforeach
+
 
 
             </div>
             <!-- Show More Button -->
             <div class="text-center mt-4">
-                <button id="show-more-btn" class="btn btn-primary">Show More</button>
+                <button id="show-more-btn" class="btn btn-primary viewAllBtn">View All</button>
             </div>
         </div>
     </section>
 
 
 
-    <section class="why_choose">
+    <!-- <section class="why_choose">
         <div class="container">
             <h2 class="mb-3">Muslim Lynk Redefines Lead Generation</h2>
             <div class="row">
@@ -544,12 +751,15 @@
             </div>
 
         </div>
-    </section>
+    </section> -->
 
     <section class="articles">
         <div class="container">
-            <h2 class="mb-3">Services Offered by Muslim Lynk Members</h2>
-            <div class="services_slider_feed services_slider overflow-hidden">
+            <h2 class="main_heading">
+               Services Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span> 
+            </h2>
+            <p class="articlesPara">MuslimLynk members offer a diverse range of products and services designed to support businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance solutions, the community provides reliable, professional offerings that empower growth and scalability. Featured products include:</p>
+            <!-- <div class="services_slider_feed services_slider overflow-hidden">
                 <div class="swiper-wrapper">
                     @forelse($services as $service)
                         <div class="swiper-slide">
@@ -618,11 +828,107 @@
 
             </div>
             <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+            <div class="swiper-button-next"></div> -->
 
-            <div class="view_all_btn mt-4 d-flex justify-content-center align-items-center">
+                <div class="serviceAccordionCon">
+                    <div class="serviceAccordionConInner">
+                        <div class="kodereach-accordion-section">
+                            <div class="kodereach-accordion-item">
+                                <div id="firstChildOfAccordion" class="kodereach-accordion-header" onclick="toggleKodereachAccordion(this)">
+                                    <h3 class="kodereach-accordion-title">Review and Compilation Services</h3>
+                                    <div class="kodereach-accordion-arrow">
+                                        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="kodereach-accordion-content">
+                                    <div class="kodereach-accordion-content-inner">
+                                        <p class="description">
+                                            Review engagement services can be a cost-effective alternative to a full financial statement audit for an organization in that they provide limited assurance regarding the organization's financial statements in accordance with the organization's financial reporting framework. The financial statement deliverable will be the same as an audit, other than our opinion, and can provide the stakeholders of the company with the financial data necessary to make informed business decisions.
+                                        </p>
+
+                                        <button class="message-btn">Message Now</button>
+
+                                        <div class="author-info">
+                                            <div class="author-avatar">
+                                                <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+                                            </div>
+                                            <div class="author-details">
+                                                <div class="author-name">Akbar</div>
+                                                <div class="author-date">22 Aug 2025</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kodereach-accordion-section">
+                            <div class="kodereach-accordion-item">
+                                <div class="kodereach-accordion-header" onclick="toggleKodereachAccordion(this)">
+                                    <h3 class="kodereach-accordion-title">Sarbanes Oxley (SOX) Compliance</h3>
+                                    <div class="kodereach-accordion-arrow">
+                                        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="kodereach-accordion-content">
+                                    <div class="kodereach-accordion-content-inner">
+                                        <p class="description">
+                                            Review engagement services can be a cost-effective alternative to a full financial statement audit for an organization in that they provide limited assurance regarding the organization's financial statements in accordance with the organization's financial reporting framework. The financial statement deliverable will be the same as an audit, other than our opinion, and can provide the stakeholders of the company with the financial data necessary to make informed business decisions.
+                                        </p>
+
+                                        <button class="message-btn">Message Now</button>
+
+                                        <div class="author-info">
+                                            <div class="author-avatar">
+                                                <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+                                            </div>
+                                            <div class="author-details">
+                                                <div class="author-name">Akbar</div>
+                                                <div class="author-date">22 Aug 2025</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kodereach-accordion-section">
+                            <div class="kodereach-accordion-item">
+                                <div class="kodereach-accordion-header" onclick="toggleKodereachAccordion(this)">
+                                    <h3 class="kodereach-accordion-title">Public Company SEC Compliance & Reporting</h3>
+                                    <div class="kodereach-accordion-arrow">
+                                        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="kodereach-accordion-content">
+                                    <div class="kodereach-accordion-content-inner">
+                                        <p class="description">
+                                            Review engagement services can be a cost-effective alternative to a full financial statement audit for an organization in that they provide limited assurance regarding the organization's financial statements in accordance with the organization's financial reporting framework. The financial statement deliverable will be the same as an audit, other than our opinion, and can provide the stakeholders of the company with the financial data necessary to make informed business decisions.
+                                        </p>
+
+                                        <button class="message-btn">Message Now</button>
+
+                                        <div class="author-info">
+                                            <div class="author-avatar">
+                                                <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+                                            </div>
+                                            <div class="author-details">
+                                                <div class="author-name">Akbar</div>
+                                                <div class="author-date">22 Aug 2025</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="serviceAccordionConInner">
+                        <img src="assets/images/kodeReachLogo.png" alt="kodeReachLogo">
+                        <span>$1.00/ Starting</span>
+                    </div>
+                </div>
+
+            <!-- <div class="view_all_btn mt-4 d-flex justify-content-center align-items-center">
                 <a href="{{ route('services') }}" class="btn btn-primary rounded-pill">View All Services</a>
-            </div>
+            </div> -->
         </div>
     </section>
     {{-- <section class="articles">
@@ -668,14 +974,18 @@
         </div>
     </section> --}}
 
-    <section class="lp_footer">
+    <!-- <section class="lp_footer">
         <div class="container">
 
             <p class="powered_by">
                 Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
-    </section>
+    </section> -->
+
+    <div id="footer">
+             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+         </div>
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -740,11 +1050,177 @@
             </div>
         </div>
     </div>
+
+    
+
+
+       
 @endsection
 
 
 @section('scripts')
-    <script>
+ <script>
+        (function() {
+            // State
+            let currentIndex = 0;
+            
+            // Elements
+            const sliderTrack = document.getElementById('sliderTrack');
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            const dotsContainer = document.getElementById('sliderDots');
+
+            console.log('Slider initialized with', totalSlides, 'slides');
+
+            // Create dots
+            function createDots() {
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot';
+                    if (i === 0) dot.classList.add('active');
+                    dot.setAttribute('data-index', i);
+                    dotsContainer.appendChild(dot);
+                }
+                console.log('Dots created:', totalSlides);
+            }
+
+            // Update slider position
+            function updateSlider() {
+                const offset = currentIndex * -100;
+                sliderTrack.style.transform = `translateX(${offset}%)`;
+                console.log('Slider moved to index:', currentIndex, 'offset:', offset + '%');
+                updateButtons();
+                updateDots();
+            }
+
+            // Update button states
+            function updateButtons() {
+                const prevButtons = document.querySelectorAll('[data-action="prev"]');
+                const nextButtons = document.querySelectorAll('[data-action="next"]');
+
+                prevButtons.forEach(btn => {
+                    if (currentIndex === 0) {
+                        btn.classList.add('disabled');
+                    } else {
+                        btn.classList.remove('disabled');
+                    }
+                });
+
+                nextButtons.forEach(btn => {
+                    if (currentIndex === totalSlides - 1) {
+                        btn.classList.add('disabled');
+                    } else {
+                        btn.classList.remove('disabled');
+                    }
+                });
+            }
+
+            // Update dots
+            function updateDots() {
+                const dots = dotsContainer.querySelectorAll('.dot');
+                dots.forEach((dot, index) => {
+                    if (index === currentIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            // Next slide
+            function nextSlide() {
+                console.log('Next clicked, current:', currentIndex);
+                if (currentIndex < totalSlides - 1) {
+                    currentIndex++;
+                    updateSlider();
+                }
+            }
+
+            // Previous slide
+            function prevSlide() {
+                console.log('Prev clicked, current:', currentIndex);
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSlider();
+                }
+            }
+
+            // Go to specific slide
+            function goToSlide(index) {
+                console.log('Go to slide:', index);
+                currentIndex = index;
+                updateSlider();
+            }
+
+            // Event delegation for arrow buttons
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                
+                if (target.hasAttribute('data-action')) {
+                    e.preventDefault();
+                    const action = target.getAttribute('data-action');
+                    
+                    if (action === 'next') {
+                        nextSlide();
+                    } else if (action === 'prev') {
+                        prevSlide();
+                    }
+                }
+                
+                if (target.classList.contains('dot')) {
+                    e.preventDefault();
+                    const index = parseInt(target.getAttribute('data-index'));
+                    if (!isNaN(index)) {
+                        goToSlide(index);
+                    }
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            });
+
+            // Touch/swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            sliderTrack.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            sliderTrack.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+                
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        nextSlide();
+                    } else {
+                        prevSlide();
+                    }
+                }
+            }
+
+            // Initialize
+            createDots();
+            updateButtons();
+            
+            console.log('Slider ready!');
+        })();
+    </script>
+
+        <script>
         document.addEventListener("DOMContentLoaded", function() {
             const industriesContainer = document.getElementById("industries-container");
             const showMoreBtn = document.getElementById("show-more-btn");
@@ -762,7 +1238,7 @@
                     }
                 });
 
-                showMoreBtn.textContent = isExpanded ? "Show Less" : "Show More";
+                showMoreBtn.textContent = isExpanded ? "View Less" : "View All";
             }
 
             // Initial Setup
@@ -896,4 +1372,36 @@ Best Regards,
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Make FIRST accordion active by default
+            const firstItem = document.querySelector(".kodereach-accordion-item");
+            if (firstItem) {
+                const firstContent = firstItem.querySelector(".kodereach-accordion-content");
+                firstItem.classList.add("active");
+                firstContent.style.maxHeight = firstContent.scrollHeight + "px";
+            }
+        });
+
+        function toggleKodereachAccordion(header) {
+            const item = header.parentElement;
+            const content = item.querySelector(".kodereach-accordion-content");
+            const isOpen = item.classList.contains("active");
+
+            // Close all accordions first
+            document.querySelectorAll(".kodereach-accordion-item").forEach(acc => {
+                acc.classList.remove("active");
+                acc.querySelector(".kodereach-accordion-content").style.maxHeight = null;
+            });
+
+            // Re-open clicked one ONLY if it was not open
+            if (!isOpen) {
+                item.classList.add("active");
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+    </script>
+
+
+    
 @endsection

@@ -1132,10 +1132,509 @@ div.selected-filter-group {
 
 /* new Landing page */
 
-.feed_lp .main_heading {
-    margin: 30px auto;
+.feed_lp .main_heading,
+.leadGenSec .main_heading,
+.industries_sec .container .industriesMainHeading,
+.articles .container .main_heading{
+    width: fit-content;
+    margin: 30px auto 20px auto !important;
     text-align: center;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 64px;
+    color: #000000;
+    position: relative;
 }
+
+.industries_sec .container .industriesMainHeading {
+    color: #fff !important;
+}
+
+.feed_lp .main_heading::after,
+.leadGenSec .main_heading::after,
+.industries_sec .container .industriesMainHeading::after,
+.articles .container .main_heading::after{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 6px;
+    background-color: #B8C034;
+}
+
+.feed_lp .main_heading .feedLpSec,
+.leadGenSec .main_heading .leadGenSecHeading,
+.industries_sec .container .industriesMainHeading .industriesSecHeading,
+.articles .container .main_heading .feedLpSec{
+    color: #B8C034;
+}
+
+.feed_lp .main_heading .feedLpPri,
+.articles .container .main_heading .feedLpPri{
+    color: #273572;
+}
+
+.feed_lp .feedLpPara,
+.leadGenSec .leadGenPara,
+.articlesPara {
+    font-size: 22px;
+    font-family: "inter";
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    line-height: 140%;
+    width: 82%;
+    margin: auto;
+}
+
+.leadGenSec{
+    padding: 60px 0;
+}
+
+.leadGenSec .container .leadGenBoxMain{
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 60px 0;
+}
+
+.leadGenSec .container .leadGenBoxMain .leadGenBox:nth-child(1){
+    color: #fff;
+    border: 2px solid #F2F2F2;
+    padding: 30px;
+    border-radius: 17px;
+    background: linear-gradient(180deg, #0E1948, #213BAE);
+}
+
+.leadGenSec .container .leadGenBoxMain .leadGenBox{
+    color: #000;
+    border: 2px solid #F2F2F2;
+    padding: 30px;
+    border-radius: 17px;
+    font-family: Inter, sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.leadGenSec .container .leadGenBoxMain .leadGenBox img{
+    margin-bottom: 30px;
+}
+
+.leadGenSec .container .leadGenBoxMain .leadGenBox h3{
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.leadGenSec .container .leadGenBoxMain .leadGenBox p{
+    font-size: 18px;
+    font-weight: 400;
+    max-width: 88%;
+    line-height: 140%;
+}
+
+.industries_sec .container{
+    position: relative;
+    z-index: 1;
+}
+
+/* Product Slider section */
+ .productSliderSection {
+            background: linear-gradient(180deg, #0E1948, #213BAE);
+    padding: 60px 0;
+            position: relative;
+        }
+
+        .slider-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .slide {
+            min-width: 100%;
+            flex-shrink: 0;
+        }
+
+        .productSliderSection .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            padding: 0 80px;
+        }
+
+        .productSliderSecInnerCol {
+            flex: 1;
+        }
+
+        .productSliderSecInnerCol:first-child {
+            max-width: 550px;
+        }
+
+        .productSliderSecInnerCol:last-child {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+.productSliderSecInnerCol:nth-of-type(2) img{
+
+border: 3px solid #B8C034;
+width: 100%;
+    max-width: 543px;
+    border-radius: 17px;
+}
+
+        h2.industriesMainHeading{
+    color: #fff !important;
+    width: fit-content;
+    text-align: center;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 64px;
+    position: relative;
+}
+
+h2.industriesMainHeading::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 6px;
+    background-color: #B8C034;
+}
+
+        .industriesMainPara{
+    font-size: 22px;
+    font-family: "inter";
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 140%;
+    width: 100%;
+    color: #fff;
+}
+
+.sliderUserAndPricingInfo {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+}
+
+.sliderPricing span.sliderPricingUnit {
+    background: #B8C034;
+    color: #000;
+    font-family: "Inter";
+    font-size: 16px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 50px;
+}
+        .sliderUserAndPricingInfo .author-info {
+    display: flex;
+    gap: 17px;
+    align-items: center;
+    margin: 10px 0;
+}
+
+
+.sliderUserAndPricingInfo .author-info .author-avatar img {
+    width: 50px;
+    border-radius: 50%;
+}
+
+.sliderUserAndPricingInfo .author-info .author-details .author-name {
+    font-size: 18.71px;
+    font-family: "Inter";
+    font-weight: 400;
+    line-height: 26.73px;
+    color: #FFF;
+}
+.sliderUserAndPricingInfo .author-info .author-details .author-date {
+    font-size: 16.04px;
+    font-family: "Inter";
+    font-weight: 400;
+    line-height: 18.71px;
+    color: #FFF;
+}
+
+button.sliderUserMessageBtn {
+    font-size: 18px;
+    font-weight: 500;
+    font-family: "Poppins";
+    border-radius: 9.77px;
+    background-color: #B8C034;
+    
+    width: 100%;
+    padding: 18px 60px;
+    margin-top: 20px;
+    border: 1px solid #B8C034;
+}
+
+        .sliderUserMessageBtn a {
+            color: #273572;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .sliderArrows {
+            display: flex;
+            gap: 15px;
+            margin-top: -40px;
+            z-index: 9999;
+        }
+
+        .sliderPreviousArrow,
+        .sliderNextArrow {
+            width: 50px;
+            height: 50px;
+            background: #B8C034;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .sliderArrows svg {
+    pointer-events: none;
+}
+
+        .sliderPreviousArrow:hover:not(.disabled),
+        .sliderNextArrow:hover:not(.disabled) {
+            background: #B8C034;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .sliderPreviousArrow.disabled,
+        .sliderNextArrow.disabled {
+            background: #E8E8E8;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffffff9c;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #fff;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+                padding: 0 40px;
+                gap: 40px;
+            }
+
+            .productSliderSecInnerCol:first-child {
+                max-width: 100%;
+            }
+
+            .industriesMainHeading {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .industriesMainHeading {
+                font-size: 26px;
+            }
+
+            .industriesMainPara {
+                font-size: 14px;
+            }
+
+            .sliderUserAndPricingInfo {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .sliderPreviousArrow,
+            .sliderNextArrow {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+/* Product Slider section */
+
+
+/* service accordion section  */
+
+.serviceAccordionCon {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    padding: 100px 0;
+}
+
+.serviceAccordionCon .serviceAccordionConInner {
+    width: 100%;
+    position: relative;
+}
+
+.serviceAccordionCon .serviceAccordionConInner #firstChildOfAccordion{
+     border: none;
+}
+
+.serviceAccordionCon .serviceAccordionConInner .kodereach-accordion-header {
+    border-top: 1px solid #F2F2F2;
+    padding: 30px 0;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+h3.kodereach-accordion-title {
+    font-size: 36px;
+    font-family: "Bebas Neue";
+    font-weight: 400;
+    color: #333333;
+    margin: 0;
+}
+
+.kodereach-accordion-item.active h3.kodereach-accordion-title { color: #273572; }
+
+.kodereach-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.kodereach-accordion-item.active .kodereach-accordion-arrow svg {
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease;
+     fill: #fff;
+}
+
+.kodereach-accordion-item.active .kodereach-accordion-arrow{
+    background: #273572;
+    border: 1px solid #273572;
+}
+
+.kodereach-accordion-arrow svg {
+    transition: transform 0.3s ease;
+    rotate: 43deg;
+    fill: #000;
+}
+
+.kodereach-accordion-arrow {
+    padding: 10px 13px 13px 13px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid #F2F2F2F2;
+}
+
+ p.description {
+    font-size: 22px;
+    font-family: "inter";
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 140%;
+    color: #333333;
+}
+
+.kodereach-accordion-content button.message-btn {
+    background-color: #273572;
+    color: #fff;
+    font-size: 19.35px;
+    font-weight: 400;
+    font-family: "poppins";
+    padding: 14px 36px;
+    border-radius: 8.6px;
+    border: none;
+    outline: none;
+}
+
+.kodereach-accordion-content .author-info {
+    display: flex;
+    gap: 17px;
+    align-items: center;
+    margin: 40px 0;
+}
+/* 
+.kodereach-accordion-content .author-info .author-avatar {
+    border-radius: 50%;
+    overflow: hidden;
+} */
+ .kodereach-accordion-content .author-info .author-avatar img {
+    width: 50px;
+    border-radius: 50%;
+} 
+
+ .kodereach-accordion-content .author-info .author-details .author-name {
+    font-size: 18.71px;
+    font-family: "Inter";
+    font-weight: 400;
+    line-height: 26.73px;
+}
+
+.kodereach-accordion-content .author-info .author-details .author-date {
+    font-size: 16.04px;
+    font-family: "Inter";
+    font-weight: 400;
+    line-height: 18.71px;
+}
+
+.serviceAccordionCon .serviceAccordionConInner:nth-child(2) span{
+    background: #B8C034;
+    padding: 10px 60px;
+    border-radius: 37px;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Inter";
+    color: #000;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+}
+
+.serviceAccordionCon .serviceAccordionConInner img {
+    width: 100%;
+    border-radius: 17px;
+}
+/* service accordion section  */
 
 .custom-select-dropdown .btn-light {
     display: flex;
@@ -1280,11 +1779,6 @@ div.selected-filter-group {
     color: var(--primary);
 }
 
-/* .details span:nth-child(2) {
-    font-weight: 700;
-    color: var(--black);
-    font-size: 16px;
-} */
 .why_choose .card-up {
     display: flex;
     align-items: center;
@@ -1364,7 +1858,7 @@ div.selected-filter-group {
 }
 
 .feed_lp {
-    padding: 40px 0pc;
+    padding: 60px 0pc;
 }
 
 .custom-select-dropdown {
@@ -1700,23 +2194,54 @@ div.selected-filter-group {
 
 .industries_sec {
     padding: 40px 0px;
-    background: #f2f3e1;
+    background: url("/assets/images/muslimlynkIndustries.png") no-repeat center/cover;
+    position: relative;
 }
+
+.industries_sec::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+   background: linear-gradient(180deg, #0e1948e3, #213baedb);
+       z-index: 0;
+}
+
+/* #industries-container .col-lg-3.col-md-6{
+    padding: 0;
+    margin: 0;
+    border-radius: 25.68px;
+    background: #FFF;
+} */
 
 .industries_sec .industry_box {
-    box-shadow: 0 0 10px 0 #00000026;
-    padding: 20px;
-    min-height: 170px;
+    padding: 30px;
+    min-height: 174px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: start;
+    justify-content: start;
     flex-direction: column;
-    transition: .3s all ease;
     text-decoration: none;
-    background: var(--white);
+   border-radius: 25.68px;
+    background: #FFF;
+    
 }
 
-.industries_sec .industry_box:hover {
+button.btn.btn-primary.viewAllBtn{
+    font-size: 18px;
+    font-weight:500;
+    font-family: "Poppins";
+    border-radius: 9.77px;
+    color: #273572;
+    background-color: #B8C034;
+    padding: 10px 60px;
+    margin-top: 20px;
+    border: 1px solid #B8C034;
+}
+
+/* .industries_sec .industry_box:hover {
     background: var(--primary);
 }
 
@@ -1726,19 +2251,25 @@ div.selected-filter-group {
 
 .industries_sec .industry_box:hover .icon {
     color: var(--white);
-}
+} */
 
 .industries_sec .industry_box .industry_heading {
-    font-size: 16px;
+    font-size: 18px;
+    font-family: "Inter";
+    line-height: 120%;
     margin-top: 20px;
-    text-align: center;
-    color: var(--primary);
+    margin-bottom: 0 !important;
+    text-align: start;
+    color: #273572;
 }
 
 .industries_sec .industry_box .icon {
-    font-size: 29px;
+    font-size: 29.35px;
     text-align: center;
-    color: var(--secondary);
+    color: #273572;
+    font-weight: 900;
+    font-family: "poppins";
+    line-height: 100%;
 }
 
 .service_price .discounted_price {
@@ -2909,6 +3440,50 @@ p.industryProfileRole {
 }
 
 @media only screen and (max-width: 768px) {
+
+    .feed_lp .main_heading::after, .leadGenSec .main_heading::after, .industries_sec .container .industriesMainHeading::after, .articles .container .main_heading::after{ left: 42%;
+        bottom: -4px;
+        height: 3px;}
+
+        .slide {
+    width: 100%;}
+
+    .kodereach-accordion-content button.message-btn {font-size: 15.35px;}
+
+    p.description { font-size: 16px;}
+
+    .serviceAccordionCon { flex-direction: column-reverse; padding: 0; margin-top: 30px;}
+
+    h3.kodereach-accordion-title{ font-size: 28px;}
+
+    .serviceAccordionCon .serviceAccordionConInner:nth-child(2) span {
+    padding: 6px 36px;
+    font-size: 14px;}
+
+    .feed_lp .feedLpPara, .leadGenSec .leadGenPara, .articlesPara {
+    font-size: 16px;
+    width: 100%;}
+
+    .feed_lp .main_heading, .leadGenSec .main_heading, .industries_sec .container .industriesMainHeading, .articles .container .main_heading, h2.industriesMainHeading {
+    font-size: 40px;}
+
+    h2.industriesMainHeading{
+        margin-bottom: 20px;
+    }
+
+    h2.industriesMainHeading::after { bottom: -7px;}
+
+    .leadGenSec .container .leadGenBoxMain{ flex-direction: column;
+    }
+
+    .productSliderSection .container { flex-direction: column-reverse; padding: 0 20px; }
+
+    .sliderArrows { margin-top: 18px;}
+
+    .productSliderSection {
+    padding: 30px 0;}
+
+    #footer p { font-size: 14px !important;}
 
     .top-controls {
     align-self: center;}
