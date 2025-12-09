@@ -1,5 +1,12 @@
 <?php
 
+$allowed_hosts = ['muslimlynk.com', 'www.muslimlynk.com'];
+
+if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $allowed_hosts)) {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));

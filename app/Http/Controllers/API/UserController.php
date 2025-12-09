@@ -73,6 +73,67 @@ class UserController extends Controller
         ]);
     }
 
+    public function registerAmcob(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+
+        $baseSlug = Str::slug($request->first_name . ' ' . $request->last_name);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (User::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'slug' => $slug,
+            'role_id' => 4,
+            'status' => 'pending',
+            'is_amcob' => 'Yes',
+            'paid' => 'Yes',
+        ]);
+
+        // Create subscription for Amcob user
+        Subscription::create([
+            'user_id' => $user->id,
+            'plan_id' => 1,
+            'subscription_type' => 'Free',
+            'subscription_amount' => 0.00,
+            'start_date' => now(),
+            'renewal_date' => now()->addDays(30),
+            'status' => 'inactive',
+            'transaction_id' => null,
+            'receipt_data' => null,
+            'platform' => 'Amcob',
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'User registered successfully.',
+            'user' => $user,
+        ]);
+    }
+
     public function handleIapSubscription(Request $request)
     {
         $validated = $request->validate([
