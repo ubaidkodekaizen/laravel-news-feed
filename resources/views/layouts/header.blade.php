@@ -18,6 +18,12 @@
     <meta name="twitter:image" content="{{ asset('assets/images/logo_bg.png') }}">
     <meta name="twitter:site" content="@yourtwitterhandle"> --}}
 
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
@@ -50,8 +56,22 @@
             cursor: pointer;
         }
 
-        .suggestion_search {
-            position: relative;
+        input#header_search{
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            color: #273572;
+        }
+
+        input#header_search::placeholder{
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            color: #273572;
         }
     </style>
 
@@ -70,51 +90,61 @@
             <div class="header_left">
                 <div class="logo">
                     <a href="{{ route('home') }}">
-                        <img src="{{ asset('assets/images/logo_bg.png') }}" alt="" class="img-fluid">
+                        <img src="{{ asset('assets/images/greenAndWhiteLogo.png') }}" alt="" class="img-fluid">
                     </a>
                 </div>
 
                 <div class="header-mid mobile_hide">
                     <form method="GET" action="{{ route('search') }}" class="mb-0" id="search_form">
                         <div class="search_area">
-                            <div class="suggestion_search w-50">
+
+
+                            {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
+
+                            <div class="suggestion_search">
                                 <input type="text" id="header_search" autocomplete="off"
                                     placeholder="Product, Service or Industry" class="form-control">
                                 <div id="suggestion_box" class="suggestion-box" style="display: none;"></div>
                             </div>
-
-                            {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
 
                             <input type="hidden" name="name" id="first_name1">
                             <input type="hidden" name="product" id="product1">
                             <input type="hidden" name="service" id="service1">
                             <input type="hidden" name="company_industry" id="company_industry1">
 
-                            <button class="btn btn-primary search_btn">Search</button>
+                            <button class="btn btn-primary search_btn">
+                                <img src="{{asset('assets/images/fe_search.svg')}}" alt="Search">
+                            </button>
                         </div>
                     </form>
                 </div>
 
-                <div class="top_header_links mobile_hide">
-                    <ul>
-                        <li>
-                            <a href="{{ route('our.community') }}" class="btn btn-primary">Our Community</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('smart.suggestion') }}" class="btn btn-primary">Smart Suggestion</a>
-                        </li>
-                    </ul>
-                </div>
+
             </div>
 
             <div class="header_right">
+                 <div class="top_header_links mobile_hide">
+                    <ul>
+                        <li>
+                            <a href="{{ route('our.community') }}" class="btn btn-primary">
+                                 <img src="{{asset('assets/images/Vector.svg')}}" alt="community">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('smart.suggestion') }}" class="btn btn-primary">
+                                <img src="{{asset('assets/images/suggestion.svg')}}" alt="Suggestions">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
                 <div class="profile">
                     <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                         alt="">
                     <div class="dropdown">
                         <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="user_profile_name_h"> {{ Auth::user()->first_name }} </span>
+                                <span class="user_profile_name_h"> {{ Auth::user()->first_name }} </span>
+                        <img id="userProfileDropdown" src="{{asset('assets/images/whiteChevron.svg')}}" alt="DropDown">
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>

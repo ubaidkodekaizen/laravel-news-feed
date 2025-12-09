@@ -210,7 +210,7 @@
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
-                Build Your Network
+               Products Offered by MuslimLynk Members
             </h1>
             {{-- <div class="filters">
                 <div class="row align-items-end">
