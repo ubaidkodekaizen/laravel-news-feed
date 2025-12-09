@@ -2213,7 +2213,6 @@ h3.kodereach-accordion-title {
     align-items: start;
     justify-content: start;
     flex-direction: column;
-    transition: .3s all ease;
     text-decoration: none;
    border-radius: 25.68px;
     background: #FFF;
