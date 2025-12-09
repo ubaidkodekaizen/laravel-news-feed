@@ -1,8 +1,7 @@
 @extends('layouts.main')
 @section('content')
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
         .text-danger {
             font-size: 12px;
@@ -215,11 +214,11 @@
 
         @media(max-width: 768px) {
             .swiper-button-prev {
-                left:  0px;
+                left: 0px;
             }
 
             .swiper-button-next {
-                right:  0px;
+                right: 0px;
             }
         }
     </style>
@@ -227,240 +226,88 @@
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
-               Products Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span> 
+                Products Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span>
             </h1>
-            <p class="feedLpPara">MuslimLynk members offer a diverse range of products and services designed to support businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance solutions, the community provides reliable, professional offerings that empower growth and scalability. Featured products include:</p>
-            {{-- <div class="filters">
-                <div class="row align-items-end">
+            <p class="feedLpPara">MuslimLynk members offer a diverse range of products and services designed to support
+                businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance
+                solutions, the community provides reliable, professional offerings that empower growth and scalability.
+                Featured products include:</p>
 
-                    <div class="col-lg-3 col-md-6 col-6">
-                        <label for="job_titile">Select Job Title</label>
-                        <div class="custom-select-dropdown">
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="jobTitleDropdown"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Job Titles
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="jobTitleDropdown">
-                                    <small class="text-danger">Select Job Title</small>
-                                    <li>
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="jobTitle1">Manager</label>
-                                            <input class="form-check-input" type="checkbox" value="Manager" id="jobTitle1">
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="jobTitle2">Engineer</label>
-                                            <input class="form-check-input" type="checkbox" value="Engineer" id="jobTitle2">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 col-6">
-                        <label for="industry">Select Industry</label>
-                        <div class="custom-select-dropdown">
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="industryDropdown"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Industries
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="industryDropdown">
-                                    <small class="text-danger">Select Industry</small>
-                                    <li>
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="industry1">IT</label>
-                                            <input class="form-check-input" type="checkbox" value="IT" id="industry1">
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="industry2">Healthcare</label>
-                                            <input class="form-check-input" type="checkbox" value="Healthcare"
-                                                id="industry2">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-6">
-                        <label for="sub_industry">Select Sub Industry</label>
-                        <div class="custom-select-dropdown">
-
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="subIndustryDropdown"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Sub Industries
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="subIndustryDropdown">
-                                    <small class="text-danger">Select Sub Industry</small>
-                                    <li>
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="subIndustry1">Software</label>
-                                            <input class="form-check-input" type="checkbox" value="Software"
-                                                id="subIndustry1">
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check">
-                                            <label class="form-check-label" for="subIndustry2">Hardware</label>
-                                            <input class="form-check-input" type="checkbox" value="Hardware"
-                                                id="subIndustry2">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-6">
-                        <div class="text-center">
-                            <button class="btn btn-primary w-50">Search</button>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
         </div>
 
     </section>
 
-    <!-- <section class="productSliderSection">
-        <div class="container">
-
-            <div class="productSliderSecInnerCol">
-                <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
-                <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
-                <div class="sliderUserAndPricingInfo">
-                    <div class="sliderPricing">
-                        <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
-                    </div>
-                    
-                    <div class="author-info">
-                        <div class="author-avatar"> 
-                            <img src="assets/images/placeholderUser.png" alt="User Profile Image">
-                        </div>
-                        <div class="author-details">
-                            <div class="author-name">Akbar</div>
-                            <div class="author-date">22 Aug 2025</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
-
-                <div class="sliderArrows">
-                    <div class="sliderPreviousArrow"><</div>
-                    <div class="sliderNextArrow">></div>
-                </div>
-
-            </div>
-            <div class="productSliderSecInnerCol">
-                <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
-            </div>
-            
-        </div>
-    </section> -->
 
     <section class="productSliderSection">
         <div class="slider-wrapper">
             <div class="slider-track" id="sliderTrack">
-                
-                <!-- Slide 1 -->
-                <div class="slide">
-                    <div class="container">
-                        <div class="productSliderSecInnerCol">
-                            <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
-                            <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
-                            <div class="sliderUserAndPricingInfo">
-                                <div class="sliderPricing">
-                                    <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
-                                </div>
-                                
-                                <div class="author-info">
-                                    <div class="author-avatar"> 
-                                        <img src="assets/images/placeholderUser.png" alt="User Profile Image">
+
+                @forelse ($products as $product)
+                    <div class="slide product-trigger-wrapper" data-id="{{ $product->user->id }}"
+                        data-title="{{ $product->title }}" data-description="{{ $product->short_description }}"
+                        data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
+                        data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
+                        data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
+                        data-user-name="{{ $product->user->first_name }}"
+                        data-user-photo="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}">
+                        <div class="container">
+                            <div class="productSliderSecInnerCol">
+                                <h2 class="industriesMainHeading">{{ $product->title }}</h2>
+                                <p class="industriesMainPara">{{ Str::limit($product->short_description, 100) }}</p>
+                                <button type="button" class="btn btn-sm btn-primary mt-2 read-more-btn trigger-element">
+                                    Read More
+                                </button>
+                                <div class="sliderUserAndPricingInfo">
+                                    <div class="sliderPricing">
+                                        <span class="sliderPricingUnit">
+                                            @if ($product->discounted_price && $product->discounted_price < $product->original_price)
+                                                <s>${{ $product->original_price }}</s>
+                                                ${{ $product->discounted_price }}
+                                            @else
+                                                ${{ $product->original_price }}
+                                            @endif
+                                            / {{ $product->quantity }}-{{ $product->unit_of_quantity }}
+                                        </span>
                                     </div>
-                                    <div class="author-details">
-                                        <div class="author-name">Akbar</div>
-                                        <div class="author-date">22 Aug 2025</div>
+
+                                    <div class="author-info">
+                                        <div class="author-avatar">
+                                            <img src="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
+                                                alt="User Profile Image">
+                                        </div>
+                                        <div class="author-details">
+                                            <div class="author-name">{{ $product->user->first_name }}</div>
+                                            <div class="author-date">{{ $product->created_at->format('d M Y') }}</div>
+
+                                        </div>
                                     </div>
                                 </div>
+
+                                <button class="sliderUserMessageBtn view-more direct-message-btn"
+                                    data-receiver-id="{{ $product->user->id }}">Message now</button>
+
                             </div>
-
-                            <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
-
-                        </div>
-                        <div class="productSliderSecInnerCol">
-                           <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
+                            <div class="productSliderSecInnerCol">
+                                <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
+                                    alt="ProductImage">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-<!-- Slide 1 -->
-                <div class="slide">
-                    <div class="container">
-                        <div class="productSliderSecInnerCol">
-                            <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
-                            <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
-                            <div class="sliderUserAndPricingInfo">
-                                <div class="sliderPricing">
-                                    <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
-                                </div>
-                                
-                                <div class="author-info">
-                                    <div class="author-avatar"> 
-                                        <img src="assets/images/placeholderUser.png" alt="User Profile Image">
-                                    </div>
-                                    <div class="author-details">
-                                        <div class="author-name">Akbar</div>
-                                        <div class="author-date">22 Aug 2025</div>
-                                    </div>
-                                </div>
+                @empty
+                    <div class="swiper-slide">
+                        <div class="card">
+                            <img src="https://via.placeholder.com/300x180" alt="No Events">
+                            <div class="card-content">
+                                <h3>No Events Available</h3>
+                                <p>Stay tuned for upcoming events.</p>
                             </div>
-
-                            <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
-
-                        </div>
-                        <div class="productSliderSecInnerCol">
-                           <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
                         </div>
                     </div>
-                </div>
-                <!-- Slide 1 -->
-                <div class="slide">
-                    <div class="container">
-                        <div class="productSliderSecInnerCol">
-                            <h2 class="industriesMainHeading">Amazon FBA Prep</h2>
-                            <p class="industriesMainPara">Amazon FBA Prep by USI USI ensures your products are inspected, labeled, packaged, and Amazon-compliant—saving you time, avoiding chargebacks, and keeping your FBA business running smoothly.</p>
-                            <div class="sliderUserAndPricingInfo">
-                                <div class="sliderPricing">
-                                    <span class="sliderPricingUnit">$0.00/2500-Per Unit</span>
-                                </div>
-                                
-                                <div class="author-info">
-                                    <div class="author-avatar"> 
-                                        <img src="assets/images/placeholderUser.png" alt="User Profile Image">
-                                    </div>
-                                    <div class="author-details">
-                                        <div class="author-name">Akbar</div>
-                                        <div class="author-date">22 Aug 2025</div>
-                                    </div>
-                                </div>
-                            </div>
+                @endforelse
 
-                            <button class="sliderUserMessageBtn"><a href="#">Message now</a></button>
 
-                        </div>
-                        <div class="productSliderSecInnerCol">
-                           <img src="assets/images/ProductSliderImage.png" alt="ProductImage">
-                        </div>
-                    </div>
-                </div>
+
 
             </div>
 
@@ -468,181 +315,59 @@
             <div class="container">
                 <div class="sliderArrows">
                     <div class="sliderPreviousArrow" data-action="prev">
-                        <svg fill="#000000" width="20px" height="20px" viewBox="-78.5 0 512 512" xmlns="http://www.w3.org/2000/svg" ><title>left</title><path d="M257 64L291 98 128 262 291 426 257 460 61 262 257 64Z" /></svg>
+                        <svg fill="#000000" width="20px" height="20px" viewBox="-78.5 0 512 512"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <title>left</title>
+                            <path d="M257 64L291 98 128 262 291 426 257 460 61 262 257 64Z" />
+                        </svg>
                     </div>
                     <div class="sliderNextArrow" data-action="next">
-                        <svg fill="#000000" width="20px" height="20px" viewBox="-77 0 512 512" xmlns="http://www.w3.org/2000/svg" ><title>right</title><path d="M98 460L64 426 227 262 64 98 98 64 294 262 98 460Z" /></svg>
+                        <svg fill="#000000" width="20px" height="20px" viewBox="-77 0 512 512"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <title>right</title>
+                            <path d="M98 460L64 426 227 262 64 98 98 64 294 262 98 460Z" />
+                        </svg>
                     </div>
                 </div>
             </div>
-                <div class="slider-dots" id="sliderDots"></div>
+            <div class="slider-dots" id="sliderDots"></div>
         </div>
     </section>
 
-    
-
-    {{-- <section class="event_slider">
-        <div class="container">
-            <h2 class="mb-3">Products</h2>
-            <div class="swiper">
-                <div class="swiper-wrapper">
-
-                    @forelse($events as $event)
-                        <div class="swiper-slide">
-                            <div class="card">
-                                <img src="{{ $event->image ? asset('storage/' . $event->image) : 'https://via.placeholder.com/300x180' }}"
-                                    alt="Event Image">
-                                <div class="card-content">
-                                    <!-- Event Title -->
-                                    <div class="details">
-                                        <h3>{{ $event->title }}</h3>
-                                        <!-- Event City & Venue -->
-                                        <p><strong>City:</strong> {{ $event->city }}</p>
-                                        <p><strong>Venue:</strong> {{ $event->venue }}</p>
-
-                                        <!-- Event Date & Time -->
-
-                                        <span><strong>Date:</strong>
-                                            {{ \Carbon\Carbon::parse($event->date)->format('F j, Y') }}</span>
-                                        <span><strong>Time:</strong>
-                                            {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}</span>
-                                    </div>
-
-                                    <!-- Book Now Button -->
-                                    <a href="{{ $event->url }}" class="view-more">Book Now</a>
-                                </div>
-                            </div>
-                        </div>
-
-                    @empty
-                        <div class="swiper-slide">
-                            <div class="card">
-                                <img src="https://via.placeholder.com/300x180" alt="No Events">
-                                <div class="card-content">
-                                    <h3>No Events Available</h3>
-                                    <p>Stay tuned for upcoming events.</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endforelse
-
-                </div>
-                <!-- Add Pagination and Navigation -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
-        </div>
-
-    </section> --}}
-
-    <!-- <section class="event_slider">
-        <div class="container">
-            <h2 class="mb-3">Products Offered by Muslim Lynk Members</h2>
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    @forelse ($products as $product)
-                        <div class="swiper-slide">
-                            <div class="card product-trigger-wrapper" data-id="{{ $product->user->id }}"
-                                data-title="{{ $product->title }}" data-description="{{ $product->short_description }}"
-                                data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
-                                data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
-                                data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
-                                data-user-name="{{ $product->user->first_name }}"
-                                data-user-photo="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
-                                data-date="{{ $product->created_at->format('d M Y') }}">
-                                <div class="event_slider_img_box">
-                                    <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
-                                        alt="{{ $product->title }}" class="trigger-element">
-                                    <div class="service_price_duration my-0 event_price_label">
-                                        <p class="service_price">
-
-                                            <span>
-                                                @if ($product->discounted_price && $product->discounted_price < $product->original_price)
-                                                    <s>${{ $product->original_price }}</s>
-                                                    ${{ $product->discounted_price }}
-                                                @else
-                                                    ${{ $product->original_price }}
-                                                @endif
-                                                / {{ $product->quantity }}-{{ $product->unit_of_quantity }}
-                                            </span>
 
 
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="card-content">
-
-
-                                    <div class="details">
-                                        <h3 class="trigger-element">{{ $product->title }}</h3>
-                                        <p>
-                                            {{ Str::limit($product->short_description, 100) }}
-                                        </p>
-                                        <button type="button"
-                                            class="btn btn-sm btn-primary mt-2 read-more-btn trigger-element">
-                                            Read More
-                                        </button>
-
-                                        <div class="service_posted_by mt-2">
-                                            <div class="person_profile">
-                                                <img src="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
-                                                    alt="{{ $product->user->first_name }}">
-
-                                            </div>
-                                            <div class="posted_name_date">
-                                                <h6>{{ $product->user->first_name }}
-                                                    <p>{{ $product->created_at->format('d M Y') }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <a href="javascript:void(0)" class="view-more direct-message-btn w-100"
-                                        data-receiver-id="{{ $product->user->id }}">Message Now</a>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <p>No products available.</p>
-                    @endforelse
-                </div>
-
-
-            </div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-            <div class="view_all_btn mt-4 d-flex justify-content-center align-items-center">
-                <a href="{{ route('products') }}" class="btn btn-primary rounded-pill">View All Products</a>
-            </div>
-        </div>
-
-    </section> -->
 
     <section class="leadGenSec">
-       <div class="container">
-         <h1 class="main_heading">
-               Muslim Lynk Redefines<span class="leadGenSecHeading"> Lead Generation</span> 
+        <div class="container">
+            <h1 class="main_heading">
+                Muslim Lynk Redefines<span class="leadGenSecHeading"> Lead Generation</span>
             </h1>
-            <p class="leadGenPara">MuslimLynk empowers its members through cutting-edge lead generation tools and strategies. By leveraging advanced business intelligence and seamless communication platforms, Muslim Lynk enables professionals to connect meaningfully and grow their network effectively. The key offerings include:</p>
+            <p class="leadGenPara">MuslimLynk empowers its members through cutting-edge lead generation tools and
+                strategies. By leveraging advanced business intelligence and seamless communication platforms, Muslim Lynk
+                enables professionals to connect meaningfully and grow their network effectively. The key offerings include:
+            </p>
 
-       </div>
+        </div>
 
-        <div class="container"> 
+        <div class="container">
             <div class="leadGenBoxMain">
                 <div class="leadGenBox">
                     <img src="assets/images/realTimeBusinessIntelligent.svg" alt="">
                     <h3>Real-Time Business Intelligence</h3>
-                    <p>Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every connection is relevant and actionable.</p>
+                    <p>Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every connection
+                        is relevant and actionable.</p>
                 </div>
-                 <div class="leadGenBox">
+                <div class="leadGenBox">
                     <img src="assets/images/seamlessDirectEngagementWithPeople.svg" alt="">
                     <h3>Seamless Direct Engagement With People</h3>
-                    <p>Reach the right people effortlessly through integrated direct messaging and LinkedIn connectivity, eliminating barriers to impactful conversations.</p>
+                    <p>Reach the right people effortlessly through integrated direct messaging and LinkedIn connectivity,
+                        eliminating barriers to impactful conversations.</p>
                 </div>
-                 <div class="leadGenBox">
+                <div class="leadGenBox">
                     <img src="assets/images/precisionDrivenLeadGeneration.svg" alt="">
                     <h3>Precision-Driven Lead Generation</h3>
-                    <p>Secure a direct pathway to industry leaders, cutting through noise and delivering high-value opportunities with unmatched efficiency.</p>
+                    <p>Secure a direct pathway to industry leaders, cutting through noise and delivering high-value
+                        opportunities with unmatched efficiency.</p>
                 </div>
             </div>
         </div>
@@ -650,29 +375,20 @@
 
     <section class="industries_sec">
         <div class="container">
-            <h2 class="mb-3 industriesMainHeading">MUSLIMLYNK  <span class="industriesSecHeading">INDUSTRIES</span></h2>
+            <h2 class="mb-3 industriesMainHeading">MUSLIMLYNK <span class="industriesSecHeading">INDUSTRIES</span></h2>
             <div class="row g-4" id="industries-container">
-                <!-- @foreach ($industries as $industry)
-                    <div class="col-lg-3 col-md-6">
+
+                @foreach ($industries as $index => $industry)
+                    <div class="col-lg-3 col-md-6 ">
                         <a href="{{ route('industry', ['industry' => $industry['name']]) }}" class="industry_box">
                             <div class="icon">
-                                <i class="{{ $industry['icon'] }}"></i>
+                                <span class="industry_number">
+                                    {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                                </span>
                             </div>
                             <h2 class="industry_heading">{{ $industry['name'] }}</h2>
                         </a>
                     </div>
-                @endforeach -->
-                @foreach($industries as $index => $industry)
-                <div class="col-lg-3 col-md-6 ">
-                    <a href="{{ route('industry', ['industry' => $industry['name']]) }}" class="industry_box">
-                        <div class="icon">
-                            <span class="industry_number">
-                                {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
-                            </span>
-                        </div>
-                        <h2 class="industry_heading">{{ $industry['name'] }}</h2>
-                    </a>
-                </div>
                 @endforeach
 
 
@@ -686,306 +402,91 @@
     </section>
 
 
-
-    <!-- <section class="why_choose">
-        <div class="container">
-            <h2 class="mb-3">Muslim Lynk Redefines Lead Generation</h2>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-up">
-                                <div class="card-img">
-                                    <i class="fa-solid fa-clock"></i>
-                                </div>
-                                <div class="card-heading">
-                                    <h3>Real-Time Business Intelligence</h3>
-                                    {{-- <span>Subtitle</span> --}}
-                                </div>
-                            </div>
-                            <p>
-                                Access a dynamic, up-to-date database of professionals and decision-makers, ensuring every
-                                connection is relevant and actionable.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-up">
-                                <div class="card-img">
-                                    <i class="fa-solid fa-message"></i>
-                                </div>
-                                <div class="card-heading">
-                                    <h3>Seamless Direct Engagement With People</h3>
-                                    {{-- <span>Subtitle</span> --}}
-                                </div>
-                            </div>
-                            <p>
-                                Reach the right people effortlessly through integrated direct messaging and LinkedIn
-                                connectivity, eliminating barriers to impactful conversations.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-up">
-                                <div class="card-img">
-                                    <i class="fa-solid fa-user"></i>
-                                </div>
-                                <div class="card-heading">
-                                    <h3>Precision-Driven Lead Generation</h3>
-                                    {{-- <span>Subtitle</span> --}}
-                                </div>
-                            </div>
-                            <p>
-                                Secure a direct pathway to industry leaders, cutting through noise and delivering high-value
-                                opportunities with unmatched efficiency.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section> -->
-
     <section class="articles">
         <div class="container">
             <h2 class="main_heading">
-               Services Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span> 
+                Services Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span>
             </h2>
-            <p class="articlesPara">MuslimLynk members offer a diverse range of products and services designed to support businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance solutions, the community provides reliable, professional offerings that empower growth and scalability. Featured products include:</p>
-            <!-- <div class="services_slider_feed services_slider overflow-hidden">
-                <div class="swiper-wrapper">
-                    @forelse($services as $service)
-                        <div class="swiper-slide">
-                            <div class="card service-trigger-wrapper" data-id="{{ $service->user->id }}"
-                                data-title="{{ $service->title }}" data-description="{{ $service->short_description }}"
-                                data-image="{{ $service->service_image ? asset('storage/' . $service->service_image) : 'https://placehold.co/420x250' }}"
-                                data-price="{{ $service->discounted_price && $service->discounted_price < $service->original_price ? '$' . $service->discounted_price . ' (was $' . $service->original_price . ')' : '$' . $service->original_price }}"
-                                data-quantity="{{ $service->duration }}" data-user-name="{{ $service->user->first_name }}"
-                                data-user-photo="{{ $service->user->photo ? asset('storage/' . $service->user->photo) : 'https://placehold.co/50x50' }}"
-                                data-date="{{ $service->created_at->format('d M Y') }}">
-                                <div class="card-header p-0 border-0 service_slider_img_box">
-                                    <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : 'https://placehold.co/420x250' }}"
-                                        alt="{{ $service->title }}" class="img-fluid rounded trigger-element">
-                                    <div class="service_price_duration my-0 event_price_label">
-                                        <p class="service_price">
+            <p class="articlesPara">MuslimLynk members offer a diverse range of products and services designed to support
+                businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance
+                solutions, the community provides reliable, professional offerings that empower growth and scalability.
+                Featured products include:</p>
 
-                                            <span>
-                                                @if ($service->discounted_price && $service->discounted_price < $service->original_price)
-                                                    <s>${{ $service->original_price }}</s>
-                                                    ${{ $service->discounted_price }}
-                                                @else
-                                                    ${{ $service->original_price }}
-                                                @endif
-                                                / {{ $service->duration }}
-                                            </span>
-
-
-                                        </p>
+            <div class="serviceAccordionCon">
+                <div class="serviceAccordionConInner">
+                    @forelse($services as $index => $service)
+                        <div class="kodereach-accordion-section">
+                            <div class="kodereach-accordion-item">
+                                <div class="kodereach-accordion-header {{ $index === 0 ? 'active' : '' }}"
+                                    onclick="toggleKodereachAccordion(this)"
+                                    data-service-image="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/kodeReachLogo.png') }}"
+                                    data-service-price="@if ($service->discounted_price && $service->discounted_price < $service->original_price) ${{ $service->discounted_price }}@else${{ $service->original_price }} @endif"
+                                    data-service-duration="{{ $service->duration }}">
+                                    <h3 class="kodereach-accordion-title">{{ $service->title }}</h3>
+                                    <div class="kodereach-accordion-arrow">
+                                        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z" />
+                                        </svg>
                                     </div>
-
                                 </div>
-                                <div class="card-body">
-                                    <h3 class="service_heading trigger-element">{{ $service->title }}</h3>
-                                    <p>{{ Str::limit($service->short_description, 100) }}</p>
-                                    <button type="button"
-                                        class="btn btn-sm btn-primary mt-2 read-more-btn trigger-element">
-                                        Read More
-                                    </button>
-                                    <div class="service_price_duration">
-                                        <div class="service_price">
-                                            <div class="service_posted_by">
-                                                <div class="person_profile">
-                                                    <img src="{{ $service->user->photo ? asset('storage/' . $service->user->photo) : 'https://placehold.co/50x50' }}"
-                                                        alt="{{ $service->user->first_name }}">
-                                                </div>
-                                                <div class="posted_name_date">
-                                                    <h6>{{ $service->user->first_name }}
-                                                    </h6>
-                                                    <p>{{ $service->created_at->format('d M Y') }}</p>
-                                                </div>
-                                            </div>
+                                <div class="kodereach-accordion-content"
+                                    style="{{ $index === 0 ? 'display: block;' : '' }}">
+                                    <div class="kodereach-accordion-content-inner">
+                                        <p class="description">
+                                            {{ $service->short_description }}
+                                        </p>
 
+                                        <button class="message-btn direct-message-btn"
+                                            data-receiver-id="{{ $service->user->id }}">
+                                            Message Now
+                                        </button>
+
+                                        <div class="author-info">
+                                            <div class="author-avatar">
+                                                <img src="{{ $service->user->photo ? asset('storage/' . $service->user->photo) : asset('assets/images/placeholderUser.png') }}"
+                                                    alt="{{ $service->user->first_name }}">
+                                            </div>
+                                            <div class="author-details">
+                                                <div class="author-name">{{ $service->user->first_name }}</div>
+                                                <div class="author-date">{{ $service->created_at->format('d M Y') }}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100"
-                                        data-receiver-id="{{ $service->user->id }}">Message Now</a>
-
                                 </div>
                             </div>
                         </div>
                     @empty
-                        <p>No services available.</p>
+                        <div class="text-center py-4">
+                            <p>No services available at the moment.</p>
+                        </div>
                     @endforelse
                 </div>
-
-
-            </div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div> -->
-
-                <div class="serviceAccordionCon">
-                    <div class="serviceAccordionConInner">
-                        <div class="kodereach-accordion-section">
-                            <div class="kodereach-accordion-item">
-                                <div id="firstChildOfAccordion" class="kodereach-accordion-header" onclick="toggleKodereachAccordion(this)">
-                                    <h3 class="kodereach-accordion-title">Review and Compilation Services</h3>
-                                    <div class="kodereach-accordion-arrow">
-                                        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z"/></svg>
-                                    </div>
-                                </div>
-                                <div class="kodereach-accordion-content">
-                                    <div class="kodereach-accordion-content-inner">
-                                        <p class="description">
-                                            Review engagement services can be a cost-effective alternative to a full financial statement audit for an organization in that they provide limited assurance regarding the organization's financial statements in accordance with the organization's financial reporting framework. The financial statement deliverable will be the same as an audit, other than our opinion, and can provide the stakeholders of the company with the financial data necessary to make informed business decisions.
-                                        </p>
-
-                                        <button class="message-btn">Message Now</button>
-
-                                        <div class="author-info">
-                                            <div class="author-avatar">
-                                                <img src="assets/images/placeholderUser.png" alt="User Profile Image">
-                                            </div>
-                                            <div class="author-details">
-                                                <div class="author-name">Akbar</div>
-                                                <div class="author-date">22 Aug 2025</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kodereach-accordion-section">
-                            <div class="kodereach-accordion-item">
-                                <div class="kodereach-accordion-header" onclick="toggleKodereachAccordion(this)">
-                                    <h3 class="kodereach-accordion-title">Sarbanes Oxley (SOX) Compliance</h3>
-                                    <div class="kodereach-accordion-arrow">
-                                        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z"/></svg>
-                                    </div>
-                                </div>
-                                <div class="kodereach-accordion-content">
-                                    <div class="kodereach-accordion-content-inner">
-                                        <p class="description">
-                                            Review engagement services can be a cost-effective alternative to a full financial statement audit for an organization in that they provide limited assurance regarding the organization's financial statements in accordance with the organization's financial reporting framework. The financial statement deliverable will be the same as an audit, other than our opinion, and can provide the stakeholders of the company with the financial data necessary to make informed business decisions.
-                                        </p>
-
-                                        <button class="message-btn">Message Now</button>
-
-                                        <div class="author-info">
-                                            <div class="author-avatar">
-                                                <img src="assets/images/placeholderUser.png" alt="User Profile Image">
-                                            </div>
-                                            <div class="author-details">
-                                                <div class="author-name">Akbar</div>
-                                                <div class="author-date">22 Aug 2025</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kodereach-accordion-section">
-                            <div class="kodereach-accordion-item">
-                                <div class="kodereach-accordion-header" onclick="toggleKodereachAccordion(this)">
-                                    <h3 class="kodereach-accordion-title">Public Company SEC Compliance & Reporting</h3>
-                                    <div class="kodereach-accordion-arrow">
-                                        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z"/></svg>
-                                    </div>
-                                </div>
-                                <div class="kodereach-accordion-content">
-                                    <div class="kodereach-accordion-content-inner">
-                                        <p class="description">
-                                            Review engagement services can be a cost-effective alternative to a full financial statement audit for an organization in that they provide limited assurance regarding the organization's financial statements in accordance with the organization's financial reporting framework. The financial statement deliverable will be the same as an audit, other than our opinion, and can provide the stakeholders of the company with the financial data necessary to make informed business decisions.
-                                        </p>
-
-                                        <button class="message-btn">Message Now</button>
-
-                                        <div class="author-info">
-                                            <div class="author-avatar">
-                                                <img src="assets/images/placeholderUser.png" alt="User Profile Image">
-                                            </div>
-                                            <div class="author-details">
-                                                <div class="author-name">Akbar</div>
-                                                <div class="author-date">22 Aug 2025</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="serviceAccordionConInner">
-                        <img src="assets/images/kodeReachLogo.png" alt="kodeReachLogo">
-                        <span>$1.00/ Starting</span>
-                    </div>
+                <div class="serviceAccordionConInner">
+                    <img id="serviceImage"
+                        src="{{ $services->isNotEmpty() && $services->first()->service_image ? asset('storage/' . $services->first()->service_image) : asset('assets/images/kodeReachLogo.png') }}"
+                        alt="Service Image" class="img-fluid">
+                    <span id="servicePricing">
+                        @if ($services->isNotEmpty())
+                            @if ($services->first()->discounted_price && $services->first()->discounted_price < $services->first()->original_price)
+                                ${{ $services->first()->discounted_price }} / {{ $services->first()->duration }}
+                            @else
+                                ${{ $services->first()->original_price }} / {{ $services->first()->duration }}
+                            @endif
+                        @else
+                            $1.00 / Starting
+                        @endif
+                    </span>
                 </div>
-
-            <!-- <div class="view_all_btn mt-4 d-flex justify-content-center align-items-center">
-                <a href="{{ route('services') }}" class="btn btn-primary rounded-pill">View All Services</a>
-            </div> -->
+            </div>
         </div>
     </section>
-    {{-- <section class="articles">
-        <div class="container">
-            <h2 class="mb-3">Articles</h2>
-            <div class="article_slider overflow-hidden">
-                <div class="swiper-wrapper">
-                    @forelse($blogs as $blog)
-                        <div class="swiper-slide">
 
-                            <div class="card">
-                                <div class="card-header p-0 border-0">
-                                    <!-- Blog Image -->
-                                    <img src="{{ $blog->image ? asset('storage/' . $blog->image) : 'https://via.placeholder.com/650x300' }}"
-                                        alt="{{ $blog->title }}" class="img-fluid rounded">
-                                </div>
-                                <div class="card-body">
-
-                                    <h3>{{ $blog->title }}</h3>
-
-
-                                    <p>{!! \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) !!}</p>
-
-
-
-                                    <a href="#" class="btn btn-primary">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="swiper-slide">
-                            <div class="card">
-                                <div class="col-12">
-                                    <p>No blogs available at the moment. Please check back later.</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
-        </div>
-    </section> --}}
-
-    <!-- <section class="lp_footer">
-        <div class="container">
-
-            <p class="powered_by">
-                Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
-            </p>
-        </div>
-    </section> -->
 
     <div id="footer">
-             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-         </div>
+        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+    </div>
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -1050,20 +551,15 @@
             </div>
         </div>
     </div>
-
-    
-
-
-       
 @endsection
 
 
 @section('scripts')
- <script>
+    <script>
         (function() {
             // State
             let currentIndex = 0;
-            
+
             // Elements
             const sliderTrack = document.getElementById('sliderTrack');
             const slides = document.querySelectorAll('.slide');
@@ -1156,18 +652,18 @@
             // Event delegation for arrow buttons
             document.addEventListener('click', function(e) {
                 const target = e.target;
-                
+
                 if (target.hasAttribute('data-action')) {
                     e.preventDefault();
                     const action = target.getAttribute('data-action');
-                    
+
                     if (action === 'next') {
                         nextSlide();
                     } else if (action === 'prev') {
                         prevSlide();
                     }
                 }
-                
+
                 if (target.classList.contains('dot')) {
                     e.preventDefault();
                     const index = parseInt(target.getAttribute('data-index'));
@@ -1192,17 +688,21 @@
 
             sliderTrack.addEventListener('touchstart', function(e) {
                 touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
+            }, {
+                passive: true
+            });
 
             sliderTrack.addEventListener('touchend', function(e) {
                 touchEndX = e.changedTouches[0].screenX;
                 handleSwipe();
-            }, { passive: true });
+            }, {
+                passive: true
+            });
 
             function handleSwipe() {
                 const swipeThreshold = 50;
                 const diff = touchStartX - touchEndX;
-                
+
                 if (Math.abs(diff) > swipeThreshold) {
                     if (diff > 0) {
                         nextSlide();
@@ -1215,12 +715,12 @@
             // Initialize
             createDots();
             updateButtons();
-            
+
             console.log('Slider ready!');
         })();
     </script>
 
-        <script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             const industriesContainer = document.getElementById("industries-container");
             const showMoreBtn = document.getElementById("show-more-btn");
@@ -1290,9 +790,9 @@
                                 // If no conversation, open the modal
                                 console.log(response.receiver);
                                 $('#receiver_id').val(receiverId);
-                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
+                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
 I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
-Looking forward to connecting! 
+Looking forward to connecting!
 Best Regards,
 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
                                 // $('#mainModal').modal('show');
@@ -1373,13 +873,20 @@ Best Regards,
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             // Make FIRST accordion active by default
             const firstItem = document.querySelector(".kodereach-accordion-item");
             if (firstItem) {
+                const firstHeader = firstItem.querySelector(".kodereach-accordion-header");
                 const firstContent = firstItem.querySelector(".kodereach-accordion-content");
+
                 firstItem.classList.add("active");
                 firstContent.style.maxHeight = firstContent.scrollHeight + "px";
+
+                // Update image and pricing for first item
+                if (firstHeader) {
+                    updateServiceDisplay(firstHeader);
+                }
             }
         });
 
@@ -1398,10 +905,33 @@ Best Regards,
             if (!isOpen) {
                 item.classList.add("active");
                 content.style.maxHeight = content.scrollHeight + "px";
+
+                // Update service image and pricing on the right
+                updateServiceDisplay(header);
+            }
+        }
+
+        function updateServiceDisplay(header) {
+            const serviceImage = header.getAttribute('data-service-image');
+            const servicePrice = header.getAttribute('data-service-price');
+            const serviceDuration = header.getAttribute('data-service-duration');
+
+            const serviceImageElement = document.getElementById('serviceImage');
+            const servicePricingElement = document.getElementById('servicePricing');
+
+            // Update image with smooth transition
+            if (serviceImageElement && serviceImage) {
+                serviceImageElement.style.opacity = '0';
+                setTimeout(() => {
+                    serviceImageElement.src = serviceImage;
+                    serviceImageElement.style.opacity = '1';
+                }, 200);
+            }
+
+            // Update pricing
+            if (servicePricingElement && servicePrice && serviceDuration) {
+                servicePricingElement.textContent = `${servicePrice} / ${serviceDuration}`;
             }
         }
     </script>
-
-
-    
 @endsection
