@@ -99,26 +99,6 @@
                         </div>
 
 
-                        <!-- Sub - Category Filter Section -->
-                        {{-- <div class="filter-section">
-                        <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#industrySubCategoryFilter">
-                            Sub - Industry <span class="toggle-icon">+</span>
-                        </div>
-                        <div id="industrySubCategoryFilter" class="filterCollapseBox collapse">
-                            <div class="selected-filter-group" id="selectedIndustrySubCategoryFilters"></div>
-                            <input type="text" name="company_sub_category" class="filter-search"
-                                placeholder="Search Industry..."
-                                oninput="filterOptions(this, 'industrySubCategoryFilterOptions')">
-                            <div id="industrySubCategoryFilterOptions" style="display: none">
-                                @foreach ($filters['company_sub_categories'] as $sub_category)
-                                    <div class="filter-option"
-                                        onclick="addFilter('company_sub_category', '{{ $sub_category }}', 'selectedIndustrySubCategoryFilters')">
-                                        {{ $sub_category }}</div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div> --}}
-
                         <!-- Business Type Filter Section -->
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
@@ -525,32 +505,8 @@
         <div class="main-content">
             <!-- User Details Card -->
             <div class="row g-4" id="userResults">
-                {{-- <div class="col-md-12 userResults" id="userResults"> --}}
-                    @include('partial.search-result', ['users' => $users])
-                {{-- </div> --}}
-                <div class="col-12"></div>
+                @include('partial.search-result', ['users' => $users])
             </div>
-
-            <div class="RecordAndPagination">
-                <div class="top-controls">
-                    <label for="recordsPerPage">Records per page</label>
-                    <div class="select-wrapper">
-                        <select id="recordsPerPage">
-                            <option value="8" selected>8</option>
-                            <option value="12">12</option>
-                            <option value="24">24</option>
-                        </select>
-                        <svg class="dropdown-icon" width="14" height="14" viewBox="0 0 24 24" fill="none">
-                            <path d="M7 10l5 5 5-5" stroke="#555" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <span class="record-info" id="recordInfo"></span>
-                </div>
-
-                <div class="pagination" id="pagination"></div>
-            </div>
-
         </div>
 
     </div>
@@ -606,28 +562,37 @@
 
         // Sync header filters into the global filters object
         function syncHeaderFilters() {
-            const headerForm = new FormData(document.getElementById('search_form'));
-            for (const [key, value] of headerForm.entries()) {
-                if (value) {
-                    filters[key] = Array.isArray(filters[key]) ? [...filters[key], value] : [value];
+            const searchForm = document.getElementById('search_form');
+            if (searchForm) {
+                const headerForm = new FormData(searchForm);
+                for (const [key, value] of headerForm.entries()) {
+                    if (value) {
+                        filters[key] = Array.isArray(filters[key]) ? [...filters[key], value] : [value];
+                    }
                 }
             }
         }
 
         // Apply filters and refresh results
-        function applyFilters() {
+        function applyFilters(page = 1) {
             syncHeaderFilters();
-            let newUrl = `${window.location.origin}${window.location.pathname}?${jQuery.param(filters, true)}`;
+
+            // Add page to filters
+            const requestData = { ...filters, page: page };
+
+            let newUrl = `${window.location.origin}${window.location.pathname}?${jQuery.param(requestData, true)}`;
             window.history.pushState({
                 path: newUrl
             }, '', newUrl);
 
             jQuery.ajax({
                 url: window.location.pathname,
-                data: filters,
+                data: requestData,
                 method: 'GET',
                 success: function(response) {
                     jQuery('#userResults').html(response);
+                    // Reinitialize direct message buttons after AJAX load
+                    initDirectMessageButtons();
                 },
                 error: function(error) {
                     console.error('Error fetching results:', error);
@@ -740,24 +705,12 @@
         jQuery(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
             const pageUrl = jQuery(this).attr('href');
-            let newUrl = `${pageUrl}&${jQuery.param(filters, true)}`;
 
-            window.history.pushState({
-                path: newUrl
-            }, '', newUrl);
+            // Extract page number from URL
+            const urlParams = new URLSearchParams(pageUrl.split('?')[1]);
+            const page = urlParams.get('page') || 1;
 
-            jQuery.ajax({
-                url: pageUrl,
-                data: filters,
-                method: 'GET',
-                success: function(response) {
-                    jQuery('#userResults').html(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching paginated results:', error);
-                    alert('Failed to load results. Please try again.');
-                }
-            });
+            applyFilters(page);
         });
 
         // Toggle filter sections
@@ -773,14 +726,18 @@
 
 @section('scripts')
     <script>
-        jQuery(document).ready(function($) {
+        // Initialize direct message buttons
+        function initDirectMessageButtons() {
             let directMessageBtn = document.querySelectorAll('.direct-message-btn');
 
             directMessageBtn.forEach(element => {
-                element.addEventListener("click", function() {
+                // Remove existing event listeners by cloning
+                const newElement = element.cloneNode(true);
+                element.parentNode.replaceChild(newElement, element);
+
+                newElement.addEventListener("click", function() {
                     let receiverId = $(this).data('receiver-id');
                     $('#receiver_id').val(receiverId);
-
 
                     // Check if conversation exists
                     $.ajax({
@@ -803,13 +760,11 @@
                                 console.log(response.receiver);
                                 $('#receiver_id').val(receiverId);
                                 $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
-    I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
-    Looking forward to connecting!
-    Best Regards,
+I came across your profile and was really impressed by your work. I'd love to connect and exchange ideas.
+Looking forward to connecting!
+Best Regards,
                 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
-                                // $('#mainModal').modal('show');
-                                var myModal = new bootstrap.Modal(document
-                                    .getElementById('mainModal'));
+                                var myModal = new bootstrap.Modal(document.getElementById('mainModal'));
                                 myModal.show();
                             }
                         },
@@ -819,7 +774,11 @@
                     });
                 });
             });
+        }
 
+        jQuery(document).ready(function($) {
+            // Initialize on page load
+            initDirectMessageButtons();
 
             $('#directMessageForm').on('submit', function(e) {
                 e.preventDefault();
@@ -855,103 +814,5 @@
                 });
             });
         });
-
-
-        // pagination and record per page start
-        // ==== CONFIG ====
-        const recordsPerPageSelect = document.getElementById("recordsPerPage");
-        const pagination = document.getElementById("pagination");
-        const recordInfo = document.getElementById("recordInfo");
-        const allCards = Array.from(document.querySelectorAll(".user-card"));
-        const cardsContainer = document.querySelector(".userResults");
-
-        let currentPage = 1;
-        let recordsPerPage = parseInt(recordsPerPageSelect.value);
-
-        // ==== INITIAL SETUP ====
-        function renderCards() {
-            const start = (currentPage - 1) * recordsPerPage;
-            const end = start + recordsPerPage;
-
-            // Hide all cards
-            allCards.forEach(card => card.parentElement.style.display = "none");
-
-            // Show current range
-            const visibleCards = allCards.slice(start, end);
-            visibleCards.forEach(card => card.parentElement.style.display = "block");
-
-            // ✅ Updated Record Info Format (e.g., "8 of 140 records")
-            const shownCount = Math.min(end, allCards.length);
-            recordInfo.textContent = `${shownCount} of ${allCards.length} records`;
-
-            // Render pagination
-            renderPagination();
-        }
-
-        // ==== PAGINATION ====
-        function renderPagination() {
-            pagination.innerHTML = "";
-            const totalPages = Math.ceil(allCards.length / recordsPerPage);
-
-            const createButton = (page, text = page, disabled = false, active = false) => {
-                const btn = document.createElement("button");
-                btn.textContent = text;
-                btn.disabled = disabled;
-                btn.className = "page-btn";
-                if (active) btn.classList.add("active");
-                btn.addEventListener("click", () => {
-                    currentPage = page;
-                    renderCards();
-                });
-                return btn;
-            };
-
-            const addEllipsis = () => {
-                const span = document.createElement("span");
-                span.textContent = "...";
-                span.className = "ellipsis";
-                pagination.appendChild(span);
-            };
-
-            // Prev Button
-            pagination.appendChild(createButton(currentPage - 1, "Prev", currentPage === 1));
-
-            // Page Buttons with Ellipsis
-            const maxVisible = 5;
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-
-            if (endPage - startPage < maxVisible - 1) {
-                startPage = Math.max(1, endPage - maxVisible + 1);
-            }
-
-            if (startPage > 1) {
-                pagination.appendChild(createButton(1));
-                if (startPage > 2) addEllipsis();
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                pagination.appendChild(createButton(i, i, false, i === currentPage));
-            }
-
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) addEllipsis();
-                pagination.appendChild(createButton(totalPages));
-            }
-
-            // Next Button
-            pagination.appendChild(createButton(currentPage + 1, "Next", currentPage === totalPages));
-        }
-
-        // ==== EVENT LISTENERS ====
-        recordsPerPageSelect.addEventListener("change", () => {
-            recordsPerPage = parseInt(recordsPerPageSelect.value);
-            currentPage = 1;
-            renderCards();
-        });
-
-        // ==== INITIAL CALL ====
-        renderCards();
-        // pagination and record per page end
     </script>
 @endsection
