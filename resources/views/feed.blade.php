@@ -10,12 +10,13 @@
         }
 
         .read-more-btn {
-            width: 100%;
-            background: transparent;
+            border-radius: 7px;
             border: none;
-            border-top: 1px solid #ddd;
-            border-radius: 0px;
-            color: #686868;
+            background: #B8C034;
+            color: #000;
+            font-family: "Inter";
+            border: 1px solid #B8C034;
+            font-size: 12px;
             font-weight: 500;
             text-align: left;
         }
@@ -25,8 +26,7 @@
         .read-more-btn:active {
             background: transparent !important;
             color: var(--secondary) !important;
-            border: none !important;
-            border-top: 1px solid var(--secondary) !important;
+            border: 1px solid #B8C034;
         }
 
         #productModal .modal-dialog.modal-lg {
@@ -464,20 +464,23 @@
                     @endforelse
                 </div>
                 <div class="serviceAccordionConInner">
-                    <img id="serviceImage"
-                        src="{{ $services->isNotEmpty() && $services->first()->service_image ? asset('storage/' . $services->first()->service_image) : asset('assets/images/kodeReachLogo.png') }}"
-                        alt="Service Image" class="img-fluid">
-                    <span id="servicePricing">
-                        @if ($services->isNotEmpty())
-                            @if ($services->first()->discounted_price && $services->first()->discounted_price < $services->first()->original_price)
-                                ${{ $services->first()->discounted_price }} / {{ $services->first()->duration }}
+                    <div class="servideAccordionImgCon">
+
+                        <img id="serviceImage"
+                            src="{{ $services->isNotEmpty() && $services->first()->service_image ? asset('storage/' . $services->first()->service_image) : asset('assets/images/kodeReachLogo.png') }}"
+                            alt="Service Image" class="img-fluid">
+                        <span id="servicePricing">
+                            @if ($services->isNotEmpty())
+                                @if ($services->first()->discounted_price && $services->first()->discounted_price < $services->first()->original_price)
+                                    ${{ $services->first()->discounted_price }} / {{ $services->first()->duration }}
+                                @else
+                                    ${{ $services->first()->original_price }} / {{ $services->first()->duration }}
+                                @endif
                             @else
-                                ${{ $services->first()->original_price }} / {{ $services->first()->duration }}
+                                $1.00 / Starting
                             @endif
-                        @else
-                            $1.00 / Starting
-                        @endif
-                    </span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

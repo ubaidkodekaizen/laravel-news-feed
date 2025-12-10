@@ -1291,7 +1291,7 @@ width: 100%;
         h2.industriesMainHeading{
     color: #fff !important;
     width: fit-content;
-    text-align: center;
+    text-align: left;
     font-family: "Bebas Neue", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -3407,6 +3407,66 @@ p.industryProfileRole {
     .userProfileMemberSince {
         margin-bottom: 4px !important;
     }
+
+    .leadGenSec .container .leadGenBoxMain{
+        flex-direction: column;
+    }
+    .slide {
+    width: 100%;}
+
+    .sliderArrows {
+   margin-top: 20px;
+    }
+    .productSliderSection .container {
+        padding: 0 20px;
+    flex-direction: column-reverse;
+    gap: 30px;
+    }
+
+    .productSliderSection {
+    padding: 20px 0;}
+
+    .slider-dots {
+    margin-top: 20px;}
+
+    .sliderUserAndPricingInfo {
+        margin-top: 20px;
+    }
+
+    .feed_lp .main_heading, .leadGenSec .main_heading, .industries_sec .container .industriesMainHeading, .articles .container .main_heading {
+    font-size: 48px;}
+
+    .feed_lp .feedLpPara, .leadGenSec .leadGenPara, .articlesPara {
+    font-size: 16px;
+    width: 100%;}
+
+    .feed_lp .main_heading::after, .leadGenSec .main_heading::after, .industries_sec .container .industriesMainHeading::after, .articles .container .main_heading::after {
+    left: 100px;}
+
+    .serviceAccordionCon {
+    flex-direction: column-reverse;}
+
+    .serviceAccordionCon .serviceAccordionConInner:nth-child(2) span {
+    padding: 1px 20px;
+    font-size: 12px;
+    top: 5px;
+    left: 5px;}
+
+    h3.kodereach-accordion-title {
+    font-size: 28px;}
+p.description {
+    font-size: 16px;}
+
+    .kodereach-accordion-arrow svg {
+    width: 13px;
+    height: 13px;}
+
+    .kodereach-accordion-arrow {
+    padding: 4px 11px 8px;}
+
+    h2.industriesMainHeading {
+    font-size: 44px;}
+
 }
 
 @media (max-width: 894px) {
