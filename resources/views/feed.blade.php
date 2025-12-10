@@ -89,6 +89,10 @@
             justify-content: start;
         }
 
+        .productModalUserProfileBox img {
+            object-fit: cover;
+        }
+
         #productModal .direct-message-btn {
             flex: 1;
             border-radius: 10px;
@@ -249,7 +253,8 @@
                         data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
                         data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
                         data-user-name="{{ $product->user->first_name }}"
-                        data-user-photo="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}">
+                        data-user-photo="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
+                        data-date="{{ $product->created_at->format('d-M-Y') }}">
                         <div class="container">
                             <div class="productSliderSecInnerCol">
                                 <h2 class="industriesMainHeading">{{ $product->title }}</h2>
@@ -277,7 +282,7 @@
                                         </div>
                                         <div class="author-details">
                                             <div class="author-name">{{ $product->user->first_name }}</div>
-                                            <div class="author-date">{{ $product->created_at->format('d M Y') }}</div>
+                                            <div class="author-date">{{ $product->created_at->format('d-M-Y') }}</div>
 
                                         </div>
                                     </div>
