@@ -1,5 +1,13 @@
 @extends('layouts.main')
 
+@section('styles')
+    <style>
+        body{
+            overflow: hidden !important;
+        }
+    </style>
+@endsection
+
 
 @section('content')
     <div class="navbar_d_flex">

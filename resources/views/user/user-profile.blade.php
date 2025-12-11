@@ -176,7 +176,7 @@
             margin-top: 15px;
             padding-right: 20px;
             width: 94%;
-            margin: 30px auto;
+            margin: 30px auto 60px;
         }
 
         .generalInfoHeading{
@@ -484,7 +484,7 @@
             font-weight: 300;
             text-align: center;
             width: 60%;
-            margin: auto;
+            margin: 0 auto 40px;
         }
 
          @media (max-width: 1280px) {

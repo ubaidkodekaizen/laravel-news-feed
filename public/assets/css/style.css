@@ -71,7 +71,7 @@ body {
     position: sticky !important;
     top: 0;
     z-index: 999999;
-    padding: 4px 10px;
+    padding: 10px;
     background: linear-gradient(180deg, #0e1948, #213bae);
     color: var(--white);
 }
@@ -3721,7 +3721,7 @@ p.description {
     .profile-pic::before {
         top: 44px;
     }
-    
+
     .industry-profile-card {
     gap: 0px;}
 
