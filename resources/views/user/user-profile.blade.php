@@ -1,6 +1,11 @@
 @extends('layouts.main')
 @section('content')
     <style>
+        body{
+            overflow: hidden;
+        }
+
+
         .user_company_profile .profile_pic img {
             border-radius: 15px;
             height: 300px;
@@ -21,6 +26,7 @@
             font-weight: 500;
             color: #333333;
             margin-bottom: 42px;
+            line-height: 200%;
         }
 
         .company_card span i {
@@ -45,9 +51,10 @@
         }
 
         .event_slider .card {
+            width: 100%;
             min-height: unset !important;
             box-shadow: 0px 0px 10px 0px #0000001a;
-            border-radius: 10px;
+            border-radius: 0px;
             border: 1px solid #e7e7e7;
         }
 
@@ -58,12 +65,27 @@
             overflow: hidden;
         }
 
-        .company_card {
+        .event_slider .swiper-slide {
+            width: 414px !important;
+        }
+
+        /* .company_card {
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
             gap: 20px;
             height: auto !important;
+            border-right: 1px solid #E9EBF0;
+            background: #f4f5fb;
+        } */
+
+            .company_card {
+            padding: 40px 34px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: calc(-100px + 100.5vh) !important;
+            overflow-y: auto;
             border-right: 1px solid #E9EBF0;
             background: #f4f5fb;
         }
@@ -90,6 +112,7 @@
             box-shadow: none;
             border-radius: 10px;
             border: 1px solid #E5E5E5;
+            min-height: 150px;
         }
 
         .company_profile_section,
@@ -107,6 +130,7 @@
             border: none;
             /* overflow: hidden; */
             margin: 0;
+            height: auto;
         }
 
         .profile-image {
@@ -142,6 +166,8 @@
         .services_profile_border {
             margin-top: 15px;
             padding-right: 20px;
+            width: 94%;
+            margin: 30px auto;
         }
 
         .generalInfoHeading{
@@ -181,8 +207,53 @@
             padding: 10px;
         }
 
+        .company_profile_section .event_slider .card-content h3 {
+            margin-top: 0;
+            font-size: 21px;
+            font-family: "Inter";
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .event_price_label {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 30px;
+            margin-left: auto;
+            position: absolute;
+            top: -45px;
+            left: 20px;
+        }
+
+        .event_slider .card-content p {
+            font-size: 18px;
+            font-family: "Inter";
+            font-weight: 400;
+        }
+
         .company_profile_section .event_slider .card-content {
-            padding: 10px;
+            padding: 20px;
+            background: #F2F2F2;
+            position: relative;
+        }
+
+        .company_profile_section .event_slider .event_price_label p {
+            font-size: 16px;
+            padding: 4px 14px;
+            color: #000000;
+            font-weight: 500;
+        }
+
+         .company_profile_section .event_slider .event_price_label {
+              height: 35px;
+            width: fit-content;
+        }
+
+      
+
+        .company_profile_section .event_slider .card img {
+            height: 414px;
         }
 
         .company_profile_section .event_slider {
@@ -215,7 +286,7 @@
             display: flex;
             gap: 26px;
             width: 94%;
-            margin: auto;
+            margin: 30px auto 0;
             border: 1px solid #E5E5E5;
             border-radius: 14.11px;
             padding: 14px;
@@ -287,6 +358,7 @@
             font-weight: 700;
             font-family: "Inter";
             margin: 0;
+            word-wrap: break-word;
         }
 
         .offeredHeadingMain {
@@ -324,11 +396,126 @@
             text-align: center;
         }
 
+        .swiper.swiper-initialized.swiper-horizontal.swiper-backface-hidden {
+            width: 94%;
+            margin: 30px auto;
+        }
+
+        #userEducation p:last-child {
+            color: #ffffffff;
+            font-size: 12.7px !important;
+                font-family: Inter, sans-serif;
+         }
+
+         .mainProfileContent{
+            height: calc(-100px + 100.5vh) !important;
+            overflow-y: auto;
+         }
+
+         
+
+
+         .col-lg-2 {
+        flex: 0 0 20%;}
+
+         @media (max-width: 1280px) {
+            .company_profile_section .col-lg-3{
+                width: 30%;
+            }
+
+            .mainProfileContent {
+               width: 68%;
+        margin-left: 20px;
+            }
+        }
+
+        @media (max-width: 998px) {
+            .company_profile_section .col-lg-3{
+                width: 30%;
+            }
+
+            .mainProfileContent {
+               width: 70%;
+        margin-left: 0px;
+            }
+        }
+
+         @media (max-width: 788px) {
+            /* .company_profile_section .col-lg-3{
+                width: 0%;
+            } */
+
+            .mainProfileContent {
+               width: 70%;
+            margin-left: 0px;
+                }
+
+                .mainProfileContent {
+                width: 100%;
+                margin-left: 10px;
+            }
+
+            .sidebar {
+            background: transparent !important;}
+
+            .company_card{
+                  height: auto !important;
+              padding: 120px 20px 20px 20px;
+            }
+
+            .company_profile_section .col-lg-3 {
+            padding-right: 0 !important;
+            padding-left: 0;}
+
+            .mainProfileImage {
+            flex-direction: column;}
+
+            .profileHeadingAndSocials {
+                gap: 0;
+            flex-direction: column;}
+
+            .col-lg-2 {
+                flex: 0 0 100%;
+                 margin-top: 22px;
+            }
+            .profileInfoInner .row {
+                margin-top: 0;
+            }
+
+            .addressInfo {
+                flex: 0 0 100%;
+                margin-top: 22px;
+                padding: 0 14px;
+            }
+
+            .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100%;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.open {
+            width: 100% !important;
+            left: 0;
+            z-index: 99;
+        }
+        }
+
+        
 
 
         
     </style>
 
+<button class="sidebar-toggler btn btn-primary d-lg-none" 
+        type="button" 
+        onclick="toggleSidebar()">
+    Company Info
+</button>
     <section class="user_profile_view">
         <div class="container">
             <!-- LinkedIn Profile View -->
@@ -339,8 +526,8 @@
                 <!-- Profile Image -->
                 <div class="position-relative">
                     <div class="company_profile_section">
-                        <div class="row">
-                            <div class="col-lg-3">
+                        <div class="row ">
+                            <div id="sidebar" class="col-lg-3 sidebar">
                                 <div class="company_card">
                                     <h2 class="generalInfoHeading">Company Info</h2>
                                     <div class="company_logo">
@@ -471,7 +658,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-lg-9">
+                            <div class="col-lg-9 mainProfileContent">
                                 <div class="event_slider">
                                     <div class="container">
                                         <div class="mainProfileImage">
@@ -593,11 +780,11 @@
                             <div class="row">
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">First Name</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->first_name ?? '' }}</p>
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Last Name</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->last_name ?? '' }}</p>
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Date of Birth</h3>
@@ -605,33 +792,33 @@
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Ethnicity</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->ethnicity }}</p>
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Gender</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->gender }}</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Email Address</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->email ?? '' }}</p>
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Phone Number</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->phone ?? '' }}</p>
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Martial Status</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->marital_status }}</p>
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Nationality</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->nationality }}</p>
                                 </div>
                                 <div class="col-lg-2">
                                     <h3 class="profileInfoInnerInfoHead">Age Group</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->age_group }}</p>
                                 </div>
                             </div>
                         </div>
@@ -641,15 +828,15 @@
                         <div class="profileInfoInner">
                             <h2 class="profileInfoHeading">Address</h2>
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-3 addressInfo">
                                     <h3 class="profileInfoInnerInfoHead">Country</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->country ?? '' }}</p>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-3 addressInfo">
                                     <h3 class="profileInfoInnerInfoHead">City</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->city ?? '' }}</p>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-3 addressInfo">
                                     <h3 class="profileInfoInnerInfoHead">Postal Code</h3>
                                     <p  class="profileInfoInnerInfoAns">-</p>
                                 </div>
@@ -780,7 +967,12 @@
                                 </div>
                                 <div class="services_profile_border">
                                     <div class="container">
-                                        <h2 class="mb-3 service_heading">Services</h2>
+                                         <div class="offeredHeadingMain">
+
+                                            <span class="offeredProductSubHeading">MuslimLynk</span>
+                                            <h2 class="mb-3 offeredProductMainHeading">Offered <span>Service</span></h2>
+                                        </div>
+                                        <!-- <h2 class="mb-3 service_heading">Services</h2> -->
                                         <div
                                             class="services_slider services_profile_slider articles overflow-hidden pb-0 pt-0">
                                             <div class="swiper-wrapper">
@@ -1015,5 +1207,16 @@ Best Regards,
                 });
             });
         });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            if (sidebar) {
+                sidebar.classList.toggle("open");
+            } else {
+                console.error("Sidebar element not found!");
+            }
+        }
+
+        let filters = {};
     </script>
 @endsection
