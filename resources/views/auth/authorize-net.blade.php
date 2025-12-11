@@ -321,6 +321,22 @@
 
         @media only screen and (max-width: 768px) {
 
+            .form_container .row:first-child {
+    border-radius: 0px;}
+
+            .account_signup {
+    display: flex !important;}
+
+            h2 {
+                 font-size: 30.7px;}
+
+            .para {
+                font-size: 18px;}
+
+            .form-section {
+                padding: 0;
+            width: 100%;}
+
 
             .custom-btn {
                 width: 100%;

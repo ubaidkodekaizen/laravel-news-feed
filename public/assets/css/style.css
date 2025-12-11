@@ -1389,7 +1389,7 @@ button.sliderUserMessageBtn {
             display: flex;
             gap: 15px;
             margin-top: -40px;
-            z-index: 9999;
+            z-index: 99;
         }
 
         .sliderPreviousArrow,
@@ -3483,9 +3483,21 @@ p.description {
     .profile-pic img {
         width: 176px;
     }
+
+    div#sidebarMain{
+        width: 0;
+    }
 }
 
 @media only screen and (max-width: 768px) {
+
+    .industry-heading .subHeading{
+        font-size: 14px;
+        padding: 7px 17px;
+    }
+
+    .industry-heading h1 {
+    font-size: 42.7px;}
 
     .top-controls {
         align-self: center;
@@ -3519,7 +3531,8 @@ p.description {
     }
 
     .industry-heading p {
-        width: 90%;
+        width: 85%;
+        font-size: 16px;
     }
 
     .industry_specialist .container .row.g-3 .col-md-4 {
@@ -3691,7 +3704,7 @@ p.description {
     }
 }
 
-@media (max-width: 412px) {
+@media (max-width: 500px) {
     .industry-profile-card {
         flex-direction: column;
         padding: 8px 20px;
@@ -3708,6 +3721,9 @@ p.description {
     .profile-pic::before {
         top: 44px;
     }
+    
+    .industry-profile-card {
+    gap: 0px;}
 
     /* .industry-profile-card .profile_details {
     text-align: center;

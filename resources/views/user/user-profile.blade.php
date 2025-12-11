@@ -474,6 +474,19 @@
             color: var(--secondary);
         }
 
+
+        .offeredHeadingMain p{
+            color: #000;
+            font-size: 18px;
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: 300;
+            text-align: center;
+            width: 60%;
+            margin: auto;
+        }
+
          @media (max-width: 1280px) {
             .company_profile_section .col-lg-3{
                 width: 30%;
@@ -520,6 +533,10 @@
             /* .company_profile_section .col-lg-3{
                 width: 0%;
             } */
+
+                .offeredHeadingMain p{
+                    font-size: 16px;
+                }
 
             .mainProfileContent {
                width: 70%;
@@ -578,6 +595,7 @@
             width: 100% !important;
             left: 0;
             z-index: 99;
+            padding: 0;
         }
         }
 
@@ -1017,6 +1035,7 @@
 
                                             <span class="offeredProductSubHeading">MuslimLynk</span>
                                             <h2 class="mb-3 offeredProductMainHeading">Offered <span>Products</span></h2>
+                                            <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
                                         </div>
                                         <div class="swiper">
                                             <div class="swiper-wrapper">
@@ -1069,6 +1088,7 @@
 
                                             <span class="offeredProductSubHeading">MuslimLynk</span>
                                             <h2 class="mb-3 offeredProductMainHeading">Offered <span>Service</span></h2>
+                                            <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
                                         </div>
                                         <!-- <h2 class="mb-3 service_heading">Services</h2> -->
                                         <div
