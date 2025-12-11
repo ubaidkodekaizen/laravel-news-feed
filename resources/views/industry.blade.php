@@ -5,7 +5,7 @@
             <div class="industry-heading text-center mb-5">
                 <span class="subHeading">Technology</span>
                 <h1>Industry <span>Experts</span></h1>
-                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                <p>Here you’ll find members who are experts in their industries. Reach out, get advice, and learn from those who bring real-world experience to the community.</p>
             </div>
         </div>
 

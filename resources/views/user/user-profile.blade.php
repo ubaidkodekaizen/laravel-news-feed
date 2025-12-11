@@ -76,7 +76,7 @@
             width: 414px !important;
         }
 
-       
+
 
         /* .company_card {
             padding: 40px 20px;
@@ -158,7 +158,7 @@
             text-align: left;
         }
 
-        .contact_social_flex { 
+        .contact_social_flex {
             border-bottom: none;
             padding-bottom: 0px;
             max-width: 100%;
@@ -270,10 +270,10 @@
         .service_price p { margin-bottom: 1px !important;}
 
          /* .company_profile_section .event_slider .event_price_label {
-              
+
         } */
 
-      
+
 
         .company_profile_section .event_slider .card img,
         .company_profile_section .articles .card img {
@@ -599,14 +599,14 @@
         }
         }
 
-        
 
 
-        
+
+
     </style>
 
-<button class="sidebar-toggler btn btn-primary d-lg-none" 
-        type="button" 
+<button class="sidebar-toggler btn btn-primary d-lg-none"
+        type="button"
         onclick="toggleSidebar()">
     Company Info
 </button>
@@ -692,7 +692,7 @@
                                             <!-- <a href="tel:{{ $user->company->company_phone }}" class="company_contact">
                                                 <span><i class="fa-solid fa-phone"></i></span>
                                                 {{ $user->company->company_phone }}
-                                                
+
                                             </a> -->
                                             <a href="tel:{{ $user->company->company_phone }}">
                                             <div class="company_contact">
@@ -849,7 +849,7 @@
                                     </a>
                                 </li>
                             @endif
-                            
+
 
                             @if ($user->tiktok_url)
                                 <li>
@@ -909,10 +909,10 @@
                                     <h3 class="profileInfoInnerInfoHead">Gender</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->gender }}</p>
                                 </div>
-                                
+
                             </div>
                             <div class="row">
-                                
+
                                 <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Email Address</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->email ?? '' }}</p>
@@ -931,7 +931,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                
+
                                 <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Age Group</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->age_group }}</p>
@@ -959,7 +959,7 @@
                             </div>
                         </div>
                     </div>
-                                        
+
 
                     <!-- <div class="contact_social_flex">
                         <div class="contact_email">
@@ -1028,14 +1028,14 @@
                                     </a>
                                 </li>
                             @endif
-                        </ul>               
-                    </div> -->             
-                    
+                        </ul>
+                    </div> -->
+
                                         <div class="offeredHeadingMain">
 
                                             <span class="offeredProductSubHeading">MuslimLynk</span>
                                             <h2 class="mb-3 offeredProductMainHeading">Offered <span>Products</span></h2>
-                                            <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                                            <p>A look at the products our MuslimLynk members are offering. Created by real people in our community, for others who can benefit from them.</p>
                                         </div>
                                         <div class="swiper">
                                             <div class="swiper-wrapper">
@@ -1088,7 +1088,7 @@
 
                                             <span class="offeredProductSubHeading">MuslimLynk</span>
                                             <h2 class="mb-3 offeredProductMainHeading">Offered <span>Service</span></h2>
-                                            <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                                            <p>These services come directly from MuslimLynk members. Explore what fellow members can support you with as you build and connect.</p>
                                         </div>
                                         <!-- <h2 class="mb-3 service_heading">Services</h2> -->
                                         <div
@@ -1237,10 +1237,10 @@
 
                         <div class="mb-3">
                             <label for="messageContent" class="form-label">Your Message</label>
-                            <textarea class="form-control" id="messageContent" name="content" rows="4" required>Hi {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}, 
+                            <textarea class="form-control" id="messageContent" name="content" rows="4" required>Hi {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }},
 I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
 
-Looking forward to connecting! 
+Looking forward to connecting!
 
 Best Regards,
 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</textarea>

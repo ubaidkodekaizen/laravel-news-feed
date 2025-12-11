@@ -7,7 +7,7 @@
             <div class="industry-heading text-center mb-5">
                 <span class="subHeading">MuslimLynk</span>
                 <h1>Smart <span>Suggestion</span></h1>
-                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                <p>Smart Suggestions helps you find members and resources you may want to connect with. It’s a simple way to surface recommendations based on what you’re looking for.</p>
             </div>
             <div class="row g-3">
 

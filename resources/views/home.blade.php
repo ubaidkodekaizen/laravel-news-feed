@@ -1500,35 +1500,35 @@
                  <h4 class="advantageSecInnerHeading">The Muslim Lynk <span>Advantage</span></h4>
                  <div class="advantageSecInnerBoxOuterRow">
                      <div class="advantageSecInnerBoxRow">
-                         <div class="advantageSecInnerBoxes active" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
+                         <div class="advantageSecInnerBoxes active" data-img="{{ asset('assets/images/connectAndNetwork.png') }}">
                              <span>01</span>
                              <h4>Connect & Network</h4>
                              <p>Discover and connect with professionals who share your vision, industry, or goals,
                                  organized
                                  by expertise and location.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/directMessaging.png') }}">
                              <span>02</span>
                              <h4>Direct Messaging</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
                                  delays.
                              </p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/smartSuggestions.png') }}">
                              <span>03</span>
                              <h4>Smart Suggestions</h4>
                              <p>Let our technology guide you to valuable connections, resources, and opportunities
                                  tailored
                                  to your needs.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/marketplace.png') }}">
                              <span>04</span>
                              <h4>Marketplace</h4>
                              <p>A vibrant space to buy and sell services and products, driving growth and prosperity
                                  within
                                  the Muslim community.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/mobileAccess.png') }}">
                              <span>05</span>
                              <h4>Mobile Access</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
