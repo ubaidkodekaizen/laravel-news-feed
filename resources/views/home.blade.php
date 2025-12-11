@@ -1507,28 +1507,28 @@
                                  organized
                                  by expertise and location.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/logo_jpg.jpg') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
                              <span>02</span>
                              <h4>Direct Messaging</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
                                  delays.
                              </p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/muslim-link-dashboard.png') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
                              <span>03</span>
                              <h4>Smart Suggestions</h4>
                              <p>Let our technology guide you to valuable connections, resources, and opportunities
                                  tailored
                                  to your needs.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/kodeReachLogo.png') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
                              <span>04</span>
                              <h4>Marketplace</h4>
                              <p>A vibrant space to buy and sell services and products, driving growth and prosperity
                                  within
                                  the Muslim community.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/image1.png') }}">
+                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/homeAdvantageSecImg.png') }}">
                              <span>05</span>
                              <h4>Mobile Access</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
