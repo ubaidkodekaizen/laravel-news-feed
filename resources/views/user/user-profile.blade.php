@@ -25,8 +25,13 @@
             font-family: "inter";
             font-weight: 500;
             color: #333333;
-            margin-bottom: 42px;
-            line-height: 200%;
+            margin-bottom: 36px;
+            line-height: 150%;
+            display: flex;
+        }
+
+        a {
+            text-decoration: none;
         }
 
         .company_card span i {
@@ -50,12 +55,13 @@
             margin-right: 14px;
         }
 
-        .event_slider .card {
+        .event_slider .card,
+        .services_slider .card {
             width: 100%;
             min-height: unset !important;
-            box-shadow: 0px 0px 10px 0px #0000001a;
-            border-radius: 0px;
-            border: 1px solid #e7e7e7;
+            box-shadow: none !important;
+            border-radius: 0px !important;
+            border: none !important;
         }
 
         .services_slider .card {
@@ -65,9 +71,12 @@
             overflow: hidden;
         }
 
-        .event_slider .swiper-slide {
+        .event_slider .swiper-slide,
+        .services_profile_border .swiper-slide {
             width: 414px !important;
         }
+
+       
 
         /* .company_card {
             padding: 40px 20px;
@@ -207,15 +216,18 @@
             padding: 10px;
         }
 
-        .company_profile_section .event_slider .card-content h3 {
+        .company_profile_section .event_slider .card-content h3,
+        .company_profile_section .articles .card-body h3 {
             margin-top: 0;
+            margin-bottom: 14px;
             font-size: 21px;
             font-family: "Inter";
             font-weight: 500;
             color: #000000;
         }
 
-        .event_price_label {
+        .event_price_label,
+        .service_price_duration {
             background: var(--secondary);
             color: var(--white);
             padding: 4px 12px;
@@ -224,35 +236,47 @@
             position: absolute;
             top: -45px;
             left: 20px;
+            height: 35px;
+            width: fit-content;
         }
 
-        .event_slider .card-content p {
-            font-size: 18px;
+        .service_price_duration {
+            top: -55px;
+        }
+
+        .event_slider .card-content p,
+        .company_profile_section .articles .card-body p {
+            font-size: 16px;
             font-family: "Inter";
             font-weight: 400;
+            color: #555 !important;
         }
 
-        .company_profile_section .event_slider .card-content {
+        .company_profile_section .event_slider .card-content,
+        .company_profile_section .articles .card .card-body {
             padding: 20px;
             background: #F2F2F2;
             position: relative;
         }
 
-        .company_profile_section .event_slider .event_price_label p {
+        .company_profile_section .event_slider .event_price_label p span,
+        .service_price p span{
             font-size: 16px;
             padding: 4px 14px;
             color: #000000;
             font-weight: 500;
         }
 
-         .company_profile_section .event_slider .event_price_label {
-              height: 35px;
-            width: fit-content;
-        }
+        .service_price p { margin-bottom: 1px !important;}
+
+         /* .company_profile_section .event_slider .event_price_label {
+              
+        } */
 
       
 
-        .company_profile_section .event_slider .card img {
+        .company_profile_section .event_slider .card img,
+        .company_profile_section .articles .card img {
             height: 414px;
         }
 
@@ -282,7 +306,9 @@
             font-family: "Inter";
         }
 
+
         .mainProfileImage {
+            background: #fff;
             display: flex;
             gap: 26px;
             width: 94%;
@@ -315,12 +341,20 @@
             gap: 20px;
         }
 
+        .list_check_flex {
+            gap: 10px;}
+
+         .list_check_flex li{
+            border-radius: 50%;
+            overflow: hidden;
+         }
+
         .list_check_flex li a svg {
             border: 1px solid #B8C034;
-            padding: 7px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            padding: 9px;
+            width: 44px;
+            height: 44px;
+            /* border-radius: 50%; */
             background: #B8C034;
             fill: #273572 !important;
             color: #273572 !important;
@@ -328,11 +362,12 @@
         }
 
         .profileInfoMain {
+            background: #fff;
             width: 94%;
             margin: 30px auto;
             border: 1px solid #E5E5E5;
             border-radius: 14.11px;
-            padding: 40px 30px;
+            padding: 40px;
         }
 
         .profileInfoInner .row {
@@ -401,22 +436,37 @@
             margin: 30px auto;
         }
 
-        #userEducation p:last-child {
+        #userEducation .noEduFound {
             color: #ffffffff;
             font-size: 12.7px !important;
                 font-family: Inter, sans-serif;
          }
 
          .mainProfileContent{
+            background: #FAFBFF;
             height: calc(-100px + 100.5vh) !important;
             overflow-y: auto;
          }
 
-         
-
+        p.mainProfilePosition {
+            top: -6px;
+            left: 3px;
+            position: relative;
+        }
 
          .col-lg-2 {
-        flex: 0 0 20%;}
+             flex: 0 0 20%;}
+
+        .profile-details .location {
+            font-size: 20.92px;
+            color: #273572;
+            font-weight: 400;
+            margin-top: 16px;
+        }
+
+        .list_check_flex li a img {
+            width: 44px;
+        }
 
          @media (max-width: 1280px) {
             .company_profile_section .col-lg-3{
@@ -561,52 +611,84 @@
                                         </div> -->
 
                                         @if (!empty($user->company->company_business_type))
-                                            <p class="company_experience">
+                                            <!-- <p class="company_experience">
                                                 <span><i class="fa-solid fa-landmark"></i></span>
                                                 {{ $user->company->company_business_type }}
-                                            </p>
+                                            </p> -->
+
+                                            <div class="company_experience">
+                                                <div><span><i class="fa-solid fa-landmark"></i></span></div>
+                                                <div>{{ $user->company->company_business_type }}</div>
+                                            </div>
                                         @endif
 
                                         @if (!empty($user->company->company_position))
-                                            <p class="company_position">
+                                            <!-- <p class="company_position">
                                                 <span><i class="fa-solid fa-user-tie"></i></span>
                                                 {{ $user->company->company_position }}
-                                            </p>
+                                            </p> -->
+                                            <div class="company_position">
+                                                <div> <span><i class="fa-solid fa-user-tie"></i></span></div>
+                                                <div>{{ $user->company->company_position }}</div>
+                                            </div>
                                         @endif
 
                                         @if (!empty($user->company->company_experience))
-                                            <p class="company_experience">
+                                            <!-- <p class="company_experience">
                                                 <span><i class="fa-solid fa-business-time"></i></span>
                                                 {{ $user->company->company_experience }}
-                                            </p>
+                                            </p> -->
+                                            <div class="company_experience">
+                                                <div><span><i class="fa-solid fa-business-time"></i></span></div>
+                                                <div>{{ $user->company->company_experience }}</div>
+                                            </div>
                                         @endif
 
                                         @if (!empty($user->company->company_phone))
-                                            <a href="tel:{{ $user->company->company_phone }}" class="company_contact">
+                                            <!-- <a href="tel:{{ $user->company->company_phone }}" class="company_contact">
                                                 <span><i class="fa-solid fa-phone"></i></span>
                                                 {{ $user->company->company_phone }}
+                                                
+                                            </a> -->
+                                            <a href="tel:{{ $user->company->company_phone }}">
+                                            <div class="company_contact">
+                                                <div><span><i class="fa-solid fa-phone"></i></span></div>
+                                                <div>{{ $user->company->company_phone }}</div>
+                                            </div>
                                             </a>
                                         @endif
 
                                         @if (!empty($user->company->company_revenue))
-                                            <p class="company_experience">
+                                            <!-- <p class="company_experience">
                                                 <span><i class="fa-solid fa-money-bill-trend-up"></i></span>
                                                 ${{ $user->company->company_revenue }}
-                                            </p>
+                                            </p> -->
+                                            <div class="company_experience">
+                                                <div><span><i class="fa-solid fa-money-bill-trend-up"></i></span></div>
+                                                <div> ${{ $user->company->company_revenue }}</div>
+                                            </div>
                                         @endif
 
                                         @if (!empty($user->company->company_no_of_employee))
-                                            <p class="company_experience">
+                                            <!-- <p class="company_experience">
                                                 <span><i class="fa-solid fa-people-group"></i></span>
                                                 {{ $user->company->company_no_of_employee }}
-                                            </p> 
+                                            </p>  -->
+                                            <div class="company_experience">
+                                                <div><span><i class="fa-solid fa-people-group"></i></span></div>
+                                                <div>{{ $user->company->company_no_of_employee }}</div>
+                                            </div>
                                         @endif
 
                                         @if (!empty($user->company->company_industry))
-                                            <p class="company_experience">
+                                            <!-- <p class="company_experience">
                                                 <span><i class="fa-solid fa-industry"></i></span>
                                                 {{ $user->company->company_industry }}
-                                            </p>
+                                            </p> -->
+                                            <div class="company_experience">
+                                                <div><span><i class="fa-solid fa-industry"></i></span></div>
+                                                <div>{{ $user->company->company_industry }}</div>
+                                            </div>
                                         @endif
                                     </div>
 
@@ -651,7 +733,7 @@
                                                     </p>
                                                 </div>
                                             @empty
-                                                <p>No Education is added to show.</p>
+                                                <p class="noEduFound">No Education is added to show.</p>
                                             @endforelse
                                         </div>
                                     </div>
@@ -674,7 +756,7 @@
                                 {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}
                             </h1>
                             <div class="contact_social_flex">
-                        <div class="contact_email">
+                        <!-- <div class="contact_email">
                             @if ($user->phone_public == 'Yes')
                                 <div class="contact_info_flex">
                                     <i class="fa-solid fa-phone"></i>
@@ -691,26 +773,19 @@
                                     </div>
                                 </div>
                             @endif
-                        </div>
+                        </div> -->
                         <ul class="list_check_flex">
                             @if ($user->linkedin_url)
                                 <li>
-                                    <!-- <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
-                                        title="Facebook">
-                                        <img src="{{ asset('assets/images/social-icons/linkedin.png') }}" alt="">
-                                    </a> -->
                                     <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank" title="LinkedIn" aria-label="LinkedIn profile">
-                                        <svg width="24px" height="24px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3 1a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V3a2 2 0 00-2-2H3zm1.102 4.297a1.195 1.195 0 100-2.39 1.195 1.195 0 000 2.39zm1 7.516V6.234h-2v6.579h2zM6.43 6.234h2v.881c.295-.462.943-1.084 2.148-1.084 1.438 0 2.219.953 2.219 2.766 0 .087.008.484.008.484v3.531h-2v-3.53c0-.485-.102-1.438-1.18-1.438-1.079 0-1.17 1.198-1.195 1.982v2.986h-2V6.234z" fill="#273572"/>
-                                        </svg>
+                                        <img src="{{ asset('assets/images/linkedInIcon.svg') }}" alt="">
                                     </a>
                                 </li>
                             @endif
                             @if ($user->facebook_url)
                                 <li>
                                     <a href="{{ $user->facebook_url }}" target="_blank" title="Facebook">
-                                        <!-- <img src="{{ asset('assets/images/social-icons/facebook.png') }}" alt=""> -->
-                                         <svg fill="#000000" width="30px" height="30px" viewBox="-3 0 19 19" xmlns="http://www.w3.org/2000/svg" class="cf-icon-svg"><path d="M12.538 9.62a6.038 6.038 0 1 0-6.981 5.964v-4.22H4.023V9.62h1.534V8.29a2.13 2.13 0 0 1 2.28-2.349 9.285 9.285 0 0 1 1.352.118v1.486h-.762a.873.873 0 0 0-.984.943V9.62h1.675l-.268 1.746H7.443v4.22a6.04 6.04 0 0 0 5.095-5.966z"/></svg>
+                                        <img src="{{ asset('assets/images/facebookIcon.svg') }}" alt="">
                                     </a>
                                 </li>
                             @endif
@@ -718,10 +793,7 @@
                             @if ($user->x_url)
                                 <li>
                                     <a href="{{ $user->x_url }}" target="_blank" title="X (Formerly Twitter)">
-                                        <!-- <img src="{{ asset('assets/images/social-icons/twitter.png') }}" alt=""> -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" class="bi bi-twitter-x" viewBox="0 0 16 16" id="Twitter-X--Streamline-Bootstrap" height="16" width="16">
-                                            <path d="M12.6 0.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867 -5.07 -4.425 5.07H0.316l5.733 -6.57L0 0.75h5.063l3.495 4.633L12.601 0.75Zm-0.86 13.028h1.36L4.323 2.145H2.865z" stroke-width="1"></path>
-                                        </svg>
+                                        <img src="{{ asset('assets/images/twitterXiCon.svg') }}" alt="">
                                     </a>
                                 </li>
                             @endif
@@ -729,11 +801,7 @@
                             @if ($user->instagram_url)
                                 <li>
                                     <a href="{{ $user->instagram_url }}" target="_blank" title="Instagram">
-                                        <!-- <img src="{{ asset('assets/images/social-icons/instagram.png') }}" alt=""> -->
-                                        <svg width="24px" height="24px" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7.5 5C6.11929 5 5 6.11929 5 7.5C5 8.88071 6.11929 10 7.5 10C8.88071 10 10 8.88071 10 7.5C10 6.11929 8.88071 5 7.5 5Z" fill="#273572"/>
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 0C2.01472 0 0 2.01472 0 4.5V10.5C0 12.9853 2.01472 15 4.5 15H10.5C12.9853 15 15 12.9853 15 10.5V4.5C15 2.01472 12.9853 0 10.5 0H4.5ZM4 7.5C4 5.567 5.567 4 7.5 4C9.433 4 11 5.567 11 7.5C11 9.433 9.433 11 7.5 11C5.567 11 4 9.433 4 7.5ZM11 4H12V3H11V4Z" fill="#273572"/>
-                                        </svg>
+                                        <img src="{{ asset('assets/images/instagramIcon.svg') }}" alt="">
                                     </a>
                                 </li>
                             @endif
@@ -742,8 +810,7 @@
                             @if ($user->tiktok_url)
                                 <li>
                                     <a href="{{ $user->tiktok_url }}" target="_blank" title="TikTok">
-                                        <!-- <img src="{{ asset('assets/images/social-icons/tiktok.png') }}" alt=""> -->
-                                         <svg width="24px" height="24px" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg"><title>TikTok icon</title><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                                        <img src="{{ asset('assets/images/tiktokIcon.svg') }}" alt="">
                                     </a>
                                 </li>
                             @endif
@@ -751,20 +818,19 @@
                             @if ($user->youtube_url)
                                 <li>
                                     <a href="{{ $user->youtube_url }}" target="_blank" title="YouTube">
-                                        <!-- <img src="{{ asset('assets/images/social-icons/youtube.png') }}" alt=""> -->
-                                        <svg fill="#000000" width="30px" height="30px" viewBox="-2 -5 24 24" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" class="jam jam-youtube"><path d='M15.812.017H4.145C1.855.017 0 1.852 0 4.116v5.768c0 2.264 1.856 4.1 4.145 4.1h11.667c2.29 0 4.145-1.836 4.145-4.1V4.116c0-2.264-1.856-4.1-4.145-4.1zM13.009 7.28L7.552 9.855a.219.219 0 0 1-.314-.196V4.35c0-.161.173-.266.318-.193l5.458 2.735a.216.216 0 0 1-.005.389z' /></svg>
+                                        <img src="{{ asset('assets/images/youtubeIcon.svg') }}" alt="">
                                     </a>
                                 </li>
                                 @endif
                         </ul>
                     </div>
                         </div>
-                        <p> {{ $user->user_position ?? 'Not Provided' }} </p>
-                        <p class="location"> {{ $user->city ?? '' }}, {{ $user->county ?? '' }}, {{ $user->state ?? '' }},
+                        <p class="mainProfilePosition"> {{ $user->user_position ?? 'Not Provided' }} </p>
+                        <p class="location mainProfileLocation"> <span><img src="{{ asset('assets/images/location.svg') }}"></span> {{ $user->city ?? '' }}, {{ $user->county ?? '' }}, {{ $user->state ?? '' }},
                             {{ $user->country ?? '' }}</p>
-                        <a class="contact-info" href="javascript:void(0);" data-bs-toggle="modal"
-                            data-bs-target="#moreDetailsModal">More Details</a>
-                        <div class="mt-4">
+                        <!-- <a class="contact-info" href="javascript:void(0);" data-bs-toggle="modal"
+                            data-bs-target="#moreDetailsModal">More Details</a> -->
+                        <div class="mt-3">
                             <a href="javascript:void(0)" class="btn btn-secondary direct-message-btn"
                                 data-receiver-id="{{ $user->id }}">
                                 Direct Message
@@ -778,45 +844,51 @@
                         <div class="profileInfoInner">
                             <h2 class="profileInfoHeading">Personal Information</h2>
                             <div class="row">
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">First Name</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->first_name ?? '' }}</p>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Last Name</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->last_name ?? '' }}</p>
                                 </div>
-                                <div class="col-lg-2">
+                                <!-- <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Date of Birth</h3>
                                     <p  class="profileInfoInnerInfoAns">-</p>
-                                </div>
-                                <div class="col-lg-2">
+                                </div> -->
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Ethnicity</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->ethnicity }}</p>
                                 </div>
-                                <div class="col-lg-2">
+
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Gender</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->gender }}</p>
                                 </div>
+                                
                             </div>
                             <div class="row">
-                                <div class="col-lg-2">
+                                
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Email Address</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->email ?? '' }}</p>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Phone Number</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->phone ?? '' }}</p>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Martial Status</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->marital_status }}</p>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Nationality</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->nationality }}</p>
                                 </div>
-                                <div class="col-lg-2">
+                            </div>
+                            <div class="row">
+                                
+                                <div class="col-lg-3">
                                     <h3 class="profileInfoInnerInfoHead">Age Group</h3>
                                     <p  class="profileInfoInnerInfoAns">{{ $user->age_group }}</p>
                                 </div>
@@ -837,8 +909,8 @@
                                     <p  class="profileInfoInnerInfoAns">{{ $user->city ?? '' }}</p>
                                 </div>
                                 <div class="col-lg-3 addressInfo">
-                                    <h3 class="profileInfoInnerInfoHead">Postal Code</h3>
-                                    <p  class="profileInfoInnerInfoAns">-</p>
+                                    <h3 class="profileInfoInnerInfoHead">Zip Code</h3>
+                                    <p  class="profileInfoInnerInfoAns">{{ $user->zip_code ?? '' }}</p>
                                 </div>
                             </div>
                         </div>
