@@ -454,8 +454,8 @@
             position: relative;
         }
 
-         .col-lg-2 {
-             flex: 0 0 20%;}
+         /* .col-lg-3 {
+             flex: 0 0 20%;} */
 
         .profile-details .location {
             font-size: 20.92px;
@@ -524,7 +524,7 @@
                 gap: 0;
             flex-direction: column;}
 
-            .col-lg-2 {
+            .col-lg-3 {
                 flex: 0 0 100%;
                  margin-top: 22px;
             }
