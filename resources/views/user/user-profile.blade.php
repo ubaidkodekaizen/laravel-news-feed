@@ -469,6 +469,11 @@
             width: 44px;
         }
 
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: var(--secondary);
+        }
+
          @media (max-width: 1280px) {
             .company_profile_section .col-lg-3{
                 width: 30%;
@@ -489,6 +494,26 @@
                width: 70%;
         margin-left: 0px;
             }
+
+            .event_slider .swiper-slide, .services_profile_border .swiper-slide {
+                width: 100% !important;
+            }
+            .profile-details h1 {
+             margin-bottom: 0;}
+
+             p.mainProfilePosition {
+                top: 7px;}
+
+             .contact_social_flex {
+                 padding: 0;}
+
+                 .offeredProductMainHeading {
+              font-size: 42.7px !important;}
+
+              .offeredProductSubHeading {
+                font-size: 14px;
+                padding: 5px 17px;}
+
         }
 
          @media (max-width: 788px) {
