@@ -515,7 +515,7 @@
 
             .company_profile_section .col-lg-3 {
             padding-right: 0 !important;
-            padding-left: 0;}
+            padding-left: 14px;}
 
             .mainProfileImage {
             flex-direction: column;}
