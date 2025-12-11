@@ -202,7 +202,7 @@
     align-items: stretch;
     justify-content: space-between;
     border-top: 1px solid #dddddd;
-    border-bottom: 1px solid #dddddd;    
+    border-bottom: 1px solid #dddddd;
     flex-direction: column;
 }
 .messageBoxInputInnerCol {
@@ -283,6 +283,8 @@
     height: 40px;
     max-width: 100%;
     border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #9ca6d5;
 }
 
 .messageBoxListItemContent {
@@ -515,7 +517,7 @@
 .conversationBoxSearch input {
     padding: 5px 10px;
     width: 100%;
-    border: 1px solid #dddddd; 
+    border: 1px solid #dddddd;
     outline: none;
     background: #eeeff4;
     border-radius: 5px;

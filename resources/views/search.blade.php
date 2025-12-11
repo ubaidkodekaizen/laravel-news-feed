@@ -736,11 +736,11 @@
                 element.parentNode.replaceChild(newElement, element);
 
                 newElement.addEventListener("click", function() {
-                    let receiverId = $(this).data('receiver-id');
-                    $('#receiver_id').val(receiverId);
+                    let receiverId = jQuery(this).data('receiver-id');
+                    jQuery('#receiver_id').val(receiverId);
 
                     // Check if conversation exists
-                    $.ajax({
+                    jQuery.ajax({
                         url: '/api/check-conversation',
                         method: 'GET',
                         data: {
@@ -758,8 +758,8 @@
                             } else {
                                 // If no conversation, open the modal
                                 console.log(response.receiver);
-                                $('#receiver_id').val(receiverId);
-                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
+                                jQuery('#receiver_id').val(receiverId);
+                                jQuery("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
 I came across your profile and was really impressed by your work. I'd love to connect and exchange ideas.
 Looking forward to connecting!
 Best Regards,

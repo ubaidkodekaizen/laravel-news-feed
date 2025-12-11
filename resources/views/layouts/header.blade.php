@@ -31,10 +31,10 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/App-Db5XVQeo.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/App-C02OVGiM.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="{{ asset('build/assets/App-aPEsMNkZ.js') }}" defer></script>
+    <script src="{{ asset('build/assets/App-Cw67gaKi.js') }}" defer></script>
     <style>
         .suggestion-box {
             position: absolute;
@@ -235,43 +235,43 @@
         document.addEventListener('DOMContentLoaded', function() {
             const triggers = document.querySelectorAll('[data-toggle="tooltip"]');
             let activeTooltip = null;
-            
+
             triggers.forEach(function(trigger) {
                 trigger.addEventListener('mouseenter', function() {
                     const text = trigger.getAttribute('title') || trigger.getAttribute('data-original-title');
-                    
+
                     if (!text) return;
-                    
+
                     if (!trigger.getAttribute('data-original-title')) {
                         trigger.setAttribute('data-original-title', text);
                         trigger.removeAttribute('title');
                     }
-                    
+
                     if (activeTooltip) {
                         activeTooltip.remove();
                     }
-                    
+
                     activeTooltip = document.createElement('div');
                     activeTooltip.className = 'custom-tooltip';
                     activeTooltip.textContent = text;
                     document.body.appendChild(activeTooltip);
-                    
+
                     const triggerRect = trigger.getBoundingClientRect();
                     const tooltipRect = activeTooltip.getBoundingClientRect();
-                    
+
                     const left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2) + window.scrollX;
                     const top = triggerRect.bottom + 10 + window.scrollY;
-                    
+
                     activeTooltip.style.left = left + 'px';
                     activeTooltip.style.top = top + 'px';
-                    
+
                     setTimeout(function() {
                         if (activeTooltip) {
                             activeTooltip.classList.add('show');
                         }
                     }, 10);
                 });
-                
+
                 trigger.addEventListener('mouseleave', function() {
                     if (activeTooltip) {
                         activeTooltip.classList.remove('show');

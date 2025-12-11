@@ -9,7 +9,7 @@ const MessageList = ({ messages }) => {
   useEffect(() => {
     setMessageList(messages); // Update state when new messages arrive
   }, [messages]);
-  
+
   const toggleReactBtns = (messageId) => {
     setReactBtns((prev) => ({
       ...prev,
@@ -26,10 +26,10 @@ const MessageList = ({ messages }) => {
           Authorization: localStorage.getItem("sanctum-token"),
         },
       });
-      setMessageList((prevMessages) => 
-        prevMessages.map((msg) => 
-          msg.id === messageId 
-            ? { ...msg, reactions: [...(msg.reactions || []), response.data] } 
+      setMessageList((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === messageId
+            ? { ...msg, reactions: [...(msg.reactions || []), response.data] }
             : msg
         )
       );
@@ -49,10 +49,10 @@ const MessageList = ({ messages }) => {
         },
       });
 
-      setMessageList((prevMessages) => 
-        prevMessages.map((msg) => 
-          msg.id === messageId 
-            ? { ...msg, reactions: msg.reactions.filter((r) => r.emoji !== emoji) } 
+      setMessageList((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === messageId
+            ? { ...msg, reactions: msg.reactions.filter((r) => r.emoji !== emoji) }
             : msg
         )
       );
@@ -71,7 +71,7 @@ const MessageList = ({ messages }) => {
 
     messages.forEach((message) => {
       const messageDate = new Date(message.created_at);
-      
+
       if (!currentDate || !isSameDay(currentDate, messageDate)) {
         if (currentGroup.length > 0) {
           groups.push({
@@ -109,7 +109,7 @@ const MessageList = ({ messages }) => {
   const messageGroups = groupMessagesByDate(messageList);
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col w-100 space-y-4">
       {messageGroups.map((group, groupIndex) => (
         <div key={groupIndex} className="space-y-4">
           <div className="flex items-center justify-center">
@@ -146,9 +146,9 @@ const MessageList = ({ messages }) => {
                     </div>
                   </div>
                   <div className="messageBoxListItemContentMsg">
-                    {msg.content} 
+                    {msg.content}
                   </div>
-                  
+
                   <div className="messageReactions">
                     {msg.reactions?.map((reaction) => (
                       <span
