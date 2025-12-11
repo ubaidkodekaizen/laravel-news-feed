@@ -397,6 +397,7 @@
         }
 
         .offeredHeadingMain {
+            margin-top: 80px;
             display: flex;
             flex-direction: column;
             justify-self: center;
@@ -454,8 +455,8 @@
             position: relative;
         }
 
-         .col-lg-2 {
-             flex: 0 0 20%;}
+         /* .col-lg-3 {
+             flex: 0 0 20%;} */
 
         .profile-details .location {
             font-size: 20.92px;
@@ -515,7 +516,7 @@
 
             .company_profile_section .col-lg-3 {
             padding-right: 0 !important;
-            padding-left: 0;}
+            padding-left: 14px;}
 
             .mainProfileImage {
             flex-direction: column;}
@@ -524,7 +525,7 @@
                 gap: 0;
             flex-direction: column;}
 
-            .col-lg-2 {
+            .col-lg-3 {
                 flex: 0 0 100%;
                  margin-top: 22px;
             }
