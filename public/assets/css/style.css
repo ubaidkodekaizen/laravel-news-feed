@@ -1111,7 +1111,7 @@ div.selected-filter-group {
 /* Toggler Button styles */
 .sidebar-toggler {
     position: fixed;
-    top: 110px;
+    top: 120px;
     right: 20px;
     z-index: 1100;
     background-color: var(--primary);
