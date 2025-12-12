@@ -1572,7 +1572,7 @@ button.sliderUserMessageBtn {
 }
 .kodereach-accordion-item {
     display: flex;
-    align-items: start;
+    align-items: stretch;
     gap: 20px;
 }
 .kodereach-accordion-item .servideAccordionImgCon {
@@ -1580,6 +1580,7 @@ button.sliderUserMessageBtn {
 }
 .kodereach-accordion-item.active .servideAccordionImgCon {
     display: block;
+    height: 100%;
 }
 .serviceAccordionCon .serviceAccordionConInner {
     width: 100%;
@@ -1712,6 +1713,9 @@ p.description {
 .serviceAccordionCon .serviceAccordionConInner img {
     width: 100%;
     border-radius: 17px;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
 }
 /* service accordion section  */
 
