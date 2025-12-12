@@ -353,7 +353,7 @@
             </div>
         </div>
         <div class="slider-dots" id="sliderDots"></div>
-        
+
     </div>
     <div class="container">
         <a class="viewMoreBtn" href="{{ route('products') }}" target="_blank">View All</a>
@@ -427,7 +427,6 @@
     </div>
 </section>
 
-
 <section class="articles">
     <div class="container">
         <h2 class="main_heading">
@@ -439,75 +438,66 @@
             Featured products include:</p>
 
         <div class="serviceAccordionCon">
-            <div class="serviceAccordionConInner">
-                @forelse($services as $index => $service)
-                <div class="kodereach-accordion-section">
-                    <div class="kodereach-accordion-item">
-                        <div class="kodereach-accordion-header {{ $index === 0 ? 'active' : '' }}"
-                            onclick="toggleKodereachAccordion(this)"
-                            data-service-image="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/kodeReachLogo.png') }}"
-                            data-service-price="@if ($service->discounted_price && $service->discounted_price < $service->original_price) ${{ $service->discounted_price }}@else${{ $service->original_price }} @endif"
-                            data-service-duration="{{ $service->duration }}">
-                            <h3 class="kodereach-accordion-title">{{ $service->title }}</h3>
-                            <div class="kodereach-accordion-arrow">
-                                <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z" />
-                                </svg>
-                            </div>
+            @forelse($services as $index => $service)
+            <div class="kodereach-accordion-item {{ $index === 0 ? 'active' : '' }}">
+                <!-- LEFT SECTION: Heading and Content -->
+                <div class="serviceAccordionConInner">
+                    <div class="kodereach-accordion-header {{ $index === 0 ? 'active' : '' }}"
+                        onclick="toggleKodereachAccordion(this)">
+                        <h3 class="kodereach-accordion-title">{{ $service->title }}</h3>
+                        <div class="kodereach-accordion-arrow">
+                            <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M3.293,20.707a1,1,0,0,1,0-1.414L17.586,5H12a1,1,0,0,1,0-2h8a1,1,0,0,1,1,1v8a1,1,0,0,1-2,0V6.414L4.707,20.707a1,1,0,0,1-1.414,0Z" />
+                            </svg>
                         </div>
-                        <div class="kodereach-accordion-content"
-                            style="{{ $index === 0 ? 'display: block;' : '' }}">
-                            <div class="kodereach-accordion-content-inner">
-                                <p class="description">
-                                    {{ $service->short_description }}
-                                </p>
+                    </div>
+                    <div class="kodereach-accordion-content" style="{{ $index === 0 ? 'display: block;' : '' }}">
+                        <div class="kodereach-accordion-content-inner">
+                            <p class="description">
+                                {{ $service->short_description }}
+                            </p>
 
-                                <button class="message-btn direct-message-btn"
-                                    data-receiver-id="{{ $service->user->id }}">
-                                    Message Now
-                                </button>
+                            <button class="message-btn direct-message-btn"
+                                data-receiver-id="{{ $service->user->id }}">
+                                Message Now
+                            </button>
 
-                                <div class="author-info">
-                                    <div class="author-avatar">
-                                        <img src="{{ $service->user->photo ? asset('storage/' . $service->user->photo) : asset('assets/images/placeholderUser.png') }}"
-                                            alt="{{ $service->user->first_name }}">
-                                    </div>
-                                    <div class="author-details">
-                                        <div class="author-name">{{ $service->user->first_name }}</div>
-                                        <div class="author-date">{{ $service->created_at->format('d M Y') }}</div>
-                                    </div>
+                            <div class="author-info">
+                                <div class="author-avatar">
+                                    <img src="{{ $service->user->photo ? asset('storage/' . $service->user->photo) : asset('assets/images/placeholderUser.png') }}"
+                                        alt="{{ $service->user->first_name }}">
+                                </div>
+                                <div class="author-details">
+                                    <div class="author-name">{{ $service->user->first_name }}</div>
+                                    <div class="author-date">{{ $service->created_at->format('d M Y') }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                @empty
-                <div class="text-center py-4">
-                    <p>No services available at the moment.</p>
-                </div>
-                @endforelse
-            </div>
-            <div class="serviceAccordionConInner">
-                <div class="servideAccordionImgCon">
 
-                    <img id="serviceImage"
-                        src="{{ $services->isNotEmpty() && $services->first()->service_image ? asset('storage/' . $services->first()->service_image) : asset('assets/images/kodeReachLogo.png') }}"
-                        alt="Service Image" class="img-fluid">
-                    <span id="servicePricing">
-                        @if ($services->isNotEmpty())
-                        @if ($services->first()->discounted_price && $services->first()->discounted_price < $services->first()->original_price)
-                            ${{ $services->first()->discounted_price }} / {{ $services->first()->duration }}
+                <!-- RIGHT SECTION: Service Image -->
+                <div class="serviceAccordionConInner">
+                    <div class="servideAccordionImgCon">
+                        <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/kodeReachLogo.png') }}"
+                            alt="{{ $service->title }}" class="img-fluid">
+                        <span class="servicePricing">
+                            @if ($service->discounted_price && $service->discounted_price < $service->original_price)
+                                ${{ $service->discounted_price }} / {{ $service->duration }}
                             @else
-                            ${{ $services->first()->original_price }} / {{ $services->first()->duration }}
+                                ${{ $service->original_price }} / {{ $service->duration }}
                             @endif
-                            @else
-                            $1.00 / Starting
-                            @endif
-                    </span>
+                        </span>
+                    </div>
                 </div>
             </div>
+            @empty
+            <div class="text-center py-4">
+                <p>No services available at the moment.</p>
+            </div>
+            @endforelse
         </div>
     </div>
     <div class="container">
@@ -909,60 +899,32 @@ Best Regards,
         // Make FIRST accordion active by default
         const firstItem = document.querySelector(".kodereach-accordion-item");
         if (firstItem) {
-            const firstHeader = firstItem.querySelector(".kodereach-accordion-header");
             const firstContent = firstItem.querySelector(".kodereach-accordion-content");
-
-            firstItem.classList.add("active");
-            firstContent.style.maxHeight = firstContent.scrollHeight + "px";
-
-            // Update image and pricing for first item
-            if (firstHeader) {
-                updateServiceDisplay(firstHeader);
+            if (firstContent) {
+                firstItem.classList.add("active");
+                firstContent.style.maxHeight = firstContent.scrollHeight + "px";
             }
         }
     });
 
     function toggleKodereachAccordion(header) {
-        const item = header.parentElement;
+        const item = header.closest(".kodereach-accordion-item");
         const content = item.querySelector(".kodereach-accordion-content");
         const isOpen = item.classList.contains("active");
 
         // Close all accordions first
         document.querySelectorAll(".kodereach-accordion-item").forEach(acc => {
             acc.classList.remove("active");
-            acc.querySelector(".kodereach-accordion-content").style.maxHeight = null;
+            const accContent = acc.querySelector(".kodereach-accordion-content");
+            if (accContent) {
+                accContent.style.maxHeight = null;
+            }
         });
 
         // Re-open clicked one ONLY if it was not open
         if (!isOpen) {
             item.classList.add("active");
             content.style.maxHeight = content.scrollHeight + "px";
-
-            // Update service image and pricing on the right
-            updateServiceDisplay(header);
-        }
-    }
-
-    function updateServiceDisplay(header) {
-        const serviceImage = header.getAttribute('data-service-image');
-        const servicePrice = header.getAttribute('data-service-price');
-        const serviceDuration = header.getAttribute('data-service-duration');
-
-        const serviceImageElement = document.getElementById('serviceImage');
-        const servicePricingElement = document.getElementById('servicePricing');
-
-        // Update image with smooth transition
-        if (serviceImageElement && serviceImage) {
-            serviceImageElement.style.opacity = '0';
-            setTimeout(() => {
-                serviceImageElement.src = serviceImage;
-                serviceImageElement.style.opacity = '1';
-            }, 200);
-        }
-
-        // Update pricing
-        if (servicePricingElement && servicePrice && serviceDuration) {
-            servicePricingElement.textContent = `${servicePrice} / ${serviceDuration}`;
         }
     }
 </script>
