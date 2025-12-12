@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="{{ asset('build/assets/App-C02OVGiM.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="{{ asset('build/assets/App-Cw67gaKi.js') }}" defer></script>
+    <script src="{{ asset('build/assets/App-Dn0-_m-T.js') }}" defer></script>
     <style>
         .suggestion-box {
             position: absolute;
