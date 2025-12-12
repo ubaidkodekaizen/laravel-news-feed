@@ -2374,7 +2374,7 @@ button.btn.btn-primary.viewAllBtn{
     margin-left: auto;
     position: absolute;
     bottom: 5px;
-    right: 5px;
+    /* right: 5px; */
 }
 
 .event_price_label .original_price {

@@ -12,13 +12,18 @@
             text-align: left;
         }
 
-        .read-more-btn:hover,
-        .read-more-btn:focus,
-        .read-more-btn:active {
-            background: transparent !important;
-            color: var(--secondary) !important;
-            border: none !important;
-            border-top: 1px solid var(--secondary) !important;
+        button.btn.btn-sm.btn-primary.mt-2.read-more-btn.trigger-element {
+            border: none;
+            font-size: 13.65px;
+            font-family: "Inter";
+            font-weight: 500;
+            padding: 0;
+            color: #273572;
+        }
+
+        .read-more-btn:hover{
+            color: #b8c034 !important;
+            background-color: transparent;
         }
 
         #productModal .modal-dialog.modal-lg {
@@ -116,15 +121,58 @@
 
         .articles .card {
             min-height: 610px;
+            border: none;
+            border-radius: 0;
+            background: #F2F2F2;
         }
 
         .articles .card .card-body {
             display: flex;
             flex-direction: column;
+            padding: 10px 28px 28px;
+        }
+
+        .articles .card-body h3 {
+            margin: 15px 0px;
+            margin-bottom: 14px;
+            font-size: 21px;
+            font-family: "Inter";
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .articles .card-body h3::before {
+            content: none;
+        }
+        
+        .articles .card-body p {
+            font-size: 16px;
+            font-family: "Inter";
+            font-weight: 400;
+            color: #555 !important;
+            margin-bottom: 0;
+        }
+
+        .service_posted_by .posted_name_date h6 {
+            margin-bottom: 1px;
+            color: var(--black);
+            font-size: 17.71px;
+            font-family: "Inter";
+            font-weight: 400;
+            line-height: 26.73px;
         }
 
         .articles .card .direct-message-btn {
-            padding: 10px 10px;
+            padding: 16px 10px;
+            font-family: "Inter";
+            margin-top: 10px;
+            border-radius: 10px;
+            font-weight: 400;
+        }
+
+        .articles .card .direct-message-btn:hover {
+            color: #273572 !important;
+            padding: 16px 10px;
         }
 
         .service_slider_img_box {
@@ -178,50 +226,94 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;;
-            height: 42.5px;
+            width: 100%;
+            height: 63.5px;
             line-height: 30px;
             outline: 0;
             font-size: 1em;
-            border-radius: 20px;
-            padding: 0 45px 0px 20px;
+            border-radius: 16px;
+            padding: 4px 30px;
+            background: var(--primary);
+            color: #fff;
             border: 1px solid var(--primary);
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
         }
+
+         .service_search_area input::placeholder{
+            color: #fff;
+          }
 
         .service_search_area .fa{
             box-sizing: border-box;
             padding: 10px;
-            width: 42.5px;
-            height: 42.5px;
+            width: 78.5px;
+            height: 59.5px;
             position: absolute;
-            top: 0;
-            right: 0;
-            border-radius: 50%;
+            align-content: center;
+            top: 2px;
+            right: 1.7px;
+            border-radius: 0px 14px 14px 0px;
             color: var(--primary);
+            background: #B8C034;
             text-align: center;
             font-size: 1.2em;
             transition: all 1s;
         }
 
-        .service_search_area form:hover .fa{
+        /* .service_search_area form:hover .fa{
             background: var(--primary);
             color: white;
-        }
+        } */
         .min_h_400{
             min-height: calc(100vh - 400px);
         }
+
+        .col-lg-7 {
+            padding: 0;
+        }
+
+        .articles .card img {
+            height: 414px;
+            border-radius: 0px !important;
+        }
+
+        .service_slider_img_box {
+        height: unset;}
+
+        .event_price_label .service_price {
+            font-family: "Inter";
+            font-size: 16px;
+            padding: 1px 14px;
+            color: #000000;
+            font-weight: 500;
+            margin-bottom: 0px !important;
+            width: fit-content !important;
+            margin-right: auto;
+            margin-left: 0;
+        }
+
+        .event_price_label {
+            bottom: 20px;
+            left: 20px;
+        }
+
+
     </style>
 
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
-                Services Offered by Muslim Lynk Members
-            </h1>
+            Services Offered by <span class="feedLpPri">Muslim<span class="feedLpSec">Lynk Members</span></span>
+             </h1>
             <div class="service_search_area">
                 <div class="row justify-content-center">
-                    <div class="col-lg-6">
+                    <div class="col-lg-7">
                         <form action="">
-                            <input type="search" placeholder="Search here ...">
+                            <input type="search" placeholder="Search services">
                             <button type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -241,14 +333,17 @@
             </div>
         </div>
     </section>
-    <section class="lp_footer">
+    <div id="footer">
+             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+         </div>
+    <!-- <section class="lp_footer">
         <div class="container">
 
             <p class="powered_by">
                 Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
             </p>
         </div>
-    </section>
+    </section> -->
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -409,7 +504,7 @@ Best Regards,
                 };
 
                 $.ajax({
-                    url: '{{ route('sendMessage') }}',
+                    url: "{{ route('sendMessage') }}",
                     method: 'POST',
                     data: formData,
                     headers: {
