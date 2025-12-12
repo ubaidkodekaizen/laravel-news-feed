@@ -65,6 +65,7 @@ class PageController extends Controller
             $query->where('status', 'complete');
         })
             ->orderByDesc('id')
+            ->take(3)
             ->get();
 
         return view('feed', compact('blogs', 'events', 'products', 'services', 'industries'));

@@ -481,7 +481,7 @@
                 <!-- RIGHT SECTION: Service Image -->
                 <div class="serviceAccordionConInner">
                     <div class="servideAccordionImgCon">
-                        <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/kodeReachLogo.png') }}"
+                        <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/servicePlaceholder.png') }}"
                             alt="{{ $service->title }}" class="img-fluid">
                         <span class="servicePricing">
                             @if ($service->discounted_price && $service->discounted_price < $service->original_price)

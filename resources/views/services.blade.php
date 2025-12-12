@@ -21,7 +21,7 @@
             color: #273572;
         }
 
-        .read-more-btn:hover{
+        .read-more-btn:hover {
             color: #b8c034 !important;
             background-color: transparent;
         }
@@ -144,7 +144,7 @@
         .articles .card-body h3::before {
             content: none;
         }
-        
+
         .articles .card-body p {
             font-size: 16px;
             font-family: "Inter";
@@ -206,11 +206,11 @@
         }
 
 
-        .service_search_area form{
+        .service_search_area form {
             position: relative;
             top: 50%;
             left: 50%;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
             transition: all 1s;
             width: 100%;
             height: 50px;
@@ -222,7 +222,7 @@
             cursor: pointer;
         }
 
-        .service_search_area input{
+        .service_search_area input {
             position: absolute;
             top: 0;
             left: 0;
@@ -243,11 +243,11 @@
             font-size: 16px;
         }
 
-         .service_search_area input::placeholder{
+        .service_search_area input::placeholder {
             color: #fff;
-          }
+        }
 
-        .service_search_area .fa{
+        .service_search_area .fa {
             box-sizing: border-box;
             padding: 10px;
             width: 78.5px;
@@ -265,10 +265,10 @@
         }
 
         /* .service_search_area form:hover .fa{
-            background: var(--primary);
-            color: white;
-        } */
-        .min_h_400{
+                background: var(--primary);
+                color: white;
+            } */
+        .min_h_400 {
             min-height: calc(100vh - 400px);
         }
 
@@ -276,13 +276,15 @@
             padding: 0;
         }
 
-        .articles .card img {
-            height: 414px;
+        .service_slider_img_box img {
+            min-height: 414px;
             border-radius: 0px !important;
+            object-fit: cover;
         }
 
         .service_slider_img_box {
-        height: unset;}
+            height: unset;
+        }
 
         .event_price_label .service_price {
             font-family: "Inter";
@@ -300,15 +302,13 @@
             bottom: 20px;
             left: 20px;
         }
-
-
     </style>
 
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
-            Services Offered by <span class="feedLpPri">Muslim<span class="feedLpSec">Lynk Members</span></span>
-             </h1>
+                Services Offered by <span class="feedLpPri">Muslim<span class="feedLpSec">Lynk Members</span></span>
+            </h1>
             <div class="service_search_area">
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
@@ -327,23 +327,23 @@
     <section class="articles min_h_400">
         <div class="container">
             <div class="overflow-hidden">
-                    <div class="row g-4">
-                        @include('partial.service_cards', ['services' => $services])
-                    </div>
+                <div class="row g-4">
+                    @include('partial.service_cards', ['services' => $services])
+                </div>
             </div>
         </div>
     </section>
     <div id="footer">
-             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-         </div>
+        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+    </div>
     <!-- <section class="lp_footer">
-        <div class="container">
+            <div class="container">
 
-            <p class="powered_by">
-                Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
-            </p>
-        </div>
-    </section> -->
+                <p class="powered_by">
+                    Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
+                </p>
+            </div>
+        </section> -->
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -412,17 +412,17 @@
 
 
 @section('scripts')
-<script>
-        jQuery(document).ready(function () {
+    <script>
+        jQuery(document).ready(function() {
             const searchInput = jQuery('input[type="search"]');
             const resultsContainer = jQuery('.articles .row');
 
-            jQuery('form').on('submit', function (e) {
+            jQuery('form').on('submit', function(e) {
                 e.preventDefault();
                 fetchServices(searchInput.val());
             });
 
-            searchInput.on('input', function () {
+            searchInput.on('input', function() {
                 const value = jQuery(this).val();
                 clearTimeout(jQuery.data(this, 'timer'));
                 const wait = setTimeout(() => fetchServices(value), 500);
@@ -431,14 +431,17 @@
 
             function fetchServices(searchTerm) {
                 jQuery.ajax({
-                    url: "{{ route('services') }}", 
+                    url: "{{ route('services') }}",
                     method: "GET",
-                    data: { search: searchTerm },
-                    success: function (response) {
+                    data: {
+                        search: searchTerm
+                    },
+                    success: function(response) {
                         resultsContainer.html(response.html);
                     },
-                    error: function () {
-                        resultsContainer.html('<div class="col-12"><p>Error loading services.</p></div>');
+                    error: function() {
+                        resultsContainer.html(
+                            '<div class="col-12"><p>Error loading services.</p></div>');
                     }
                 });
             }
@@ -474,9 +477,9 @@
                                 // If no conversation, open the modal
                                 console.log(response.receiver);
                                 $('#receiver_id').val(receiverId);
-                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
+                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
 I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
-Looking forward to connecting! 
+Looking forward to connecting!
 Best Regards,
 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
                                 // $('#mainModal').modal('show');

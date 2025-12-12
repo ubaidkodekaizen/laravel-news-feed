@@ -1442,7 +1442,82 @@ button.sliderUserMessageBtn {
 .dot.active {
     background: #fff;
 }
+#mainModal .modal-content {
+    border-radius: 17px;
+    overflow: hidden;
+}
+#mainModal .modal-header {
+    background: #fff !important;
+    padding: 20px 22px 20px 24px;
+}
+#mainModal .modal-header .modal-title {
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 120%;
+    text-transform: capitalize;
+    color: black;
+}
 
+
+#mainModal .btn-close {
+    background: #273572 url(../images/closeIcon.webp);
+    background-size: 30%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 1;
+    border-radius: 50%;
+    padding: 10px;
+    transition: .3s;
+}
+#mainModal .btn-close:hover {
+    background: #df2828 url(../images/closeIcon.webp);
+    transition: .3s;
+    background-size: 30%;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+#directMessageForm label.form-label {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 120%;
+    text-transform: capitalize;
+    color: black;
+    margin: 0px 0px 15px 0;
+}
+#directMessageForm textarea#messageContent {
+    min-height: 185px;
+    border: 1px solid #27357214;
+    background: #27357212;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    padding: 23px 19px;
+    color: black;
+    border-radius: 11px;
+}
+#directMessageForm button[type='submit'] {
+    height: 45px;
+    font-family: Poppins;
+    font-weight: 500;
+    font-size: 14.31px;
+    line-height: 100%;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #FFFFFF;
+    border-radius: 6.36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#mainModal .modal-body {
+    padding: 22px 24px 18px 24px;
+}
+#mainModal  #messageStatus {
+    margin: 0 !important;
+}
 @media (max-width: 968px) {
     .container {
         flex-direction: column;
