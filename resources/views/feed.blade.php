@@ -482,7 +482,7 @@
                 <div class="serviceAccordionConInner">
                     <div class="servideAccordionImgCon">
                         <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/servicePlaceholder.png') }}"
-                            alt="{{ $service->title }}" class="img-fluid">
+                            alt="{{ $service->title }}" class="img-fluid serviceImg">
                         <span class="servicePricing">
                             @if ($service->discounted_price && $service->discounted_price < $service->original_price)
                                 ${{ $service->discounted_price }} / {{ $service->duration }}

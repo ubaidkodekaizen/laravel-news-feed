@@ -1710,12 +1710,13 @@ p.description {
     left: 30px;
 }
 
-.serviceAccordionCon .serviceAccordionConInner img {
+.serviceAccordionCon .serviceAccordionConInner .serviceImg {
     width: 100%;
     border-radius: 17px;
     height: 100%;
     object-fit: cover;
     object-position: center center;
+    min-height: 300px;
 }
 /* service accordion section  */
 
