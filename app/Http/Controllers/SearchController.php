@@ -78,6 +78,8 @@ class SearchController extends Controller
     // For main search
     public function SearchUserCompany(Request $request)
     {
+        $perPage = $request->get('per_page', 12); // Default to 12
+
         $query = User::where('status', 'complete')
             ->whereHas('company', function ($query) {
                 $query->where('status', 'complete');
@@ -231,8 +233,11 @@ class SearchController extends Controller
 
         $query->orderByRaw("CASE WHEN city IS NULL THEN 2 WHEN city = 'N/A' THEN 1 ELSE 0 END")
             ->orderBy('id', 'desc');
-        // Fetch filtered results
-        $users = $query->paginate(15);
+
+
+        // Use dynamic per page value
+        $users = $query->paginate($perPage)->appends($request->except('page'));
+
 
         // Return the updated user results
         if ($request->ajax()) {

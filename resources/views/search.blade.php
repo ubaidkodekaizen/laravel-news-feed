@@ -2,8 +2,86 @@
 
 @section('styles')
     <style>
-        body{
+        body {
             overflow: hidden !important;
+        }
+
+        .pagination-container {
+            margin: 40px 0 60px 0;
+        }
+
+        .pagination-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: end;
+            order: 3;
+        }
+
+        #recordsInfo {
+            white-space: nowrap;
+            min-width: 150px;
+            text-align: right;
+            order: 2;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 17.33px;
+            line-height: 100%;
+            color: #696969;
+        }
+
+        .recordPerPageBox {
+            order: 1;
+        }
+
+        .recordPerPageBox span {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 17.33px;
+            line-height: 100%;
+            color: #696969;
+        }
+
+        #perPageSelect {
+            font-family: "Inter", sans-serif;
+            font-weight: 300;
+            font-size: 18.67px;
+            line-height: 100%;
+            letter-spacing: 0px;
+            color: #2C2C2C;
+            padding: 10px 30px 10px 20px;
+            border: 1.33px solid #E1E0E0;
+            border-radius: 10.67px;
+        }
+
+        /* Initially hide State and County filters */
+        [data-bs-target="#stateFilter"],
+        [data-bs-target="#countyFilter"] {
+            display: none;
+        }
+
+        @media(max-width: 1250px) {
+            .pagination-container-inner {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .recordPerPageBox span {
+                font-size: 16px;
+            }
+
+            #recordsInfo {
+                font-size: 16px;
+            }
+
+            #perPageSelect {
+                font-size: 16px;
+            }
+
+            .pagination .page-link {
+                font-size: 16px !important;
+                padding: 8px 12px !important;
+            }
         }
     </style>
 @endsection
@@ -511,7 +589,7 @@
 
         <!-- Main Content Area -->
         <div class="main-content">
-            <!-- User Details Card -->
+            <!-- User Details Card - THIS gets replaced by AJAX -->
             <div class="row g-4" id="userResults">
                 @include('partial.search-result', ['users' => $users])
             </div>
@@ -581,12 +659,74 @@
             }
         }
 
+        // Function to check if USA/US is selected and toggle State/County visibility
+        function toggleUSFilters() {
+            const countryFilters = filters['country'] || [];
+            const isUSASelected = countryFilters.some(country =>
+                country.toLowerCase() === 'usa' ||
+                country.toLowerCase() === 'us' ||
+                country.toLowerCase() === 'united states' ||
+                country.toLowerCase() === 'united states of america'
+            );
+
+            const stateFilter = document.querySelector('[data-bs-target="#stateFilter"]').closest('.filter-section');
+            const countyFilter = document.querySelector('[data-bs-target="#countyFilter"]').closest('.filter-section');
+
+            if (isUSASelected) {
+                stateFilter.style.display = 'block';
+                countyFilter.style.display = 'block';
+            } else {
+                stateFilter.style.display = 'none';
+                countyFilter.style.display = 'none';
+
+                // Clear state and county filters if they exist
+                if (filters['state']) {
+                    delete filters['state'];
+                    document.getElementById('selectedStateFilters').innerHTML = '';
+                }
+                if (filters['user_county']) {
+                    delete filters['user_county'];
+                    document.getElementById('selectedCountyFilters').innerHTML = '';
+                }
+            }
+        }
+
+        // Function to attach per page selector event
+        function attachPerPageEvent() {
+            const perPageSelect = document.getElementById('perPageSelect');
+            if (perPageSelect) {
+                // Remove old event listener by cloning (prevents duplicate listeners)
+                const newPerPageSelect = perPageSelect.cloneNode(true);
+                perPageSelect.parentNode.replaceChild(newPerPageSelect, perPageSelect);
+
+                // Attach new event listener
+                newPerPageSelect.addEventListener('change', function() {
+                    const perPage = this.value;
+                    console.log('Per page changed to:', perPage);
+
+                    // Update filter
+                    filters['per_page'] = perPage;
+
+                    // Reset to page 1 when changing per page
+                    applyFilters(1);
+                });
+            }
+        }
+
         // Apply filters and refresh results
         function applyFilters(page = 1) {
             syncHeaderFilters();
 
             // Add page to filters
-            const requestData = { ...filters, page: page };
+            const requestData = {
+                ...filters,
+                page: page
+            };
+
+            // Ensure per_page is included if it exists
+            if (filters.per_page) {
+                requestData.per_page = filters.per_page;
+            }
 
             let newUrl = `${window.location.origin}${window.location.pathname}?${jQuery.param(requestData, true)}`;
             window.history.pushState({
@@ -599,6 +739,8 @@
                 method: 'GET',
                 success: function(response) {
                     jQuery('#userResults').html(response);
+                    // Reattach per page event after AJAX load
+                    attachPerPageEvent();
                     // Reinitialize direct message buttons after AJAX load
                     initDirectMessageButtons();
                 },
@@ -649,6 +791,11 @@
                 searchInput.value = '';
             }
 
+            // Check if country filter changed and toggle US-specific filters
+            if (category === 'country') {
+                toggleUSFilters();
+            }
+
             debouncedApplyFilters();
         }
 
@@ -677,9 +824,13 @@
                 searchInput.value = '';
             }
 
+            // Check if country filter changed and toggle US-specific filters
+            if (category === 'country') {
+                toggleUSFilters();
+            }
+
             debouncedApplyFilters();
         }
-
 
         // Filter dropdown options
         function filterOptions(input, optionsContainerId) {
@@ -706,8 +857,36 @@
             filters = {};
             jQuery('.selected-filter-group').empty();
             jQuery('.filter-search').val('');
+
+            // Reset per page to default
+            filters['per_page'] = '12';
+
+            // Hide state and county filters on reset
+            toggleUSFilters();
+
             applyFilters();
         }
+
+        // Consolidated initialization on document ready
+        jQuery(document).ready(function() {
+            // Initialize per_page from URL on page load
+            const urlParams = new URLSearchParams(window.location.search);
+            const perPageFromUrl = urlParams.get('per_page') || '12';
+
+            filters['per_page'] = perPageFromUrl;
+
+            // Attach per page event on initial load
+            attachPerPageEvent();
+
+            // Initialize country filters from URL and check for USA
+            const countryParam = urlParams.getAll('country[]');
+            if (countryParam.length > 0) {
+                filters['country'] = countryParam;
+            }
+
+            // Check and toggle US filters on page load
+            toggleUSFilters();
+        });
 
         // Handle pagination click with filters applied
         jQuery(document).on('click', '.pagination a', function(e) {
@@ -772,7 +951,8 @@ I came across your profile and was really impressed by your work. I'd love to co
 Looking forward to connecting!
 Best Regards,
                 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
-                                var myModal = new bootstrap.Modal(document.getElementById('mainModal'));
+                                var myModal = new bootstrap.Modal(document.getElementById(
+                                    'mainModal'));
                                 myModal.show();
                             }
                         },

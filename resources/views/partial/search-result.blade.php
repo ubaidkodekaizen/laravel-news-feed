@@ -39,18 +39,44 @@
     </div>
 </div>
 @empty
-    <div class="user-card">
-        <h2>No User Found</h2>
+    <div class="col-12">
+        <div class="user-card">
+            <h2>No User Found</h2>
+        </div>
     </div>
 @endforelse
 
-{{-- for UI development code section start --}}
+<!-- Pagination Section with Per Page Selector -->
+<div class="col-12">
+    <div class="pagination-container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pagination-container-inner">
+            {{-- Left: Records per page dropdown --}}
+            <div class="d-flex align-items-center gap-2 recordPerPageBox">
+                <span >Records per page</span>
+                <select class="form-select form-select-sm" style="width: auto;" id="perPageSelect">
+                    <option value="12" {{ request('per_page', 12) == 12 ? 'selected' : '' }}>12</option>
+                    <option value="24" {{ request('per_page', 12) == 24 ? 'selected' : '' }}>24</option>
+                    <option value="50" {{ request('per_page', 12) == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('per_page', 12) == 100 ? 'selected' : '' }}>100</option>
+                </select>
+            </div>
 
+            {{-- Center: Pagination controls --}}
+            <div class="pagination-wrapper">
+                {{ $users->links('partial.search-pagination') }}
+            </div>
 
+            {{-- Right: Record count display --}}
+            <span  id="recordsInfo">
+                {{ $users->firstItem() ?? 0 }} - {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} records
+            </span>
+        </div>
+    </div>
 
-{{-- for UI development code section end --}}
-
-<!-- Pagination Links -->
-{{-- <div id="pagination" class="pagination justify-content-center">
-    {{ $users->links() }}</div> --}}
-
+    {{-- Hidden data for JavaScript to read pagination info --}}
+    <div id="paginationData" style="display:none;"
+         data-first-item="{{ $users->firstItem() ?? 0 }}"
+         data-last-item="{{ $users->lastItem() ?? 0 }}"
+         data-total="{{ $users->total() }}">
+    </div>
+</div>
