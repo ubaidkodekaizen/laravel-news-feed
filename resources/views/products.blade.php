@@ -86,6 +86,7 @@
 
     .productModalContent {
         padding: 10px;
+        width: 100%;
     }
 
     small#productModalDate {
@@ -346,7 +347,8 @@
     #productModal .modal-footer {
         padding: 0 0 0 34px;
         border: none;
-        width: 60%;
+        width: 100%;
+        max-width: 60%;
         display: flex;
         align-items: stretch;
         justify-content: space-between;
@@ -372,7 +374,7 @@
         color: #fff;
     }
 
-        
+
     small#productModalDate {
         font-size: 16.04px;
         font-family: Inter;
@@ -400,7 +402,7 @@
     }
 
     .modal-dialog-centered {
-            min-height: 0 !important;
+            /* min-height: 0 !important; */
         }
 
     #productModal .direct-message-btn:hover {
@@ -409,7 +411,7 @@
         transition: .3s;
     }
 
-   
+
 
     #productModal .modal-content {
             margin-top: 150px;
@@ -552,10 +554,10 @@
             <div class="modal-body p-0">
                 <div class="productModalImageBox">
                     <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
-                    
+
                         </div>
-                        
-                        
+
+
                     </div>
                     <div class="modal-footer">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img src="assets/images/closeIcon.webp" alt=""></button>
@@ -573,7 +575,7 @@
 
                 </div>
                 <div class="productModalUserProfileBox">
-                    
+
                     <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
                         data-bs-dismiss="modal">Message Now</a>
                 </div>
@@ -585,7 +587,7 @@
                         <small id="productModalDate"></small>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -697,9 +699,9 @@
                             // If no conversation, open the modal
                             console.log(response.receiver);
                             $('#receiver_id').val(receiverId);
-                            $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''}, 
+                            $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
 I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
-Looking forward to connecting! 
+Looking forward to connecting!
 Best Regards,
 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
                             // $('#mainModal').modal('show');

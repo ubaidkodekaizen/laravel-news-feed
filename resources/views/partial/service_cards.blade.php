@@ -2,13 +2,13 @@
     <div class="col-lg-4 mb-3">
         <div class="card service-trigger-wrapper" data-id="{{ $service->user->id }}" data-title="{{ $service->title }}"
             data-description="{{ $service->short_description }}"
-            data-image="{{ $service->service_image ? asset('storage/' . $service->service_image) : 'https://placehold.co/420x250' }}"
+            data-image="{{ $service->service_image ? asset('storage/' . $service->service_image) :  'assets/images/servicePlaceholderImg.png'  }}"
             data-price="{{ $service->discounted_price && $service->discounted_price < $service->original_price ? '$' . $service->discounted_price . ' (was $' . $service->original_price . ')' : '$' . $service->original_price }}"
             data-quantity="{{ $service->duration }}" data-user-name="{{ $service->user->first_name }}"
             data-user-photo="{{ $service->user->photo ? asset('storage/' . $service->user->photo) : 'https://placehold.co/50x50' }}"
             data-date="{{ $service->created_at->format('d M Y') }}">
             <div class="card-header p-0 border-0 service_slider_img_box">
-                <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : 'https://placehold.co/420x250' }}"
+                <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) :  'assets/images/servicePlaceholderImg.png'  }}"
                     alt="{{ $service->title }}" class="img-fluid rounded trigger-element">
                 <div class="service_price_duration my-0 event_price_label">
                     <p class="service_price">

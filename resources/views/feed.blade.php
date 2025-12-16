@@ -79,6 +79,7 @@
     .productModalContent {
         padding: 10px;
         min-height: 365px;
+        width: 100%;
     }
 
     small#productModalDate {
@@ -100,7 +101,8 @@
     #productModal .modal-footer {
         padding: 0 0 0 34px;
         border: none;
-        width: 60%;
+        width: 100%;
+        max-width: 60%;
         display: flex;
         align-items: stretch;
         justify-content: space-between;
@@ -209,9 +211,9 @@
 
     }
         .modal-dialog-centered {
-            min-height: 0 !important;
+            /* min-height: 0 !important; */
         }
-        
+
     .trigger-element {
         cursor: pointer;
     }
@@ -324,7 +326,7 @@
             right: 0px;
         }
     }
-    
+
 </style>
 
 <section class="feed_lp">
@@ -349,7 +351,7 @@
             @forelse ($products as $product)
             <div class="slide product-trigger-wrapper" data-id="{{ $product->user->id }}"
                 data-title="{{ $product->title }}" data-description="{{ $product->short_description }}"
-                data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'https://placehold.co/420x250' }}"
+                data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'assets/images/MuslimLynkPlaceholder.png' }}"
                 data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
                 data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
                 data-user-name="{{ $product->user->first_name }}"
@@ -564,7 +566,7 @@
                 <!-- RIGHT SECTION: Service Image -->
                 <div class="serviceAccordionConInner">
                     <div class="servideAccordionImgCon">
-                        <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/servicePlaceholder.png') }}"
+                        <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/servicePlaceholderImg.png') }}"
                             alt="{{ $service->title }}" class="img-fluid serviceImg">
                         <span class="servicePricing">
                             @if ($service->discounted_price && $service->discounted_price < $service->original_price)
@@ -625,10 +627,10 @@
             <div class="modal-body p-0">
                 <div class="productModalImageBox">
                     <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
-                    
+
                         </div>
-                        
-                        
+
+
                     </div>
                     <div class="modal-footer">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img src="assets/images/closeIcon.webp" alt=""></button>
@@ -646,7 +648,7 @@
 
                 </div>
                 <div class="productModalUserProfileBox">
-                    
+
                     <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
                         data-bs-dismiss="modal">Message Now</a>
                 </div>
@@ -658,7 +660,7 @@
                         <small id="productModalDate"></small>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -969,7 +971,7 @@ Best Regards,
             bsModal.show();
         });
     });
-  
+
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {

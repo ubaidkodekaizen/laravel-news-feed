@@ -33,11 +33,11 @@
         }
 
         .productModalImageBox {
-           height: 100%;
+            height: 100%;
             border-radius: 14.47px;
             border: 3px solid #B8C034;
             position: relative;
-         overflow: hidden;
+            overflow: hidden;
         }
 
         #productModalImage {
@@ -64,10 +64,10 @@
         }
 
         .modal-dialog-centered {
-            min-height: 0 !important;
+            /* min-height: 0 !important; */
         }
 
-         h6#productModalUserName {
+        h6#productModalUserName {
             font-size: 18.71px;
             font-family: Inter;
             font-weight: 400;
@@ -85,6 +85,7 @@
 
         .productModalContent {
             padding: 10px;
+            width: 100%;
         }
 
 
@@ -123,9 +124,9 @@
         }
 
         /* #productModalLabel {
-            font-size: 18px;
-            line-height: 1.3em;
-        } */
+                font-size: 18px;
+                line-height: 1.3em;
+            } */
 
         .productModalImageBox .btn-close {
             position: absolute;
@@ -211,16 +212,16 @@
         }
 
         /* .customHeading::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            background: linear-gradient(to right, transparent, var(--secondary));
-            height: 5px;
-            border-radius: 10px;
-        } */
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                background: linear-gradient(to right, transparent, var(--secondary));
+                height: 5px;
+                border-radius: 10px;
+            } */
 
         .articles {
             overflow: hidden;
@@ -287,9 +288,9 @@
         }
 
         /* .service_search_area form:hover .fa{
-                background: var(--primary);
-                color: white;
-            } */
+                    background: var(--primary);
+                    color: white;
+                } */
         .min_h_400 {
             min-height: calc(100vh - 400px);
         }
@@ -326,117 +327,119 @@
         }
 
         #productModal .modal-footer {
-        padding: 0 0 0 34px;
-        border: none;
-        width: 60%;
-        display: flex;
-        align-items: stretch;
-        justify-content: space-between;
-    }
+            padding: 0 0 0 34px;
+            border: none;
+            width: 100%;
+            max-width: 60%;
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+        }
 
-    .productModalUserProfileBox {
-        display: flex;
-        align-items: center;
-        justify-content: start;
-        width: 100%;
-        max-width: 48%;
-    }
+        .productModalUserProfileBox {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            width: 100%;
+            max-width: 48%;
+        }
 
-    .productModalUserProfileBox img {
-        object-fit: cover;
-    }
+        .productModalUserProfileBox img {
+            object-fit: cover;
+        }
 
-    #productModal .direct-message-btn {
-        height: 60px !important;
-        font-size: 18px;
-        font-weight: 500;
-        font-family: "Poppins";
-        flex: 1;
-        border-radius: 10px;
-        background: var(--secondary);
-        color: #273572;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        max-width: 326px;
-        height: 100%;
-        transition: .3s;
-    }
+        #productModal .direct-message-btn {
+            height: 60px !important;
+            font-size: 18px;
+            font-weight: 500;
+            font-family: "Poppins";
+            flex: 1;
+            border-radius: 10px;
+            background: var(--secondary);
+            color: #273572;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            max-width: 326px;
+            height: 100%;
+            transition: .3s;
+        }
 
-    #productModal .direct-message-btn:hover {
-        background: var(--secondary);
-        color: #ffffffff;
-        transition: .3s;
-    }
+        #productModal .direct-message-btn:hover {
+            background: var(--secondary);
+            color: #ffffffff;
+            transition: .3s;
+        }
 
-    #productModal .modal-content {
+        #productModal .modal-content {
             margin-top: 150px;
-        height: fit-content;
-        overflow: hidden;
-        flex-direction: row;
-        background: linear-gradient(45deg, #1F2C77 50%, #2C3FB3 110%);
-        padding: 26px;
-        border: 3px solid #fff;
-        border-radius: 17px !important;
-        overflow: hidden;
-    }
+            height: fit-content;
+            overflow: hidden;
+            flex-direction: row;
+            background: linear-gradient(45deg, #1F2C77 50%, #2C3FB3 110%);
+            padding: 26px;
+            border: 3px solid #fff;
+            border-radius: 17px !important;
+            overflow: hidden;
+        }
 
-    /* #productModalLabel {
-        font-size: 18px;
-        line-height: 1.3em;
-    } */
+        /* #productModalLabel {
+            font-size: 18px;
+            line-height: 1.3em;
+        } */
 
-    h5.customHeading {
-    color: #fff !important;
-    width: fit-content;
-    text-align: left;
-    font-family: "Bebas Neue", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 64px;
-    line-height: 106%;
-    margin: 18px 0;
-    position: relative;
-    }
+        h5.customHeading {
+            color: #fff !important;
+            width: fit-content;
+            text-align: left;
+            font-family: "Bebas Neue", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 64px;
+            line-height: 106%;
+            margin: 18px 0;
+            position: relative;
+        }
 
-    h5.customHeading::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 50px;
-        height: 6px;
-        background-color: #b8c034;
-    }
+        h5.customHeading::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 6px;
+            background-color: #b8c034;
+        }
 
-    #productModalDescription{
+        #productModalDescription {
 
-        font-size: 22px;
-        font-family: "inter";
-        font-optical-sizing: auto;
-        font-weight: 400;
-        font-style: normal;
-        line-height: 140%;
-        width: 100%;
-        color: #fff;
-    }
+            font-size: 22px;
+            font-family: "inter";
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            line-height: 140%;
+            width: 100%;
+            color: #fff;
+        }
 
-    .modal-footer .btn-close {
-        --bs-btn-close-bg: url("/assets/images/modalCloseVector.svg") !important;
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background-color: #434F9C;
-        color: #ffffff !important;
-        --bs-btn-close-opacity: 1;
-        padding: 7px 12px 18px 14px;
-        border-radius: 50%;
-    }
-    .modal-footer .btn-close img{
-        width: 15px;
+        .modal-footer .btn-close {
+            --bs-btn-close-bg: url("/assets/images/modalCloseVector.svg") !important;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #434F9C;
+            color: #ffffff !important;
+            --bs-btn-close-opacity: 1;
+            padding: 7px 12px 18px 14px;
+            border-radius: 50%;
+        }
 
-    }
+        .modal-footer .btn-close img {
+            width: 15px;
+
+        }
     </style>
 
     <section class="feed_lp">
@@ -472,13 +475,13 @@
         <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
     </div>
     <!-- <section class="lp_footer">
-            <div class="container">
+                <div class="container">
 
-                <p class="powered_by">
-                    Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
-                </p>
-            </div>
-        </section> -->
+                    <p class="powered_by">
+                        Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
+                    </p>
+                </div>
+            </section> -->
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -505,63 +508,25 @@
         </div>
     </div>
     <!-- Modal -->
-     <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-
-            <div class="modal-body p-0">
-                <div class="productModalImageBox">
-                    <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
-                    
-                        </div>
-                        
-                        
-                    </div>
-                    <div class="modal-footer">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img src="assets/images/closeIcon.webp" alt=""></button>
-                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                <div class="productModalContent">
-                    <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
-                            id="productModalQuantity"></span></p>
-
-
-                    <h5 class="modal-title customHeading" id="productModalLabel">Product Title</h5>
-
-
-                    <p class="mt-2"><span id="productModalDescription"></span></p>
-
-
-                </div>
-                <div class="productModalUserProfileBox">
-                    
-                    <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
-                        data-bs-dismiss="modal">Message Now</a>
-                </div>
-                <div class="productModalUserProfileBox">
-                    <img id="productModalUserPhoto" src="" alt="User photo" class="rounded-circle me-2"
-                        width="50" height="50">
-                    <div>
-                        <h6 id="productModalUserName" class="mb-0"></h6>
-                        <small id="productModalDate"></small>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-</div>
-    <!-- <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
 
                 <div class="modal-body p-0">
                     <div class="productModalImageBox">
                         <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img
+                            src="assets/images/closeIcon.webp" alt=""></button>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    <div class="productModalContent">
                         <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
                                 id="productModalQuantity"></span></p>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="productModalContent">
 
 
                         <h5 class="modal-title customHeading" id="productModalLabel">Product Title</h5>
@@ -571,9 +536,11 @@
 
 
                     </div>
+                    <div class="productModalUserProfileBox">
 
-                </div>
-                <div class="modal-footer">
+                        <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
+                            data-bs-dismiss="modal">Message Now</a>
+                    </div>
                     <div class="productModalUserProfileBox">
                         <img id="productModalUserPhoto" src="" alt="User photo" class="rounded-circle me-2"
                             width="50" height="50">
@@ -582,12 +549,49 @@
                             <small id="productModalDate"></small>
                         </div>
                     </div>
-                    <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
-                        data-bs-dismiss="modal">Message Now</a>
+
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
+    <!-- <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+
+                    <div class="modal-body p-0">
+                        <div class="productModalImageBox">
+                            <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
+                            <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
+                                    id="productModalQuantity"></span></p>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="productModalContent">
+
+
+                            <h5 class="modal-title customHeading" id="productModalLabel">Product Title</h5>
+
+
+                            <p class="mt-2"><span id="productModalDescription"></span></p>
+
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="productModalUserProfileBox">
+                            <img id="productModalUserPhoto" src="" alt="User photo" class="rounded-circle me-2"
+                                width="50" height="50">
+                            <div>
+                                <h6 id="productModalUserName" class="mb-0"></h6>
+                                <small id="productModalDate"></small>
+                            </div>
+                        </div>
+                        <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
+                            data-bs-dismiss="modal">Message Now</a>
+                    </div>
+                </div>
+            </div>
+        </div> -->
 @endsection
 
 
