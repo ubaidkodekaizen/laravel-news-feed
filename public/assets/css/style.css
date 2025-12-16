@@ -863,15 +863,12 @@ div.selected-filter-group {
 }
 
 .top_filter_heading {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.2);
     border-radius: 0;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 30px;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
+    color: #333;
     margin: 0;
-    padding: 10px 20px;
+    font-size: 28px;
+    font-family: "Inter";
+    font-weight: 500;
 }
 
 .profile_name {
@@ -2186,33 +2183,41 @@ p.description {
 }
 
 #dashboardMenu .nav-list .nav-items a {
-    display: flex;
+   display: flex;
     cursor: pointer;
     align-items: center;
     justify-content: flex-start;
     column-gap: 0.5rem;
-    padding: 0.75rem 0.5rem;
-    font-size: 1rem;
+    padding: 1rem 0.8rem;
+    font-size: 1.13rem;
     font-weight: 500;
+    font-family: "Inter";
     text-transform: capitalize;
-    color: var(--white);
+    color: #333;
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.1s;
     animation-duration: 0.1s;
     text-decoration: none;
+    border-radius: 10px;
 }
 
 #dashboardMenu .nav-list .nav-items a.active {
-    border-radius: 10px;
-    background-color: var(--white);
-    color: var(--primary);
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+#dashboardMenu .nav-list .nav-items a.active img{
+    filter: invert(3) brightness(1.5) !important;
 }
 
 #dashboardMenu .nav-list .nav-items a:hover {
-    border-radius: 10px;
-    background-color: var(--white);
-    color: var(--primary);
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+#dashboardMenu .nav-list .nav-items a:hover img{
+    filter: invert(3) brightness(1.5) !important;
 }
 
 .icon_name_flex {

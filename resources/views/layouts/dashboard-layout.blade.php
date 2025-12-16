@@ -2,6 +2,18 @@
 
 @extends('layouts.main')
 
+<style>
+    .main-content {
+        padding: 46px 40px !important;
+        background: #fafbff;
+    }
+    .col-lg-6.dashboardBtns {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+    }
+</style>
+
 @section('content')
     <div class="navbar_d_flex">
         <!-- Toggler Button for Dashboard Sidebar -->
