@@ -10,15 +10,18 @@
     }
 
     .read-more-btn {
-        border-radius: 7px;
         border: none;
-        background: #B8C034;
-        color: #000;
-        font-family: "Inter";
-        border: 1px solid #B8C034;
-        font-size: 12px;
-        font-weight: 500;
-        text-align: left;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    color: #B8C034;
+    font-family: "Inter";
+    font-size: 22px;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    margin-top: -5px !important;
+    text-align: left;
     }
 
     .read-more-btn:hover,
@@ -26,16 +29,20 @@
     .read-more-btn:active {
         background: transparent !important;
         color: var(--secondary) !important;
-        border: 1px solid #B8C034;
+         border: none !important;
     }
 
     #productModal .modal-dialog.modal-lg {
-        max-width: 600px;
+        max-width: 1139px;
+        width: 100%;
     }
 
     .productModalImageBox {
-        height: 300px;
+       height: 100%;
+        border-radius: 14.47px;
+        border: 3px solid #B8C034;
         position: relative;
+        overflow: hidden;
     }
 
     #productModalImage {
@@ -46,27 +53,40 @@
     }
 
     .productModalPriceBox {
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
         background: var(--secondary);
-        color: #fff;
         margin: 0;
-        border-radius: 25px;
-        padding: 3px 10px;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: fit-content;
         gap: 10px;
+        color: #000;
+        font-family: "Inter";
+        font-size: 16px;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 50px;
+    }
+
+    h6#productModalUserName{
+        font-size: 18.71px;
+        font-family: Inter;
+        font-weight: 400;
+        line-height: 26.73px;
+        color: #fff;
     }
 
     .productModalContent {
         padding: 10px;
+        min-height: 365px;
     }
 
     small#productModalDate {
-        font-size: 12px;
-        color: #4f4f4f;
+        font-size: 16.04px;
+        font-family: Inter;
+        font-weight: 400;
+        line-height: 18.71px;
+        color: #fff;
     }
 
     .event_slider h2,
@@ -78,6 +98,9 @@
     }
 
     #productModal .modal-footer {
+        padding: 0 0 0 34px;
+        border: none;
+        width: 60%;
         display: flex;
         align-items: stretch;
         justify-content: space-between;
@@ -87,6 +110,8 @@
         display: flex;
         align-items: center;
         justify-content: start;
+        width: 100%;
+        max-width: 48%;
     }
 
     .productModalUserProfileBox img {
@@ -94,42 +119,99 @@
     }
 
     #productModal .direct-message-btn {
+        height: 60px !important;
+        font-size: 18px;
+        font-weight: 500;
+        font-family: "Poppins";
         flex: 1;
         border-radius: 10px;
         background: var(--secondary);
-        color: #fff;
+        color: #273572;
         display: flex;
         align-items: center;
         justify-content: center;
         text-decoration: none;
-        max-width: 200px;
+        max-width: 326px;
+        height: 100%;
         transition: .3s;
     }
 
     #productModal .direct-message-btn:hover {
-        background: var(--primary);
+        color: #ffffffff;
         transition: .3s;
     }
 
     #productModal .modal-content {
+            margin-top: 150px;
+        height: fit-content;
+        overflow: hidden;
+        flex-direction: row;
+        background: linear-gradient(45deg, #1F2C77 50%, #2C3FB3 110%);
+        padding: 26px;
+        border: 3px solid #fff;
+        border-radius: 17px !important;
         overflow: hidden;
     }
 
-    #productModalLabel {
+    /* #productModalLabel {
         font-size: 18px;
         line-height: 1.3em;
+    } */
+
+    h5.customHeading {
+    color: #fff !important;
+    width: fit-content;
+    text-align: left;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 64px;
+    line-height: 106%;
+    margin: 18px 0;
+    position: relative;
     }
 
-    .productModalImageBox .btn-close {
+    h5.customHeading::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 6px;
+        background-color: #b8c034;
+    }
+
+    #productModalDescription{
+
+        font-size: 22px;
+        font-family: "inter";
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 140%;
+        width: 100%;
+        color: #fff;
+    }
+
+    .modal-footer .btn-close {
+        --bs-btn-close-bg: url("/assets/images/modalCloseVector.svg") !important;
         position: absolute;
         top: 5px;
         right: 5px;
-        background-color: #fff;
-        color: #000;
+        background-color: #434F9C;
+        color: #ffffff !important;
         --bs-btn-close-opacity: 1;
-        padding: 5px;
+        padding: 7px 12px 18px 14px;
+        border-radius: 50%;
     }
+    .modal-footer .btn-close img{
+        width: 15px;
 
+    }
+        .modal-dialog-centered {
+            min-height: 0 !important;
+        }
+        
     .trigger-element {
         cursor: pointer;
     }
@@ -152,7 +234,7 @@
         position: relative;
     }
 
-    .customHeading {
+    /* .customHeading {
         color: var(--primary);
         position: relative;
         display: inline-block;
@@ -170,7 +252,7 @@
         background: linear-gradient(to right, transparent, var(--secondary));
         height: 5px;
         border-radius: 10px;
-    }
+    } */
 
     .articles {
         overflow: hidden;
@@ -242,6 +324,7 @@
             right: 0px;
         }
     }
+    
 </style>
 
 <section class="feed_lp">
@@ -275,7 +358,7 @@
                 <div class="container">
                     <div class="productSliderSecInnerCol">
                         <h2 class="industriesMainHeading">{{ $product->title }}</h2>
-                        <p class="industriesMainPara">{{ Str::limit($product->short_description, 100) }}</p>
+                        <p class="industriesMainPara">{{ Str::limit($product->short_description, 120) }}</p>
                         <button type="button" class="btn btn-sm btn-primary mt-2 read-more-btn trigger-element">
                             Read More
                         </button>
@@ -542,11 +625,17 @@
             <div class="modal-body p-0">
                 <div class="productModalImageBox">
                     <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
+                    
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img src="assets/images/closeIcon.webp" alt=""></button>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                <div class="productModalContent">
                     <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
                             id="productModalQuantity"></span></p>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="productModalContent">
 
 
                     <h5 class="modal-title customHeading" id="productModalLabel">Product Title</h5>
@@ -556,9 +645,11 @@
 
 
                 </div>
-
-            </div>
-            <div class="modal-footer">
+                <div class="productModalUserProfileBox">
+                    
+                    <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
+                        data-bs-dismiss="modal">Message Now</a>
+                </div>
                 <div class="productModalUserProfileBox">
                     <img id="productModalUserPhoto" src="" alt="User photo" class="rounded-circle me-2"
                         width="50" height="50">
@@ -567,8 +658,7 @@
                         <small id="productModalDate"></small>
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
-                    data-bs-dismiss="modal">Message Now</a>
+                
             </div>
         </div>
     </div>
@@ -581,14 +671,14 @@
     (function() {
         // State
         let currentIndex = 0;
+        let autoSlideInterval = null;
+        const AUTO_SLIDE_DELAY = 5000; // 3 seconds
 
         // Elements
         const sliderTrack = document.getElementById('sliderTrack');
         const slides = document.querySelectorAll('.slide');
         const totalSlides = slides.length;
         const dotsContainer = document.getElementById('sliderDots');
-
-        console.log('Slider initialized with', totalSlides, 'slides');
 
         // Create dots
         function createDots() {
@@ -600,14 +690,12 @@
                 dot.setAttribute('data-index', i);
                 dotsContainer.appendChild(dot);
             }
-            console.log('Dots created:', totalSlides);
         }
 
         // Update slider position
         function updateSlider() {
             const offset = currentIndex * -100;
             sliderTrack.style.transform = `translateX(${offset}%)`;
-            console.log('Slider moved to index:', currentIndex, 'offset:', offset + '%');
             updateButtons();
             updateDots();
         }
@@ -617,47 +705,35 @@
             const prevButtons = document.querySelectorAll('[data-action="prev"]');
             const nextButtons = document.querySelectorAll('[data-action="next"]');
 
-            prevButtons.forEach(btn => {
-                if (currentIndex === 0) {
-                    btn.classList.add('disabled');
-                } else {
-                    btn.classList.remove('disabled');
-                }
-            });
+            prevButtons.forEach(btn =>
+                btn.classList.toggle('disabled', currentIndex === 0)
+            );
 
-            nextButtons.forEach(btn => {
-                if (currentIndex === totalSlides - 1) {
-                    btn.classList.add('disabled');
-                } else {
-                    btn.classList.remove('disabled');
-                }
-            });
+            nextButtons.forEach(btn =>
+                btn.classList.toggle('disabled', currentIndex === totalSlides - 1)
+            );
         }
 
         // Update dots
         function updateDots() {
             const dots = dotsContainer.querySelectorAll('.dot');
-            dots.forEach((dot, index) => {
-                if (index === currentIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
+            dots.forEach((dot, index) =>
+                dot.classList.toggle('active', index === currentIndex)
+            );
         }
 
         // Next slide
         function nextSlide() {
-            console.log('Next clicked, current:', currentIndex);
             if (currentIndex < totalSlides - 1) {
                 currentIndex++;
-                updateSlider();
+            } else {
+                currentIndex = 0; // loop back to start
             }
+            updateSlider();
         }
 
         // Previous slide
         function prevSlide() {
-            console.log('Prev clicked, current:', currentIndex);
             if (currentIndex > 0) {
                 currentIndex--;
                 updateSlider();
@@ -666,79 +742,79 @@
 
         // Go to specific slide
         function goToSlide(index) {
-            console.log('Go to slide:', index);
             currentIndex = index;
             updateSlider();
         }
 
-        // Event delegation for arrow buttons
+        // Auto slide functions
+        function startAutoSlide() {
+            stopAutoSlide();
+            autoSlideInterval = setInterval(nextSlide, AUTO_SLIDE_DELAY);
+        }
+
+        function stopAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = null;
+            }
+        }
+
+        // Event delegation
         document.addEventListener('click', function(e) {
             const target = e.target;
 
             if (target.hasAttribute('data-action')) {
                 e.preventDefault();
-                const action = target.getAttribute('data-action');
+                stopAutoSlide();
 
-                if (action === 'next') {
-                    nextSlide();
-                } else if (action === 'prev') {
-                    prevSlide();
-                }
+                if (target.getAttribute('data-action') === 'next') nextSlide();
+                if (target.getAttribute('data-action') === 'prev') prevSlide();
+
+                startAutoSlide();
             }
 
             if (target.classList.contains('dot')) {
                 e.preventDefault();
-                const index = parseInt(target.getAttribute('data-index'));
-                if (!isNaN(index)) {
-                    goToSlide(index);
-                }
+                stopAutoSlide();
+                goToSlide(parseInt(target.dataset.index));
+                startAutoSlide();
             }
         });
 
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft') {
-                prevSlide();
-            } else if (e.key === 'ArrowRight') {
-                nextSlide();
-            }
+            stopAutoSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+            startAutoSlide();
         });
 
-        // Touch/swipe support
+        // Touch support
         let touchStartX = 0;
         let touchEndX = 0;
 
-        sliderTrack.addEventListener('touchstart', function(e) {
+        sliderTrack.addEventListener('touchstart', e => {
+            stopAutoSlide();
             touchStartX = e.changedTouches[0].screenX;
-        }, {
-            passive: true
-        });
+        }, { passive: true });
 
-        sliderTrack.addEventListener('touchend', function(e) {
+        sliderTrack.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {
-            passive: true
-        });
-
-        function handleSwipe() {
-            const swipeThreshold = 50;
             const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
+            startAutoSlide();
+        }, { passive: true });
 
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    nextSlide();
-                } else {
-                    prevSlide();
-                }
-            }
-        }
+        // Pause on hover
+        sliderTrack.addEventListener('mouseenter', stopAutoSlide);
+        sliderTrack.addEventListener('mouseleave', startAutoSlide);
 
-        // Initialize
+        // Init
         createDots();
-        updateButtons();
+        updateSlider();
+        startAutoSlide();
 
-        console.log('Slider ready!');
+        console.log('Auto slider initialized');
     })();
 </script>
 
@@ -893,6 +969,7 @@ Best Regards,
             bsModal.show();
         });
     });
+  
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {

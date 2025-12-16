@@ -19,6 +19,7 @@
             font-weight: 500;
             padding: 0;
             color: #273572;
+            background-color: transparent;
         }
 
         .read-more-btn:hover {
@@ -27,12 +28,16 @@
         }
 
         #productModal .modal-dialog.modal-lg {
-            max-width: 600px;
+            max-width: 1139px;
+            width: 100%;
         }
 
         .productModalImageBox {
-            height: 300px;
+           height: 100%;
+            border-radius: 14.47px;
+            border: 3px solid #B8C034;
             position: relative;
+         overflow: hidden;
         }
 
         #productModalImage {
@@ -43,28 +48,45 @@
         }
 
         .productModalPriceBox {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
             background: var(--secondary);
-            color: #fff;
             margin: 0;
-            border-radius: 25px;
-            padding: 3px 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: fit-content;
             gap: 10px;
+            color: #000;
+            font-family: "Inter";
+            font-size: 16px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 50px;
+        }
+
+        .modal-dialog-centered {
+            min-height: 0 !important;
+        }
+
+         h6#productModalUserName {
+            font-size: 18.71px;
+            font-family: Inter;
+            font-weight: 400;
+            line-height: 26.73px;
+            color: #fff;
+        }
+
+        small#productModalDate {
+            font-size: 16.04px;
+            font-family: Inter;
+            font-weight: 400;
+            line-height: 18.71px;
+            color: #fff;
         }
 
         .productModalContent {
             padding: 10px;
         }
 
-        small#productModalDate {
-            font-size: 12px;
-            color: #4f4f4f;
-        }
 
         #productModal .modal-footer {
             display: flex;
@@ -100,10 +122,10 @@
             overflow: hidden;
         }
 
-        #productModalLabel {
+        /* #productModalLabel {
             font-size: 18px;
             line-height: 1.3em;
-        }
+        } */
 
         .productModalImageBox .btn-close {
             position: absolute;
@@ -188,7 +210,7 @@
             font-weight: 700;
         }
 
-        .customHeading::before {
+        /* .customHeading::before {
             content: '';
             position: absolute;
             bottom: 0;
@@ -198,7 +220,7 @@
             background: linear-gradient(to right, transparent, var(--secondary));
             height: 5px;
             border-radius: 10px;
-        }
+        } */
 
         .articles {
             overflow: hidden;
@@ -302,6 +324,119 @@
             bottom: 20px;
             left: 20px;
         }
+
+        #productModal .modal-footer {
+        padding: 0 0 0 34px;
+        border: none;
+        width: 60%;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+    }
+
+    .productModalUserProfileBox {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        width: 100%;
+        max-width: 48%;
+    }
+
+    .productModalUserProfileBox img {
+        object-fit: cover;
+    }
+
+    #productModal .direct-message-btn {
+        height: 60px !important;
+        font-size: 18px;
+        font-weight: 500;
+        font-family: "Poppins";
+        flex: 1;
+        border-radius: 10px;
+        background: var(--secondary);
+        color: #273572;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        max-width: 326px;
+        height: 100%;
+        transition: .3s;
+    }
+
+    #productModal .direct-message-btn:hover {
+        background: var(--secondary);
+        color: #ffffffff;
+        transition: .3s;
+    }
+
+    #productModal .modal-content {
+            margin-top: 150px;
+        height: fit-content;
+        overflow: hidden;
+        flex-direction: row;
+        background: linear-gradient(45deg, #1F2C77 50%, #2C3FB3 110%);
+        padding: 26px;
+        border: 3px solid #fff;
+        border-radius: 17px !important;
+        overflow: hidden;
+    }
+
+    /* #productModalLabel {
+        font-size: 18px;
+        line-height: 1.3em;
+    } */
+
+    h5.customHeading {
+    color: #fff !important;
+    width: fit-content;
+    text-align: left;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 64px;
+    line-height: 106%;
+    margin: 18px 0;
+    position: relative;
+    }
+
+    h5.customHeading::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 6px;
+        background-color: #b8c034;
+    }
+
+    #productModalDescription{
+
+        font-size: 22px;
+        font-family: "inter";
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 140%;
+        width: 100%;
+        color: #fff;
+    }
+
+    .modal-footer .btn-close {
+        --bs-btn-close-bg: url("/assets/images/modalCloseVector.svg") !important;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: #434F9C;
+        color: #ffffff !important;
+        --bs-btn-close-opacity: 1;
+        padding: 7px 12px 18px 14px;
+        border-radius: 50%;
+    }
+    .modal-footer .btn-close img{
+        width: 15px;
+
+    }
     </style>
 
     <section class="feed_lp">
@@ -370,7 +505,52 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+     <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-body p-0">
+                <div class="productModalImageBox">
+                    <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
+                    
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img src="assets/images/closeIcon.webp" alt=""></button>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                <div class="productModalContent">
+                    <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
+                            id="productModalQuantity"></span></p>
+
+
+                    <h5 class="modal-title customHeading" id="productModalLabel">Product Title</h5>
+
+
+                    <p class="mt-2"><span id="productModalDescription"></span></p>
+
+
+                </div>
+                <div class="productModalUserProfileBox">
+                    
+                    <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
+                        data-bs-dismiss="modal">Message Now</a>
+                </div>
+                <div class="productModalUserProfileBox">
+                    <img id="productModalUserPhoto" src="" alt="User photo" class="rounded-circle me-2"
+                        width="50" height="50">
+                    <div>
+                        <h6 id="productModalUserName" class="mb-0"></h6>
+                        <small id="productModalDate"></small>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
 
@@ -407,7 +587,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 @endsection
 
 

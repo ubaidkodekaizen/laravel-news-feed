@@ -229,7 +229,7 @@ body {
     display: none;
 }
 
-.avatar-upload .avatar-edit input + label {
+.avatar-upload .avatar-edit input+label {
     display: inline-block;
     width: 34px;
     height: 34px;
@@ -243,12 +243,12 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-.avatar-upload .avatar-edit input + label:hover {
+.avatar-upload .avatar-edit input+label:hover {
     background: #f1f1f1;
     border-color: #d6d6d6;
 }
 
-.avatar-upload .avatar-edit input + label:after {
+.avatar-upload .avatar-edit input+label:after {
     content: "\f040";
     font-family: "FontAwesome";
     color: #757575;
@@ -269,7 +269,7 @@ body {
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
 }
 
-.avatar-upload .avatar-preview > div {
+.avatar-upload .avatar-preview>div {
     height: 300px;
     width: 300px;
     display: flex;
@@ -499,7 +499,7 @@ body {
     margin: 10px 0px 0px 0px;
 }
 
-.user_company_profile .location_data .profile_subheading + .profile_data {
+.user_company_profile .location_data .profile_subheading+.profile_data {
     font-size: 1rem;
     margin: 10px 0px;
     border: none;
@@ -579,7 +579,7 @@ input#header_search {
 
 .header-mid select,
 .header-mid input,
-.avatar-upload .avatar-preview > div {
+.avatar-upload .avatar-preview>div {
     border: 2px solid var(--primary);
 }
 
@@ -1308,6 +1308,8 @@ h2.industriesMainHeading::after {
 }
 
 .industriesMainPara {
+    position: relative;
+    display: inline;
     font-size: 22px;
     font-family: "inter";
     font-optical-sizing: auto;
@@ -1319,6 +1321,7 @@ h2.industriesMainHeading::after {
 }
 
 .sliderUserAndPricingInfo {
+    margin-top: 30px;
     display: flex;
     gap: 22px;
     align-items: center;
@@ -1333,6 +1336,7 @@ h2.industriesMainHeading::after {
     padding: 6px 12px;
     border-radius: 50px;
 }
+
 .sliderUserAndPricingInfo .author-info {
     display: flex;
     gap: 17px;
@@ -1354,6 +1358,7 @@ h2.industriesMainHeading::after {
     line-height: 26.73px;
     color: #fff;
 }
+
 .sliderUserAndPricingInfo .author-info .author-details .author-date {
     font-size: 16.04px;
     font-family: "Inter";
@@ -1393,7 +1398,7 @@ button.sliderUserMessageBtn {
 .sliderNextArrow {
     width: 50px;
     height: 50px;
-    background: #b8c034;
+    background: #e8e8e8;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1405,23 +1410,30 @@ button.sliderUserMessageBtn {
     transition: all 0.3s ease;
     user-select: none;
 }
+
+.sliderPreviousArrow:hover,
+.sliderNextArrow:hover {
+    background: #b8c034;
+    transform: scale(1.05);
+}
+
 .sliderArrows svg {
     pointer-events: none;
 }
 
-.sliderPreviousArrow:hover:not(.disabled),
+/* .sliderPreviousArrow:hover:not(.disabled),
 .sliderNextArrow:hover:not(.disabled) {
-    background: #b8c034;
+    background: #e8e8e8;
     color: #fff;
     transform: scale(1.05);
-}
+} */
 
-.sliderPreviousArrow.disabled,
+/* .sliderPreviousArrow.disabled,
 .sliderNextArrow.disabled {
     background: #e8e8e8;
     cursor: not-allowed;
     pointer-events: none;
-}
+} */
 
 .slider-dots {
     display: flex;
@@ -1442,14 +1454,18 @@ button.sliderUserMessageBtn {
 .dot.active {
     background: #fff;
 }
+
 #mainModal .modal-content {
     border-radius: 17px;
     overflow: hidden;
+    flex-direction: row;
 }
+
 #mainModal .modal-header {
     background: #fff !important;
     padding: 20px 22px 20px 24px;
 }
+
 #mainModal .modal-header .modal-title {
     font-family: Inter;
     font-weight: 600;
@@ -1470,6 +1486,7 @@ button.sliderUserMessageBtn {
     padding: 10px;
     transition: .3s;
 }
+
 #mainModal .btn-close:hover {
     background: #df2828 url(../images/closeIcon.webp);
     transition: .3s;
@@ -1477,6 +1494,7 @@ button.sliderUserMessageBtn {
     background-position: center center;
     background-repeat: no-repeat;
 }
+
 #directMessageForm label.form-label {
     font-family: "Inter", sans-serif;
     font-weight: 600;
@@ -1486,6 +1504,7 @@ button.sliderUserMessageBtn {
     color: black;
     margin: 0px 0px 15px 0;
 }
+
 #directMessageForm textarea#messageContent {
     min-height: 185px;
     border: 1px solid #27357214;
@@ -1498,6 +1517,7 @@ button.sliderUserMessageBtn {
     color: black;
     border-radius: 11px;
 }
+
 #directMessageForm button[type='submit'] {
     height: 45px;
     font-family: Poppins;
@@ -1512,12 +1532,17 @@ button.sliderUserMessageBtn {
     align-items: center;
     justify-content: center;
 }
+
 #mainModal .modal-body {
     padding: 22px 24px 18px 24px;
+    width: 100%;
+    max-width: 100%;
 }
-#mainModal  #messageStatus {
+
+#mainModal #messageStatus {
     margin: 0 !important;
 }
+
 @media (max-width: 968px) {
     .container {
         flex-direction: column;
@@ -1532,6 +1557,14 @@ button.sliderUserMessageBtn {
     .industriesMainHeading {
         font-size: 32px;
     }
+
+    .productModalPriceBox{
+        padding: 2px 12px !important;
+    }
+
+    .productModalPriceBox{
+        font-size: 12px !important;
+    }
 }
 
 @media (max-width: 576px) {
@@ -1543,8 +1576,10 @@ button.sliderUserMessageBtn {
         font-size: 26px;
     }
 
-    .industriesMainPara {
-        font-size: 14px;
+    .industriesMainPara,
+    .read-more-btn,
+    #productModalDescription {
+        font-size: 14px !important;
     }
 
     .sliderUserAndPricingInfo {
@@ -1560,6 +1595,7 @@ button.sliderUserMessageBtn {
         font-size: 16px;
     }
 }
+
 /* Product Slider section */
 
 /* service accordion section  */
@@ -1570,18 +1606,22 @@ button.sliderUserMessageBtn {
     gap: 30px;
     padding: 50px 0;
 }
+
 .kodereach-accordion-item {
     display: flex;
     align-items: stretch;
     gap: 20px;
 }
+
 .kodereach-accordion-item .servideAccordionImgCon {
     display: none;
 }
+
 .kodereach-accordion-item.active .servideAccordionImgCon {
     display: block;
     height: 100%;
 }
+
 .serviceAccordionCon .serviceAccordionConInner {
     width: 100%;
     position: relative;
@@ -1671,6 +1711,7 @@ p.description {
     align-items: center;
     margin: 40px 0;
 }
+
 /*
 .kodereach-accordion-content .author-info .author-avatar {
     border-radius: 50%;
@@ -1718,6 +1759,7 @@ p.description {
     object-position: center center;
     min-height: 300px;
 }
+
 /* service accordion section  */
 
 .custom-select-dropdown .btn-light {
@@ -2056,11 +2098,11 @@ p.description {
     font-size: 13px;
 }
 
-.btn-check:checked + .btn,
+.btn-check:checked+.btn,
 .btn.active,
 .btn.show,
 .btn:first-child:active,
-:not(.btn-check) + .btn:active {
+:not(.btn-check)+.btn:active {
     background: var(--secondary);
     color: var(--white);
     border: 1px solid var(--secondary);
@@ -2088,11 +2130,11 @@ p.description {
     /* border: 1px solid; */
 }
 
-.toggle__input:checked + .toggle__label {
+.toggle__input:checked+.toggle__label {
     background-color: var(--primary);
 }
 
-.toggle__input:checked + .toggle__label::after {
+.toggle__input:checked+.toggle__label::after {
     left: 32px;
 }
 
@@ -2277,8 +2319,7 @@ p.description {
 
 .industries_sec {
     padding: 40px 0px;
-    background: url("/assets/images/muslimlynkIndustries.png") no-repeat
-        center/cover;
+    background: url("/assets/images/muslimlynkIndustries.png") no-repeat center/cover;
     position: relative;
 }
 
@@ -3238,8 +3279,7 @@ span.user_profile_name_h {
     align-content: end;
 }
 
-.industryProfileMainImg {
-}
+.industryProfileMainImg {}
 
 .industryProfileImg {
     width: 100%;
@@ -3468,6 +3508,36 @@ p.industryProfileRole {
     .drawer_links li a:hover {
         text-decoration: underline;
     }
+
+    #productModal .modal-content {
+        flex-direction: column !important;
+        margin-top: 90px;
+    }
+
+    .productModalContent {
+        padding: 10px 0 !important;
+        min-height: fit-content !important;
+    }
+
+    #productModal .modal-dialog.modal-lg {
+        padding: 20px;
+        margin: 0;
+    }
+
+    #productModal .modal-footer {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    #productModal .direct-message-btn {
+        max-width: 100% !important;
+        height: 60px !important;
+    }
+
+    .productModalUserProfileBox {
+        max-width: 100% !important;
+        margin-top: 20px !important;
+    }
 }
 
 @media (max-width: 1399px) {
@@ -3503,6 +3573,7 @@ p.industryProfileRole {
     .leadGenSec .container .leadGenBoxMain {
         flex-direction: column;
     }
+
     .slide {
         width: 100%;
     }
@@ -3510,6 +3581,7 @@ p.industryProfileRole {
     .sliderArrows {
         margin-top: 20px;
     }
+
     .productSliderSection .container {
         padding: 0 20px;
         flex-direction: column-reverse;
@@ -3563,6 +3635,7 @@ p.industryProfileRole {
     h3.kodereach-accordion-title {
         font-size: 28px;
     }
+
     p.description {
         font-size: 16px;
     }
@@ -3576,8 +3649,9 @@ p.industryProfileRole {
         padding: 4px 11px 8px;
     }
 
-    h2.industriesMainHeading {
-        font-size: 44px;
+    h2.industriesMainHeading,
+    h5.customHeading {
+        font-size: 44px !important;
     }
 }
 
@@ -3598,6 +3672,7 @@ p.industryProfileRole {
 }
 
 @media only screen and (max-width: 768px) {
+
     .industry-heading .subHeading {
         font-size: 14px;
         padding: 7px 17px;
@@ -3804,9 +3879,11 @@ p.industryProfileRole {
         justify-content: start;
         gap: 0;
     }
+
     .top-controls label {
         font-size: 12.33px;
     }
+
     .record-info {
         font-size: 12.33px;
     }
@@ -3821,9 +3898,11 @@ p.industryProfileRole {
         flex-direction: column;
         padding: 8px 20px;
     }
+
     .industry-profile-card .profile-pic {
         width: -webkit-fill-available;
     }
+
     .profile-pic img {
         width: 100%;
         height: 300px;
