@@ -181,6 +181,8 @@
         .main-content {
             width: 100%;
             flex: 1;
+            height: calc(100vh - 109px);
+            overflow-x: hidden;
         }
 
         .new_user_details .form-check-row {
@@ -303,9 +305,9 @@
             <div class="custom_card_profile">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="user-details" data-bs-toggle="tab" data-bs-target="#user-details-pane"
-                            type="button" role="tab" aria-controls="user-details-pane"
-                            aria-selected="true">Personal</button>
+                        <button class="nav-link active" id="user-details" data-bs-toggle="tab"
+                            data-bs-target="#user-details-pane" type="button" role="tab"
+                            aria-controls="user-details-pane" aria-selected="true">Personal</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link " id="company-details-tab" data-bs-toggle="tab"
@@ -323,8 +325,8 @@
 
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="user-details-pane" role="tabpanel" aria-labelledby="user-details"
-                        tabindex="0">
+                    <div class="tab-pane fade show active" id="user-details-pane" role="tabpanel"
+                        aria-labelledby="user-details" tabindex="0">
                         <div class="new_user_details">
                             <form action="{{ route('user.details.update') }}" method="POST" enctype="multipart/form-data"
                                 id="user_details">

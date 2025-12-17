@@ -1108,6 +1108,9 @@ div.selected-filter-group {
 
 .navbar_d_flex {
     display: flex;
+    height: 100%;
+    align-items: stretch;
+    margin: 140px 0 0 0;
 }
 
 /* Toggler Button styles */
@@ -2100,7 +2103,13 @@ p.description {
 
 .user_company_profile .new_user_details .list_check_flex label {
     margin: 0px;
-    font-size: 13px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+    border-radius: 4px;
+    padding: 5px 11px 6px 11px;
+    border: 1px solid #e9ebf0;
 }
 
 .btn-check:checked + .btn,
