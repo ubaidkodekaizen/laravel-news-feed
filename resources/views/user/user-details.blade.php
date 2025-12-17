@@ -124,6 +124,10 @@
             border-radius: 9.77px;
         }
 
+        .new_user_details .accordion-item:last-child {
+            margin: 0;
+        }
+
         .new_user_details .accordion-button {
             background: transparent !important;
             font-family: Poppins;
@@ -247,6 +251,7 @@
             line-height: 100%;
             letter-spacing: 0px;
             text-align: center;
+            margin: 26px 0 0 0;
         }
 
         .profileTooltip {
@@ -298,12 +303,12 @@
             <div class="custom_card_profile">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link " id="user-details" data-bs-toggle="tab" data-bs-target="#user-details-pane"
+                        <button class="nav-link active" id="user-details" data-bs-toggle="tab" data-bs-target="#user-details-pane"
                             type="button" role="tab" aria-controls="user-details-pane"
                             aria-selected="true">Personal</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="company-details-tab" data-bs-toggle="tab"
+                        <button class="nav-link " id="company-details-tab" data-bs-toggle="tab"
                             data-bs-target="#company-details-tab-pane" type="button" role="tab"
                             aria-controls="company-details-tab-pane" aria-selected="false">Professional</button>
                     </li>
@@ -318,7 +323,7 @@
 
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade " id="user-details-pane" role="tabpanel" aria-labelledby="user-details"
+                    <div class="tab-pane fade show active" id="user-details-pane" role="tabpanel" aria-labelledby="user-details"
                         tabindex="0">
                         <div class="new_user_details">
                             <form action="{{ route('user.details.update') }}" method="POST" enctype="multipart/form-data"
@@ -443,19 +448,19 @@
 
                                 <div class="row">
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="first_name">First Name<span class="text-danger">*</span></label>
                                         <input type="text" name="first_name" id="first_name" class="form-control"
                                             value="{{ old('first_name', $user->first_name) }}">
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="last_name">Last Name<span class="text-danger">*</span></label>
                                         <input type="text" name="last_name" id="last_name" class="form-control"
                                             value="{{ old('last_name', $user->last_name) }}">
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="phone" class="toggle_flex">Cell / Mobile<span
                                                 class="text-danger">* </span>
                                             <div class="cont">
@@ -474,7 +479,7 @@
                                             value="{{ old('phone', $user->phone) }}">
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="email">Email<span class="text-danger">*</span>
                                             <div class="cont">
                                                 (Private
@@ -493,34 +498,34 @@
                                     </div>
 
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="city">City<span class="text-danger">*</span></label>
                                         <input type="text" name="city" id="city" class="form-control"
                                             value="{{ old('city', $user->city) }}">
                                         {{-- {!! \App\Helpers\DropDownHelper::renderCityDropdownForUser($user->state, $user->city) !!} --}}
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="county">County</label>
                                         <input type="text" name="county" id="county" class="form-control"
                                             value="{{ old('county', $user->county) }}">
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="state">State</label>
                                         <input type="text" name="state" id="state" class="form-control"
                                             value="{{ old('state', $user->state) }}">
                                         {{-- {!! \App\Helpers\DropDownHelper::renderStateDropdownForUser($user->country, $user->state) !!} --}}
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="zip_code">Zip Code</label>
                                         <input type="text" name="zip_code" id="zip_code" class="form-control"
                                             value="{{ old('zip_code', $user->zip_code) }}">
                                         {{-- {!! \App\Helpers\DropDownHelper::renderStateDropdownForUser($user->country, $user->state) !!} --}}
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="country">Country<span class="text-danger">*</span></label>
                                         <input type="text" name="country" id="country" class="form-control"
                                             value="{{ old('country', $user->country) }}">
@@ -532,14 +537,14 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="mosque_id">Mosque<span class="text-danger">*</span></label>
                                         <select name="mosque_id" id="mosque_id" class="form-select">
                                             <option value="">Select Mosque</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-lg-6 newMosqueCol d-none">
+                                    <div class="col-lg-3 newMosqueCol d-none">
                                         <label for="mosque">Suggest New Mosque<span class="text-danger">*</span></label>
                                         <input type="text" name="mosque" id="mosque" class="form-control"
                                             value="{{ old('mosque', $user->mosque) }}">
@@ -547,7 +552,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="gender">Gender</label>
                                         <select name="gender" id="gender" class="form-select">
                                             <option value="Male" {{ $user->gender === 'Male' ? 'selected' : '' }}>Male
@@ -564,7 +569,7 @@
                                     </div>
 
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="age_group">Age Group</label>
                                         <select name="age_group" id="age_group" class="form-select">
                                             <option value="20-30" {{ $user->age_group === '20-30' ? 'selected' : '' }}>
@@ -583,7 +588,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="ethnicity">Ethnicity</label>
                                         <fieldset>
                                             <select class="form-select dropdown" id="ethnicity" name="ethnicity">
@@ -661,7 +666,7 @@
                                         </fieldset>
                                     </div>
 
-                                    <div class="col-lg-6" id="other-ethnicity-div"
+                                    <div class="col-lg-3" id="other-ethnicity-div"
                                         style="{{ $user->ethnicity === 'Other' ? '' : 'display: none;' }}">
                                         <label for="other-ethnicity">Please specify your ethnicity</label>
                                         <input type="text" class="form-control" id="other-ethnicity"
@@ -670,12 +675,12 @@
                                     </div>
 
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="nationality">Nationality</label>
                                         {!! \App\Helpers\DropDownHelper::nationalityDropdown($user->nationality) !!}
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="languages">Languages</label>
                                         <div class="languages-input-container">
                                             <input type="text" id="language-input" name="language-input"
@@ -693,7 +698,7 @@
 
 
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="marital_status">Marital Status</label>
                                         <select name="marital_status" id="marital_status" class="form-select">
                                             <option value="Single"
@@ -713,7 +718,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-lg-6" id="other-marital-status-div"
+                                    <div class="col-lg-3" id="other-marital-status-div"
                                         style="{{ $user->marital_status === 'Other' ? '' : 'display: none;' }}">
                                         <label for="other-marital-status">Please specify your marital status</label>
                                         <input type="text" class="form-control" id="other-marital-status"
@@ -723,7 +728,7 @@
 
 
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="linkedin_url">LinkedIn<span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <div class="input-group-text">https://www.linkedin.com/in/</div>
@@ -735,34 +740,34 @@
                                             value="">
 
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="facebook_url">Facebook</label>
                                         <input type="text" name="facebook_url" id="facebook_url" class="form-control"
                                             value="{{ old('facebook_url', $user->facebook_url) }}" placeholder="Link">
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="x_url">X (Formerly Twitter)</label>
                                         <input type="text" name="x_url" id="x_url" class="form-control"
                                             value="{{ old('x_url', $user->x_url) }}" placeholder="Link">
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="instagram">Instagram</label>
                                         <input type="text" name="instagram_url" id="instagram" class="form-control"
                                             placeholder="Link" value="{{ old('x_url', $user->instagram_url) }}">
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="tikTok">TikTok</label>
                                         <input type="text" name="tiktok_url" id="tikTok" class="form-control"
                                             placeholder="Link" value="{{ old('x_url', $user->tiktok_url) }}">
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-3">
                                         <label for="youTube">YouTube</label>
                                         <input type="text" name="youtube_url" id="youTube" class="form-control"
                                             placeholder="Link" value="{{ old('x_url', $user->youtube_url) }}">
                                     </div>
 
-                                    <div class="col-12 mt-5">
+                                    <div class="col-12 ">
                                         <button type="submit" class="btn btn-primary profileSaveBtn">Save</button>
                                     </div>
                                 </div>
@@ -770,7 +775,7 @@
                         </div>
 
                     </div>
-                    <div class="tab-pane fade show active" id="company-details-tab-pane" role="tabpanel"
+                    <div class="tab-pane fade " id="company-details-tab-pane" role="tabpanel"
                         aria-labelledby="company-details-tab" tabindex="0">
                         <div class="new_user_details">
                             <form action="{{ route('user.company.update') }}" method="POST"
@@ -1214,7 +1219,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 mt-4 text-start">
+                                <div class="col-12 text-start">
                                     <button type="submit" class="btn btn-primary profileSaveBtn">Save</button>
                                 </div>
 

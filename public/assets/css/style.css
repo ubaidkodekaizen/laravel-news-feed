@@ -2125,14 +2125,13 @@ p.description {
 
 .toggle__label {
     display: inline-block;
-    width: 60px;
-    height: 30px;
+    width: 35px;
+    height: 18px;
     background-color: red;
     border-radius: 99px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin: 0 !important;
-    /* border: 1px solid; */
 }
 
 .toggle__input:checked + .toggle__label {
@@ -2140,23 +2139,26 @@ p.description {
 }
 
 .toggle__input:checked + .toggle__label::after {
-    left: 32px;
+    left: 20px;
 }
 
 .toggle__label::after {
     content: "";
     position: absolute;
-    top: 2px;
+    top: 2.5px;
     left: 2px;
-    width: 26px;
-    height: 26px;
+    width: 13px;
+    height: 13px;
     background-color: var(--white);
     border-radius: 50%;
     transition: left 0.3s ease;
 }
 
 .cont {
-    display: inline;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
 .new_user_details .languages-input-container {
