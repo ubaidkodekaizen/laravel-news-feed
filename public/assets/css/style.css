@@ -212,19 +212,27 @@ body {
     justify-content: end;
 }
 
+.profile_pic {
+    height: 224px;
+    width: 236px;
+    padding: 0;
+    margin: 0 0 32px 0;
+}
 .avatar-upload {
     position: relative;
-    max-width: 310px;
-    margin: 50px auto;
+    margin: 0 auto 0 0;
 }
 
 .avatar-upload .avatar-edit {
     position: absolute;
-    right: 12px;
+    right: -12px;
     z-index: 1;
-    top: 10px;
+    top: -12px;
 }
-
+.avatar-upload .avatar-edit label {
+    background-color: #b8c035 !important;
+    margin: 0 !important;
+}
 .avatar-upload .avatar-edit input {
     display: none;
 }
@@ -237,7 +245,6 @@ body {
     border-radius: 100%;
     background: #ffffff;
     border: 1px solid transparent;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
     cursor: pointer;
     font-weight: normal;
     transition: all 0.2s ease-in-out;
@@ -261,21 +268,18 @@ body {
 }
 
 .avatar-upload .avatar-preview {
-    height: 300px;
-    width: 300px;
+    height: 100%;
+    width: 100%;
     position: relative;
-    border-radius: 10px;
-    /* border: 6px solid #F8F8F8; */
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-upload .avatar-preview > div {
-    height: 300px;
-    width: 300px;
+    height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 17px;
     overflow: hidden;
 }
 
@@ -387,12 +391,9 @@ body {
 }
 
 .user_company_profile {
-    padding: 20px 0px;
-    /* background: #2735720d; */
 }
 
 .user_company_profile .profile_pic img {
-    border-radius: 10px;
     height: auto;
     width: 100%;
     margin: 0 auto;
@@ -402,11 +403,9 @@ body {
 }
 
 .user_company_profile .custom_card_profile {
-    background: var(--white);
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 2px 2px 2px 2px #e0dada;
-    margin: 40px 0px 0px 0px;
+    padding: 0;
+    border-radius: 0;
+    margin: 0;
 }
 
 .card_profile_first {
@@ -459,19 +458,25 @@ body {
     margin: 30px 0px 0px 0px;
 }
 
-.user_company_profile .new_user_details input,
+/* .user_company_profile .new_user_details input,
 .user_company_profile .new_user_details select,
 .user_company_profile .new_user_details textarea {
     border: 1px solid var(--primary);
     border-radius: 10px;
     padding: 10px;
-}
+} */
 
 .user_company_profile .new_user_details label:not(.form-check-label) {
-    font-size: 18px;
-    font-weight: 500;
-    margin: 30px 0px 5px;
+    margin: 34px 0px 12px 0px;
     position: relative;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 100%;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }
 
 .user_company_profile .btn-flex {
@@ -2045,24 +2050,28 @@ p.description {
 }
 
 .custom_card_profile .nav-tabs {
-    justify-content: center;
+    justify-content: start;
     gap: 20px;
     border: none;
     margin-bottom: 40px;
 }
 
 .custom_card_profile .nav-tabs .nav-link {
-    padding: 10px 50px;
-    border: 1px solid;
+    padding: 10px 18px;
     border-radius: 10px;
-    font-weight: 600;
-    color: var(--primary);
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    color: #333333;
+    border: 1px solid #e9ebf0;
+    background: #f4f5fb;
 }
 
 .custom_card_profile .nav-tabs .nav-link.active {
-    background: var(--secondary);
-    color: var(--white);
-    border-color: var(--white);
+    color: #ffffff;
+    border-color: #273572;
+    background: #273572;
 }
 
 .list_check_flex {
@@ -2183,7 +2192,7 @@ p.description {
 }
 
 #dashboardMenu .nav-list .nav-items a {
-   display: flex;
+    display: flex;
     cursor: pointer;
     align-items: center;
     justify-content: flex-start;
@@ -2207,7 +2216,7 @@ p.description {
     color: var(--white);
 }
 
-#dashboardMenu .nav-list .nav-items a.active img{
+#dashboardMenu .nav-list .nav-items a.active img {
     filter: invert(3) brightness(1.5) !important;
 }
 
@@ -2216,7 +2225,7 @@ p.description {
     color: var(--white);
 }
 
-#dashboardMenu .nav-list .nav-items a:hover img{
+#dashboardMenu .nav-list .nav-items a:hover img {
     filter: invert(3) brightness(1.5) !important;
 }
 

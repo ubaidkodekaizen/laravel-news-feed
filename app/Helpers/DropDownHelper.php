@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Helpers;
+
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Service;
@@ -11,6 +12,164 @@ use DB;
 
 class DropDownHelper
 {
+
+
+    // Add these methods to your DropDownHelper class
+
+    public static function getDesignationsArray()
+    {
+        return DB::table('designations')->pluck('name')->toArray();
+    }
+
+    public static function getIndustriesArray()
+    {
+        return DB::table('industries')->pluck('name')->toArray();
+    }
+
+    // ============================================
+    // ICP FIELDS METHODS (Based on Specification)
+    // ============================================
+
+    /**
+     * Business Location (Geography)
+     * Field 2 from ICP specification
+     */
+    public static function getBusinessLocationsArray()
+    {
+        return [
+            'North America',
+            'South America',
+            'Europe',
+            'Middle East',
+            'Asia',
+            'Africa',
+            'Australia / Oceania',
+            'Global / Remote'
+        ];
+    }
+
+    /**
+     * Your Role (Decision Maker Role)
+     * Field 5 from ICP specification
+     */
+    public static function getCompanyRolesArray()
+    {
+        return [
+            'Founder / Co-Founder',
+            'CEO / Managing Director',
+            'CTO / Technical Head',
+            'CMO / Marketing Head',
+            'COO / Operations Head',
+            'Product Manager',
+            'IT Manager',
+            'Procurement / Purchasing Manager',
+            'Sales Manager',
+            'Consultant',
+            'Other'
+        ];
+    }
+
+    /**
+     * Current Business Challenges (Pain Points)
+     * Field 6 from ICP specification
+     */
+    public static function getCurrentBusinessChallengesArray()
+    {
+        return [
+            'Low lead generation',
+            'High customer acquisition cost',
+            'Poor conversion rates',
+            'Manual or inefficient processes',
+            'Scaling issues',
+            'Technology limitations',
+            'Lack of automation',
+            'Integration problems',
+            'High operational costs',
+            'Data/security concerns',
+            'Compliance issues'
+        ];
+    }
+
+    /**
+     * Business Goals
+     * Field 7 from ICP specification
+     */
+    public static function getBusinessGoalsArray()
+    {
+        return [
+            'Increase revenue',
+            'Reduce operational costs',
+            'Improve efficiency',
+            'Scale operations',
+            'Enter new markets',
+            'Improve customer retention',
+            'Launch new product/service',
+            'Improve digital presence',
+            'Strengthen security & compliance'
+        ];
+    }
+
+    /**
+     * Technologies You Use (Optional)
+     * Field 8 from ICP specification
+     */
+    public static function getTechnologiesArray()
+    {
+        return [
+            'Laravel',
+            'Node.js',
+            'React',
+            'Angular',
+            'Vue.js',
+            'PHP',
+            'Python',
+            'Salesforce',
+            'HubSpot',
+            'Stripe',
+            'AWS',
+            'Google Cloud',
+            'Azure',
+            'MySQL',
+            'PostgreSQL',
+            'Other'
+        ];
+    }
+
+    /**
+     * Buying Process (Optional)
+     * Field 9 from ICP specification
+     */
+    public static function getBuyingProcessArray()
+    {
+        return [
+            'Founder-led decisions',
+            'Manager approval required',
+            'Multiple stakeholders involved',
+            'Committee-based decision',
+            'Procurement-driven process'
+        ];
+    }
+
+    /**
+     * Company Attributes (Optional)
+     * Field 10 from ICP specification
+     */
+    public static function getCompanyAttributesArray()
+    {
+        return [
+            'B2B',
+            'B2C',
+            'B2B2C',
+            'Startup',
+            'SMB',
+            'Enterprise',
+            'Remote-first',
+            'Hybrid',
+            'Bootstrapped',
+            'Venture-funded'
+        ];
+    }
+
 
     //Search Bar country Dropdown
     public static function countryDropdown()
@@ -664,14 +823,4 @@ class DropDownHelper
 
         return $options;
     }
-
-
-
-
-
-
-
-
-
-
 }

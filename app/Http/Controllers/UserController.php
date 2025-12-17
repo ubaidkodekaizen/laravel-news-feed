@@ -77,7 +77,6 @@ class UserController extends Controller
             } else {
                 return redirect()->route('admin.dashboard');
             }
-
         }
 
         return back()->withErrors([
@@ -90,7 +89,29 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $company = Company::where('user_id', $user->id)->first();
-        return view('user.user-details', compact('user', 'company'));
+
+        // Get dropdown data
+        $designations = \App\Helpers\DropDownHelper::getDesignationsArray();
+        $industries = \App\Helpers\DropDownHelper::getIndustriesArray();
+
+
+        // ICP dropdown data
+        $business_locations = \App\Helpers\DropDownHelper::getBusinessLocationsArray();
+        // $company_roles = \App\Helpers\DropDownHelper::getCompanyRolesArray();
+        $business_challenges = \App\Helpers\DropDownHelper::getCurrentBusinessChallengesArray();
+        $business_goals = \App\Helpers\DropDownHelper::getBusinessGoalsArray();
+        // $technologies = \App\Helpers\DropDownHelper::getTechnologiesArray();
+        // $buying_process = \App\Helpers\DropDownHelper::getBuyingProcessArray();
+        $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
+
+
+        return view('user.user-details', compact('user', 'company', 'designations', 'industries',  'business_locations',
+        // 'company_roles',
+        'business_challenges',
+        'business_goals',
+        // 'technologies',
+        // 'buying_process',
+        'company_attributes'));
     }
 
     public function updateUserDetails(Request $request)
@@ -160,7 +181,6 @@ class UserController extends Controller
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('profile_photos', 'public');
             $user->photo = $photoPath;
-
         }
         $user->status = 'complete';
         $user->save();
@@ -276,14 +296,4 @@ class UserController extends Controller
             'message' => 'Please provide either mosque_id or mosque name.',
         ], 422);
     }
-
-
-
-
-
-
-
-
-
-
 }

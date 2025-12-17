@@ -1,20 +1,309 @@
 @extends('layouts.dashboard-layout')
 
+
 @section('dashboard-content')
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+        rel="stylesheet" />
+    <style>
+        body {
+            overflow-y: hidden;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+            flex-direction: row-reverse;
+            background: #B8C034;
+            gap: 10px;
+            border-radius: 4px;
+            border: none;
+            margin: 0px 8px 8px 0px;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection {
+            background: #27357205;
+            border: 2px solid #E9EBF0;
+            box-shadow: none !important;
+            border-radius: 9.77px;
+            padding: 13px 13px 13px 13px;
+            min-height: 57px;
+        }
+
+
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove {
+            color: #000000;
+            filter: brightness(100) invert(1);
+        }
+
+        .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--selected,
+        .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option[aria-selected=true]:not(.select2-results__option--highlighted) {
+            color: black;
+            background-color: #B8C034;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 100%;
+            padding: 10px 10px;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-search {
+            height: unset;
+        }
+
+
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-search .select2-search__field {
+            border: 2px solid #E9EBF0;
+            width: 100% !important;
+            padding: 5px 6px;
+            height: 36px;
+            border-radius: 4px;
+        }
+
+        .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field {
+            border: 2px solid #E9EBF0;
+            width: 100% !important;
+            padding: 5px 6px;
+            height: 36px;
+            border-radius: 4px;
+        }
+
+        .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field:focus {
+            border: 2px solid #E9EBF0;
+            box-shadow: none;
+        }
+
+        .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+        .select2-container--bootstrap-5.select2-container--open .select2-selection {
+            border: 2px solid #E9EBF0;
+            box-shadow: none;
+        }
+
+        .select2-container--bootstrap-5 .select2-dropdown {
+            border: 2px solid #E9EBF0;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__clear,
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__clear {
+            top: 30px;
+            right: 15px;
+        }
+
+        .new_user_details .form-control {
+            background: #27357205;
+            border-radius: 9.77px;
+            border: 2px solid #E9EBF0;
+            padding: 19px 16px;
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 100%;
+            color: #000;
+        }
+
+        .new_user_details .input-group {
+            min-height: 61px;
+        }
+
+        .new_user_details #company_linkedin_user {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            height: 100%;
+            width: 30%;
+            background: #fff;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .new_user_details .accordion-item {
+            background: #F9F9F9;
+            margin: 0px 0px 14px 0px;
+            border-radius: 9.77px;
+        }
+
+        .new_user_details .accordion-button {
+            background: transparent !important;
+            font-family: Poppins;
+            font-weight: 600 !important;
+            font-size: 20px !important;
+            line-height: 100%;
+            color: #273572 !important;
+            padding: 25px 35px 22px 33px;
+            border-top-left-radius: 9.77px !important;
+            border-top-right-radius: 9.77px !important;
+        }
+
+
+
+        .new_user_details .accordion-button::before {
+            height: 36px;
+            width: 36px;
+            content: "";
+            background-color: #273572;
+            border-radius: 50%;
+            position: absolute;
+            right: 35px;
+        }
+
+        .new_user_details .accordion-button::after {
+            position: absolute;
+            right: 35px;
+            height: 36px;
+            width: 36px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-position: center center;
+            filter: invert(1) brightness(100);
+        }
+
+        .new_user_details .accordion-body {
+            padding: 25px 30px 79px 30px;
+        }
+
+        .new_user_details .accordion-item:last-of-type>.accordion-header .accordion-button.collapsed {
+            border-top: 1px solid #E9EBF0;
+        }
+
+        .sidebar {
+            width: 100%;
+            max-width: 16%;
+        }
+
+        .main-content {
+            width: 100%;
+            flex: 1;
+        }
+
+        .new_user_details .form-check-row {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 18px;
+            min-height: 57px;
+        }
+
+        .new_user_details .form-check-row .form-check {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 12px;
+            padding: 0;
+        }
+
+        .new_user_details .form-check-row label {
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 100%;
+            color: #000000;
+            margin: 0;
+            position: relative;
+            padding-left: 26px;
+            cursor: pointer;
+        }
+
+
+
+        .new_user_details .form-check-row .form-check input[type="radio"] {
+            display: none;
+        }
+
+
+        .new_user_details .form-check-row .form-check label::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 1px solid #273572;
+            border-radius: 50%;
+        }
+
+        .form-check-row .form-check input[type="radio"]:checked+label::after {
+            content: "";
+            position: absolute;
+            left: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #B8C034;
+            border-radius: 50%;
+        }
+
+        .profileSaveBtn {
+            border-radius: 9.77px;
+            padding: 15px 56px;
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            font-size: 22px;
+            line-height: 100%;
+            letter-spacing: 0px;
+            text-align: center;
+        }
+
+        .profileTooltip {
+            margin: 0px 0px 0px 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profileTooltipText {
+            visibility: hidden;
+            opacity: 0;
+            transition: .3s;
+            position: absolute;
+            background: #273572;
+            width: 283px;
+            z-index: 9999;
+            bottom: 35px;
+            left: -33px;
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 100%;
+            color: #FFFFFF;
+            padding: 12px 14px;
+            border-radius: 7px;
+            user-select: none;
+        }
+
+        .profileTooltip:hover .profileTooltipText {
+            visibility: visible;
+            opacity: 1;
+            transition: .3s;
+        }
+
+        .profileTooltipTextCurve {
+            background: #273572;
+            border-radius: 4px;
+            width: 40px;
+            height: 40px;
+            transform: rotate(46deg) skew(3deg, 360deg);
+            position: absolute;
+            bottom: -5px;
+            left: 20px;
+            z-index: -1;
+        }
+    </style>
     <section class="user_company_profile">
         <div class="container">
             <div class="custom_card_profile">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="user-details" data-bs-toggle="tab"
-                            data-bs-target="#user-details-pane" type="button" role="tab"
-                            aria-controls="user-details-pane" aria-selected="true">Personal</button>
+                        <button class="nav-link " id="user-details" data-bs-toggle="tab" data-bs-target="#user-details-pane"
+                            type="button" role="tab" aria-controls="user-details-pane"
+                            aria-selected="true">Personal</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="company-details-tab" data-bs-toggle="tab"
+                        <button class="nav-link active" id="company-details-tab" data-bs-toggle="tab"
                             data-bs-target="#company-details-tab-pane" type="button" role="tab"
                             aria-controls="company-details-tab-pane" aria-selected="false">Professional</button>
                     </li>
@@ -29,134 +318,129 @@
 
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="user-details-pane" role="tabpanel"
-                        aria-labelledby="user-details" tabindex="0">
+                    <div class="tab-pane fade " id="user-details-pane" role="tabpanel" aria-labelledby="user-details"
+                        tabindex="0">
                         <div class="new_user_details">
                             <form action="{{ route('user.details.update') }}" method="POST" enctype="multipart/form-data"
                                 id="user_details">
                                 @csrf
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h1 class="profile_heading text-center">
-                                            Personal Information
-                                        </h1>
-                                        <div class="profile_pic">
-                                            <div class="avatar-upload mb-3">
-                                                <div class="avatar-edit">
-                                                    <input type='file' id="imageUpload" name="photo"
-                                                        accept=".png, .jpg, .jpeg" />
-                                                    <label for="imageUpload"></label>
-                                                </div>
-                                                <div class="avatar-preview">
-                                                    <div id="imagePreview">
-                                                        <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
-                                                            alt="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <label class="form-label text-center w-100 mt-0">Upload Photo</label>
+
+
+                                <div class="profile_pic">
+                                    <div class="avatar-upload mb-3">
+                                        <div class="avatar-edit">
+                                            <input type='file' id="imageUpload" name="photo"
+                                                accept=".png, .jpg, .jpeg" />
+                                            <label for="imageUpload"></label>
                                         </div>
-
-                                    </div>
-                                    <div class="col-12">
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
+                                        <div class="avatar-preview">
+                                            <div id="imagePreview">
+                                                <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                                    alt="">
                                             </div>
-                                        @endif
+                                        </div>
                                     </div>
-                                    <div class="col-12">
-                                        <label for="list_check_flex">Are You?<span class="text-danger">*</span> (Select all
-                                            that Apply)</label>
-                                        <ul class="list_check_flex">
-                                            @php
-                                                $selectedAreYou = explode(', ', $user->user_position ?? ''); // Split stored values into an array
-                                            @endphp
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="accredited_investor"
-                                                    name="are_you[]" value="Accredited Investor"
-                                                    {{ in_array('Accredited Investor', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="accredited_investor">Accredited Investor</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="business_owner"
-                                                    name="are_you[]" value="Business Owner"
-                                                    {{ in_array('Business Owner', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="business_owner">Business Owner</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="board_member_advisor"
-                                                    name="are_you[]" value="Board Member / Advisor"
-                                                    {{ in_array('Board Member / Advisor', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="board_member_advisor">Board Member / Advisor</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="corporate_executive"
-                                                    name="are_you[]" value="Corporate Executive"
-                                                    {{ in_array('Corporate Executive', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="corporate_executive">Corporate Executive</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="educator_academia"
-                                                    name="are_you[]" value="Educator / Academia"
-                                                    {{ in_array('Educator / Academia', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="educator_academia">Educator / Academia</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="govt_public_sector_leader"
-                                                    name="are_you[]" value="Govt/Public Sector Leader"
-                                                    {{ in_array('Govt/Public Sector Leader', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="govt_public_sector_leader">Govt/Public Sector Leader</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="industry_expert"
-                                                    name="are_you[]" value="Industry Expert"
-                                                    {{ in_array('Industry Expert', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="industry_expert">Industry Expert</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="job_seeker"
-                                                    name="are_you[]" value="Job Seeker"
-                                                    {{ in_array('Job Seeker', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn" for="job_seeker">Job
-                                                    Seeker</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="non_profit_leader"
-                                                    name="are_you[]" value="Non-Profit Leader"
-                                                    {{ in_array('Non-Profit Leader', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="non_profit_leader">Non-Profit Leader</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="investment_seeker"
-                                                    name="are_you[]" value="Investment Seeker"
-                                                    {{ in_array('Investment Seeker', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="investment_seeker">Investment Seeker</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" class="btn-check" id="student_intern"
-                                                    name="are_you[]" value="Student / Intern"
-                                                    {{ in_array('Student / Intern', $selectedAreYou) ? 'checked' : '' }}>
-                                                <label class="btn btn-outline-secondary custom_btn"
-                                                    for="student_intern">Student / Intern</label>
-                                            </li>
-                                        </ul>
-                                    </div>
-
                                 </div>
+
+                                <div class="col-12">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-12">
+                                    <label for="list_check_flex">Are You?<span class="text-danger">*</span> (Select all
+                                        that Apply)</label>
+                                    <ul class="list_check_flex">
+                                        @php
+                                            $selectedAreYou = explode(', ', $user->user_position ?? ''); // Split stored values into an array
+                                        @endphp
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="accredited_investor"
+                                                name="are_you[]" value="Accredited Investor"
+                                                {{ in_array('Accredited Investor', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="accredited_investor">Accredited Investor</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="business_owner" name="are_you[]"
+                                                value="Business Owner"
+                                                {{ in_array('Business Owner', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="business_owner">Business Owner</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="board_member_advisor"
+                                                name="are_you[]" value="Board Member / Advisor"
+                                                {{ in_array('Board Member / Advisor', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="board_member_advisor">Board Member / Advisor</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="corporate_executive"
+                                                name="are_you[]" value="Corporate Executive"
+                                                {{ in_array('Corporate Executive', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="corporate_executive">Corporate Executive</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="educator_academia"
+                                                name="are_you[]" value="Educator / Academia"
+                                                {{ in_array('Educator / Academia', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="educator_academia">Educator / Academia</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="govt_public_sector_leader"
+                                                name="are_you[]" value="Govt/Public Sector Leader"
+                                                {{ in_array('Govt/Public Sector Leader', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="govt_public_sector_leader">Govt/Public Sector Leader</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="industry_expert"
+                                                name="are_you[]" value="Industry Expert"
+                                                {{ in_array('Industry Expert', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="industry_expert">Industry Expert</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="job_seeker" name="are_you[]"
+                                                value="Job Seeker"
+                                                {{ in_array('Job Seeker', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn" for="job_seeker">Job
+                                                Seeker</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="non_profit_leader"
+                                                name="are_you[]" value="Non-Profit Leader"
+                                                {{ in_array('Non-Profit Leader', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="non_profit_leader">Non-Profit Leader</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="investment_seeker"
+                                                name="are_you[]" value="Investment Seeker"
+                                                {{ in_array('Investment Seeker', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="investment_seeker">Investment Seeker</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" class="btn-check" id="student_intern"
+                                                name="are_you[]" value="Student / Intern"
+                                                {{ in_array('Student / Intern', $selectedAreYou) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-secondary custom_btn"
+                                                for="student_intern">Student / Intern</label>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
                                 <div class="row">
 
                                     <div class="col-lg-6">
@@ -479,186 +763,461 @@
                                     </div>
 
                                     <div class="col-12 mt-5">
-                                        <button type="submit" class="btn btn-primary w-100">Save</button>
+                                        <button type="submit" class="btn btn-primary profileSaveBtn">Save</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
 
                     </div>
-                    <div class="tab-pane fade" id="company-details-tab-pane" role="tabpanel"
+                    <div class="tab-pane fade show active" id="company-details-tab-pane" role="tabpanel"
                         aria-labelledby="company-details-tab" tabindex="0">
                         <div class="new_user_details">
                             <form action="{{ route('user.company.update') }}" method="POST"
                                 enctype="multipart/form-data" id="user_company">
                                 @csrf
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h1 class="profile_heading text-center mt-0">
-                                            Professional Information
-                                        </h1>
-                                        <div class="profile_pic">
-                                            <div class="avatar-upload mb-3">
-                                                <div class="avatar-edit">
-                                                    <input type='file' id="imageUploadCompany" name="company_logo"
-                                                        accept=".png, .jpg, .jpeg" />
-                                                    <label for="imageUploadCompany"></label>
+
+
+
+                                <div class="profile_pic">
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input type='file' id="imageUploadCompany" name="company_logo"
+                                                accept=".png, .jpg, .jpeg" />
+                                            <label for="imageUploadCompany"></label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            <div id="imagePreviewCompany">
+                                                <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
+                                                    alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-12">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                </div>
+
+
+                                <div class="accordion" id="professionalTabs">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseOne" aria-expanded="true"
+                                                aria-controls="collapseOne">
+                                                Basic Details
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse show"
+                                            aria-labelledby="headingOne" data-bs-parent="#professionalTabs">
+                                            <div class="accordion-body">
+                                                <div class="row">
+                                                    <!-- Company Name -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_name">Company Name</label>
+                                                        <input type="text" name="company_name" id="company_name"
+                                                            class="form-control"
+                                                            value="{{ old('company_name', $company->company_name ?? '') }}">
+                                                    </div>
+
+
+                                                    <div class="col-lg-3">
+                                                        <label for="company_web_url">Company URL</label>
+                                                        <input type="text" name="company_web_url" id="company_web_url"
+                                                            class="form-control"
+                                                            value="{{ old('company_web_url', $company->company_web_url ?? '') }}">
+                                                    </div>
+
+
+
+
+                                                    <div class="col-lg-3">
+                                                        <label for="company_position">Title/Designation</label>
+                                                        <select name="company_position_display" id="company_position"
+                                                            class="form-select" multiple>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_position_hidden"
+                                                            name="company_position"
+                                                            value="{{ old('company_position', $company->company_position ?? '') }}" />
+                                                    </div>
+
+
+
+                                                    <div class="col-lg-3 company_position_other_div d-none">
+                                                        <label for="company_position_other">Title/Designation Other</label>
+                                                        <input type="text" name="company_position_other"
+                                                            id="company_position_other" class="form-control"
+                                                            value="">
+                                                    </div>
+                                                    <div class="col-lg-3 custom-select-dropdown mt-0">
+                                                        <label for="company_experience">Years of Experience</label>
+                                                        <select name="company_experience" id="company_experience"
+                                                            class="form-select">
+                                                            <option value="Under 1"
+                                                                {{ optional($company)->company_experience == 'Under 1' ? 'selected' : '' }}>
+                                                                Under 1
+                                                            </option>
+                                                            <option value="1-5 years"
+                                                                {{ optional($company)->company_experience == '1-5 years' ? 'selected' : '' }}>
+                                                                1-5 years
+                                                            </option>
+                                                            <option value="5-10 years"
+                                                                {{ optional($company)->company_experience == '5-10 years' ? 'selected' : '' }}>
+                                                                5-10 years
+                                                            </option>
+                                                            <option value="10-20 years"
+                                                                {{ optional($company)->company_experience == '10-20 years' ? 'selected' : '' }}>
+                                                                10-20 years
+                                                            </option>
+                                                            <option value="20+ years"
+                                                                {{ optional($company)->company_experience == '20+ years' ? 'selected' : '' }}>
+                                                                20+ years
+                                                            </option>
+                                                        </select>
+
+                                                    </div>
+
+
                                                 </div>
-                                                <div class="avatar-preview">
-                                                    <div id="imagePreviewCompany">
-                                                        <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
-                                                            alt="">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <label for="work_phone_num">Work Phone Number</label>
+                                                        <input type="tel" name="company_phone" id="company_phone"
+                                                            class="form-control phone_number"
+                                                            value="{{ old('company_phone', $company->company_phone ?? '') }}">
+                                                    </div>
+                                                    <!-- Company Linkedin URL -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_linkedin_user">Company LinkedIn Page</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-text">https://www.linkedin.com/company/
+                                                            </div>
+                                                            <input type="text" name="company_linkedin_user"
+                                                                id="company_linkedin_user" class="form-control"
+                                                                value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}">
+                                                        </div>
+                                                        <input type="hidden" name="company_linkedin_url"
+                                                            id="company_linkedin_url_hidden" value="">
+
+                                                    </div>
+
+
+
+                                                    {{-- <div class="col-lg-3">
+                                                        <label for="company_industry">Industry</label>
+                                                        <select name="company_industry_display" id="company_industry"
+                                                            class="form-select" multiple>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_industry_hidden"
+                                                            name="company_industry"
+                                                            value="{{ old('company_industry', $company->company_industry ?? '') }}" />
+                                                    </div>
+
+                                                    <div class="col-lg-3 company_industry_other_div d-none">
+                                                        <label for="company_industry_other">Industry Other</label>
+                                                        <input type="text" name="company_industry_other"
+                                                            id="company_industry_other" class="form-control"
+                                                            value="">
+                                                    </div> --}}
+
+                                                    <!-- Business Type Dropdown -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_business_type">Company Type</label>
+                                                        {!! \App\Helpers\DropDownHelper::renderBusinessTypeDropdown($company->company_business_type ?? '') !!}
+                                                        <div id="business_type_other_field" style="display: none;">
+                                                            <label for="business_type_other">Other Company Type</label>
+                                                            <input type="text" name="company_business_type_other"
+                                                                id="business_type_other" class="form-control"
+                                                                placeholder="Enter other business type">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-3">
+                                                        <label for="company_revenue">Company Revenue:</label>
+                                                        {!! \App\Helpers\DropDownHelper::renderRevenueDropdown($company->company_revenue ?? '') !!}
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <!-- Company Revenue -->
+
+
+                                                    <!-- Number of Employees Dropdown -->
+                                                    {{-- <div class="col-lg-3">
+                                                        <label for="company_no_of_employee">Company No. of
+                                                            Employees</label>
+                                                        {!! \App\Helpers\DropDownHelper::renderEmployeeSizeDropdown($company->company_no_of_employee ?? '') !!}
+                                                    </div> --}}
+
+
+
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <label class="form-label text-center w-100 mt-0">Upload Logo</label>
                                     </div>
-                                    <div class="col-12">
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingTwo">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                aria-expanded="false" aria-controls="collapseTwo">
+                                                ICP Details
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse"
+                                            aria-labelledby="headingTwo" data-bs-parent="#professionalTabs">
+                                            <div class="accordion-body">
+                                                <div class="row">
+
+                                                    <!-- Industry Dropdown -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_industry">Industry <span
+                                                                class="text-danger">*</span>
+                                                            <div class="profileTooltip">
+                                                                <div class="profileTooltipText">
+                                                                    Select the industry your company primarily operates in.
+                                                                    <div class="profileTooltipTextCurve"></div>
+                                                                </div>
+                                                                <img src="{{ asset('assets/images/noticeIcon.png') }}"
+                                                                    class="img-fluid" alt="">
+                                                            </div>
+                                                        </label>
+                                                        <select name="company_industry_display" id="company_industry"
+                                                            class="form-select" required>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_industry_hidden"
+                                                            name="company_industry"
+                                                            value="{{ old('company_industry', $company->company_industry ?? '') }}" />
+                                                    </div>
+
+                                                    <div class="col-lg-3 company_industry_other_div d-none">
+                                                        <label for="company_industry_other">Industry Other</label>
+                                                        <input type="text" name="company_industry_other"
+                                                            id="company_industry_other" class="form-control"
+                                                            value="">
+                                                    </div>
+
+                                                    <!-- Business Location Dropdown -->
+                                                    <div class="col-lg-3">
+                                                        <label for="business_location">Business Location <span
+                                                                class="text-danger">*</span>
+                                                            <div class="profileTooltip">
+                                                                <div class="profileTooltipText">
+                                                                    Select the primary market or region where your business
+                                                                    operates.
+                                                                    <div class="profileTooltipTextCurve"></div>
+                                                                </div>
+                                                                <img src="{{ asset('assets/images/noticeIcon.png') }}"
+                                                                    class="img-fluid" alt="">
+                                                            </div>
+                                                        </label>
+                                                        <select name="business_location_display" id="business_location"
+                                                            class="form-select" required>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="business_location_hidden"
+                                                            name="business_location"
+                                                            value="{{ old('business_location', $company->business_location ?? '') }}" />
+                                                    </div>
+
+                                                    <!-- Company Size Dropdown -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_no_of_employee">Company Size <span
+                                                                class="text-danger">*</span>
+                                                            <div class="profileTooltip">
+                                                                <div class="profileTooltipText">
+                                                                    Choose the approximate size of your organization.
+                                                                    <div class="profileTooltipTextCurve"></div>
+                                                                </div>
+                                                                <img src="{{ asset('assets/images/noticeIcon.png') }}"
+                                                                    class="img-fluid" alt="">
+                                                            </div>
+                                                        </label>
+                                                        {!! \App\Helpers\DropDownHelper::renderEmployeeSizeDropdown($company->company_no_of_employee ?? '') !!}
+                                                    </div>
+
+
+                                                    <!-- Decision Maker -->
+                                                    <div class="col-lg-3">
+                                                        <label class="">Are You a Decision Maker? <span
+                                                                class="text-danger">*</span>
+                                                            <div class="profileTooltip">
+                                                                <div class="profileTooltipText">
+                                                                    Indicate whether you have authority to approve
+                                                                    purchases.
+                                                                    <div class="profileTooltipTextCurve"></div>
+                                                                </div>
+                                                                <img src="{{ asset('assets/images/noticeIcon.png') }}"
+                                                                    class="img-fluid" alt="">
+                                                            </div>
+
+                                                        </label>
+                                                        <div class="form-check-row">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="is_decision_maker" id="decision_maker_yes"
+                                                                    value="1"
+                                                                    {{ old('is_decision_maker', $company->is_decision_maker ?? '') == 1 ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="decision_maker_yes">
+                                                                    Yes
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="is_decision_maker" id="decision_maker_no"
+                                                                    value="0"
+                                                                    {{ old('is_decision_maker', $company->is_decision_maker ?? '') == 0 ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="decision_maker_no">
+                                                                    No
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <!-- Your Role -->
+                                                    {{-- <div class="col-lg-3">
+                                                        <label for="company_role">Your Role <span
+                                                                class="text-danger">*</span></label>
+                                                        <select name="company_role_display" id="company_role"
+                                                            class="form-select" required>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_role_hidden"
+                                                            name="company_role"
+                                                            value="{{ old('company_role', $company->company_role ?? '') }}" />
+                                                    </div> --}}
+
+                                                    <!-- Current Business Challenges -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_current_business_challenges">Current Business
+                                                            Challenges <span class="text-danger">*</span>
+                                                            <div class="profileTooltip">
+                                                                <div class="profileTooltipText">
+                                                                    Select the key challenges your business is currently
+                                                                    facing.
+                                                                    <div class="profileTooltipTextCurve"></div>
+                                                                </div>
+                                                                <img src="{{ asset('assets/images/noticeIcon.png') }}"
+                                                                    class="img-fluid" alt="">
+                                                            </div>
+                                                        </label>
+                                                        <select name="company_current_business_challenges_display"
+                                                            id="company_current_business_challenges" class="form-select"
+                                                            multiple required>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden"
+                                                            id="company_current_business_challenges_hidden"
+                                                            name="company_current_business_challenges"
+                                                            value="{{ old('company_current_business_challenges', $company->company_current_business_challenges ?? '') }}" />
+
+                                                    </div>
+
+                                                    <!-- Business Goals -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_business_goals">Business Goals <span
+                                                                class="text-danger">*</span>
+                                                            <div class="profileTooltip">
+                                                                <div class="profileTooltipText">
+                                                                    Select the goals you want to achieve in the next 6–12
+                                                                    months.
+                                                                    <div class="profileTooltipTextCurve"></div>
+                                                                </div>
+                                                                <img src="{{ asset('assets/images/noticeIcon.png') }}"
+                                                                    class="img-fluid" alt="">
+                                                            </div>
+                                                        </label>
+                                                        <select name="company_business_goals_display"
+                                                            id="company_business_goals" class="form-select" multiple
+                                                            required>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_business_goals_hidden"
+                                                            name="company_business_goals"
+                                                            value="{{ old('company_business_goals', $company->company_business_goals ?? '') }}" />
+
+                                                    </div>
+
+                                                    <!-- Technologies You Use -->
+                                                    {{-- <div class="col-lg-3">
+                                                        <label for="company_technologies_you_use">Technologies You
+                                                            Use</label>
+                                                        <select name="company_technologies_you_use_display"
+                                                            id="company_technologies_you_use" class="form-select" multiple
+                                                            required>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_technologies_you_use_hidden"
+                                                            name="company_technologies_you_use"
+                                                            value="{{ old('company_technologies_you_use', $company->company_technologies_you_use ?? '') }}" />
+
+                                                    </div> --}}
+
+
+                                                </div>
+                                                <div class="row">
+
+                                                    <!-- Buying Process -->
+                                                    {{-- <div class="col-lg-3">
+                                                        <label for="company_buying_process">Buying Process</label>
+                                                        <select name="company_buying_process_display"
+                                                            id="company_buying_process" class="form-select">
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_buying_process_hidden"
+                                                            name="company_buying_process"
+                                                            value="{{ old('company_buying_process', $company->company_buying_process ?? '') }}" />
+
+                                                    </div> --}}
+
+                                                    <!-- Company Attributes -->
+                                                    <div class="col-lg-3">
+                                                        <label for="company_attributes">Company Attributes
+                                                            <div class="profileTooltip">
+                                                                <div class="profileTooltipText">
+                                                                    Select attributes that best describe your company.
+                                                                    <div class="profileTooltipTextCurve"></div>
+                                                                </div>
+                                                                <img src="{{ asset('assets/images/noticeIcon.png') }}"
+                                                                    class="img-fluid" alt="">
+                                                            </div>
+                                                        </label>
+                                                        <select name="company_attributes_display" id="company_attributes"
+                                                            class="form-select" multiple>
+                                                            <!-- Options will be loaded via JavaScript -->
+                                                        </select>
+                                                        <input type="hidden" id="company_attributes_hidden"
+                                                            name="company_attributes"
+                                                            value="{{ old('company_attributes', $company->company_attributes ?? '') }}" />
+                                                    </div>
+
+                                                </div>
                                             </div>
-                                        @endif
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row align-items-end">
-                                    <!-- Company Name -->
-                                    <div class="col-lg-6">
-                                        <label for="company_name">Company Name</label>
-                                        <input type="text" name="company_name" id="company_name" class="form-control"
-                                            value="{{ old('company_name', $company->company_name ?? '') }}">
-                                    </div>
 
-
-                                    <div class="col-lg-6">
-                                        <label for="company_web_url">Company URL</label>
-                                        <input type="text" name="company_web_url" id="company_web_url"
-                                            class="form-control"
-                                            value="{{ old('company_web_url', $company->company_web_url ?? '') }}">
-                                    </div>
-
-
-
-                                    <div class="col-lg-6 custom-select-dropdown">
-                                        <label for="company_position">Title/Designation</label>
-
-                                        <div class="selected-tags my-2" id="selected-tags">
-                                            {{ $company->company_position ?? '' }}
-                                        </div>
-                                        <input type="hidden" id="company_position_hidden" name="company_position"
-                                            value="{{ old('company_position', $company->company_position ?? '') }}" />
-                                        {!! \App\Helpers\DropDownHelper::designationDropdown($company->company_position ?? '') !!}
-
-                                    </div>
-
-                                    <div class="col-lg-6 company_position_other_div d-none">
-                                        <label for="company_position_other">Title/Designation Other</label>
-                                        <input type="text" name="company_position_other" id="company_position_other"
-                                            class="form-control" value="">
-                                    </div>
-
-                                    <div class="col-lg-6 custom-select-dropdown mt-0">
-                                        <label for="company_experience">Years of Experience</label>
-                                        <select name="company_experience" id="company_experience" class="form-select">
-                                            <option value="Under 1"
-                                                {{ optional($company)->company_experience == 'Under 1' ? 'selected' : '' }}>
-                                                Under 1
-                                            </option>
-                                            <option value="1-5 years"
-                                                {{ optional($company)->company_experience == '1-5 years' ? 'selected' : '' }}>
-                                                1-5 years
-                                            </option>
-                                            <option value="5-10 years"
-                                                {{ optional($company)->company_experience == '5-10 years' ? 'selected' : '' }}>
-                                                5-10 years
-                                            </option>
-                                            <option value="10-20 years"
-                                                {{ optional($company)->company_experience == '10-20 years' ? 'selected' : '' }}>
-                                                10-20 years
-                                            </option>
-                                            <option value="20+ years"
-                                                {{ optional($company)->company_experience == '20+ years' ? 'selected' : '' }}>
-                                                20+ years
-                                            </option>
-                                        </select>
-
-                                    </div>
-
-
-                                    <div class="col-lg-6">
-                                        <label for="work_phone_num">Work Phone Number</label>
-                                        <input type="tel" name="company_phone" id="company_phone"
-                                            class="form-control phone_number"
-                                            value="{{ old('company_phone', $company->company_phone ?? '') }}">
-                                    </div>
-                                    <!-- Company Linkedin URL -->
-                                    <div class="col-lg-6">
-                                        <label for="company_linkedin_user">Company LinkedIn Page</label>
-                                        <div class="input-group">
-                                            <div class="input-group-text">https://www.linkedin.com/company/</div>
-                                            <input type="text" name="company_linkedin_user" id="company_linkedin_user"
-                                                class="form-control"
-                                                value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}">
-                                        </div>
-                                        <input type="hidden" name="company_linkedin_url"
-                                            id="company_linkedin_url_hidden" value="">
-
-                                    </div>
-
-                                    <div class="col-lg-6 custom-select-dropdown">
-                                        <label for="company_industry">Industry</label>
-                                        <div class="selected-tags-industry my-2" id="selected-tags-industry">
-                                            {{ $company->company_industry ?? '' }}
-                                        </div>
-                                        <input type="hidden" id="company_industry_hidden" name="company_industry"
-                                            value="{{ old('company_industry', $company->company_industry ?? '') }}" />
-                                        {!! \App\Helpers\DropDownHelper::industryDropdown($company->company_industry ?? '') !!}
-                                    </div>
-
-                                    <div class="col-lg-6 company_industry_other_div d-none">
-                                        <label for="company_industry_other">Industry Other</label>
-                                        <input type="text" name="company_industry_other" id="company_industry_other"
-                                            class="form-control" value="">
-                                    </div>
-
-
-
-
-                                    <!-- Business Type Dropdown -->
-                                    <div class="col-lg-6">
-                                        <label for="company_business_type">Company Type</label>
-                                        {!! \App\Helpers\DropDownHelper::renderBusinessTypeDropdown($company->company_business_type ?? '') !!}
-                                        <div id="business_type_other_field" style="display: none;">
-                                            <label for="business_type_other">Other Company Type</label>
-                                            <input type="text" name="company_business_type_other"
-                                                id="business_type_other" class="form-control"
-                                                placeholder="Enter other business type">
-                                        </div>
-                                    </div>
-
-                                    <!-- Company Revenue -->
-                                    <div class="col-lg-6">
-                                        <label for="company_revenue">Company Revenue:</label>
-                                        {!! \App\Helpers\DropDownHelper::renderRevenueDropdown($company->company_revenue ?? '') !!}
-                                    </div>
-
-                                    <!-- Number of Employees Dropdown -->
-                                    <div class="col-lg-6">
-                                        <label for="company_no_of_employee">Company No. of Employees</label>
-                                        {!! \App\Helpers\DropDownHelper::renderEmployeeSizeDropdown($company->company_no_of_employee ?? '') !!}
-                                    </div>
-
-
-                                    <div class="col-12 mt-4 text-end">
-                                        <button type="submit" class="btn btn-primary w-100">Save</button>
-                                    </div>
+                                <div class="col-12 mt-4 text-start">
+                                    <button type="submit" class="btn btn-primary profileSaveBtn">Save</button>
                                 </div>
+
                             </form>
                         </div>
                     </div>
@@ -675,6 +1234,10 @@
 @section('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         jQuery(document).ready(function($) {
 
@@ -840,6 +1403,347 @@
                     }
                 });
             });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR DESIGNATION
+            // ============================================
+
+            // Get designations from Blade (passed from controller)
+            const designations = @json($designations ?? []);
+
+            // Build options HTML
+            let designationOptions = '<option value="">Select Title/Designation</option>';
+            designations.forEach(function(item) {
+                designationOptions += `<option value="${item}">${item}</option>`;
+            });
+            designationOptions += '<option value="Other">Other</option>';
+
+            // Populate the select
+            $('#company_position').html(designationOptions);
+
+            // Initialize Select2
+            $('#company_position').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select or type Title/Designation',
+                allowClear: true,
+                multiple: true,
+                tags: true,
+                tokenSeparators: [','],
+                width: '100%'
+            });
+
+            // Set existing values
+            let existingDesignation = $('#company_position_hidden').val();
+            if (existingDesignation) {
+                let designationArray = existingDesignation.split(', ').filter(v => v.trim());
+                $('#company_position').val(designationArray).trigger('change');
+            }
+
+            // Handle changes
+            $('#company_position').on('change', function() {
+                let selectedValues = $(this).val();
+                $('#company_position_hidden').val(selectedValues ? selectedValues.join(', ') : '');
+
+                if (selectedValues && selectedValues.includes('Other')) {
+                    $('.company_position_other_div').removeClass('d-none');
+                } else {
+                    $('.company_position_other_div').addClass('d-none');
+                }
+            });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR INDUSTRY
+            // ============================================
+
+            // Get industries from Blade (passed from controller)
+
+            const industries = @json($industries ?? []);
+            console.log('Industries:', industries);
+            // Build options HTML
+            let industryOptions = '<option value="">Select Industry</option>';
+            industries.forEach(function(item) {
+                industryOptions += `<option value="${item}">${item}</option>`;
+            });
+            industryOptions += '<option value="Other">Other</option>';
+
+            // Populate the select
+            $('#company_industry').html(industryOptions);
+
+            // Initialize Select2
+            $('#company_industry').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select or type Industry',
+                allowClear: true,
+                multiple: true,
+                tags: true,
+                tokenSeparators: [','],
+                width: '100%'
+            });
+
+            // Set existing values
+            let existingIndustry = $('#company_industry_hidden').val();
+            if (existingIndustry) {
+                let industryArray = existingIndustry.split(', ').filter(v => v.trim());
+                $('#company_industry').val(industryArray).trigger('change');
+            }
+
+            // Handle changes
+            $('#company_industry').on('change', function() {
+                let selectedValues = $(this).val();
+                $('#company_industry_hidden').val(selectedValues ? selectedValues.join(', ') : '');
+
+                if (selectedValues && selectedValues.includes('Other')) {
+                    $('.company_industry_other_div').removeClass('d-none');
+                } else {
+                    $('.company_industry_other_div').addClass('d-none');
+                }
+            });
+
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR BUSINESS LOCATION
+            // ============================================
+
+            const businessLocations = @json($business_locations ?? []);
+
+            let locationOptions = '<option value="">Select Business Location</option>';
+            businessLocations.forEach(function(item) {
+                locationOptions += `<option value="${item}">${item}</option>`;
+            });
+
+            $('#business_location').html(locationOptions);
+
+            $('#business_location').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select Business Location',
+                allowClear: true,
+                width: '100%'
+            });
+
+            let existingLocation = $('#business_location_hidden').val();
+            if (existingLocation) {
+                // For single select, just set the value directly (no split needed)
+                $('#business_location').val(existingLocation).trigger('change');
+            }
+
+            $('#business_location').on('change', function() {
+                let selectedValue = $(this).val();
+                // For single select, just store the value directly (no join needed)
+                $('#business_location_hidden').val(selectedValue || '');
+            });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR COMPANY ROLE
+            // ============================================
+
+            // const companyRoles = @json($company_roles ?? []);
+
+            // let roleOptions = '<option value="">Select Your Role</option>';
+            // companyRoles.forEach(function(item) {
+            //     roleOptions += `<option value="${item}">${item}</option>`;
+            // });
+
+            // $('#company_role').html(roleOptions);
+
+            // $('#company_role').select2({
+            //     theme: 'bootstrap-5',
+            //     placeholder: 'Select Your Role',
+            //     allowClear: true,
+            //     width: '100%'
+            // });
+
+            // let existingRole = $('#company_role_hidden').val();
+            // if (existingRole) {
+            //     $('#company_role').val(existingRole).trigger('change');
+            // }
+
+            // $('#company_role').on('change', function() {
+            //     let selectedValue = $(this).val();
+            //     $('#company_role_hidden').val(selectedValue || '');
+            // });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR BUSINESS CHALLENGES
+            // ============================================
+
+            const businessChallenges = @json($business_challenges ?? []);
+
+            let challengesOptions = '<option value="">Select Current Business Challenges</option>';
+            businessChallenges.forEach(function(item) {
+                challengesOptions += `<option value="${item}">${item}</option>`;
+            });
+
+            $('#company_current_business_challenges').html(challengesOptions);
+
+            $('#company_current_business_challenges').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select Current Business Challenges',
+                allowClear: true,
+                multiple: true,
+                tags: true,
+                tokenSeparators: [','],
+                width: '100%'
+            });
+
+            let existingChallenges = $('#company_current_business_challenges_hidden').val();
+            if (existingChallenges) {
+                let challengesArray = existingChallenges.split(', ').filter(v => v.trim());
+                $('#company_current_business_challenges').val(challengesArray).trigger('change');
+            }
+
+            $('#company_current_business_challenges').on('change', function() {
+                let selectedValues = $(this).val();
+                $('#company_current_business_challenges_hidden').val(selectedValues ? selectedValues.join(
+                    ', ') : '');
+            });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR BUSINESS GOALS
+            // ============================================
+
+            const businessGoals = @json($business_goals ?? []);
+
+            let goalsOptions = '<option value="">Select Business Goals</option>';
+            businessGoals.forEach(function(item) {
+                goalsOptions += `<option value="${item}">${item}</option>`;
+            });
+
+            $('#company_business_goals').html(goalsOptions);
+
+            $('#company_business_goals').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select Business Goals',
+                allowClear: true,
+                multiple: true,
+                tags: true,
+                tokenSeparators: [','],
+                width: '100%'
+            });
+
+            let existingGoals = $('#company_business_goals_hidden').val();
+            if (existingGoals) {
+                let goalsArray = existingGoals.split(', ').filter(v => v.trim());
+                $('#company_business_goals').val(goalsArray).trigger('change');
+            }
+
+            $('#company_business_goals').on('change', function() {
+                let selectedValues = $(this).val();
+                $('#company_business_goals_hidden').val(selectedValues ? selectedValues.join(', ') : '');
+            });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR TECHNOLOGIES
+            // ============================================
+
+            // const technologies = @json($technologies ?? []);
+
+            // let techOptions = '<option value="">Select Technologies You Use</option>';
+            // technologies.forEach(function(item) {
+            //     techOptions += `<option value="${item}">${item}</option>`;
+            // });
+
+            // $('#company_technologies_you_use').html(techOptions);
+
+            // $('#company_technologies_you_use').select2({
+            //     theme: 'bootstrap-5',
+            //     placeholder: 'Select Technologies You Use',
+            //     allowClear: true,
+            //     multiple: true,
+            //     tags: true,
+            //     tokenSeparators: [','],
+            //     width: '100%'
+            // });
+
+            // let existingTech = $('#company_technologies_you_use_hidden').val();
+            // if (existingTech) {
+            //     let techArray = existingTech.split(', ').filter(v => v.trim());
+            //     $('#company_technologies_you_use').val(techArray).trigger('change');
+            // }
+
+            // $('#company_technologies_you_use').on('change', function() {
+            //     let selectedValues = $(this).val();
+            //     $('#company_technologies_you_use_hidden').val(selectedValues ? selectedValues.join(', ') :
+            //         '');
+            // });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR BUYING PROCESS
+            // ============================================
+
+            // const buyingProcess = @json($buying_process ?? []);
+
+            // let buyingOptions = '<option value="">Select Buying Process</option>';
+            // buyingProcess.forEach(function(item) {
+            //     buyingOptions += `<option value="${item}">${item}</option>`;
+            // });
+
+            // $('#company_buying_process').html(buyingOptions);
+
+            // $('#company_buying_process').select2({
+            //     theme: 'bootstrap-5',
+            //     placeholder: 'Select Buying Process',
+            //     allowClear: true,
+            //     width: '100%'
+            // });
+
+            // let existingBuying = $('#company_buying_process_hidden').val();
+            // if (existingBuying) {
+
+            //     $('#company_buying_process').val(existingBuying).trigger('change');
+            // }
+
+            // $('#company_buying_process').on('change', function() {
+            //     let selectedValue = $(this).val();
+            //     $('#company_buying_process_hidden').val(selectedValue || '');
+            // });
+
+            // ============================================
+            // SELECT2 INITIALIZATION FOR COMPANY ATTRIBUTES
+            // ============================================
+
+            const companyAttributes = @json($company_attributes ?? []);
+
+            let attributesOptions = '<option value="">Select Company Attributes</option>';
+            companyAttributes.forEach(function(item) {
+                attributesOptions += `<option value="${item}">${item}</option>`;
+            });
+
+            $('#company_attributes').html(attributesOptions);
+
+            $('#company_attributes').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select Company Attributes',
+                allowClear: true,
+                multiple: true,
+                tags: true,
+                tokenSeparators: [','],
+                width: '100%'
+            });
+
+            let existingAttributes = $('#company_attributes_hidden').val();
+            if (existingAttributes) {
+                let attributesArray = existingAttributes.split(', ').filter(v => v.trim());
+                $('#company_attributes').val(attributesArray).trigger('change');
+            }
+
+            $('#company_attributes').on('change', function() {
+                let selectedValues = $(this).val();
+                $('#company_attributes_hidden').val(selectedValues ? selectedValues.join(', ') : '');
+            });
+
+
+            // ============================================
+            // SELECT2 FOR OTHER SINGLE DROPDOWNS
+            // ============================================
+            $('#mosque_id, #gender, #age_group, #ethnicity, #nationality, #marital_status, #company_experience, #company_business_type, #company_revenue, #company_no_of_employee')
+                .select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    allowClear: true
+                });
+
+
+
         });
     </script>
     <script>
@@ -967,263 +1871,11 @@
             }
         });
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // DESIGNATION FUNCTIONALITY
-            const designationCheckboxes = document.querySelectorAll('.position-dropdown-menu .form-check-input');
-
-            const designationHiddenInput = document.getElementById('company_position_hidden');
-            const designationOtherCheckbox = document.getElementById('company_position_other_select');
-            const designationOtherFieldDiv = document.querySelector('.company_position_other_div');
-            const designationOtherInput = document.getElementById('company_position_other');
-            const designationTagContainer = document.querySelector('#selected-tags');
-            const designationSearchInput = document.getElementById('search-dropdown');
-
-            const updateDesignationTags = () => {
-                designationTagContainer.innerHTML = '';
-                const selectedCheckboxes = Array.from(designationCheckboxes).filter(cb => cb.checked);
-                selectedCheckboxes.forEach(checkbox => {
-                    const label = checkbox.labels[0];
-                    if (label) {
-                        const tagText = label.textContent.trim();
-                        createDesignationTag(tagText, checkbox);
-                    }
-                });
-
-                if (designationOtherCheckbox.checked && designationOtherInput.value.trim()) {
-                    createDesignationTag(designationOtherInput.value.trim(), null, true);
-                }
-            };
-
-            const createDesignationTag = (text, checkbox, isOther = false) => {
-                const tag = document.createElement('span');
-                tag.className = 'tag';
-                tag.textContent = text;
-
-                const closeButton = document.createElement('span');
-                closeButton.className = 'tag-close';
-                closeButton.textContent = '×';
-                closeButton.addEventListener('click', () => {
-                    tag.remove();
-                    if (isOther) {
-                        designationOtherCheckbox.checked = false;
-                        designationOtherInput.value = '';
-                        designationOtherFieldDiv.classList.add('d-none');
-                    } else if (checkbox) {
-                        checkbox.checked = false;
-                    }
-                    updateDesignationHiddenInput();
-                });
-
-                tag.appendChild(closeButton);
-                designationTagContainer.appendChild(tag);
-            };
-
-            const updateDesignationHiddenInput = () => {
-                const selected = Array.from(designationCheckboxes)
-                    .filter(cb => cb.checked && cb !== designationOtherCheckbox)
-                    .map(cb => cb.labels[0].textContent.trim());
-
-                if (designationOtherCheckbox.checked && designationOtherInput.value.trim()) {
-                    selected.push(designationOtherInput.value.trim());
-                }
-
-                designationHiddenInput.value = Array.from(new Set(selected)).join(', ');
-                updateDesignationTags();
-            };
-
-            const initializeDesignationTags = () => {
-                const existingValues = designationHiddenInput.value.split(', ').filter(value => value.trim());
-
-                existingValues.forEach(value => {
-                    const matchingCheckbox = Array.from(designationCheckboxes).find(cb => cb.labels[0]
-                        .textContent.trim() === value);
-
-                    if (matchingCheckbox) {
-                        matchingCheckbox.checked = true;
-                    } else if (value === designationOtherInput.value.trim()) {
-                        designationOtherCheckbox.checked = true;
-                        designationOtherFieldDiv.classList.remove('d-none');
-                    }
-                });
-
-                updateDesignationTags();
-            };
-
-            initializeDesignationTags();
-
-            designationCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    if (designationOtherCheckbox.checked) {
-                        designationOtherFieldDiv.classList.remove('d-none');
-                    } else {
-                        designationOtherFieldDiv.classList.add('d-none');
-                    }
-                    updateDesignationHiddenInput();
-                });
-            });
-
-            designationOtherInput.addEventListener('keyup', updateDesignationHiddenInput);
-
-            designationSearchInput.addEventListener('input', () => {
-                const dropdownMenu = document.querySelector('.position-dropdown-menu');
-                const searchTerm = designationSearchInput.value.toLowerCase().trim();
-                const listItems = dropdownMenu.querySelectorAll('li');
-
-                listItems.forEach(item => {
-                    const label = item.querySelector('.form-check-label');
-                    if (label) {
-                        const labelText = label.textContent.toLowerCase();
-                        item.style.display = labelText.includes(searchTerm) ? '' : 'none';
-                    }
-                });
-            });
-        });
-    </script>
-
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // INDUSTRY FUNCTIONALITY
-            const industryCheckboxes = document.querySelectorAll('.industry-dropdown-menu .form-check-input');
-
-            const industryHiddenInput = document.getElementById('company_industry_hidden');
-            const industryOtherCheckbox = document.getElementById('industry_other_select');
-            const industryOtherFieldDiv = document.querySelector('.company_industry_other_div');
-            const industryOtherInput = document.getElementById('company_industry_other');
-            const industryTagContainer = document.querySelector('#selected-tags-industry');
-            const industrySearchInput = document.getElementById('industry-search-dropdown');
-            console.log('Industry Tags Updated:', industryHiddenInput.value);
-            const updateIndustryHiddenInput = () => {
-                // Get existing values from the hidden input field
-                const existingValues = industryHiddenInput.value.split(', ').filter(value => value.trim());
-
-                // Get newly selected checkboxes
-                const selected = Array.from(industryCheckboxes)
-                    .filter(cb => cb.checked && cb !== industryOtherCheckbox)
-                    .map(cb => cb.labels[0].textContent.trim());
-
-                // Include "Other" field value if applicable
-                if (industryOtherCheckbox.checked && industryOtherInput.value.trim()) {
-                    selected.push(industryOtherInput.value.trim());
-                }
-
-                // Combine existing and new values, removing duplicates
-                const updatedValues = Array.from(new Set([...existingValues, ...selected]));
-
-                // Update the hidden input field
-                industryHiddenInput.value = updatedValues.join(', ');
-
-                console.log("Industry Hidden Input Value: ", industryHiddenInput.value); // Debugging line
-                updateIndustryTags();
-            };
-            const updateIndustryTags = () => {
-                industryTagContainer.innerHTML = '';
-                const selectedCheckboxes = Array.from(industryCheckboxes).filter(cb => cb.checked);
-                selectedCheckboxes.forEach(checkbox => {
-                    const label = checkbox.labels[0];
-                    if (label) {
-                        const tagText = label.textContent.trim();
-                        createIndustryTag(tagText, checkbox);
-                    }
-                });
-
-                if (industryOtherCheckbox.checked && industryOtherInput.value.trim()) {
-                    createIndustryTag(industryOtherInput.value.trim(), null, true);
-                }
-            };
-            const createIndustryTag = (text, checkbox, isOther = false) => {
-                const tag = document.createElement('span');
-                tag.className = 'tag2';
-                tag.textContent = text;
-
-                const closeButton = document.createElement('span');
-                closeButton.className = 'tag-close2';
-                closeButton.textContent = '×';
-                closeButton.addEventListener('click', () => {
-                    tag.remove();
-
-                    // Update checkbox or "Other" field as appropriate
-                    if (isOther) {
-                        industryOtherCheckbox.checked = false;
-                        industryOtherInput.value = '';
-                        industryOtherFieldDiv.classList.add('d-none');
-                    } else if (checkbox) {
-                        checkbox.checked = false;
-                    }
-
-                    // Remove the tag's value from the hidden input field
-                    const updatedValues = industryHiddenInput.value
-                        .split(', ')
-                        .filter(value => value.trim() !== text); // Remove the tag's value
-                    industryHiddenInput.value = updatedValues.join(', ');
-
-                    console.log("Updated Hidden Input Value After Removal: ", industryHiddenInput
-                        .value); // Debugging line
-
-                    updateIndustryTags(); // Optional: Update tags visually if needed
-                });
-
-                tag.appendChild(closeButton);
-                industryTagContainer.appendChild(tag);
-            };
-
-
-            const initializeIndustryTags = () => {
-                const existingValues = industryHiddenInput.value.split(', ').filter(value => value.trim());
-
-                // Loop through existing values and check corresponding checkboxes
-                existingValues.forEach(value => {
-                    const matchingCheckbox = Array.from(industryCheckboxes).find(cb => cb.labels[0]
-                        .textContent.trim() === value);
-
-                    if (matchingCheckbox) {
-                        matchingCheckbox.checked = true;
-                    } else if (value === industryOtherInput.value.trim()) {
-                        industryOtherCheckbox.checked = true;
-                        industryOtherFieldDiv.classList.remove('d-none');
-                    }
-                });
-
-                // Generate tags for existing values
-                updateIndustryTags();
-            };
-            initializeIndustryTags();
 
 
 
 
 
-            industryCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    if (industryOtherCheckbox.checked) {
-                        industryOtherFieldDiv.classList.remove('d-none');
-                    } else {
-                        industryOtherFieldDiv.classList.add('d-none');
-                    }
-                    updateIndustryHiddenInput();
-                });
-            });
-
-
-            industryOtherInput.addEventListener('keyup', updateIndustryHiddenInput);
-
-            industrySearchInput.addEventListener('input', () => {
-                const dropdownMenu = document.querySelector('.industry-dropdown-menu');
-                const searchTerm = industrySearchInput.value.toLowerCase().trim();
-                const listItems = dropdownMenu.querySelectorAll('li');
-
-                listItems.forEach(item => {
-                    const label = item.querySelector('.form-check-label');
-                    if (label) {
-                        const labelText = label.textContent.toLowerCase();
-                        item.style.display = labelText.includes(searchTerm) ? '' : 'none';
-                    }
-                });
-            });
-        });
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('select[name="company_business_type"]').addEventListener('change', function() {
