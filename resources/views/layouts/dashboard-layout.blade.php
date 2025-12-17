@@ -12,6 +12,7 @@
         justify-content: end;
         gap: 10px;
     }
+    
 </style>
 
 @section('content')

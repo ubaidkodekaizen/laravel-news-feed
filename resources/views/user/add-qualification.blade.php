@@ -1,5 +1,35 @@
 @extends('layouts.dashboard-layout')
 
+<style>
+    .form-label,
+    .col-lg-12 label {
+        margin-bottom: .5rem;
+        font-family: "inter";
+        font-weight: 400;
+        font-size: 18px;
+    }
+
+    .add_form .form-control,
+    .add_form .form-select {
+        font-family: "inter";
+        font-weight: 400 !important;
+        font-size: 18px !important;
+        padding: 14.5px .75rem !important;
+        background-color: #F6F7FC !important;
+        border: 2px solid #E9EBF0 !important;
+        border-radius: 9.77px !important;
+    }
+
+    .add_form button.btn.btn-primary {
+        font-family: "poppins";
+        font-weight: 500;
+        font-size: 18px;
+        padding: 15px 66px;
+        border-radius: 9.77px;
+    }
+    
+</style>
+
 @section('dashboard-content')
     <div class="qualifications">
         <div class="section_heading_flex">
