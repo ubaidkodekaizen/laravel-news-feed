@@ -1110,7 +1110,6 @@ div.selected-filter-group {
     display: flex;
     height: 100%;
     align-items: stretch;
-    margin: 140px 0 0 0;
 }
 
 /* Toggler Button styles */

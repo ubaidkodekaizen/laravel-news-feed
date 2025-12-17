@@ -178,6 +178,10 @@
             max-width: 16%;
         }
 
+        /* .navbar_d_flex {
+            margin: 140px 0 0 0;
+        } */
+
         .main-content {
             width: 100%;
             flex: 1;
