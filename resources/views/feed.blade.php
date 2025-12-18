@@ -595,7 +595,7 @@
     <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
 </div>
 <!-- Main Modal -->
-<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header" style="background-color: var(--primary); color: #fff;">
@@ -620,7 +620,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" >
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
 

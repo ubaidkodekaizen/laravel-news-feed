@@ -8,7 +8,7 @@
     }
     var sendMsg = "{{ route('sendMessage') }}";
     var createConversation = "{{ route('create.conversation') }}";
-    
+
     function getUserConversationRoute(conversationId) {
         return "{{ route('get.user.conversation', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);
     }
@@ -21,8 +21,8 @@
     }
     var userPing = "{{ route('user.ping') }}";
     var userOffline = "{{ route('user.offline') }}";
-    
-    
+
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
@@ -40,9 +40,9 @@
     </script>
     <div id="chat-container"></div>
 @endauth
- 
+
 <script>
-    
+
     jQuery(document).ready(function($) {
 
 
