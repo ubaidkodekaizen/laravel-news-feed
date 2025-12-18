@@ -120,7 +120,7 @@
     }
 
     .data_table_user .table.dataTable tbody td a::after{
-        content: ""; 
+        content: "";
         position: absolute;
         left: 24px;
         top: 50%;
@@ -132,7 +132,7 @@
     }
 
     .data_table_user .table.dataTable tbody td form button::after{
-        content: ""; 
+        content: "";
         position: absolute;
         /* right: 24px; */
         top: 50%;
@@ -237,28 +237,28 @@
 
     @media (max-width: 1440px) {
 
-        table.dataTable thead > tr > th.sorting, 
-        table.dataTable thead > tr > th.sorting_asc, 
-        table.dataTable thead > tr > th.sorting_desc, 
-        table.dataTable thead > tr > th.sorting_asc_disabled, 
-        table.dataTable thead > tr > th.sorting_desc_disabled, 
-        table.dataTable thead > tr > td.sorting, 
-        table.dataTable thead > tr > td.sorting_asc, 
-        table.dataTable thead > tr > td.sorting_desc, 
-        table.dataTable thead > tr > td.sorting_asc_disabled, 
+        table.dataTable thead > tr > th.sorting,
+        table.dataTable thead > tr > th.sorting_asc,
+        table.dataTable thead > tr > th.sorting_desc,
+        table.dataTable thead > tr > th.sorting_asc_disabled,
+        table.dataTable thead > tr > th.sorting_desc_disabled,
+        table.dataTable thead > tr > td.sorting,
+        table.dataTable thead > tr > td.sorting_asc,
+        table.dataTable thead > tr > td.sorting_desc,
+        table.dataTable thead > tr > td.sorting_asc_disabled,
         table.dataTable thead > tr > td.sorting_desc_disabled{
             width: 0% !important;
         }
 
-        
+
 
     }
 
-    
+
 
 @media (max-width: 1080px) {
-    
-    
+
+
     div#products-table_filter {
         transform: translate(0px, -10px);
         margin: auto !important;
@@ -272,7 +272,7 @@
 
     th.sorting,
     .data_table_user .table.dataTable tbody td {
-        font-size: 14.65px; 
+        font-size: 14.65px;
     }
 
     th.sorting {
@@ -282,7 +282,7 @@
     /* .dataTables_filter::after {
         right: 28px;
     } */
-   
+
 }
 
 
@@ -358,6 +358,7 @@
     jQuery(document).ready(function($) {
         $.fn.dataTable.ext.errMode = 'none'; // Suppress DataTable warnings
         $('#products-table').DataTable({
+            responsive: true,
             language: {
                 emptyTable: "No products available" // Custom message instead of warning
             }
