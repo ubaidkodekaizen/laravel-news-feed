@@ -173,10 +173,10 @@
             border-top: 1px solid #E9EBF0;
         }
 
-        .sidebar {
+        /* .sidebar {
             width: 100%;
             max-width: 16%;
-        }
+        } */
 
         /* .navbar_d_flex {
             margin: 140px 0 0 0;
@@ -303,6 +303,23 @@
             left: 20px;
             z-index: -1;
         }
+
+        @media (max-width: 1400px) {
+
+            body{
+                overflow: hidden !important;
+            }
+            .col-lg-3 {
+                width: 50% !important;
+            }
+        }
+
+         @media (max-width: 768px) {
+            .col-lg-3 {
+                width: 100% !important;
+            }
+        }
+
     </style>
     <section class="user_company_profile">
         <div class="container">
@@ -1787,7 +1804,7 @@
                 tag.textContent = language;
 
                 const closeBtn = document.createElement('button');
-                closeBtn.classList.add('btn-close', 'btn-close-white', 'ms-2');
+                closeBtn.classList.add('btn-close', 'btn-close', 'ms-2');
                 closeBtn.setAttribute('aria-label', 'Remove');
                 closeBtn.style.fontSize = '0.7rem';
                 closeBtn.style.verticalAlign = 'middle';

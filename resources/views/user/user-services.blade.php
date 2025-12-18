@@ -16,6 +16,7 @@
     .data_table_user table tbody td.btn_flex {
         width: -webkit-fill-available;
         justify-self: center;
+        flex-wrap: nowrap;
         position: relative;
         gap: 0 !important;
     }
@@ -64,6 +65,20 @@
         border-bottom: 1px solid #F2F2F2;
         border-left: 2px solid #F2F2F2;
         margin-bottom: 40px;
+        overflow-x: scroll;
+    }
+
+    .table-resposive.data_table_user::-webkit-scrollbar {
+        height: 8px;  
+        /* width: 8px;  */
+        box-shadow: none !important; 
+    }
+
+    
+
+    .table-resposive.data_table_user::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
     }
 
     .data_table_user .btn_flex {
@@ -101,6 +116,34 @@
         max-width: 100px;
         width: 100%;
     }
+
+    @media (max-width: 1080px) {
+    
+    
+    /* div#products-table_filter {
+        transform: translate(0px, -10px);
+        margin: auto !important;
+        width: 100%;
+    } */
+
+    div#products-table_filter label,
+    .dataTables_wrapper .dataTables_filter input {
+        width: 100% !important;
+    }
+
+    .table-resposive.data_table_user table thead tr th,
+    .data_table_user table tbody td {
+        font-size: 14.65px; 
+    }
+
+    /* .dataTables_filter::after {
+        right: 28px;
+    } */
+   
+}
+
+    
+    
 </style>
 
 

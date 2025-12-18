@@ -536,6 +536,8 @@
 
 
 
+
+
     @media (max-width: 1280px) {
         .company_profile_section .col-lg-3 {
             width: 30%;

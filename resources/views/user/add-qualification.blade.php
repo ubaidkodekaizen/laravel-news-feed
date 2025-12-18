@@ -27,13 +27,21 @@
         padding: 15px 66px;
         border-radius: 9.77px;
     }
+
+    .section_heading_flex h2 a img{
+        width: 14px;
+        margin-top: -6px;
+        margin-right: 16px;
+    }
+
     
 </style>
 
 @section('dashboard-content')
     <div class="qualifications">
         <div class="section_heading_flex">
-            <h2>Add Qualifications</h2>
+            <!-- <h2>Add Qualifications</h2> -->
+            <h2><a href="{{ route('user.qualifications')}}"><img src="{{ asset('assets/images/dashboard/dashboardBackChevron.svg')}}" alt=""></a> Add Qualifications</h2>
         </div>
         <div class="add_form">
             <form action="{{ route('user.store.qualifications', $education->id ?? '') }}" method="POST"

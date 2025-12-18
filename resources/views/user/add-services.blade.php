@@ -58,6 +58,7 @@
         padding: 9px 71px;
         border-radius: 9.77px;
     }
+
 </style>
 
 @section('dashboard-content')

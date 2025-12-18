@@ -102,7 +102,40 @@
         line-height: 55px;
     }
 
-    @media (max-width)
+    
+    
+
+
+@media (max-width: 1080px) {
+
+    body{
+        overflow: auto !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        height: 100%;
+        padding: 50px 14px 20px 14px !important;
+    }
+
+    div#dashboardMenu .dashboardMenuCollapseBtn {
+        display: none;
+    }
+
+   
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80% !important;
+        height: 100vh !important;
+    }
+
+    
+}
+
+
+
 </style>
 
 <div class="sidebar" id="dashboardSidebar">

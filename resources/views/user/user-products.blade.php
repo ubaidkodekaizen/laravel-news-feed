@@ -75,12 +75,13 @@
 
     table#products-table {
         border-radius: 15.99px 15.99px 0 0;
-        overflow: hidden;
+        /* overflow: hidden !important; */
         border-top: 2px solid #F2F2F2;
         border-right: 2px solid #F2F2F2;
         border-bottom: 1px solid #F2F2F2;
         border-left: 2px solid #F2F2F2;
         margin-bottom: 40px;
+        overflow-x: scroll !important;
     }
 
     th.sorting {
@@ -233,6 +234,57 @@
         background: url("{{ asset('assets/images/dashboard/productTableHeadDownChevronIcon.svg') }}") no-repeat center !important;
         background-size: contain;
     }
+
+    @media (max-width: 1440px) {
+
+        table.dataTable thead > tr > th.sorting, 
+        table.dataTable thead > tr > th.sorting_asc, 
+        table.dataTable thead > tr > th.sorting_desc, 
+        table.dataTable thead > tr > th.sorting_asc_disabled, 
+        table.dataTable thead > tr > th.sorting_desc_disabled, 
+        table.dataTable thead > tr > td.sorting, 
+        table.dataTable thead > tr > td.sorting_asc, 
+        table.dataTable thead > tr > td.sorting_desc, 
+        table.dataTable thead > tr > td.sorting_asc_disabled, 
+        table.dataTable thead > tr > td.sorting_desc_disabled{
+            width: 0% !important;
+        }
+
+        
+
+    }
+
+    
+
+@media (max-width: 1080px) {
+    
+    
+    div#products-table_filter {
+        transform: translate(0px, -10px);
+        margin: auto !important;
+        width: 100%;
+    }
+
+    div#products-table_filter label,
+    .dataTables_wrapper .dataTables_filter input {
+        width: 100% !important;
+    }
+
+    th.sorting,
+    .data_table_user .table.dataTable tbody td {
+        font-size: 14.65px; 
+    }
+
+    th.sorting {
+        padding: 16px 50px 16px 16px !important;
+    }
+
+    /* .dataTables_filter::after {
+        right: 28px;
+    } */
+   
+}
+
 
 </style>
 

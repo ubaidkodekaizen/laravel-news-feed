@@ -241,6 +241,53 @@
         background: url("{{ asset('assets/images/dashboard/productTableHeadDownChevronIcon.svg') }}") no-repeat center !important;
         background-size: contain;
     }
+
+    @media (max-width: 1400px) {
+        th.sorting,
+        .data_table_user #qualifications-table tbody td {
+            font-size: 14.65px; 
+        }
+
+        table.dataTable thead > tr > th.sorting, 
+        table.dataTable thead > tr > th.sorting_asc, 
+        table.dataTable thead > tr > th.sorting_desc, 
+        table.dataTable thead > tr > th.sorting_asc_disabled, 
+        table.dataTable thead > tr > th.sorting_desc_disabled, 
+        table.dataTable thead > tr > td.sorting, 
+        table.dataTable thead > tr > td.sorting_asc, 
+        table.dataTable thead > tr > td.sorting_desc, 
+        table.dataTable thead > tr > td.sorting_asc_disabled, 
+        table.dataTable thead > tr > td.sorting_desc_disabled{
+                width: 0% !important;
+        }
+
+    }
+
+   
+    @media (max-width: 1080px) {
+    
+    
+    div#products-table_filter {
+        transform: translate(0px, -10px);
+        margin: auto !important;
+        width: 100%;
+    }
+
+    div#products-table_filter label,
+    .dataTables_wrapper .dataTables_filter input {
+        width: 100% !important;
+    }
+
+    th.sorting,
+    .data_table_user .table.dataTable tbody td {
+        font-size: 14.65px; 
+    }
+
+    /* .dataTables_filter::after {
+        right: 28px;
+    } */
+   
+}
 </style>
 
 @section('dashboard-content')
