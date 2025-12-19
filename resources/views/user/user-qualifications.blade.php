@@ -325,6 +325,16 @@
 }
 
 @media (max-width: 1080px) {
+
+    .section_heading_flex h2 {
+        font-size: 24px;
+    }
+
+    .section_heading_flex a {
+        font-size: 14px;
+        padding: 10px 26px;
+    }
+    
     div#qualifications-table_filter label, 
     .dataTables_wrapper .dataTables_filter input {
         width: 99% !important;

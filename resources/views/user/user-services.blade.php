@@ -65,12 +65,11 @@
         border-bottom: 1px solid #F2F2F2;
         border-left: 2px solid #F2F2F2;
         margin-bottom: 40px;
-        overflow-x: scroll;
+        /* overflow-x: scroll; */
     }
 
-    .table-resposive.data_table_user::-webkit-scrollbar {
+    /* .table-resposive.data_table_user::-webkit-scrollbar {
         height: 8px;  
-        /* width: 8px;  */
         box-shadow: none !important; 
     }
 
@@ -79,7 +78,7 @@
     .table-resposive.data_table_user::-webkit-scrollbar-thumb {
         background: var(--primary);
         border-radius: 10px;
-    }
+    } */
 
     .data_table_user .btn_flex {
         height: 100px !important;
@@ -125,6 +124,15 @@
         margin: auto !important;
         width: 100%;
     } */
+
+    .section_heading_flex h2 {
+        font-size: 24px;
+    }
+
+    .section_heading_flex a {
+        font-size: 14px;
+        padding: 10px 26px;
+    }
 
     div#products-table_filter label,
     .dataTables_wrapper .dataTables_filter input {
@@ -230,6 +238,7 @@
     jQuery(document).ready(function($) {
         $.fn.dataTable.ext.errMode = 'none'; // Suppress DataTable warnings
         $('#services-table').DataTable({
+            responsive: true,
             language: {
                 emptyTable: "No services available" // Custom message instead of warning
             }
