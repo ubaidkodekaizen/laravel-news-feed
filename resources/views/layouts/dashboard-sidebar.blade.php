@@ -35,6 +35,7 @@
 
     body {
         overflow-y: unset !important;
+        background: #fafbff;
     }
 
     .header {
