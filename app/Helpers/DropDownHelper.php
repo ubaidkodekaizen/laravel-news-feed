@@ -86,7 +86,18 @@ class DropDownHelper
             'Integration problems',
             'High operational costs',
             'Data/security concerns',
-            'Compliance issues'
+            'Compliance issues',
+            'Limited market reach',
+            'Customer churn',
+            'Outdated technology stack',
+            'Lack of skilled talent',
+            'Cash flow management',
+            'Competition pressure',
+            'Market saturation',
+            'Brand visibility',
+            'Customer support challenges',
+            'Inventory management',
+            'Supply chain disruptions'
         ];
     }
 
@@ -105,7 +116,20 @@ class DropDownHelper
             'Improve customer retention',
             'Launch new product/service',
             'Improve digital presence',
-            'Strengthen security & compliance'
+            'Strengthen security & compliance',
+            'Expand customer base',
+            'Improve brand awareness',
+            'Optimize marketing ROI',
+            'Enhance customer experience',
+            'Streamline workflows',
+            'Build strategic partnerships',
+            'Improve data analytics',
+            'Increase market share',
+            'Digital transformation',
+            'Improve team productivity',
+            'Reduce time to market',
+            'Enhance product quality',
+            'Build customer loyalty'
         ];
     }
 
@@ -116,21 +140,61 @@ class DropDownHelper
     public static function getTechnologiesArray()
     {
         return [
-            'Laravel',
-            'Node.js',
-            'React',
-            'Angular',
-            'Vue.js',
-            'PHP',
-            'Python',
             'Salesforce',
             'HubSpot',
+            'Microsoft Dynamics',
+            'Zoho CRM',
+            'Pipedrive',
+            'Monday.com',
+            'Asana',
+            'Trello',
+            'Jira',
+            'Notion',
+            'Slack',
+            'Microsoft Teams',
+            'Zoom',
+            'Google Workspace',
+            'Microsoft 365',
+            'QuickBooks',
+            'Xero',
+            'Sage',
+            'Shopify',
+            'WooCommerce',
+            'Magento',
+            'BigCommerce',
+            'Wix',
+            'Squarespace',
+            'WordPress',
             'Stripe',
+            'PayPal',
+            'Square',
+            'Authorize.Net',
+            'Mailchimp',
+            'Constant Contact',
+            'SendGrid',
+            'ActiveCampaign',
+            'Klaviyo',
+            'Google Analytics',
+            'Adobe Analytics',
+            'Mixpanel',
+            'Tableau',
+            'Power BI',
             'AWS',
             'Google Cloud',
-            'Azure',
-            'MySQL',
-            'PostgreSQL',
+            'Microsoft Azure',
+            'Dropbox',
+            'Google Drive',
+            'OneDrive',
+            'Canva',
+            'Adobe Creative Suite',
+            'Figma',
+            'Sketch',
+            'LinkedIn',
+            'Facebook Business',
+            'Instagram Business',
+            'Twitter/X',
+            'TikTok Business',
+            'YouTube',
             'Other'
         ];
     }
@@ -146,7 +210,14 @@ class DropDownHelper
             'Manager approval required',
             'Multiple stakeholders involved',
             'Committee-based decision',
-            'Procurement-driven process'
+            'Procurement-driven process',
+            'Department head approval',
+            'Board approval required',
+            'Quick decision process',
+            'Long evaluation cycle',
+            'Budget-dependent',
+            'ROI-focused evaluation',
+            'Vendor comparison required'
         ];
     }
 
@@ -160,13 +231,37 @@ class DropDownHelper
             'B2B',
             'B2C',
             'B2B2C',
+            'B2G',
             'Startup',
             'SMB',
+            'Mid-market',
             'Enterprise',
+            'Non-profit',
             'Remote-first',
             'Hybrid',
+            'On-site',
             'Bootstrapped',
-            'Venture-funded'
+            'Venture-funded',
+            'Angel-funded',
+            'Public company',
+            'Family-owned',
+            'Franchise',
+            'SaaS',
+            'E-commerce',
+            'Marketplace',
+            'Platform',
+            'Agency',
+            'Consultancy',
+            'Manufacturing',
+            'Retail',
+            'Healthcare',
+            'Education',
+            'Financial services',
+            'Real estate',
+            'Hospitality',
+            'Transportation',
+            'Energy',
+            'Media & Entertainment'
         ];
     }
 
@@ -279,6 +374,37 @@ class DropDownHelper
         $product = Product::pluck('title')->unique()->sort();
         $service = Service::pluck('title')->unique()->sort();
 
+        // ICP Data from user_icps table
+        $business_locations = \App\Models\UserIcp::whereNotNull('business_location')
+            ->pluck('business_location')->unique()->sort()->values();
+        
+        $business_challenges = \App\Models\UserIcp::whereNotNull('company_current_business_challenges')
+            ->pluck('company_current_business_challenges')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+        
+        $business_goals = \App\Models\UserIcp::whereNotNull('company_business_goals')
+            ->pluck('company_business_goals')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+        
+        $company_attributes = \App\Models\UserIcp::whereNotNull('company_attributes')
+            ->pluck('company_attributes')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
         return [
             'company_position' => $company_positions,
             'company_industry' => $company_industries,
@@ -303,6 +429,12 @@ class DropDownHelper
 
             'product' => $product,
             'service' => $service,
+            
+            // ICP Filters
+            'business_locations' => $business_locations,
+            'business_challenges' => $business_challenges,
+            'business_goals' => $business_goals,
+            'company_attributes' => $company_attributes,
         ];
     }
     public static function searchFilter()
@@ -396,6 +528,37 @@ class DropDownHelper
         $product = Product::pluck('title')->unique()->sort();
         $service = Service::pluck('title')->unique()->sort();
 
+        // ICP Data from user_icps table
+        $business_locations = \App\Models\UserIcp::whereNotNull('business_location')
+            ->pluck('business_location')->unique()->sort()->values();
+        
+        $business_challenges = \App\Models\UserIcp::whereNotNull('company_current_business_challenges')
+            ->pluck('company_current_business_challenges')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+        
+        $business_goals = \App\Models\UserIcp::whereNotNull('company_business_goals')
+            ->pluck('company_business_goals')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+        
+        $company_attributes = \App\Models\UserIcp::whereNotNull('company_attributes')
+            ->pluck('company_attributes')
+            ->flatMap(function ($item) {
+                return array_map('trim', explode(',', $item));
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
         return [
             'company_positions' => $company_positions,
             'company_industries' => $company_industries,
@@ -420,6 +583,12 @@ class DropDownHelper
 
             'products' => $product,
             'services' => $service,
+            
+            // ICP Filters
+            'business_locations' => $business_locations,
+            'business_challenges' => $business_challenges,
+            'business_goals' => $business_goals,
+            'company_attributes' => $company_attributes,
         ];
     }
 
@@ -786,6 +955,125 @@ class DropDownHelper
     }
 
 
+
+    // Personal Information Dropdowns
+    public static function renderGenderDropdown($selected = null)
+    {
+        $selected = old('gender', $selected);
+        $genders = ['Male', 'Female', 'Prefer not to disclose', 'Other'];
+
+        $html = '<select name="gender" id="gender" class="form-select">';
+        foreach ($genders as $gender) {
+            $isSelected = $selected == $gender ? 'selected' : '';
+            $html .= '<option value="' . htmlspecialchars($gender) . '" ' . $isSelected . '>' . htmlspecialchars($gender) . '</option>';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
+
+    public static function renderAgeGroupDropdown($selected = null)
+    {
+        $selected = old('age_group', $selected);
+        $ageGroups = ['20-30', '31-40', '41-50', '51-60', '60+', 'Prefer not to disclose'];
+
+        $html = '<select name="age_group" id="age_group" class="form-select">';
+        foreach ($ageGroups as $ageGroup) {
+            $isSelected = $selected == $ageGroup ? 'selected' : '';
+            $html .= '<option value="' . htmlspecialchars($ageGroup) . '" ' . $isSelected . '>' . htmlspecialchars($ageGroup) . '</option>';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
+
+    public static function renderEthnicityDropdown($selected = null)
+    {
+        $selected = old('ethnicity', $selected);
+        
+        $ethnicities = [
+            'African' => [
+                'North African (e.g., Arab, Berber, Nubian)',
+                'Sub-Saharan African (e.g., Hausa, Yoruba, Somali, Zulu)',
+                'Afro-Caribbean',
+                'African-American'
+            ],
+            'Asian' => [
+                'South Asian (e.g., Indian, Pakistani, Bangladeshi, Sri Lankan, Nepali)',
+                'East Asian (e.g., Chinese, Japanese, Korean)',
+                'Southeast Asian (e.g., Malay, Filipino, Indonesian, Thai, Burmese)',
+                'Central Asian (e.g., Kazakh, Uzbek, Turkmen, Tajik, Kyrgyz)',
+                'West Asian/Middle Eastern (e.g., Arab, Persian, Kurdish, Turkish, Assyrian)'
+            ],
+            'European' => [
+                'Eastern European (e.g., Russian, Polish, Ukrainian, Romanian)',
+                'Western European (e.g., British, French, German, Dutch)',
+                'Southern European (e.g., Italian, Spanish, Greek, Portuguese)',
+                'Balkan (e.g., Bosnian, Albanian)'
+            ],
+            'Latino/Hispanic' => [
+                'Latino/Hispanic (e.g., Mexican, Brazilian, Colombian, Cuban)'
+            ],
+            'Mixed/Multiracial' => [
+                'Multiracial/Mixed Heritage'
+            ],
+            'Other' => [
+                'Other'
+            ]
+        ];
+
+        $html = '<select class="form-select dropdown" id="ethnicity" name="ethnicity">';
+        $html .= '<option value="" disabled="disabled">-- select one --</option>';
+        
+        foreach ($ethnicities as $group => $items) {
+            if ($group === 'Other') {
+                $html .= '<optgroup label="Other">';
+            } else {
+                $html .= '<optgroup label="' . htmlspecialchars($group) . '">';
+            }
+            
+            foreach ($items as $item) {
+                $isSelected = $selected == $item ? 'selected' : '';
+                $html .= '<option value="' . htmlspecialchars($item) . '" ' . $isSelected . '>' . htmlspecialchars($item) . '</option>';
+            }
+            $html .= '</optgroup>';
+        }
+        
+        $html .= '<option value="Prefer not to disclose"' . ($selected == 'Prefer not to disclose' ? ' selected' : '') . '>Prefer not to disclose</option>';
+        $html .= '</select>';
+
+        return $html;
+    }
+
+    public static function renderMaritalStatusDropdown($selected = null)
+    {
+        $selected = old('marital_status', $selected);
+        $statuses = ['Single', 'Married', 'Divorced', 'Prefer not to disclose', 'Other'];
+
+        $html = '<select name="marital_status" id="marital_status" class="form-select">';
+        foreach ($statuses as $status) {
+            $isSelected = $selected == $status ? 'selected' : '';
+            $html .= '<option value="' . htmlspecialchars($status) . '" ' . $isSelected . '>' . htmlspecialchars($status) . '</option>';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
+
+    public static function renderCompanyExperienceDropdown($selected = null)
+    {
+        $selected = old('company_experience', $selected);
+        $experiences = ['Under 1', '1-5 years', '5-10 years', '10-20 years', '20+ years'];
+
+        $html = '<select name="company_experience" id="company_experience" class="form-select">';
+        foreach ($experiences as $experience) {
+            $isSelected = $selected == $experience ? 'selected' : '';
+            $html .= '<option value="' . htmlspecialchars($experience) . '" ' . $isSelected . '>' . htmlspecialchars($experience) . '</option>';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
 
     // Sign Up Page Dropdown
     public static function getPlanDropdown()

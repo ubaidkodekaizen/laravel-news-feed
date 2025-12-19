@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Designation;
 use App\Models\Industry;
 use App\Models\BusinessType;
+use App\Models\UserIcp;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -113,14 +114,13 @@ class UserController extends Controller
             'paid' => 'Yes',
         ]);
 
-        // Create subscription for Amcob user
         Subscription::create([
             'user_id' => $user->id,
             'plan_id' => 1,
             'subscription_type' => 'Free',
             'subscription_amount' => 0.00,
             'start_date' => now(),
-            'renewal_date' => now()->addDays(30),
+            'renewal_date' => now()->addDays(90), // 90 days free trial for AMCOB users
             'status' => 'inactive',
             'transaction_id' => null,
             'receipt_data' => null,
@@ -138,7 +138,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'startDate' => 'required|date',
-            'type' => 'required|string|in:Basic_Monthly,Premium_Monthly,Basic_Yearly,Premium_Yearly',
+            'type' => 'required|string|in:Premium_Monthly,Premium_Yearly',
             'transactionId' => 'required|string',
             'recieptData' => 'nullable|string',
             'platform' => 'required|in:google,apple',
@@ -146,7 +146,6 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        // ✅ Map enum types to plan_id and plan type
         $planMapping = [
             'Premium_Monthly' => ['id' => 1, 'type' => 'Monthly'],
             'Premium_Yearly' => ['id' => 2, 'type' => 'Yearly'],
@@ -385,14 +384,12 @@ class UserController extends Controller
         $user->email_public = $request->email_public ?? 'No';
         $user->phone_public = $request->phone_public ?? 'No';
 
-        // user positions (checkboxes)
         if ($request->has('are_you') && !empty($request->are_you)) {
             $user->user_position = implode(', ', $request->are_you);
         } else {
             $user->user_position = null;
         }
 
-        // Unique slug
         $slug = Str::slug($request->first_name . ' ' . $request->last_name);
         $originalSlug = $slug;
         $counter = 1;
@@ -401,7 +398,6 @@ class UserController extends Controller
         }
         $user->slug = $slug;
 
-        // profile photo
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('profile_photos', 'public');
             $user->photo = $photoPath;
@@ -470,7 +466,6 @@ class UserController extends Controller
             ]
         );
 
-        // Unique company slug
         $companySlug = Str::slug($request->company_name);
         $originalSlug = $companySlug;
         $counter = 1;
@@ -480,7 +475,6 @@ class UserController extends Controller
         $company->company_slug = $companySlug ?? '';
         $company->status = "complete";
 
-        // company logo
         if ($request->hasFile('company_logo')) {
             $photoPath = $request->file('company_logo')->store('profile_photos', 'public');
             $company->company_logo = $photoPath;
@@ -488,10 +482,24 @@ class UserController extends Controller
 
         $company->save();
 
+        $userIcp = UserIcp::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'business_location' => $request->business_location ?? null,
+                'is_decision_maker' => $request->is_decision_maker !== null ? ($request->is_decision_maker === 'Yes' || $request->is_decision_maker === '1' || $request->is_decision_maker === 1 || $request->is_decision_maker === true ? 1 : 0) : null,
+                'company_current_business_challenges' => $request->company_current_business_challenges ?? null,
+                'company_business_goals' => $request->company_business_goals ?? null,
+                'company_attributes' => $request->company_attributes ?? null,
+                'company_technologies_you_use' => $request->company_technologies_you_use ?? null,
+                'company_buying_process' => $request->company_buying_process ?? null,
+            ]
+        );
+
         return response()->json([
             'status' => true,
             'message' => 'Professional details updated successfully!',
             'company' => $company,
+            'user_icp' => $userIcp,
         ]);
     }
 
@@ -519,9 +527,7 @@ class UserController extends Controller
         }
 
         $planMapping = [
-            // 'Basic_Monthly' => ['id' => 4, 'type' => 'monthly'],
             'Premium_Monthly' => ['id' => 1, 'type' => 'Monthly'],
-            // 'Basic_Yearly' => ['id' => 5, 'type' => 'yearly'],
             'Premium_Yearly' => ['id' => 2, 'type' => 'Yearly'],
         ];
 
@@ -812,6 +818,25 @@ class UserController extends Controller
             '100M +' => '$100M+',
         ];
 
+        $company_experiences = [
+            'Under 1',
+            '1-5 years',
+            '5-10 years',
+            '10-20 years',
+            '20+ years',
+        ];
+
+        $genders = ['Male', 'Female', 'Prefer not to disclose', 'Other'];
+        $age_groups = ['20-30', '31-40', '41-50', '51-60', '60+', 'Prefer not to disclose'];
+        $marital_statuses = ['Single', 'Married', 'Divorced', 'Prefer not to disclose', 'Other'];
+
+        $business_locations = \App\Helpers\DropDownHelper::getBusinessLocationsArray();
+        $business_challenges = \App\Helpers\DropDownHelper::getCurrentBusinessChallengesArray();
+        $business_goals = \App\Helpers\DropDownHelper::getBusinessGoalsArray();
+        $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
+        $technologies = \App\Helpers\DropDownHelper::getTechnologiesArray();
+        $buying_process = \App\Helpers\DropDownHelper::getBuyingProcessArray();
+
         return response()->json([
             'status' => true,
             'dropdowns' => [
@@ -821,6 +846,16 @@ class UserController extends Controller
                 'employee_sizes' => $employee_sizes,
                 'business_types' => $business_types,
                 'revenue_ranges' => $revenue_ranges,
+                'company_experiences' => $company_experiences,
+                'genders' => $genders,
+                'age_groups' => $age_groups,
+                'marital_statuses' => $marital_statuses,
+                'business_locations' => $business_locations,
+                'business_challenges' => $business_challenges,
+                'business_goals' => $business_goals,
+                'company_attributes' => $company_attributes,
+                'technologies' => $technologies,
+                'buying_process' => $buying_process,
             ],
         ]);
     }

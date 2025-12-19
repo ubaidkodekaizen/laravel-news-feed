@@ -89,35 +89,17 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $company = Company::where('user_id', $user->id)->first();
+        $userIcp = \App\Models\UserIcp::where('user_id', $user->id)->first();
 
         // Get dropdown data
         $designations = \App\Helpers\DropDownHelper::getDesignationsArray();
         $industries = \App\Helpers\DropDownHelper::getIndustriesArray();
 
-
-        // ICP dropdown data
-        $business_locations = \App\Helpers\DropDownHelper::getBusinessLocationsArray();
-        // $company_roles = \App\Helpers\DropDownHelper::getCompanyRolesArray();
-        $business_challenges = \App\Helpers\DropDownHelper::getCurrentBusinessChallengesArray();
-        $business_goals = \App\Helpers\DropDownHelper::getBusinessGoalsArray();
-        // $technologies = \App\Helpers\DropDownHelper::getTechnologiesArray();
-        // $buying_process = \App\Helpers\DropDownHelper::getBuyingProcessArray();
-        $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
-
-
-        return view('user.user-details', compact('user', 'company', 'designations', 'industries',  'business_locations',
-        // 'company_roles',
-        'business_challenges',
-        'business_goals',
-        // 'technologies',
-        // 'buying_process',
-        'company_attributes'));
+        return view('user.user-details', compact('user', 'company', 'userIcp', 'designations', 'industries'));
     }
 
     public function updateUserDetails(Request $request)
     {
-        //dd($request->all());
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',

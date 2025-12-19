@@ -156,35 +156,6 @@
                             </div>
                         </div>
 
-                        <!-- Industry Filter Section -->
-                        <div class="filter-section">
-                            <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#industryFilter">
-                                Industry <span class="toggle-icon">+</span>
-                            </div>
-                            <div id="industryFilter" class="filterCollapseBox collapse">
-                                <div class="selected-filter-group" id="selectedIndustryFilters">
-
-                                </div>
-                                <div class="searchBarAndFilterCon">
-                                    <input type="text" id="industrySearchInput" name="company_industry"
-                                        class="filter-search" placeholder="Search Industry..."
-                                        oninput="filterOptions(this, 'industryFilterOptions')">
-                                    <div id="industryFilterOptions" style="display: none">
-
-                                        @foreach ($filters['company_industries'] as $industry)
-                                            <div class="filter-option"
-                                                onclick="addFilter('company_industry', '{{ $industry }}', 'selectedIndustryFilters', 'industrySearchInput')">
-                                                {{ $industry }}
-                                            </div>
-                                        @endforeach
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-
-
                         <!-- Business Type Filter Section -->
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
@@ -233,32 +204,6 @@
                                     </div>
                                 </div>
 
-                            </div>
-                        </div>
-
-                        <!-- Employees Filter Section -->
-                        <div class="filter-section">
-                            <div class="filter-header collapsed" data-bs-toggle="collapse"
-                                data-bs-target="#employeesFilter">
-                                No. of Employees <span class="toggle-icon">+</span>
-                            </div>
-                            <div id="employeesFilter" class="filterCollapseBox collapse">
-                                <div class="selected-filter-group" id="selectedEmployeesFilters"></div>
-
-
-                                <div class="searchBarAndFilterCon">
-                                    <input type="text" id="employeesSearchInput" name="company_no_of_employee"
-                                        class="filter-search" placeholder="Search Employees..."
-                                        oninput="filterOptions(this, 'employeesFilterOptions')">
-                                    <div id="employeesFilterOptions">
-                                        @foreach ($filters['company_no_of_employees'] as $employee_count)
-                                            <div class="filter-option"
-                                                onclick="addFilter('company_no_of_employee', '{{ $employee_count }}', 'selectedEmployeesFilters', 'employeesSearchInput')">
-                                                {{ $employee_count }}
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -311,6 +256,191 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <!-- ICP Section -->
+                    <h5 class="filter_heading subheading_line mt-5">ICP</h5>
+                    <div class="filterContainerInner">
+                        <!-- Industry Filter Section -->
+                        <div class="filter-section">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#industryFilter">
+                                Industry <span class="toggle-icon">+</span>
+                            </div>
+                            <div id="industryFilter" class="filterCollapseBox collapse">
+                                <div class="selected-filter-group" id="selectedIndustryFilters">
+
+                                </div>
+                                <div class="searchBarAndFilterCon">
+                                    <input type="text" id="industrySearchInput" name="company_industry"
+                                        class="filter-search" placeholder="Search Industry..."
+                                        oninput="filterOptions(this, 'industryFilterOptions')">
+                                    <div id="industryFilterOptions" style="display: none">
+
+                                        @foreach ($filters['company_industries'] as $industry)
+                                            <div class="filter-option"
+                                                onclick="addFilter('company_industry', '{{ $industry }}', 'selectedIndustryFilters', 'industrySearchInput')">
+                                                {{ $industry }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Employees Filter Section -->
+                        <div class="filter-section">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#employeesFilter">
+                                Company Size <span class="toggle-icon">+</span>
+                            </div>
+                            <div id="employeesFilter" class="filterCollapseBox collapse">
+                                <div class="selected-filter-group" id="selectedEmployeesFilters"></div>
+
+
+                                <div class="searchBarAndFilterCon">
+                                    <input type="text" id="employeesSearchInput" name="company_no_of_employee"
+                                        class="filter-search" placeholder="Search Company Size..."
+                                        oninput="filterOptions(this, 'employeesFilterOptions')">
+                                    <div id="employeesFilterOptions">
+                                        @foreach ($filters['company_no_of_employees'] as $employee_count)
+                                            <div class="filter-option"
+                                                onclick="addFilter('company_no_of_employee', '{{ $employee_count }}', 'selectedEmployeesFilters', 'employeesSearchInput')">
+                                                {{ $employee_count }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Business Location Filter Section -->
+                        <div class="filter-section">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#businessLocationFilter">
+                                Business Location <span class="toggle-icon">+</span>
+                            </div>
+                            <div id="businessLocationFilter" class="filterCollapseBox collapse">
+                                <div class="selected-filter-group" id="selectedBusinessLocationFilters"></div>
+
+                                <div class="searchBarAndFilterCon">
+                                    <input type="text" id="businessLocationSearchInput" name="business_location"
+                                        class="filter-search" placeholder="Search Business Location..."
+                                        oninput="filterOptions(this, 'businessLocationFilterOptions')">
+                                    <div id="businessLocationFilterOptions">
+                                        @foreach ($filters['business_locations'] ?? [] as $location)
+                                            <div class="filter-option"
+                                                onclick="addFilter('business_location', '{{ $location }}', 'selectedBusinessLocationFilters', 'businessLocationSearchInput')">
+                                                {{ $location }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Business Challenges Filter Section -->
+                        <div class="filter-section">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#businessChallengesFilter">
+                                Business Challenges <span class="toggle-icon">+</span>
+                            </div>
+                            <div id="businessChallengesFilter" class="filterCollapseBox collapse">
+                                <div class="selected-filter-group" id="selectedBusinessChallengesFilters"></div>
+
+                                <div class="searchBarAndFilterCon">
+                                    <input type="text" id="businessChallengesSearchInput" name="company_current_business_challenges"
+                                        class="filter-search" placeholder="Search Business Challenges..."
+                                        oninput="filterOptions(this, 'businessChallengesFilterOptions')">
+                                    <div id="businessChallengesFilterOptions">
+                                        @foreach ($filters['business_challenges'] ?? [] as $challenge)
+                                            <div class="filter-option"
+                                                onclick="addFilter('company_current_business_challenges', '{{ $challenge }}', 'selectedBusinessChallengesFilters', 'businessChallengesSearchInput')">
+                                                {{ $challenge }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Business Goals Filter Section -->
+                        <div class="filter-section">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#businessGoalsFilter">
+                                Business Goals <span class="toggle-icon">+</span>
+                            </div>
+                            <div id="businessGoalsFilter" class="filterCollapseBox collapse">
+                                <div class="selected-filter-group" id="selectedBusinessGoalsFilters"></div>
+
+                                <div class="searchBarAndFilterCon">
+                                    <input type="text" id="businessGoalsSearchInput" name="company_business_goals"
+                                        class="filter-search" placeholder="Search Business Goals..."
+                                        oninput="filterOptions(this, 'businessGoalsFilterOptions')">
+                                    <div id="businessGoalsFilterOptions">
+                                        @foreach ($filters['business_goals'] ?? [] as $goal)
+                                            <div class="filter-option"
+                                                onclick="addFilter('company_business_goals', '{{ $goal }}', 'selectedBusinessGoalsFilters', 'businessGoalsSearchInput')">
+                                                {{ $goal }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Company Attributes Filter Section -->
+                        <div class="filter-section">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#companyAttributesFilter">
+                                Company Attributes <span class="toggle-icon">+</span>
+                            </div>
+                            <div id="companyAttributesFilter" class="filterCollapseBox collapse">
+                                <div class="selected-filter-group" id="selectedCompanyAttributesFilters"></div>
+
+                                <div class="searchBarAndFilterCon">
+                                    <input type="text" id="companyAttributesSearchInput" name="company_attributes"
+                                        class="filter-search" placeholder="Search Company Attributes..."
+                                        oninput="filterOptions(this, 'companyAttributesFilterOptions')">
+                                    <div id="companyAttributesFilterOptions">
+                                        @foreach ($filters['company_attributes'] ?? [] as $attribute)
+                                            <div class="filter-option"
+                                                onclick="addFilter('company_attributes', '{{ $attribute }}', 'selectedCompanyAttributesFilters', 'companyAttributesSearchInput')">
+                                                {{ $attribute }}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Decision Maker Filter Section -->
+                        <div class="filter-section">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#decisionMakerFilter">
+                                Decision Maker <span class="toggle-icon">+</span>
+                            </div>
+                            <div id="decisionMakerFilter" class="filterCollapseBox collapse">
+                                <div class="selected-filter-group" id="selectedDecisionMakerFilters"></div>
+
+                                <div class="searchBarAndFilterCon">
+                                    <input type="text" id="decisionMakerSearchInput" name="is_decision_maker"
+                                        class="filter-search" placeholder="Search Decision Maker..."
+                                        oninput="filterOptions(this, 'decisionMakerFilterOptions')" style="display: none;">
+                                    <div id="decisionMakerFilterOptions" style="display: block;">
+                                        <div class="filter-option"
+                                            onclick="addFilter('is_decision_maker', 'Yes', 'selectedDecisionMakerFilters', 'decisionMakerSearchInput')">
+                                            Yes
+                                        </div>
+                                        <div class="filter-option"
+                                            onclick="addFilter('is_decision_maker', 'No', 'selectedDecisionMakerFilters', 'decisionMakerSearchInput')">
+                                            No
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                     <!-- Position Filter Section -->

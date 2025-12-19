@@ -92,6 +92,11 @@ class User extends Authenticatable
         return $this->hasMany(Conversation::class); // Assuming Conversation model exists
     }
 
+    public function userIcp()
+    {
+        return $this->hasOne(UserIcp::class);
+    }
+
 
 
 
