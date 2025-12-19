@@ -102,9 +102,11 @@
         line-height: 55px;
     }
 
-    
-    
-
+@media (max-width: 1400px) {
+    .sidebar {
+        width: 24% !important;
+    }
+}
 
 @media (max-width: 1080px) {
 

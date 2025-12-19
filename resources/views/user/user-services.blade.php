@@ -139,6 +139,10 @@
     /* .dataTables_filter::after {
         right: 28px;
     } */
+
+    .data_table_user table tbody td.btn_flex a::after {
+        left: 0px;
+    }
    
 }
 

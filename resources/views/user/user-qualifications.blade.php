@@ -124,6 +124,7 @@
         padding: 20px !important;
         background: transparent !important;
         border: none !important;
+        position: relative;
     }
 
     .data_table_user #qualifications-table tbody td a::after{
@@ -242,6 +243,21 @@
         background-size: contain;
     }
 
+    table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before{
+        content: "" !important;
+        width: 16px;
+        height: 16px;
+        background: url("/assets/images/dashboard/productTableHeadDownChevronIcon.svg") no-repeat center !important;
+    }
+
+     table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td.dtr-control:before, table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th.dtr-control:before{
+        content: "" !important;
+        width: 16px;
+        height: 16px;
+        background: url("/assets/images/dashboard/productTableHeadDownChevronIcon.svg") no-repeat center !important;
+        rotate: -90deg;
+    }
+
     @media (max-width: 1400px) {
         th.sorting,
         .data_table_user #qualifications-table tbody td {
@@ -287,7 +303,62 @@
         right: 28px;
     } */
 
+         table.dataTable>tbody>tr.child ul.dtr-details {
+            width: 100%;
+        }
+
+        table.dataTable>tbody>tr.child ul.dtr-details>li:last-child {
+            display: flex;
+            align-items: center;
+        }
+
+        table.dataTable>tbody>tr.child ul.dtr-details>li:last-child .dtr-data {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .data_table_user .table.dataTable tbody td a, .data_table_user .table.dataTable tbody td form button {
+            position: relative;
+        }
+
 }
+
+@media (max-width: 1080px) {
+    div#qualifications-table_filter label, 
+    .dataTables_wrapper .dataTables_filter input {
+        width: 99% !important;
+        margin: 0 15px 0 0;
+    }
+
+    div#qualifications-table_filter {
+        transform: translate(10px, -10px);
+        margin: auto !important;
+        width: 100%;
+        
+    }
+
+    .dataTables_filter::after {
+        right: 46px;
+    }
+}
+
+@media (max-width: 768px) {
+    .data_table_user #qualifications-table tbody td a::after {
+        left: 19px;
+    }
+
+    div#qualifications-table_filter label {
+        margin: 0 0 0 0;
+    }
+}
+
+@media (max-width: 550px) {
+    .data_table_user #qualifications-table tbody td form button::after {
+        top: 35%;
+    }
+}
+
 </style>
 
 @section('dashboard-content')

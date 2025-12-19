@@ -235,7 +235,23 @@
         background-size: contain;
     }
 
+    table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before{
+        content: "" !important;
+        width: 16px;
+        height: 16px;
+        background: url("/assets/images/dashboard/productTableHeadDownChevronIcon.svg") no-repeat center !important;
+    }
+
+     table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td.dtr-control:before, table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th.dtr-control:before{
+        content: "" !important;
+        width: 16px;
+        height: 16px;
+        background: url("/assets/images/dashboard/productTableHeadDownChevronIcon.svg") no-repeat center !important;
+        rotate: -90deg;
+    }
+
     @media (max-width: 1440px) {
+            
 
         table.dataTable thead > tr > th.sorting,
         table.dataTable thead > tr > th.sorting_asc,
@@ -267,7 +283,8 @@
 
     div#products-table_filter label,
     .dataTables_wrapper .dataTables_filter input {
-        width: 100% !important;
+        width: 99% !important;
+        margin: 0 0px 0 15px;
     }
 
     th.sorting,
@@ -283,6 +300,36 @@
         right: 28px;
     } */
 
+        table.dataTable>tbody>tr.child ul.dtr-details {
+            width: 100%;
+        }
+
+        table.dataTable>tbody>tr.child ul.dtr-details>li:last-child {
+            display: flex;
+            align-items: center;
+        }
+
+        table.dataTable>tbody>tr.child ul.dtr-details>li:last-child .dtr-data {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .data_table_user .table.dataTable tbody td a, .data_table_user .table.dataTable tbody td form button {
+            position: relative;
+        }
+
+}
+@media (max-width: 768px) {
+    .data_table_user .table.dataTable tbody td a::after {
+        left: 19px;
+    }
+}
+
+@media (max-width: 550px) {
+    .data_table_user .table.dataTable tbody td form button::after {
+        top: 35%;
+    }
 }
 
 
