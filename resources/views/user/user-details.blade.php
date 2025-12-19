@@ -285,18 +285,18 @@
             transition: .3s;
             position: absolute;
             background: #273572;
-            width: 283px;
-            z-index: 9999;
+            width: 238px;
             bottom: 35px;
-            left: -33px;
+            right: -75px;
             font-family: "Poppins", sans-serif;
             font-weight: 400;
-            font-size: 16px;
-            line-height: 100%;
+            font-size: 14px;
+            line-height: 131%;
             color: #FFFFFF;
             padding: 12px 14px;
             border-radius: 7px;
             user-select: none;
+            z-index: 9999;
         }
 
         .profileTooltip:hover .profileTooltipText {
@@ -313,7 +313,7 @@
             transform: rotate(46deg) skew(3deg, 360deg);
             position: absolute;
             bottom: -5px;
-            left: 20px;
+            right: 63px;
             z-index: -1;
         }
 
@@ -342,6 +342,18 @@
             .main-content {
                 padding: 70px 14px 20px 14px !important;
             }
+        }
+
+        @media (max-width: 544px){
+
+                .profileTooltipText {
+                    right: -118px;
+                }
+
+            .profileTooltipTextCurve {
+                right: 106px;
+            }
+
         }
 
         @media (max-width: 398px) {
