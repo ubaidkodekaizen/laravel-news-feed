@@ -34,6 +34,23 @@
         margin-right: 16px;
     }
 
+@media (max-width: 1080px) {
+    .main-content {
+        width: 100% !important;
+        height: 100%;
+        padding: 50px 14px 20px 14px !important;
+    }
+    .section_heading_flex h2 {
+        font-size: 24px;
+        margin-bottom: 22px;    
+    }
+}
+
+@media (max-width: 786px){
+    .add_form button.btn.btn-primary {
+        font-size: 16px;
+    }
+}
     
 </style>
 

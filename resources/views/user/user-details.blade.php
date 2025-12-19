@@ -319,6 +319,31 @@
             }
         }
 
+        
+        @media (max-width: 486px) {
+            .main-content {
+                padding: 70px 14px 20px 14px !important;
+            }
+        }
+
+        @media (max-width: 398px) {
+            .user_company_profile .new_user_details label:not(.form-check-label) {
+                font-size: 15px;
+            }
+
+            .new_user_details .form-control {
+                font-size: 14px;
+            }
+
+            .profileSaveBtn {
+                border-radius: 9.77px;
+                padding: 15px 56px;
+                font-family: "Poppins", sans-serif;
+                font-weight: 500;
+                font-size: 16px;
+            }
+        }
+
     </style>
     <section class="user_company_profile">
         <div class="container">
