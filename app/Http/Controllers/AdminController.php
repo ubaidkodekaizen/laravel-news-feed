@@ -133,6 +133,23 @@ class AdminController extends Controller
             'is_amcob' => $request->amcob_member ?? 'No',
             'duration' => $request->duration ?? '',
         ]);
+
+        // Create subscription for AMCOB users with 90 days free trial
+        if (($request->amcob_member ?? 'No') === 'Yes') {
+            Subscription::create([
+                'user_id' => $user->id,
+                'plan_id' => 1,
+                'subscription_type' => 'Free',
+                'subscription_amount' => 0.00,
+                'start_date' => now(),
+                'renewal_date' => now()->addDays(90), // 90 days free trial for AMCOB users
+                'status' => 'inactive',
+                'transaction_id' => null,
+                'receipt_data' => null,
+                'platform' => 'Amcob',
+            ]);
+        }
+
         $token = Str::random(64);
         $emailData = [
             'token' => $token,

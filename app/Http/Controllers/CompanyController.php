@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Designation;
 use App\Models\Industry;
 use App\Models\BusinessType;
+use App\Models\UserIcp;
 use Auth;
 use Illuminate\Http\Request;
 use Str;
@@ -96,6 +97,20 @@ class CompanyController extends Controller
             $company->status = "complete";
             $company->save();
         }
+
+        // Save ICP data
+        UserIcp::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'business_location' => $request->business_location ?? null,
+                'is_decision_maker' => $request->is_decision_maker !== null ? ($request->is_decision_maker === 'Yes' || $request->is_decision_maker === '1' || $request->is_decision_maker === 1 || $request->is_decision_maker === true ? 1 : 0) : null,
+                'company_current_business_challenges' => $request->company_current_business_challenges ?? null,
+                'company_business_goals' => $request->company_business_goals ?? null,
+                'company_attributes' => $request->company_attributes ?? null,
+                'company_technologies_you_use' => $request->company_technologies_you_use ?? null,
+                'company_buying_process' => $request->company_buying_process ?? null,
+            ]
+        );
 
         return redirect()->back()->with('success', 'Professional details updated successfully!');
     }

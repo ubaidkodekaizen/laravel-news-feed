@@ -560,115 +560,19 @@
                                 <div class="row">
                                     <div class="col-lg-3">
                                         <label for="gender">Gender</label>
-                                        <select name="gender" id="gender" class="form-select">
-                                            <option value="Male" {{ $user->gender === 'Male' ? 'selected' : '' }}>Male
-                                            </option>
-                                            <option value="Female" {{ $user->gender === 'Female' ? 'selected' : '' }}>
-                                                Female</option>
-
-                                            <option value="Prefer not to disclose"
-                                                {{ $user->gender === 'Prefer not to disclose' ? 'selected' : '' }}>Prefer
-                                                not to disclose</option>
-                                            <option value="Other" {{ $user->gender === 'Other' ? 'selected' : '' }}>Other
-                                            </option>
-                                        </select>
+                                        {!! \App\Helpers\DropDownHelper::renderGenderDropdown($user->gender) !!}
                                     </div>
 
 
                                     <div class="col-lg-3">
                                         <label for="age_group">Age Group</label>
-                                        <select name="age_group" id="age_group" class="form-select">
-                                            <option value="20-30" {{ $user->age_group === '20-30' ? 'selected' : '' }}>
-                                                20-30</option>
-                                            <option value="31-40" {{ $user->age_group === '31-40' ? 'selected' : '' }}>
-                                                31-40</option>
-                                            <option value="41-50" {{ $user->age_group === '41-50' ? 'selected' : '' }}>
-                                                41-50</option>
-                                            <option value="51-60" {{ $user->age_group === '51-60' ? 'selected' : '' }}>
-                                                51-60</option>
-                                            <option value="60+" {{ $user->age_group === '60+' ? 'selected' : '' }}>60+
-                                            </option>
-                                            <option value="Prefer not to disclose"
-                                                {{ $user->age_group === 'Prefer not to disclose' ? 'selected' : '' }}>
-                                                Prefer not to disclose</option>
-                                        </select>
+                                        {!! \App\Helpers\DropDownHelper::renderAgeGroupDropdown($user->age_group) !!}
                                     </div>
 
                                     <div class="col-lg-3">
                                         <label for="ethnicity">Ethnicity</label>
                                         <fieldset>
-                                            <select class="form-select dropdown" id="ethnicity" name="ethnicity">
-                                                <option value="" disabled="disabled">-- select one --</option>
-                                                <optgroup label="African">
-                                                    <option value="North African (e.g., Arab, Berber, Nubian)"
-                                                        {{ $user->ethnicity === 'North African (e.g., Arab, Berber, Nubian)' ? 'selected' : '' }}>
-                                                        North African (e.g., Arab, Berber, Nubian)</option>
-                                                    <option value="Sub-Saharan African (e.g., Hausa, Yoruba, Somali, Zulu)"
-                                                        {{ $user->ethnicity === 'Sub-Saharan African (e.g., Hausa, Yoruba, Somali, Zulu)' ? 'selected' : '' }}>
-                                                        Sub-Saharan African (e.g., Hausa, Yoruba, Somali, Zulu)</option>
-                                                    <option value="Afro-Caribbean"
-                                                        {{ $user->ethnicity === 'Afro-Caribbean' ? 'selected' : '' }}>
-                                                        Afro-Caribbean</option>
-                                                    <option value="African-American"
-                                                        {{ $user->ethnicity === 'African-American' ? 'selected' : '' }}>
-                                                        African-American</option>
-                                                </optgroup>
-                                                <optgroup label="Asian">
-                                                    <option value="South Asian"
-                                                        {{ $user->ethnicity === 'South Asian' ? 'selected' : '' }}>
-                                                        South Asian (e.g., Indian, Pakistani, Bangladeshi, Sri Lankan,
-                                                        Nepali)</option>
-                                                    <option value="East Asian"
-                                                        {{ $user->ethnicity === 'East Asian' ? 'selected' : '' }}>
-                                                        East Asian (e.g., Chinese, Japanese, Korean)</option>
-                                                    <option value="Southeast Asian"
-                                                        {{ $user->ethnicity === 'Southeast Asian' ? 'selected' : '' }}>
-                                                        Southeast Asian (e.g., Malay, Filipino, Indonesian, Thai, Burmese)
-                                                    </option>
-                                                    <option value="Central Asian"
-                                                        {{ $user->ethnicity === 'Central Asian' ? 'selected' : '' }}>
-                                                        Central Asian (e.g., Kazakh, Uzbek, Turkmen, Tajik, Kyrgyz)</option>
-                                                    <option value="West Asian/Middle Eastern"
-                                                        {{ $user->ethnicity === 'West Asian/Middle Eastern' ? 'selected' : '' }}>
-                                                        West Asian/Middle Eastern (e.g., Arab, Persian, Kurdish, Turkish,
-                                                        Assyrian)</option>
-                                                </optgroup>
-                                                <optgroup label="European">
-                                                    <option value="Eastern European"
-                                                        {{ $user->ethnicity === 'Eastern European' ? 'selected' : '' }}>
-                                                        Eastern European (e.g., Russian, Polish, Ukrainian, Romanian)
-                                                    </option>
-                                                    <option value="Western European"
-                                                        {{ $user->ethnicity === 'Western European' ? 'selected' : '' }}>
-                                                        Western European (e.g., British, French, German, Dutch)</option>
-                                                    <option value="Southern European"
-                                                        {{ $user->ethnicity === 'Southern European' ? 'selected' : '' }}>
-                                                        Southern European (e.g., Italian, Spanish, Greek, Portuguese)
-                                                    </option>
-                                                    <option value="Balkan (e.g., Bosnian, Albanian)"
-                                                        {{ $user->ethnicity === 'Balkan (e.g., Bosnian, Albanian)' ? 'selected' : '' }}>
-                                                        Balkan (e.g., Bosnian, Albanian)</option>
-                                                </optgroup>
-                                                <optgroup label="Latino/Hispanic">
-                                                    <option value="Latino/Hispanic"
-                                                        {{ $user->ethnicity === 'Latino/Hispanic' ? 'selected' : '' }}>
-                                                        Latino/Hispanic (e.g., Mexican, Brazilian, Colombian, Cuban)
-                                                    </option>
-                                                </optgroup>
-                                                <optgroup label="Mixed/Multiracial">
-                                                    <option value="Multiracial/Mixed Heritage"
-                                                        {{ $user->ethnicity === 'Multiracial/Mixed Heritage' ? 'selected' : '' }}>
-                                                        Multiracial/Mixed Heritage</option>
-                                                </optgroup>
-
-                                                <option value="Prefer not to disclose"
-                                                    {{ $user->ethnicity === 'Prefer not to disclose' ? 'selected' : '' }}>
-                                                    Prefer not to disclose</option>
-                                                <optgroup label="Other">
-                                                    <option value="Other"
-                                                        {{ $user->ethnicity === 'Other' ? 'selected' : '' }}>Other</option>
-                                                </optgroup>
-                                            </select>
+                                            {!! \App\Helpers\DropDownHelper::renderEthnicityDropdown($user->ethnicity) !!}
                                         </fieldset>
                                     </div>
 
@@ -706,22 +610,7 @@
 
                                     <div class="col-lg-3">
                                         <label for="marital_status">Marital Status</label>
-                                        <select name="marital_status" id="marital_status" class="form-select">
-                                            <option value="Single"
-                                                {{ $user->marital_status === 'Single' ? 'selected' : '' }}>Single</option>
-                                            <option value="Married"
-                                                {{ $user->marital_status === 'Married' ? 'selected' : '' }}>Married
-                                            </option>
-                                            <option value="Divorced"
-                                                {{ $user->marital_status === 'Divorced' ? 'selected' : '' }}>Divorced
-                                            </option>
-
-                                            <option value="Prefer not to disclose"
-                                                {{ $user->marital_status === 'Prefer not to disclose' ? 'selected' : '' }}>
-                                                Prefer not to disclose</option>
-                                            <option value="Other"
-                                                {{ $user->marital_status === 'Other' ? 'selected' : '' }}>Other</option>
-                                        </select>
+                                        {!! \App\Helpers\DropDownHelper::renderMaritalStatusDropdown($user->marital_status) !!}
                                     </div>
 
                                     <div class="col-lg-3" id="other-marital-status-div"
@@ -873,29 +762,7 @@
                                                     </div>
                                                     <div class="col-lg-3 custom-select-dropdown mt-0">
                                                         <label for="company_experience">Years of Experience</label>
-                                                        <select name="company_experience" id="company_experience"
-                                                            class="form-select">
-                                                            <option value="Under 1"
-                                                                {{ optional($company)->company_experience == 'Under 1' ? 'selected' : '' }}>
-                                                                Under 1
-                                                            </option>
-                                                            <option value="1-5 years"
-                                                                {{ optional($company)->company_experience == '1-5 years' ? 'selected' : '' }}>
-                                                                1-5 years
-                                                            </option>
-                                                            <option value="5-10 years"
-                                                                {{ optional($company)->company_experience == '5-10 years' ? 'selected' : '' }}>
-                                                                5-10 years
-                                                            </option>
-                                                            <option value="10-20 years"
-                                                                {{ optional($company)->company_experience == '10-20 years' ? 'selected' : '' }}>
-                                                                10-20 years
-                                                            </option>
-                                                            <option value="20+ years"
-                                                                {{ optional($company)->company_experience == '20+ years' ? 'selected' : '' }}>
-                                                                20+ years
-                                                            </option>
-                                                        </select>
+                                                        {!! \App\Helpers\DropDownHelper::renderCompanyExperienceDropdown($company->company_experience ?? '') !!}
 
                                                     </div>
 
@@ -1039,7 +906,7 @@
                                                         </select>
                                                         <input type="hidden" id="business_location_hidden"
                                                             name="business_location"
-                                                            value="{{ old('business_location', $company->business_location ?? '') }}" />
+                                                            value="{{ old('business_location', $userIcp->business_location ?? '') }}" />
                                                     </div>
 
                                                     <!-- Company Size Dropdown -->
@@ -1078,8 +945,8 @@
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="is_decision_maker" id="decision_maker_yes"
-                                                                    value="1"
-                                                                    {{ old('is_decision_maker', $company->is_decision_maker ?? '') == 1 ? 'checked' : '' }}>
+                                                                    value="Yes"
+                                                                    {{ old('is_decision_maker', $userIcp->is_decision_maker ?? '') == 1 || old('is_decision_maker', $userIcp->is_decision_maker ?? '') == 'Yes' ? 'checked' : '' }}>
                                                                 <label class="form-check-label" for="decision_maker_yes">
                                                                     Yes
                                                                 </label>
@@ -1088,8 +955,8 @@
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="radio"
                                                                     name="is_decision_maker" id="decision_maker_no"
-                                                                    value="0"
-                                                                    {{ old('is_decision_maker', $company->is_decision_maker ?? '') == 0 ? 'checked' : '' }}>
+                                                                    value="No"
+                                                                    {{ old('is_decision_maker', $userIcp->is_decision_maker ?? '') == 0 || old('is_decision_maker', $userIcp->is_decision_maker ?? '') == 'No' ? 'checked' : '' }}>
                                                                 <label class="form-check-label" for="decision_maker_no">
                                                                     No
                                                                 </label>
@@ -1137,7 +1004,7 @@
                                                         <input type="hidden"
                                                             id="company_current_business_challenges_hidden"
                                                             name="company_current_business_challenges"
-                                                            value="{{ old('company_current_business_challenges', $company->company_current_business_challenges ?? '') }}" />
+                                                            value="{{ old('company_current_business_challenges', $userIcp->company_current_business_challenges ?? '') }}" />
 
                                                     </div>
 
@@ -1162,7 +1029,7 @@
                                                         </select>
                                                         <input type="hidden" id="company_business_goals_hidden"
                                                             name="company_business_goals"
-                                                            value="{{ old('company_business_goals', $company->company_business_goals ?? '') }}" />
+                                                            value="{{ old('company_business_goals', $userIcp->company_business_goals ?? '') }}" />
 
                                                     </div>
 
@@ -1216,7 +1083,7 @@
                                                         </select>
                                                         <input type="hidden" id="company_attributes_hidden"
                                                             name="company_attributes"
-                                                            value="{{ old('company_attributes', $company->company_attributes ?? '') }}" />
+                                                            value="{{ old('company_attributes', $userIcp->company_attributes ?? '') }}" />
                                                     </div>
 
                                                 </div>
@@ -1243,6 +1110,12 @@
 @endsection
 
 @section('scripts')
+    @php
+        $business_locations = \App\Helpers\DropDownHelper::getBusinessLocationsArray();
+        $business_challenges = \App\Helpers\DropDownHelper::getCurrentBusinessChallengesArray();
+        $business_goals = \App\Helpers\DropDownHelper::getBusinessGoalsArray();
+        $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
+    @endphp
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
 

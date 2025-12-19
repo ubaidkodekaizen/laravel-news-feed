@@ -84,7 +84,7 @@ class SearchController extends Controller
             ->whereHas('company', function ($query) {
                 $query->where('status', 'complete');
             })
-            ->with(['company']);
+            ->with(['company', 'userIcp']);
 
 
         if ($request->filled('company_position')) {
@@ -145,28 +145,27 @@ class SearchController extends Controller
 
         if ($request->filled('name')) {
             $names = is_array($request->name) ? $request->name : [$request->name];
-            $query->whereIn('first_name', $names); // Assuming 'country' is in the users table
-        }
-        // Filter by Country in users table
-        if ($request->filled('country')) {
-            $countries = is_array($request->country) ? $request->country : [$request->country];
-            $query->whereIn('country', $countries); // Assuming 'country' is in the users table
+            $query->whereIn('first_name', $names);
         }
 
-        // Filter by State in users table
+        if ($request->filled('country')) {
+            $countries = is_array($request->country) ? $request->country : [$request->country];
+            $query->whereIn('country', $countries);
+        }
+
         if ($request->filled('state')) {
             $states = is_array($request->state) ? $request->state : [$request->state];
-            $query->whereIn('state', $states); // Assuming 'state' is in the users table
+            $query->whereIn('state', $states);
         }
 
         if ($request->filled('user_county')) {
             $counties = is_array($request->user_county) ? $request->user_county : [$request->user_county];
-            $query->whereIn('county', $counties); // Assuming 'county' is in the users table
+            $query->whereIn('county', $counties);
         }
 
         if ($request->filled('user_city')) {
             $cities = is_array($request->user_city) ? $request->user_city : [$request->user_city];
-            $query->whereIn('city', $cities); // Assuming 'city' is in the users table
+            $query->whereIn('city', $cities);
         }
 
         if ($request->filled('user_position')) {
@@ -180,22 +179,22 @@ class SearchController extends Controller
 
         if ($request->filled('user_gender')) {
             $user_genders = is_array($request->user_gender) ? $request->user_gender : [$request->user_gender];
-            $query->whereIn('gender', $user_genders); // Assuming 'gender' is in the users table
+            $query->whereIn('gender', $user_genders);
         }
 
         if ($request->filled('user_age_group')) {
             $user_age_groups = is_array($request->user_age_group) ? $request->user_age_group : [$request->user_age_group];
-            $query->whereIn('age_group', $user_age_groups); // Assuming 'age_group' is in the users table
+            $query->whereIn('age_group', $user_age_groups);
         }
 
         if ($request->filled('marital_status')) {
             $marital_statuses = is_array($request->marital_status) ? $request->marital_status : [$request->marital_status];
-            $query->whereIn('marital_status', $marital_statuses); // Assuming 'marital_status' is in the users table
+            $query->whereIn('marital_status', $marital_statuses);
         }
 
         if ($request->filled('user_ethnicity')) {
             $user_ethnicities = is_array($request->user_ethnicity) ? $request->user_ethnicity : [$request->user_ethnicity];
-            $query->whereIn('ethnicity', $user_ethnicities); // Assuming 'ethnicity' is in the users table
+            $query->whereIn('ethnicity', $user_ethnicities);
         }
 
         if ($request->filled('user_nationality')) {
@@ -208,7 +207,6 @@ class SearchController extends Controller
         }
 
 
-        // Filter by Product/Service in product_services table
         if ($request->filled('product_service_name')) {
             $productServices = is_array($request->product_service_name) ? $request->product_service_name : [$request->product_service_name];
             $query->whereHas('company.productServices', function ($query) use ($productServices) {
@@ -231,20 +229,65 @@ class SearchController extends Controller
             });
         }
 
+        if ($request->filled('business_location')) {
+            $locations = is_array($request->business_location) ? $request->business_location : [$request->business_location];
+            $query->whereHas('userIcp', function ($query) use ($locations) {
+                $query->whereIn('business_location', $locations);
+            });
+        }
+
+        if ($request->filled('company_current_business_challenges')) {
+            $challenges = is_array($request->company_current_business_challenges) ? $request->company_current_business_challenges : [$request->company_current_business_challenges];
+            $query->whereHas('userIcp', function ($query) use ($challenges) {
+                $query->where(function ($q) use ($challenges) {
+                    foreach ($challenges as $challenge) {
+                        $q->orWhere('company_current_business_challenges', 'LIKE', '%' . $challenge . '%');
+                    }
+                });
+            });
+        }
+
+        if ($request->filled('company_business_goals')) {
+            $goals = is_array($request->company_business_goals) ? $request->company_business_goals : [$request->company_business_goals];
+            $query->whereHas('userIcp', function ($query) use ($goals) {
+                $query->where(function ($q) use ($goals) {
+                    foreach ($goals as $goal) {
+                        $q->orWhere('company_business_goals', 'LIKE', '%' . $goal . '%');
+                    }
+                });
+            });
+        }
+
+        if ($request->filled('company_attributes')) {
+            $attributes = is_array($request->company_attributes) ? $request->company_attributes : [$request->company_attributes];
+            $query->whereHas('userIcp', function ($query) use ($attributes) {
+                $query->where(function ($q) use ($attributes) {
+                    foreach ($attributes as $attribute) {
+                        $q->orWhere('company_attributes', 'LIKE', '%' . $attribute . '%');
+                    }
+                });
+            });
+        }
+
+        $isDecisionMakerParam = $request->input('is_decision_maker') ?? $request->input('is_decision_maker[]');
+        if ($isDecisionMakerParam) {
+            $isDecisionMaker = is_array($isDecisionMakerParam) ? $isDecisionMakerParam[0] : $isDecisionMakerParam;
+            $query->whereHas('userIcp', function ($query) use ($isDecisionMaker) {
+                $decisionMakerValue = ($isDecisionMaker === 'Yes' || $isDecisionMaker === '1' || $isDecisionMaker === 1 || $isDecisionMaker === true || $isDecisionMaker === 'true') ? 1 : 0;
+                $query->where('is_decision_maker', $decisionMakerValue);
+            });
+        }
+
         $query->orderByRaw("CASE WHEN city IS NULL THEN 2 WHEN city = 'N/A' THEN 1 ELSE 0 END")
             ->orderBy('id', 'desc');
 
 
-        // Use dynamic per page value
         $users = $query->paginate($perPage)->appends($request->except('page'));
 
-
-        // Return the updated user results
         if ($request->ajax()) {
             return view('partial.search-result', ['users' => $users]);
         }
 
-        // Return the full view if not an AJAX request
         return view('search', ['users' => $users]);
     }
 

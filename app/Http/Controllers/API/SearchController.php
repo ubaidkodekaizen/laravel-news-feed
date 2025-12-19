@@ -12,9 +12,6 @@ use App\Helpers\DropDownHelper;
 
 class SearchController extends Controller
 {
-
-
-
     // For main search
     public function searchUserCompany(Request $request)
     {
@@ -22,9 +19,7 @@ class SearchController extends Controller
             ->whereHas('company', function ($query) {
                 $query->where('status', 'complete');
             })
-            ->with(['company']);
-
-        // === Apply Filters ===
+            ->with(['company', 'userIcp']);
 
         if ($request->filled('company_position')) {
             $positions = (array) $request->company_position;
@@ -144,7 +139,54 @@ class SearchController extends Controller
             });
         }
 
-        // === Order & Pagination ===
+        if ($request->filled('business_location')) {
+            $locations = (array) $request->business_location;
+            $query->whereHas('userIcp', function ($query) use ($locations) {
+                $query->whereIn('business_location', $locations);
+            });
+        }
+
+        if ($request->filled('company_current_business_challenges')) {
+            $challenges = (array) $request->company_current_business_challenges;
+            $query->whereHas('userIcp', function ($query) use ($challenges) {
+                $query->where(function ($q) use ($challenges) {
+                    foreach ($challenges as $challenge) {
+                        $q->orWhere('company_current_business_challenges', 'LIKE', '%' . $challenge . '%');
+                    }
+                });
+            });
+        }
+
+        if ($request->filled('company_business_goals')) {
+            $goals = (array) $request->company_business_goals;
+            $query->whereHas('userIcp', function ($query) use ($goals) {
+                $query->where(function ($q) use ($goals) {
+                    foreach ($goals as $goal) {
+                        $q->orWhere('company_business_goals', 'LIKE', '%' . $goal . '%');
+                    }
+                });
+            });
+        }
+
+        if ($request->filled('company_attributes')) {
+            $attributes = (array) $request->company_attributes;
+            $query->whereHas('userIcp', function ($query) use ($attributes) {
+                $query->where(function ($q) use ($attributes) {
+                    foreach ($attributes as $attribute) {
+                        $q->orWhere('company_attributes', 'LIKE', '%' . $attribute . '%');
+                    }
+                });
+            });
+        }
+
+        $isDecisionMakerParam = $request->input('is_decision_maker') ?? $request->input('is_decision_maker[]');
+        if ($isDecisionMakerParam) {
+            $isDecisionMaker = is_array($isDecisionMakerParam) ? $isDecisionMakerParam[0] : $isDecisionMakerParam;
+            $query->whereHas('userIcp', function ($query) use ($isDecisionMaker) {
+                $decisionMakerValue = ($isDecisionMaker === 'Yes' || $isDecisionMaker === '1' || $isDecisionMaker === 1 || $isDecisionMaker === true || $isDecisionMaker === 'true') ? 1 : 0;
+                $query->where('is_decision_maker', $decisionMakerValue);
+            });
+        }
 
         $query->orderByRaw("CASE WHEN city IS NULL THEN 2 WHEN city = 'N/A' THEN 1 ELSE 0 END")
             ->orderBy('id', 'desc');
@@ -198,7 +240,6 @@ class SearchController extends Controller
         $companies = Company::where('company_industry', 'like', '%' . $searchTerm . '%')
             ->pluck('company_industry');
 
-        // fetch first_name and last_name separately
         $users = User::where('first_name', 'like', '%' . $searchTerm . '%')
             ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
             ->get(['first_name', 'last_name']);
