@@ -625,7 +625,7 @@ div#sidebarMain {
     height: calc(96.8vh - 100px);
     overflow-y: auto;
     color: #000;
-    background-color: transparent;
+    background-color: #f4f5fc;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -3453,11 +3453,11 @@ p.industryProfileRole {
 } */
 
 /* login page  */
-@media (max-width: 1400px) {
+/* @media (max-width: 1400px) {
     .sidebar {
-         width: 24% !important;
+         width: 50% !important;
     }
-}
+} */
 
 @media (max-width: 1280px) {
     .industry_specialist .container .row.g-3 .col-md-4 {
@@ -3595,7 +3595,7 @@ p.industryProfileRole {
         position: absolute;
         left: -100%;}
 
-    
+
 
 }
 

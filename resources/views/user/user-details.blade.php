@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css" />
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+        rel="stylesheet" />
     <style>
-        body {
-            overflow-y: hidden;
-        }
+        /* body {
+                            overflow-y: hidden;
+                        } */
 
         .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
             flex-direction: row-reverse;
@@ -104,6 +105,19 @@
 
         .new_user_details .input-group {
             min-height: 61px;
+            flex-wrap: unset;
+            overflow: hidden;
+        }
+
+        .new_user_details .input-group .input-group-text {
+            width: 100%;
+            max-width: 60%;
+        }
+
+        .new_user_details .input-group input {
+            max-width: 40%;
+            width: 100%;
+            background: #fff;
         }
 
         .new_user_details #company_linkedin_user {
@@ -111,7 +125,7 @@
             top: 50%;
             right: 0;
             height: 100%;
-            width: 30%;
+            width: 40%;
             background: #fff;
             z-index: 1;
             transform: translateY(-50%);
@@ -173,13 +187,13 @@
         }
 
         /* .sidebar {
-            width: 100%;
-            max-width: 16%;
-        } */
+                            width: 100%;
+                            max-width: 16%;
+                        } */
 
         /* .navbar_d_flex {
-            margin: 140px 0 0 0;
-        } */
+                            margin: 140px 0 0 0;
+                        } */
 
         .main-content {
             width: 100%;
@@ -305,21 +319,25 @@
 
         @media (max-width: 1400px) {
 
-            body{
-                overflow: hidden !important;
-            }
+            /* body{
+                                overflow: hidden !important;
+                            } */
             .col-lg-3 {
                 width: 50% !important;
             }
         }
 
-         @media (max-width: 768px) {
+        @media (max-width: 768px) {
             .col-lg-3 {
                 width: 100% !important;
             }
+
+            input#linkedin_user {
+                margin-top: 0;
+            }
         }
 
-        
+
         @media (max-width: 486px) {
             .main-content {
                 padding: 70px 14px 20px 14px !important;
@@ -343,7 +361,6 @@
                 font-size: 16px;
             }
         }
-
     </style>
     <section class="user_company_profile">
         <div class="container">
