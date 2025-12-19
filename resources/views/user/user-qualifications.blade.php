@@ -334,7 +334,7 @@
         font-size: 14px;
         padding: 10px 26px;
     }
-    
+
     div#qualifications-table_filter label, 
     .dataTables_wrapper .dataTables_filter input {
         width: 99% !important;
@@ -367,6 +367,21 @@
     .data_table_user #qualifications-table tbody td form button::after {
         top: 35%;
     }
+}
+
+@media (max-width: 424px) {
+.section_heading_flex {
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.section_heading_flex h2 {
+    width: 100% !important;
+}
+
+.section_heading_flex a {
+        margin-left: auto !important;
+}
 }
 
 </style>

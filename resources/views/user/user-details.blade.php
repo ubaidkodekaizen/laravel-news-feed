@@ -335,6 +335,10 @@
             input#linkedin_user {
                 margin-top: 0;
             }
+
+            .new_user_details #company_linkedin_user {
+                transform: translateY(-68%);
+            }
         }
 
 
@@ -346,19 +350,37 @@
 
         @media (max-width: 544px){
 
-                .profileTooltipText {
-                    right: -118px;
-                }
+            /* .profileTooltip {
+                position: absolute;
+                right: -18px;
+                top: 0px;
+            } */
 
-            .profileTooltipTextCurve {
-                right: 106px;
+            .container{
+                padding: 0;
             }
 
-        }
+            .profileTooltip {
+                position: absolute;
+                right: 0;
+            }
 
-        @media (max-width: 398px) {
+            .profileTooltipText {
+                right: -21px;
+            }
+
+            .profileTooltipTextCurve {
+                right: 9px;
+            }
+
+            .new_user_details .accordion-body {
+                padding: 25px 20px 79px 20px;
+            }
+
             .user_company_profile .new_user_details label:not(.form-check-label) {
                 font-size: 15px;
+                 position: relative;
+                 padding-right: 20px;
             }
 
             .new_user_details .form-control {
@@ -372,7 +394,9 @@
                 font-weight: 500;
                 font-size: 16px;
             }
+
         }
+
     </style>
     <section class="user_company_profile">
         <div class="container">
