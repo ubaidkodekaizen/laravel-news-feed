@@ -20,7 +20,7 @@
         position: relative;
         gap: 0 !important;
     }
-    
+
     .data_table_user table tbody td.btn_flex a::after {
         content: "";
         position: absolute;
@@ -34,7 +34,7 @@
     }
 
     .data_table_user table tbody td form button::after{
-        content: ""; 
+        content: "";
         position: absolute;
         /* right: 24px; */
         top: 50%;
@@ -50,7 +50,7 @@
         display: none;
     }
 
-    .data_table_user table tbody td a, 
+    .data_table_user table tbody td a,
     .data_table_user table tbody td form button {
         padding: 20px !important;
         background: transparent !important;
@@ -69,11 +69,11 @@
     }
 
     /* .table-resposive.data_table_user::-webkit-scrollbar {
-        height: 8px;  
-        box-shadow: none !important; 
+        height: 8px;
+        box-shadow: none !important;
     }
 
-    
+
 
     .table-resposive.data_table_user::-webkit-scrollbar-thumb {
         background: var(--primary);
@@ -117,8 +117,8 @@
     }
 
     @media (max-width: 1080px) {
-    
-    
+
+
     /* div#products-table_filter {
         transform: translate(0px, -10px);
         margin: auto !important;
@@ -141,7 +141,7 @@
 
     .table-resposive.data_table_user table thead tr th,
     .data_table_user table tbody td {
-        font-size: 14.65px; 
+        font-size: 14.65px;
     }
 
     /* .dataTables_filter::after {
@@ -151,11 +151,11 @@
     .data_table_user table tbody td.btn_flex a::after {
         left: 0px;
     }
-   
+
 }
 
-    
-    
+
+
 </style>
 
 
@@ -168,7 +168,7 @@
                 <a href="{{ Route('user.add.service') }}" class="btn btn-primary">Add Service</a>
             </div>
 
-            @if (session('success'))  
+            @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -177,7 +177,7 @@
 
             <div class="table-resposive data_table_user">
                 <table id="services-table" class="display" style="width:100%">
-                    <table class="table">
+
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -226,7 +226,7 @@
                                 </tr>
                             @endforelse
                         </tbody>
-                    </table>
+
 
                 </table>
             </div>
