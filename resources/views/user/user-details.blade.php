@@ -42,9 +42,9 @@
             justify-content: center;
         }
 
-        .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
-            max-width: 180px;
-        }
+        /* .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+                max-width: 180px;
+            } */
 
         .select2-container .select2-selection--single .select2-selection__rendered {
             max-width: 200px;
@@ -56,6 +56,11 @@
             font-weight: 400;
             font-size: 16px;
             line-height: 1.2em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+            width: 100%;
+            text-wrap-mode: nowrap;
         }
 
         .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove {
@@ -81,10 +86,10 @@
 
         .select2-container--bootstrap-5 .select2-selection--multiple .select2-search .select2-search__field {
             /* border: 2px solid #E9EBF0;
-                                            width: 100% !important;
-                                            padding: 5px 6px;
-                                            height: 36px;
-                                            border-radius: 4px; */
+                                                width: 100% !important;
+                                                padding: 5px 6px;
+                                                height: 36px;
+                                                border-radius: 4px; */
         }
 
         .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field {
@@ -224,13 +229,13 @@
         }
 
         /* .sidebar {
-                                                                                                                                                                                                                                        width: 100%;
-                                                                                                                                                                                                                                        max-width: 16%;
-                                                                                                                                                                                                                                    } */
+                                                                                                                                                                                                                                            width: 100%;
+                                                                                                                                                                                                                                            max-width: 16%;
+                                                                                                                                                                                                                                        } */
 
         /* .navbar_d_flex {
-                                                                                                                                                                                                                                        margin: 140px 0 0 0;
-                                                                                                                                                                                                                                    } */
+                                                                                                                                                                                                                                            margin: 140px 0 0 0;
+                                                                                                                                                                                                                                        } */
 
         .main-content {
             width: 100%;
@@ -359,8 +364,8 @@
         @media (max-width: 1400px) {
 
             /* body{
-                                                                                                                                                                                                                                            overflow: hidden !important;
-                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                overflow: hidden !important;
+                                                                                                                                                                                                                                            } */
             .col-lg-3 {
                 width: 50% !important;
             }
@@ -437,10 +442,10 @@
         @media (max-width: 544px) {
 
             /* .profileTooltip {
-                                                                                                                                                                                                                            position: absolute;
-                                                                                                                                                                                                                            right: -18px;
-                                                                                                                                                                                                                            top: 0px;
-                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                position: absolute;
+                                                                                                                                                                                                                                right: -18px;
+                                                                                                                                                                                                                                top: 0px;
+                                                                                                                                                                                                                            } */
 
             .container {
                 padding: 0;
