@@ -139,6 +139,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
         return view('user.news-feed');
     })->name('news-feed');
 
+     Route::get('/inbox', function () {
+        return view('inbox');
+    })->name('inbox');
+
     Route::get('/user/products', [ProductController::class, 'index'])->name('user.products');
     Route::get('/user/products/add', [ProductController::class, 'addEditProduct'])->name('user.add.product');
     Route::get('/user/products/edit/{id}', [ProductController::class, 'addEditProduct'])->name('user.edit.product');

@@ -20,8 +20,8 @@ function initializeEcho() {
     port: import.meta.env.VITE_REVERB_PORT ,
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT ,
-    wssPort: import.meta.env.VITE_REVERB_PORT , 
-    forceTLS: true, 
+    wssPort: import.meta.env.VITE_REVERB_PORT ,
+    forceTLS: true,
     disableStats: true,
     auth: {
       headers: {
@@ -33,7 +33,7 @@ function initializeEcho() {
   });
 
   console.log("Echo initialized:", window.Echo);
-  
+
   // Join presence channel to indicate online status
   if (window.userId) {
     window.Echo.join(`presence-online`)
@@ -46,7 +46,7 @@ function initializeEcho() {
       .leaving((user) => {
         console.log('User left:', user);
       });
-    
+
     // Also ping the server every 5 minutes to update last active timestamp
     setInterval(() => {
       fetch(userPing, {
@@ -81,7 +81,7 @@ window.addEventListener('beforeunload', () => {
     // Attempt to leave the presence channel
     try {
       window.Echo.leave('presence-online');
-      
+
       // Make a synchronous request to mark user offline
       navigator.sendBeacon(userOffline, JSON.stringify({
         token: token

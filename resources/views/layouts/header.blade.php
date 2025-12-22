@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muslim Lynk | Empowering Connections, Amplifying Impact</title>
-    <meta name="description" content="Join Muslim Lynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
+    <meta name="description"
+        content="Join Muslim Lynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Muslim Lynk – Where Connections Create Impact">
-    <meta property="og:description" content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
-    <meta property="og:url" content="{{url('/')}}">
+    <meta property="og:description"
+        content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
+    <meta property="og:url" content="{{ url('/') }}">
     <meta property="og:image" content="{{ asset('assets/images/logo_bg.png') }}">
     <meta property="og:site_name" content="{{ config('app.name') }}">
     {{-- <meta name="twitter:card" content="summary_large_image">
@@ -21,7 +23,9 @@
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 
 
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
@@ -33,10 +37,37 @@
 
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/App-C02OVGiM.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('build/assets/App-C02OVGiM.css') }}"> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="{{ asset('build/assets/App-Dn0-_m-T.js') }}" defer></script>
+    {{-- <script src="{{ asset('build/assets/App-BMe8I_Aj.js') }}" defer></script> --}}
+    {{-- Load built assets directly --}}
+    @php
+        $manifestPath = public_path('build/manifest.json');
+
+        $appCss = $chatCss = $appJs = null;
+
+        if (file_exists($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+
+            $appCss = $manifest['resources/css/app.css']['file'] ?? null;
+            $chatCss = $manifest['resources/css/chat.css']['file'] ?? null;
+            $appJs = $manifest['resources/js/App.jsx']['file'] ?? null;
+        }
+    @endphp
+
+    @if ($appCss)
+        <link rel="stylesheet" href="{{ asset('build/' . $appCss) }}">
+    @endif
+
+    @if ($chatCss)
+        <link rel="stylesheet" href="{{ asset('build/' . $chatCss) }}">
+    @endif
+
+    @if ($appJs)
+        <script type="module" src="{{ asset('build/' . $appJs) }}"></script>
+    @endif
+
     <style>
         .suggestion-box {
             position: absolute;
@@ -127,7 +158,8 @@
                 <div class="header_left">
                     <div class="logo">
                         <a href="{{ route('home') }}">
-                            <img src="{{ asset('assets/images/greenAndWhiteLogo.png') }}" alt="" class="img-fluid">
+                            <img src="{{ asset('assets/images/greenAndWhiteLogo.png') }}" alt=""
+                                class="img-fluid">
                         </a>
                     </div>
 
@@ -150,7 +182,7 @@
                                 <input type="hidden" name="company_industry" id="company_industry1">
 
                                 <button class="btn btn-primary search_btn">
-                                    <img src="{{asset('assets/images/fe_search.svg')}}" alt="Search">
+                                    <img src="{{ asset('assets/images/fe_search.svg') }}" alt="Search">
                                 </button>
                             </div>
                         </form>
@@ -163,14 +195,16 @@
                     <div class="top_header_links mobile_hide">
                         <ul>
                             <li>
-                                <a href="{{ route('our.community') }}" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Our Community">
-                                    <img src="{{asset('assets/images/Vector.svg')}}" alt="community">
+                                <a href="{{ route('our.community') }}" class="btn btn-primary" data-toggle="tooltip"
+                                    data-placement="bottom" title="Our Community">
+                                    <img src="{{ asset('assets/images/Vector.svg') }}" alt="community">
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('smart.suggestion') }}" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Smart Suggestions">
+                                <a href="{{ route('smart.suggestion') }}" class="btn btn-primary" data-toggle="tooltip"
+                                    data-placement="bottom" title="Smart Suggestions">
 
-                                    <img src="{{asset('assets/images/suggestion.svg')}}" alt="Suggestions">
+                                    <img src="{{ asset('assets/images/suggestion.svg') }}" alt="Suggestions">
                                 </a>
                             </li>
                         </ul>
@@ -182,7 +216,8 @@
                             <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="user_profile_name_h"> {{ Auth::user()->first_name }} </span>
-                                <img id="userProfileDropdown" src="{{asset('assets/images/whiteChevron.svg')}}" alt="DropDown">
+                                <img id="userProfileDropdown" src="{{ asset('assets/images/whiteChevron.svg') }}"
+                                    alt="DropDown">
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
@@ -240,7 +275,8 @@
 
             triggers.forEach(function(trigger) {
                 trigger.addEventListener('mouseenter', function() {
-                    const text = trigger.getAttribute('title') || trigger.getAttribute('data-original-title');
+                    const text = trigger.getAttribute('title') || trigger.getAttribute(
+                        'data-original-title');
 
                     if (!text) return;
 
@@ -261,7 +297,8 @@
                     const triggerRect = trigger.getBoundingClientRect();
                     const tooltipRect = activeTooltip.getBoundingClientRect();
 
-                    const left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2) + window.scrollX;
+                    const left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width /
+                        2) + window.scrollX;
                     const top = triggerRect.bottom + 10 + window.scrollY;
 
                     activeTooltip.style.left = left + 'px';
