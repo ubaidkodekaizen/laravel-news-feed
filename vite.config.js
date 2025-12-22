@@ -6,7 +6,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css',
+                // 'resources/css/app.css',
                 'resources/css/chat.css',
                 'resources/css/inbox.css',
                 'resources/js/App.jsx',
