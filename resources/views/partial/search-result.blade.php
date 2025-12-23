@@ -31,7 +31,7 @@
                 class="btn btn-success btn-sm">
                 <i class="fa-solid fa-eye"></i>
             </a>
-            <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
+            <a href="{{ $user->linkedin_url }}" target="_blank"
                 class="btn btn-primary btn-sm">
                 <i class="fa-brands fa-linkedin"></i>
             </a>

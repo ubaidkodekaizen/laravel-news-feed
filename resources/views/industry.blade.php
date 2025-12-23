@@ -46,7 +46,7 @@
                                             {{-- <a href="javascript:void(0)" class="btn btn-outline-success btn-sm" title="Message">
                                         <i class="fas fa-envelope"></i>
                                     </a> --}}
-                                            <a href="https://www.linkedin.com/in/{{ $user->linkedin_url ?? '' }}"
+                                            <a href="{{ $user->linkedin_url ?? '' }}"
                                                 class="btn btn-outline-info btn-sm" title="LinkedIn" target="_blank">
                                                 <i class="fab fa-linkedin"></i>
                                             </a>

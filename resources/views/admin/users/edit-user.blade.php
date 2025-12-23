@@ -459,14 +459,10 @@
 
                                         <div class="col-lg-6">
                                             <label for="linkedin_url">LinkedIn<span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <div class="input-group-text">https://www.linkedin.com/in/</div>
-                                                <input type="text" name="linkedin_user" id="linkedin_user"
-                                                    class="form-control"
-                                                    value="{{ old('linkedin_url', str_replace('https://www.linkedin.com/in/', '', $user->linkedin_url)) }}">
-                                            </div>
-                                            <input type="hidden" name="linkedin_url" id="linkedin_url_hidden"
-                                                value="">
+                                            <input type="url" name="linkedin_url" id="linkedin_url"
+                                                class="form-control"
+                                                value="{{ old('linkedin_url', $user->linkedin_url) }}"
+                                                placeholder="https://www.linkedin.com/in/your-profile">
 
                                         </div>
                                         <div class="col-lg-6">
@@ -623,15 +619,11 @@
                                         </div>
                                         <!-- Company Linkedin URL -->
                                         <div class="col-lg-6">
-                                            <label for="company_linkedin_user">Company LinkedIn Page</label>
-                                            <div class="input-group">
-                                                <div class="input-group-text">https://www.linkedin.com/company/</div>
-                                                <input type="text" name="company_linkedin_user"
-                                                    id="company_linkedin_user" class="form-control"
-                                                    value="{{ old('company_linkedin_user', str_replace('https://www.linkedin.com/company/', '', $company->company_linkedin_url ?? '')) }}">
-                                            </div>
-                                            <input type="hidden" name="company_linkedin_url"
-                                                id="company_linkedin_url_hidden" value="">
+                                            <label for="company_linkedin_url">Company LinkedIn Page</label>
+                                            <input type="url" name="company_linkedin_url"
+                                                id="company_linkedin_url" class="form-control"
+                                                placeholder="https://www.linkedin.com/company/your-company"
+                                                value="{{ old('company_linkedin_url', $company->company_linkedin_url ?? '') }}">
 
                                         </div>
 
@@ -1046,7 +1038,7 @@
             }
             if (userInput) {
                 const combinedUrl = `https://www.linkedin.com/in/${userInput}`;
-                document.getElementById('linkedin_url_hidden').value = combinedUrl;
+                // No hidden field; full URL is entered directly now.
                 event.target.submit();
             } else {
                 alert('Please enter a valid LinkedIn username.');
@@ -1333,7 +1325,7 @@
         document.querySelector('form').addEventListener('submit', function() {
             const companyInput = document.getElementById('company_linkedin_user').value.trim();
             const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
-            document.getElementById('company_linkedin_url_hidden').value = combinedCompanyUrl;
+            // No hidden field; full URL is entered directly now.
         });
 
 

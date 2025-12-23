@@ -108,12 +108,23 @@ class UserController extends Controller
 
     public function updateUserDetails(Request $request)
     {
+        $normalizeUrl = function ($url) {
+            if (!$url) {
+                return null;
+            }
+            $url = trim($url);
+            if (!preg_match('~^https?://~i', $url)) {
+                $url = 'https://' . $url;
+            }
+            return $url;
+        };
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . Auth::id(),
             'phone' => 'nullable|string|max:20',
-            'linkedin_url' => 'nullable|url',
+            'linkedin_url' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
@@ -131,7 +142,7 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->linkedin_url = $request->linkedin_url ?? $request->linkedin_user;
+        $user->linkedin_url = $normalizeUrl($request->linkedin_url);
         $user->x_url = $request->x_url ?? '';
         $user->instagram_url = $request->instagram_url ?? '';
         $user->facebook_url = $request->facebook_url ?? '';

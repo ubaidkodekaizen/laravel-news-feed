@@ -895,8 +895,6 @@
                                                         class="form-control"
                                                         placeholder="https://www.linkedin.com/company/your-company"
                                                         value="{{ old('linkedin_url', $user->linkedin_url ?? '') }}">
-                                                    <input type="hidden" name="linkedin_url" id="linkedin_url_hidden"
-                                                        value="">
                                                 </div>
                                                 <div class="new_user_details_inner_box_form_group_box">
                                                     <label for="facebook_url">Facebook</label>
@@ -1798,41 +1796,4 @@
         });
     </script>
 
-    <script>
-        // LinkedIn URL Handler - Personal
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const linkedinUserInput = document.getElementById('linkedin_user');
-            const linkedinHiddenInput = document.getElementById('linkedin_url_hidden');
-
-            if (form && linkedinUserInput && linkedinHiddenInput) {
-                form.addEventListener('submit', function(event) {
-                    const userInput = linkedinUserInput.value.trim();
-                    if (userInput) {
-                        const combinedUrl = `https://www.linkedin.com/in/${userInput}`;
-                        linkedinHiddenInput.value = combinedUrl;
-                    }
-                });
-            }
-        });
-    </script>
-
-    <script>
-        // LinkedIn URL Handler - Company
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const companyLinkedinInput = document.getElementById('company_linkedin_user');
-            const companyLinkedinHidden = document.getElementById('company_linkedin_url_hidden');
-
-            if (form && companyLinkedinInput && companyLinkedinHidden) {
-                form.addEventListener('submit', function() {
-                    const companyInput = companyLinkedinInput.value.trim();
-                    if (companyInput) {
-                        const combinedCompanyUrl = `https://www.linkedin.com/company/${companyInput}`;
-                        companyLinkedinHidden.value = combinedCompanyUrl;
-                    }
-                });
-            }
-        });
-    </script>
 @endsection

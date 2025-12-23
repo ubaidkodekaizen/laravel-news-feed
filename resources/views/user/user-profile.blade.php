@@ -877,13 +877,13 @@
                             @endif
                         </div> -->
                                                     <ul class="list_check_flex">
-                                                        @if ($user->linkedin_url)
-                                                        <li>
-                                                            <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank" title="LinkedIn" aria-label="LinkedIn profile">
-                                                                <img src="{{ asset('assets/images/linkedInIcon.svg') }}" alt="">
-                                                            </a>
-                                                        </li>
-                                                        @endif
+                                                    @if ($user->linkedin_url)
+                                                    <li>
+                                                        <a href="{{ $user->linkedin_url }}" target="_blank" title="LinkedIn" aria-label="LinkedIn profile">
+                                                            <img src="{{ asset('assets/images/linkedInIcon.svg') }}" alt="">
+                                                        </a>
+                                                    </li>
+                                                    @endif
                                                         @if ($user->facebook_url)
                                                         <li>
                                                             <a href="{{ $user->facebook_url }}" target="_blank" title="Facebook">
@@ -1042,8 +1042,8 @@
                         <ul class="list_check_flex">
                             @if ($user->linkedin_url)
                                 <li>
-                                    <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
-                                        title="Facebook">
+                                    <a href="{{ $user->linkedin_url }}" target="_blank"
+                                        title="LinkedIn">
                                         <img src="{{ asset('assets/images/social-icons/linkedin.png') }}" alt="">
                                     </a>
                                 </li>
