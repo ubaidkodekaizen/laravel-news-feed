@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class PageController extends Controller
@@ -55,18 +56,32 @@ class PageController extends Controller
 
         $blogs = Blog::orderByDesc('id')->get();
         $events = Event::orderByDesc('id')->get();
+        
+        // Get only one product per user (latest product for each user)
         $products = Product::whereHas('user', function ($query) {
             $query->where('status', 'complete');
         })
+            ->with('user')
             ->orderByDesc('id')
-            ->get();
+            ->get()
+            ->groupBy('user_id')
+            ->map(function ($group) {
+                return $group->first();
+            })
+            ->values();
 
+        // Get only one service per user (latest service for each user)
         $services = Service::whereHas('user', function ($query) {
             $query->where('status', 'complete');
         })
+            ->with('user')
             ->orderByDesc('id')
-            ->take(3)
-            ->get();
+            ->get()
+            ->groupBy('user_id')
+            ->map(function ($group) {
+                return $group->first();
+            })
+            ->values();
 
         return view('feed', compact('blogs', 'events', 'products', 'services', 'industries'));
     }
