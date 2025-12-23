@@ -31,6 +31,30 @@
             border-color: #dc3545 !important;
         }
 
+        .noticeText {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .noticeText strong {
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 100%;
+            color: #273572;
+            margin: 0px 0px 0px 0;
+        }
+
+        .noticeText p {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 140%;
+            color: #333333;
+            margin: 5px 0 0 0;
+            width: 100%;
+            max-width: 700px;
+        }
 
         .profileMainHeading {
             font-family: "Inter", sans-serif;
@@ -65,8 +89,8 @@
         }
 
         /* .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
-                            max-width: 180px;
-                        } */
+                                                    max-width: 180px;
+                                                } */
 
         .select2-container .select2-selection--single .select2-selection__rendered {
             max-width: 200px;
@@ -106,13 +130,6 @@
         }
 
 
-        .select2-container--bootstrap-5 .select2-selection--multiple .select2-search .select2-search__field {
-            /* border: 2px solid #E9EBF0;
-                                                            width: 100% !important;
-                                                            padding: 5px 6px;
-                                                            height: 36px;
-                                                            border-radius: 4px; */
-        }
 
         .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field {
             border: 2px solid #E9EBF0;
@@ -250,14 +267,6 @@
             border-top: 1px solid #E9EBF0;
         }
 
-        /* .sidebar {
-                                                                                                                                                                                                                                                        width: 100%;
-                                                                                                                                                                                                                                                        max-width: 16%;
-                                                                                                                                                                                                                                                    } */
-
-        /* .navbar_d_flex {
-                                                                                                                                                                                                                                                        margin: 140px 0 0 0;
-                                                                                                                                                                                                                                                    } */
 
         .main-content {
             width: 100%;
@@ -383,13 +392,23 @@
             z-index: -1;
         }
 
+        @media(max-width: 1720px) {
+            .new_user_details_inner_box_form_group_box {
+                max-width: 48%;
+                align-items: stretch;
+            }
+        }
+
         @media (max-width: 1400px) {
 
-            /* body{
-                                                                                                                                                                                                                                                            overflow: hidden !important;
-                                                                                                                                                                                                                                                        } */
             .col-lg-3 {
                 width: 50% !important;
+            }
+        }
+
+        @media(max-width: 1310px) {
+            .new_user_details_inner_box_form_group_box {
+                max-width: 100%;
             }
         }
 
@@ -463,11 +482,6 @@
 
         @media (max-width: 544px) {
 
-            /* .profileTooltip {
-                                                                                                                                                                                                                                            position: absolute;
-                                                                                                                                                                                                                                            right: -18px;
-                                                                                                                                                                                                                                            top: 0px;
-                                                                                                                                                                                                                                        } */
 
             .container {
                 padding: 0;
@@ -508,6 +522,9 @@
                 font-size: 16px;
             }
 
+            .toggle__label {
+                padding-right: 0 !important;
+            }
 
 
         }
@@ -719,16 +736,16 @@
                                                     <label for="phone" class="toggle_flex">Cell / Mobile<span
                                                             class="text-danger">* </span>
                                                         <div class="cont">
-                                                            (Private
                                                             <div class="toggle">
                                                                 <input type="checkbox" id="mobile_public"
                                                                     class="toggle__input" name="phone_public"
                                                                     value="Yes"
                                                                     @if ($user->phone_public == 'Yes') checked @endif>
-                                                                <label for="mobile_public"
-                                                                    class="toggle__label mt-0"></label>
+                                                                <label for="mobile_public" class="toggle__label mt-0">
+                                                                    <span>Private</span>
+                                                                    <span>Public</span>
+                                                                </label>
                                                             </div>
-                                                            Public)
                                                         </div>
                                                     </label>
                                                     <input type="tel" name="phone" id="phone"
@@ -739,17 +756,19 @@
                                                 <div class="new_user_details_inner_box_form_group_box">
                                                     <label for="email">Email<span class="text-danger">*</span>
                                                         <div class="cont">
-                                                            (Private
+
                                                             <div class="toggle">
                                                                 <input type="checkbox" id="email_public"
                                                                     class="toggle__input" name="email_public"
                                                                     value="Yes"
                                                                     @if ($user->email_public == 'Yes') checked @endif>
-                                                                <label for="email_public"
-                                                                    class="toggle__label mt-0"></label>
+                                                                <label for="email_public" class="toggle__label mt-0">
+                                                                    <span>Private</span>
+                                                                    <span>Public</span>
+                                                                </label>
                                                             </div>
 
-                                                            Public)
+
                                                         </div>
                                                     </label>
                                                     <input type="email" name="email" id="email"
@@ -877,23 +896,12 @@
                                             <h4>Community & Giving</h4>
                                             <div class="new_user_details_inner_box_form_group_row">
                                                 <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="mosque_id">Mosque
-                                                        <div class="profileTooltip">
-                                                            <div class="profileTooltipText">
-                                                                Why we ask this:
-                                                                Based on your location, you can select a nearby mosque. A
-                                                                portion of your subscription amount will be donated to the
-                                                                mosque you choose—at no extra cost to you.
-
-                                                                <div class="profileTooltipTextCurve"></div>
-                                                            </div>
-                                                            <img src="{{ asset('assets/images/noticeIcon.png') }}"
-                                                                class="img-fluid" alt="">
-                                                        </div>
-                                                    </label>
+                                                    <label for="mosque_id">Mosque</label>
                                                     <select name="mosque_id" id="mosque_id" class="form-select">
                                                         <option value="">Select Mosque</option>
                                                     </select>
+
+
                                                 </div>
 
                                                 <div class="new_user_details_inner_box_form_group_box newMosqueCol d-none">
@@ -901,6 +909,15 @@
                                                     <input type="text" name="mosque" id="mosque"
                                                         class="form-control" value="{{ old('mosque', $user->mosque) }}">
                                                     {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!} --}}
+                                                </div>
+
+                                                <div class="noticeText">
+                                                    <strong>Why we ask this:</strong>
+                                                    <p>
+                                                        Based on your location, you can select a nearby mosque. A
+                                                        portion of your subscription amount will be donated to the
+                                                        mosque you choose—at no extra cost to you.
+                                                    </p>
                                                 </div>
                                             </div>
 
