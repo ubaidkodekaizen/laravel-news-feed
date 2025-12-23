@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Fruitcake\Cors\HandleCors;
+use App\Http\Middleware\ApiKeyMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,12 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Register CORS middleware globally
-        // $middleware->append(HandleCors::class);
-        // $middleware->group('web', [
-        //     \Illuminate\View\Middleware\ShareErrorsFromSession::class, // Ensure this is present
-        //     \App\Http\Middleware\TrackUserActivity::class,
-        // ]);
+        // You can define middleware groups and aliases here
+        $middleware->alias([
+            'api.key' => ApiKeyMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

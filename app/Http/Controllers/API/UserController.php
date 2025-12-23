@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Company;
+use App\Models\Conversation;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\GooglePlayService;
@@ -20,10 +21,62 @@ use App\Models\Designation;
 use App\Models\Industry;
 use App\Models\BusinessType;
 use App\Models\UserIcp;
+use App\Http\Resources\UserResource;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
+
+    /**
+     * Return all users with their related objects for external API consumers.
+     * Protected via X-API-KEY header.
+     */
+    public function indexAllWithRelations(Request $request)
+    {
+        $users = User::with([
+            'company',
+            'products',
+            'services',
+            'subscriptions',
+            'userEducations',
+            'userIcp',
+            'reactions',
+        ])
+            ->whereNull('deleted_at')
+            ->get();
+
+        // Load conversations manually for each user since the relationship uses two foreign keys
+        // Also eager load messages for each conversation
+        foreach ($users as $user) {
+            $userConversations = Conversation::where(function($query) use ($user) {
+                $query->where('user_one_id', $user->id)
+                      ->orWhere('user_two_id', $user->id);
+            })
+            ->with('messages')
+            ->get();
+            $user->setRelation('conversations', $userConversations);
+
+            // Load user_mosque pivot table data
+            $userMosques = DB::table('user_mosque')
+                ->where('user_id', $user->id)
+                ->get()
+                ->map(function($item) {
+                    return (object) [
+                        'id' => $item->id,
+                        'user_id' => $item->user_id,
+                        'mosque_id' => $item->mosque_id,
+                        'amount' => $item->amount,
+                    ];
+                });
+            $user->setRelation('userMosques', $userMosques);
+        }
+
+        return response()->json([
+            'status' => true,
+            'count' => $users->count(),
+            'data' => UserResource::collection($users),
+        ]);
+    }
 
 
     public function register(Request $request)
