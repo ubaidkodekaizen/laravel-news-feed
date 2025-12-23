@@ -858,7 +858,7 @@
                                                     {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}
                                                 </h1>
                                                 <div class="contact_social_flex">
-                                                    <!-- <div class="contact_email">
+                                                    <div class="contact_email">
                             @if ($user->phone_public == 'Yes')
                                 <div class="contact_info_flex">
                                     <i class="fa-solid fa-phone"></i>
@@ -875,7 +875,7 @@
                                     </div>
                                 </div>
                             @endif
-                        </div> -->
+                        </div>
                                                     <ul class="list_check_flex">
                                                     @if ($user->linkedin_url)
                                                     <li>
@@ -1020,7 +1020,7 @@
                                     </div>
 
 
-                                    <!-- <div class="contact_social_flex">
+                                    <div class="contact_social_flex">
                         <div class="contact_email">
                             @if ($user->phone_public == 'Yes')
                                 <div class="contact_info_flex">
