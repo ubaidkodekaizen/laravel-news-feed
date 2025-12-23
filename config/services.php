@@ -44,4 +44,8 @@ return [
         ],
     ],
 
+    'muslimlynk' => [
+        'api_key' => env('MUSLIMLYNK_API_KEY'),
+    ],
+
 ];

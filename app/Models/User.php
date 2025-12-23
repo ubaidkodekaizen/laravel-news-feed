@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Conversation;
+use App\Models\Reaction;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
@@ -89,12 +90,19 @@ class User extends Authenticatable
 
     public function conversations()
     {
-        return $this->hasMany(Conversation::class); // Assuming Conversation model exists
+        // Conversations use user_one_id and user_two_id, so we need to check both
+        // This relationship is handled manually in the controller for eager loading
+        return $this->hasMany(Conversation::class, 'user_one_id');
     }
 
     public function userIcp()
     {
         return $this->hasOne(UserIcp::class);
+    }
+
+    public function reactions()
+    {
+        return $this->hasMany(Reaction::class);
     }
 
 

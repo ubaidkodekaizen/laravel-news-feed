@@ -215,6 +215,10 @@ Route::middleware('auth:sanctum')->group(function () {
   });
 
 });
+Route::middleware('api.key')->group(function () {
+  Route::get('/muslimlynk-users', [UserController::class, 'indexAllWithRelations']);
+});
+
 Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/register-amcob', [UserController::class, 'registerAmcob']);
