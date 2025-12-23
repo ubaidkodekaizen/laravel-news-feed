@@ -483,7 +483,7 @@
                 </div>
             </section> -->
     <!-- Main Modal -->
-    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: var(--primary); color: #fff;">
@@ -508,7 +508,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" >
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
 
@@ -522,7 +522,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img
-                            src="assets/images/closeIcon.webp" alt=""></button>
+                            src="{{asset('assets/images/closeIcon.webp')}}" alt=""></button>
                     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                     <div class="productModalContent">
                         <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
@@ -554,7 +554,7 @@
             </div>
         </div>
     </div>
-    <!-- <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
 

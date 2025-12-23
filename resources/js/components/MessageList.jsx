@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
+
+const DEFAULT_AVATAR = 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
 
 const MessageList = ({ messages }) => {
   const [selectedMessageId, setSelectedMessageId] = useState(null);
@@ -7,19 +9,20 @@ const MessageList = ({ messages }) => {
   const [showReactBtns, setReactBtns] = useState({});
 
   useEffect(() => {
-    setMessageList(messages); // Update state when new messages arrive
+    setMessageList(messages);
   }, [messages]);
 
   const toggleReactBtns = (messageId) => {
     setReactBtns((prev) => ({
       ...prev,
-      [messageId]: !prev[messageId], // Toggle visibility for this message
+      [messageId]: !prev[messageId],
     }));
   };
+
   const handleReact = async (messageId, emoji) => {
     try {
       const url = addReactionRoute(messageId);
-      const response = await axios.post(url, {
+      const response = await window.axios.post(url, {
         emoji,
       }, {
         headers: {
@@ -42,7 +45,7 @@ const MessageList = ({ messages }) => {
   const handleRemoveReaction = async (messageId, emoji) => {
     try {
       const url = removeReactionRoute(messageId);
-      const response = await axios.delete(url, {
+      const response = await window.axios.delete(url, {
         data: { emoji },
         headers: {
           Authorization: localStorage.getItem("sanctum-token"),
@@ -61,8 +64,6 @@ const MessageList = ({ messages }) => {
       console.error("Error removing reaction:", error);
     }
   };
-
-
 
   const groupMessagesByDate = (messages) => {
     const groups = [];
@@ -109,10 +110,10 @@ const MessageList = ({ messages }) => {
   const messageGroups = groupMessagesByDate(messageList);
 
   return (
-    <div className="flex flex-col w-100 space-y-4">
+    <div className="messageBoxListContent">
       {messageGroups.map((group, groupIndex) => (
-        <div key={groupIndex} className="space-y-4">
-          <div className="flex items-center justify-center">
+        <div key={groupIndex} className="messageGroup">
+          <div className="messageDateHeaderContainer">
             <div className="messageDateHeader">
               {formatDateHeader(group.date)}
             </div>
@@ -138,9 +139,9 @@ const MessageList = ({ messages }) => {
                   }`}
                 >
                   <div className="messageBoxListItemContentUsername">
-                     <a href={`/user/profile/${msg.sender.slug}`}>
-                     {msg.sender?.first_name ?? 'Unknown'} {msg.sender?.last_name ?? 'User'}
-                     </a>
+                    <a href={`/user/profile/${msg.sender?.slug ?? ''}`}>
+                      {msg.sender?.first_name ?? 'Unknown'} {msg.sender?.last_name ?? 'User'}
+                    </a>
                     <div className="messageBoxTime">
                       {format(new Date(msg.created_at), 'h:mm a')}
                     </div>
@@ -161,14 +162,14 @@ const MessageList = ({ messages }) => {
                     ))}
                   </div>
                   <div className='messageReactIconBtn' onClick={() => toggleReactBtns(msg.id)}>
-                      <i className="fa-regular fa-face-smile"></i>
-                        <div className={`messageReactionOptions ${showReactBtns[msg.id] ? 'messageReactionOptionsShow' : 'messageReactionOptionsHide'}`}>
-                          <button onClick={() => handleReact(msg.id, '👍')}>👍</button>
-                          <button onClick={() => handleReact(msg.id, '❤️')}>❤️</button>
-                          <button onClick={() => handleReact(msg.id, '😂')}>😂</button>
-                          <button onClick={() => handleReact(msg.id, '😮')}>😮</button>
-                          <button onClick={() => handleReact(msg.id, '😢')}>😢</button>
-                        </div>
+                    <i className="fa-regular fa-face-smile"></i>
+                    <div className={`messageReactionOptions ${showReactBtns[msg.id] ? 'messageReactionOptionsShow' : 'messageReactionOptionsHide'}`}>
+                      <button onClick={() => handleReact(msg.id, '👍')}>👍</button>
+                      <button onClick={() => handleReact(msg.id, '❤️')}>❤️</button>
+                      <button onClick={() => handleReact(msg.id, '😂')}>😂</button>
+                      <button onClick={() => handleReact(msg.id, '😮')}>😮</button>
+                      <button onClick={() => handleReact(msg.id, '😢')}>😢</button>
+                    </div>
                   </div>
                 </div>
               </div>

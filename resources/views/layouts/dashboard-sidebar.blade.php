@@ -51,7 +51,8 @@
 
     #dashboardSidebar {
         display: flex;
-        width: 18%;
+        width: 100% !important;
+        max-width: 277px;
         transition: width 0.3s ease;
         flex-direction: column;
         justify-content: space-between;
@@ -64,7 +65,8 @@
     }
 
     .main-content {
-        width: 84% !important;
+        width: 100% !important;
+        max-width: calc(100% - 277px) !important;
         height: max-content !important;
         overflow-x: hidden !important;
         overflow-y: hidden !important;
@@ -74,11 +76,13 @@
     }
 
     #dashboardSidebar.collapsed~.main-content {
-        width: 96% !important;
+        width: 100% !important;
+        max-width: calc(100% - 90px) !important;
     }
 
     #dashboardSidebar.collapsed {
-        width: 4.7% !important;
+        max-width: 90px;
+        width: 100% !important;
     }
 
     #dashboardSidebar.collapsed .menu-text {
@@ -134,7 +138,8 @@
 
     @media (max-width: 1400px) {
         #dashboardSidebar {
-            width: 18% !important;
+            width: 100% !important;
+            max-width: 277px;
         }
 
         body {
@@ -160,6 +165,7 @@
 
         .main-content {
             width: 100% !important;
+            max-width: 100% !important;
             height: 100%;
             padding: 50px 14px 20px 14px !important;
         }
@@ -168,6 +174,10 @@
             display: none;
         }
 
+        #dashboardSidebar.collapsed~.main-content {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
 
     }
 

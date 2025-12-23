@@ -1,8 +1,8 @@
-
 @yield('scripts')
 <script>
     var userTokenRoute = "{{ route('user.token') }}";
     var getConversations = "{{ route('get.conversations') }}";
+
     function getMessageRoute(conversationId) {
         return "{{ route('get.message', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);
     }
@@ -13,16 +13,16 @@
         return "{{ route('get.user.conversation', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);
     }
     var userIsTyping = "{{ route('user.is.typing') }}";
+
     function addReactionRoute(messageId) {
         return "{{ route('add.reaction', ['message' => '__ID__']) }}".replace('__ID__', messageId);
     }
+
     function removeReactionRoute(messageId) {
         return "{{ route('add.reaction', ['message' => '__ID__']) }}".replace('__ID__', messageId);
     }
     var userPing = "{{ route('user.ping') }}";
     var userOffline = "{{ route('user.offline') }}";
-
-
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
@@ -44,7 +44,6 @@
 @endauth
 
 <script>
-
     jQuery(document).ready(function($) {
 
 
@@ -264,7 +263,15 @@
             readURL(this);
         });
 
+        $('.personalProfilePicBtn').on('click', function(e) {
+            e.preventDefault();
+            $('#imageUpload').trigger('click');
+        });
 
+        $('.companyProfilePicBtn').on('click', function(e) {
+            e.preventDefault();
+            $('#imageUploadCompany').trigger('click');
+        });
 
 
 
