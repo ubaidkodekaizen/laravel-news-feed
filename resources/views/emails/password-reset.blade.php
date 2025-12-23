@@ -125,7 +125,7 @@
 																			<td class="img-center p-30 px-15"
 																				style="font-size:0pt; line-height:0pt; text-align:center; padding-top: 20px; padding-bottom: 20px;">
 																				<a href="javascript:void(0)"><img
-																						src="https://muslimlynk.com/app/public/assets/images/logo_bg.png"
+																						src="https://muslimlynk.com/public/assets/images/logo_bg.png"
 																						width="150" height="155"
 																						border="0" alt="" /></a>
 																			</td>

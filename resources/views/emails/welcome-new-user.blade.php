@@ -259,7 +259,7 @@
                                                                             <td class="img-center p-30 px-15"
                                                                                 style="font-size:0pt; line-height:0pt; text-align:center; padding-top: 20px; padding-bottom: 20px;">
                                                                                 <a href="javascript:void(0)"><img
-                                                                                        src="https://muslimlynk.com/app/public/assets/images/logo_bg.png"
+                                                                                        src="https://muslimlynk.com/public/assets/images/logo_bg.png"
                                                                                         width="150" height="155"
                                                                                         border="0"
                                                                                         alt="" /></a>
@@ -294,7 +294,7 @@
                                                                                                 <tr>
                                                                                                     <td class="a-center pb-10"
                                                                                                         style="font-size:22px; line-height:30px; color:#303030; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; text-align:center; padding-bottom: 20px;">
-                                                                                                        Thank you for joining us. Here are your details:
+                                                                                                        Thank you for joining us. Here are your account credentials. Please change your password after logging in.
                                                                                                     </td>
                                                                                                 </tr>
 
@@ -313,7 +313,11 @@
                                                                                                             </tr>
                                                                                                             <tr>
                                                                                                                 <td>Email:</td>
-                                                                                                                <td>{{ $email }}
+                                                                                                                <td>{{ $email }}</td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>Password:</td>
+                                                                                                                <td>{{ $password }}</td>
                                                                                                             </tr>
                                                                                                             <tr>
                                                                                                                 <td>AMCOB Member:</td>
@@ -336,8 +340,8 @@
                                                                                                             <tbody>
                                                                                                                 <tr>
                                                                                                                     <td bgcolor="#b8c034" style="font-size:16px;line-height:20px;font-family:'PT Sans',Arial,sans-serif;text-align:center;font-weight:bold;text-transform:uppercase;border-radius:25px;min-width:auto!important;color:#ffffff">
-                                                                                                                        <a href="{{ route('password.reset', ['token' => $token]) }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
-                                                                                                                            <span style="text-decoration:none;color:#ffffff"> Reset Password </span>
+                                                                                                                        <a href="{{ route('password.setup', ['token' => $token]) }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
+                                                                                                                            <span style="text-decoration:none;color:#ffffff">Setup/Change Password</span>
                                                                                                                         </a>
                                                                                                                     </td>
                                                                                                                 </tr>
@@ -349,6 +353,7 @@
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
                                                                                                         style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:start;">
+                                                                                                        <strong>Important:</strong> For security reasons, please change your password after your first login using the button above.<br><br>
                                                                                                         Thank you for being part of our community!<br>
                                                                                                         {{ config('app.name') }} Team
                                                                                                     </td>

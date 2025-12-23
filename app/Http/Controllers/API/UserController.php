@@ -62,13 +62,27 @@ class UserController extends Controller
             'slug' => $slug,
             'role_id' => 4,
             'status' => 'pending',
+            // Don't verify email automatically - user needs to verify via email
         ]);
+
+        // Create email verification token
+        $verificationToken = Str::random(64);
+        DB::table('email_verification_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            ['token' => $verificationToken, 'created_at' => now()]
+        );
+
+        // Send verification email
+        Mail::send('emails.email-verification', ['token' => $verificationToken], function ($message) use ($request) {
+            $message->to($request->email);
+            $message->subject('Verify Your Email - MuslimLynk');
+        });
 
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
             'status' => true,
-            'message' => 'User registered successfully.',
+            'message' => 'User registered successfully. Please check your email to verify your account.',
             'token' => $token,
             'user' => $user,
         ]);
@@ -112,6 +126,7 @@ class UserController extends Controller
             'status' => 'pending',
             'is_amcob' => 'Yes',
             'paid' => 'Yes',
+            'email_verified_at' => now(), // Automatically verify email for AMCOB users
         ]);
 
         Subscription::create([
@@ -324,6 +339,15 @@ class UserController extends Controller
             ], 401);
         }
         $user = Auth::user();
+
+        // Check if email is verified
+        if (!$user->email_verified_at) {
+            Auth::logout();
+            return response()->json([
+                'status' => false,
+                'message' => 'Please verify your email address before logging in. Check your email for the verification link.',
+            ], 403);
+        }
 
         if ($user->role_id !== 4) {
             Auth::logout();

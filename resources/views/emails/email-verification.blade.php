@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -21,7 +20,7 @@
 	<!--[if !mso]><!-->
 	<link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&display=swap" rel="stylesheet" />
 	<!--<![endif]-->
-	<title>First Email</title>
+	<title>Verify Your Email</title>
 	
 
 	<style type="text/css" media="screen">
@@ -147,14 +146,14 @@
 																								
 																								<tr>
 																									<td class="title-36 a-center pb-10" style="font-size:30px; line-height:40px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; text-align:center; padding-bottom: 20px;">
-																										<strong>Setup Password</strong>
+																										<strong>Verify Your Email</strong>
 																									</td>
 																								</tr>
 
 												
                                                                                                 <tr>
 																									<td class="title-36 a-center pb-10" style="font-size:20px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:center;">
-																										<strong>Please click the button below to verify your email and setup your password.</strong>
+																										<strong>Welcome to MuslimLynk! Please click the button below to verify your email address.</strong>
 																									</td>
 																								</tr>
 
@@ -166,8 +165,8 @@
                                                                                                             <tbody>
                                                                                                                 <tr>
                                                                                                                     <td bgcolor="#b8c034" style="font-size:16px;line-height:20px;font-family:'PT Sans',Arial,sans-serif;text-align:center;font-weight:bold;text-transform:uppercase;border-radius:25px;min-width:auto!important;color:#ffffff">
-                                                                                                                        <a href="{{ route('password.setup', ['token' => $token]) }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
-                                                                                                                            <span style="text-decoration:none;color:#ffffff">Setup your Password</span>
+                                                                                                                        <a href="{{ route('email.verify', ['token' => $token]) }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff;">
+                                                                                                                            <span style="text-decoration:none;color:#ffffff">Verify Email</span>
                                                                                                                         </a>
                                                                                                                     </td>
                                                                                                                 </tr>
@@ -177,14 +176,13 @@
                                                                                                     </td>
                                                                                                 </tr>
 
-																								{{-- <tr>
-																									<td class="title-36 a-center pb-10" style="font-size:16px; line-height:20px; color:#303030; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px;">
-																										<strong>If you did not request this password reset, please ignore this email.</strong>
+																								<tr>
+																									<td class="title-36 a-center pb-10" style="font-size:16px; line-height:20px; color:#303030; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:center;">
+																										<strong>If you did not create an account, please ignore this email.</strong>
 																									</td>
-																								</tr> --}}
+																								</tr>
                                                                                                 
 																								
-                                                                                                  
 																								
 																								
 																							</table>
@@ -217,3 +215,4 @@
 	</center>
 </body>
 </html>
+

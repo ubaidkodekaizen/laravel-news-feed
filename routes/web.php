@@ -6,6 +6,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PageController;
@@ -129,11 +130,23 @@ Route::get('/send-test-email', function () {
 
 // User Routes
 
-Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
-
+// Dashboard route - accessible to authenticated users, redirects based on role
+Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
+        $user = Auth::user();
+        // If admin, redirect to admin dashboard
+        if ($user->role_id === 1) {
+            return redirect()->route('admin.dashboard');
+        }
+        // If not role 4, deny access
+        if ($user->role_id !== 4) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('user.dashboard');
     })->name('dashboard');
+});
+
+Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('/news-feed', function () {
         return view('user.news-feed');
@@ -252,6 +265,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
     Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
     Route::get('/setup-password/{token}', [PasswordResetController::class, 'showSetupPasswordForm'])->name('password.setup');
+    
+    // Email Verification Route
+    Route::get('/verify-email/{token}', [EmailVerificationController::class, 'verify'])->name('email.verify');
 
     // Admin Routes
     Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');

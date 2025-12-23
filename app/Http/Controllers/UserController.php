@@ -63,6 +63,14 @@ class UserController extends Controller
 
             $user = Auth::user();
 
+            // Check if email is verified
+            if (!$user->email_verified_at) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Please verify your email address before logging in. Check your email for the verification link.',
+                ]);
+            }
+
             $token = $user->createToken('chat_app')->plainTextToken;
 
             session(['sanctum_token' => $token]);

@@ -124,12 +124,13 @@ class AdminController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        // Create the user
+        // Create the user with email verified automatically
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'email_verified_at' => now(), // Automatically verify email
             'is_amcob' => $request->amcob_member ?? 'No',
             'duration' => $request->duration ?? '',
         ]);
@@ -150,19 +151,26 @@ class AdminController extends Controller
             ]);
         }
 
+        // Create password reset token for password setup
         $token = Str::random(64);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            ['token' => $token, 'created_at' => now()]
+        );
+
+        // Prepare email data with credentials
         $emailData = [
             'token' => $token,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
+            'password' => $request->password, // Include password for email
             'is_amcob' => $request->amcob_member ?? 'No',
             'duration' => $request->duration ?? ''
-            // 'reset_password' => url("/reset-password/{$token}")
         ];
         Mail::send('emails.welcome-new-user', $emailData, function ($message) use ($request) {
             $message->to($request->email);
-            $message->subject('Welcome to MuslimLynk');
+            $message->subject('Welcome to MuslimLynk - Your Account Credentials');
         });
         return redirect()->route('admin.users')->with('success', 'User created successfully!');
 
