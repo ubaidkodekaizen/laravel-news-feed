@@ -10,6 +10,21 @@
             margin: 40px 0 60px 0;
         }
 
+        .avatar-initials {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #394a93;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 1px;
+            border: 8px solid #fff;
+        }
+
         .pagination-wrapper {
             flex: 1;
             display: flex;
@@ -97,7 +112,7 @@
 
 
             <div class="sidebar" id="sidebar">
-                {{-- <h5 class="filter_heading top_filter_heading">Filters</h5> --}}
+
                 <div id="filterContainer">
 
                     @php
@@ -209,8 +224,7 @@
 
                         <!-- Product/Service Filter Section -->
                         <div class="filter-section">
-                            <div class="filter-header collapsed" data-bs-toggle="collapse"
-                                data-bs-target="#productFilter">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#productFilter">
                                 Products <span class="toggle-icon">+</span>
                             </div>
                             <div id="productFilter" class="filterCollapseBox collapse">
@@ -263,7 +277,8 @@
                     <div class="filterContainerInner">
                         <!-- Industry Filter Section -->
                         <div class="filter-section">
-                            <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#industryFilter">
+                            <div class="filter-header collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#industryFilter">
                                 Industry <span class="toggle-icon">+</span>
                             </div>
                             <div id="industryFilter" class="filterCollapseBox collapse">
@@ -350,8 +365,9 @@
                                 <div class="selected-filter-group" id="selectedBusinessChallengesFilters"></div>
 
                                 <div class="searchBarAndFilterCon">
-                                    <input type="text" id="businessChallengesSearchInput" name="company_current_business_challenges"
-                                        class="filter-search" placeholder="Search Business Challenges..."
+                                    <input type="text" id="businessChallengesSearchInput"
+                                        name="company_current_business_challenges" class="filter-search"
+                                        placeholder="Search Business Challenges..."
                                         oninput="filterOptions(this, 'businessChallengesFilterOptions')">
                                     <div id="businessChallengesFilterOptions">
                                         @foreach ($filters['business_challenges'] ?? [] as $challenge)
@@ -427,7 +443,8 @@
                                 <div class="searchBarAndFilterCon">
                                     <input type="text" id="decisionMakerSearchInput" name="is_decision_maker"
                                         class="filter-search" placeholder="Search Decision Maker..."
-                                        oninput="filterOptions(this, 'decisionMakerFilterOptions')" style="display: none;">
+                                        oninput="filterOptions(this, 'decisionMakerFilterOptions')"
+                                        style="display: none;">
                                     <div id="decisionMakerFilterOptions" style="display: block;">
                                         <div class="filter-option"
                                             onclick="addFilter('is_decision_maker', 'Yes', 'selectedDecisionMakerFilters', 'decisionMakerSearchInput')">

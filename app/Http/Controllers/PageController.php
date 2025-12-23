@@ -55,42 +55,99 @@ class PageController extends Controller
 
         $blogs = Blog::orderByDesc('id')->get();
         $events = Event::orderByDesc('id')->get();
-        $products = Product::whereHas('user', function ($query) {
-            $query->where('status', 'complete');
-        })
+        $products = Product::with('user')
+            ->whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            })
             ->orderByDesc('id')
-            ->get();
+            ->get()
+            ->map(function ($product) {
+                $user = $product->user;
+                $photoPath = $user->photo ?? null;
 
-        $services = Service::whereHas('user', function ($query) {
-            $query->where('status', 'complete');
-        })
+                // Check if photo exists
+                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+                // Generate initials
+                $initials = strtoupper(
+                    substr($user->first_name, 0, 1) .
+                        substr($user->last_name ?? '', 0, 1)
+                );
+
+                // Add computed properties to the product object
+                $product->user_has_photo = $hasPhoto;
+                $product->user_initials = $initials;
+
+                return $product;
+            });
+
+        $services = Service::with('user')
+            ->whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            })
             ->orderByDesc('id')
             ->take(3)
-            ->get();
+            ->get()
+            ->map(function ($service) {
+                $user = $service->user;
+                $photoPath = $user->photo ?? null;
+
+                // Check if photo exists
+                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+                // Generate initials
+                $initials = strtoupper(
+                    substr($user->first_name, 0, 1) .
+                        substr($user->last_name ?? '', 0, 1)
+                );
+
+                // Add computed properties to the service object
+                $service->user_has_photo = $hasPhoto;
+                $service->user_initials = $initials;
+
+                return $service;
+            });
+
 
         return view('feed', compact('blogs', 'events', 'products', 'services', 'industries'));
     }
 
     public function products(Request $request)
     {
-        $query = Product::whereHas('user', function ($query) {
+        $query = Product::with('user')->whereHas('user', function ($query) {
             $query->where('status', 'complete');
         });
 
+        if ($request->has('search') && $request->search !== null) {
+            $search = $request->search;
+            $query->where('title', 'like', "%$search%");
+        }
+
+        $products = $query->orderByDesc('id')->get()->map(function ($product) {
+            $user = $product->user;
+            $photoPath = $user->photo ?? null;
+
+            // Check if photo exists
+            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+            // Generate initials
+            $initials = strtoupper(
+                substr($user->first_name, 0, 1) .
+                    substr($user->last_name ?? '', 0, 1)
+            );
+
+            // Add computed properties to the product object
+            $product->user_has_photo = $hasPhoto;
+            $product->user_initials = $initials;
+
+            return $product;
+        });
+
         if ($request->ajax()) {
-            if ($request->has('search') && $request->search !== null) {
-                $search = $request->search;
-                $query->where('title', 'like', "%$search%");
-            }
-
-            $products = $query->orderByDesc('id')->get();
-
             return response()->json([
                 'html' => view('partial.product_cards', compact('products'))->render()
             ]);
         }
-
-        $products = $query->orderByDesc('id')->get();
         return view('products', compact('products'));
     }
 
@@ -100,19 +157,38 @@ class PageController extends Controller
         $query = Service::whereHas('user', function ($query) {
             $query->where('status', 'complete');
         });
+
+        if ($request->has('search') && $request->search !== null) {
+            $search = $request->search;
+            $query->where('title', 'like', "%$search%");
+        }
+
+        $services = $query->orderByDesc('id')->get()->map(function ($service) {
+            $user = $service->user;
+            $photoPath = $user->photo ?? null;
+
+            // Check if photo exists
+            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+            // Generate initials
+            $initials = strtoupper(
+                substr($user->first_name, 0, 1) .
+                    substr($user->last_name ?? '', 0, 1)
+            );
+
+            // Add computed properties to the service object
+            $service->user_has_photo = $hasPhoto;
+            $service->user_initials = $initials;
+
+            return $service;
+        });
+
         if ($request->ajax()) {
-            if ($request->has('search') && $request->search !== null) {
-                $search = $request->search;
-                $query->where('title', 'like', "%$search%");
-            }
-
-            $services = $query->orderByDesc('id')->get();
-
             return response()->json([
                 'html' => view('partial.service_cards', compact('services'))->render()
             ]);
         }
-        $services = $query->orderByDesc('id')->get();
+
         return view('services', compact('services'));
     }
 
@@ -206,7 +282,4 @@ class PageController extends Controller
 
         return view('user.smart-suggestion', compact('suggestions'));
     }
-
-
-
 }

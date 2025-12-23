@@ -1444,6 +1444,7 @@ h2.industriesMainHeading::after {
     font-weight: 500;
     padding: 6px 12px;
     border-radius: 50px;
+    text-wrap-mode: nowrap;
 }
 
 .sliderUserAndPricingInfo .author-info {

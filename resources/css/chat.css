@@ -149,7 +149,20 @@
     width: 100%;
     height: 35px;
 }
-
+.conversationUserProfile .avatar-initials {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border: unset;
+}
 .conversationUnreadCount {
     position: absolute;
     top: 50%;
@@ -286,7 +299,16 @@
     object-fit: cover;
     border: 1px solid #9ca6d5;
 }
-
+.messageBoxListItemInner .messageSenderPhoto.avatar-initials {
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
 .messageBoxListItemContent {
     display: flex;
     flex-direction: column;
@@ -354,7 +376,18 @@
     object-fit: cover;
     object-position: center;
 }
-
+.messageBoxHead .messageBoxHeadSenderPhoto.avatar-initials {
+    border-radius: 50%;
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border: 1px solid #ffffff33;
+}
 .messageBoxHead .messageBoxHeadUsername {
     font-size: 16px;
     font-weight: 500;

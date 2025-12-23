@@ -22,6 +22,20 @@
             background-color: transparent;
         }
 
+        .avatar-initials {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #394a93;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
         .read-more-btn:hover {
             color: #b8c034 !important;
             background-color: transparent;
@@ -63,9 +77,6 @@
             border-radius: 50px;
         }
 
-        .modal-dialog-centered {
-            /* min-height: 0 !important; */
-        }
 
         h6#productModalUserName {
             font-size: 18.71px;
@@ -122,11 +133,6 @@
         #productModal .modal-content {
             overflow: hidden;
         }
-
-        /* #productModalLabel {
-                font-size: 18px;
-                line-height: 1.3em;
-            } */
 
         .productModalImageBox .btn-close {
             position: absolute;
@@ -211,18 +217,6 @@
             font-weight: 700;
         }
 
-        /* .customHeading::before {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100%;
-                background: linear-gradient(to right, transparent, var(--secondary));
-                height: 5px;
-                border-radius: 10px;
-            } */
-
         .articles {
             overflow: hidden;
             position: relative;
@@ -287,10 +281,6 @@
             transition: all 1s;
         }
 
-        /* .service_search_area form:hover .fa{
-                    background: var(--primary);
-                    color: white;
-                } */
         .min_h_400 {
             min-height: calc(100vh - 400px);
         }
@@ -385,9 +375,9 @@
         }
 
         /* #productModalLabel {
-            font-size: 18px;
-            line-height: 1.3em;
-        } */
+                            font-size: 18px;
+                            line-height: 1.3em;
+                        } */
 
         h5.customHeading {
             color: #fff !important;
@@ -425,7 +415,7 @@
         }
 
         .modal-footer .btn-close {
-            --bs-btn-close-bg: url("/assets/images/modalCloseVector.svg") !important;
+            --bs-btn-close-bg: url("{{ asset('assets/images/modalCloseVector.svg') }}") !important;
             position: absolute;
             top: 5px;
             right: 5px;
@@ -474,16 +464,9 @@
     <div id="footer">
         <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
     </div>
-    <!-- <section class="lp_footer">
-                <div class="container">
 
-                    <p class="powered_by">
-                        Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
-                    </p>
-                </div>
-            </section> -->
     <!-- Main Modal -->
-    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" >
+    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: var(--primary); color: #fff;">
@@ -508,7 +491,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" >
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
 
@@ -522,8 +505,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><img
-                            src="{{asset('assets/images/closeIcon.webp')}}" alt=""></button>
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                            src="{{ asset('assets/images/closeIcon.webp') }}" alt=""></button>
+
                     <div class="productModalContent">
                         <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
                                 id="productModalQuantity"></span></p>
@@ -554,44 +537,6 @@
             </div>
         </div>
     </div>
-    <!-- <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-
-                    <div class="modal-body p-0">
-                        <div class="productModalImageBox">
-                            <img id="productModalImage" src="" class="img-fluid mb-3" alt="Product image" />
-                            <p class="productModalPriceBox"> <span id="productModalPrice"></span><span
-                                    id="productModalQuantity"></span></p>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="productModalContent">
-
-
-                            <h5 class="modal-title customHeading" id="productModalLabel">Product Title</h5>
-
-
-                            <p class="mt-2"><span id="productModalDescription"></span></p>
-
-
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <div class="productModalUserProfileBox">
-                            <img id="productModalUserPhoto" src="" alt="User photo" class="rounded-circle me-2"
-                                width="50" height="50">
-                            <div>
-                                <h6 id="productModalUserName" class="mb-0"></h6>
-                                <small id="productModalDate"></small>
-                            </div>
-                        </div>
-                        <a href="javascript:void(0)" class="view-more direct-message-btn" data-receiver-id=""
-                            data-bs-dismiss="modal">Message Now</a>
-                    </div>
-                </div>
-            </div>
-        </div> -->
 @endsection
 
 
@@ -635,9 +580,9 @@
         jQuery(document).ready(function($) {
 
             let directMessageBtn = document.querySelectorAll('.direct-message-btn');
-            console.log("directMessageBtn", directMessageBtn);
+            // console.log("directMessageBtn", directMessageBtn);
             directMessageBtn.forEach(element => {
-                console.log("element", element);
+
                 element.addEventListener("click", function() {
                     let receiverId = $(this).data('receiver-id');
                     $('#receiver_id').val(receiverId);
@@ -666,7 +611,7 @@ I came across your profile and was really impressed by your work. I’d love to 
 Looking forward to connecting!
 Best Regards,
 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
-                                // $('#mainModal').modal('show');
+
                                 var myModal = new bootstrap.Modal(document
                                     .getElementById('mainModal'));
                                 myModal.show();
@@ -733,11 +678,42 @@ Best Regards,
                 modal.querySelector('#productModalImage').src = wrapper.dataset.image;
                 modal.querySelector('#productModalPrice').textContent = wrapper.dataset.price;
                 modal.querySelector('#productModalQuantity').textContent = wrapper.dataset.quantity;
-                modal.querySelector('#productModalUserPhoto').src = wrapper.dataset.userPhoto;
                 modal.querySelector('#productModalUserName').textContent = wrapper.dataset.userName;
                 modal.querySelector('#productModalDate').textContent = "Posted on " + wrapper.dataset.date;
                 modal.querySelector('.direct-message-btn').setAttribute('data-receiver-id', wrapper.dataset
                     .id);
+
+                // Handle user photo or initials
+                const userPhotoElement = modal.querySelector('#productModalUserPhoto');
+                const userPhoto = wrapper.dataset.userPhoto;
+
+                if (userPhoto) {
+                    // Show photo - replace with img if initials div exists
+                    if (userPhotoElement.tagName !== 'IMG') {
+                        const img = document.createElement('img');
+                        img.id = 'productModalUserPhoto';
+                        img.className = 'rounded-circle me-2';
+                        img.width = 50;
+                        img.height = 50;
+                        img.src = userPhoto;
+                        img.alt = wrapper.dataset.userName;
+                        userPhotoElement.replaceWith(img);
+                    } else {
+                        userPhotoElement.src = userPhoto;
+                        userPhotoElement.alt = wrapper.dataset.userName;
+                    }
+                } else {
+                    // Show initials - replace img with div if needed
+                    if (userPhotoElement.tagName === 'IMG') {
+                        const initialsDiv = document.createElement('div');
+                        initialsDiv.id = 'productModalUserPhoto';
+                        initialsDiv.className = 'avatar-initials me-2';
+                        initialsDiv.textContent = wrapper.dataset.userInitials;
+                        userPhotoElement.replaceWith(initialsDiv);
+                    } else {
+                        userPhotoElement.textContent = wrapper.dataset.userInitials;
+                    }
+                }
 
                 bsModal.show();
             });
