@@ -296,7 +296,7 @@ class UserController extends Controller
                     'samar.naeem@amcob.org',
                     'kashif.zubair@myadroit.com'
                 ]);
-                $message->subject('A new customer for Muslim Lynk');
+                $message->subject('A new customer for MuslimLynk');
             });
         } catch (\Exception $e) {
             \Log::error('Admin email failed to send: ' . $e->getMessage());

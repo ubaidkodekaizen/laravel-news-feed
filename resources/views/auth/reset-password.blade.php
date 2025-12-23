@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password | Muslim Lynk</title>
+    <title>Reset Password | MuslimLynk</title>
     <link rel="icon" href="{{asset('assets/images/logo_bg.png')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -57,7 +57,7 @@
                                 <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="off" required>
                                 <label>Confirm Password</label>
                             </div>
-                           
+
                             <button type="submit" class="custom-btn btn-14 mt-4">Reset Password</button>
                         </form>
                     </div>
@@ -68,7 +68,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>    
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -114,14 +114,14 @@
             });
         });
     </script>
-    
+
 <script>
      $(document).ready(function () {
             // Toggle the visibility of the password field
             $('#togglePassword').on('click', function () {
                 const passwordField = $('#password');
                 const icon = $(this);
-    
+
                 // Check the current type of the input field
                 if (passwordField.attr('type') === 'password') {
                     passwordField.attr('type', 'text'); // Change to text to show password
@@ -134,7 +134,7 @@
             $('#toggleConfirmPassword').on('click', function () {
                 const passwordField = $('#password_confirmation');
                 const icon = $(this);
-    
+
                 // Check the current type of the input field
                 if (passwordField.attr('type') === 'password') {
                     passwordField.attr('type', 'text'); // Change to text to show password
@@ -148,6 +148,6 @@
 </script>
 </body>
 
-</html>    
+</html>
 
 

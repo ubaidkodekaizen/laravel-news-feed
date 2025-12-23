@@ -299,7 +299,7 @@
                                                                                                             customer has
                                                                                                             just signed
                                                                                                             up for
-                                                                                                            Muslim Lynk,
+                                                                                                            MuslimLynk,
                                                                                                             and they are
                                                                                                             one of the
                                                                                                             first 1,000
@@ -334,7 +334,7 @@
                                                                                                 <br>
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
-                                                                                                        style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; 
+                                                                                                        style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif;
            min-width:auto !important; padding-bottom:10px; text-align:start;">
 
                                                                                                         <strong>Subscription
@@ -385,7 +385,7 @@
                                                                                                                 target="_blank"
                                                                                                                 rel="noopener noreferrer"
                                                                                                                 style="color:#b8c034; text-decoration:underline;">Authorize.Net</a>
-                                                                                                            Muslim Lynk
+                                                                                                            MuslimLynk
                                                                                                             Gateway.<br>
                                                                                                         @endif
 
@@ -429,7 +429,7 @@
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
                                                                                                         style="font-size:20px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:start;">
-                                                                                                        The Muslim Lynk
+                                                                                                        The MuslimLynk
                                                                                                         Team
                                                                                                     </td>
                                                                                                 </tr>

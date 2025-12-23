@@ -61,7 +61,7 @@
         <div class="container">
             <h1>Privacy Policy</h1>
             <p class="font-weight-bold"> <strong>Effective Date:</strong> Jun 10, 2025<br>
-                At Muslim Lynk, your privacy is our priority. This Privacy Policy outlines how we collect, use, and
+                At MuslimLynk, your privacy is our priority. This Privacy Policy outlines how we collect, use, and
                 protect your information when you use our mobile application and services.</p>
             <ol>
 
@@ -114,7 +114,7 @@
                 </li>
                 <li>
                     <h3>Children’s Privacy</h3>
-                    <p>Muslim Lynk is not intended for children under the age of 13. We do not knowingly collect data
+                    <p>MuslimLynk is not intended for children under the age of 13. We do not knowingly collect data
                         from
                         children.</p>
                 </li>
@@ -123,7 +123,7 @@
                     <p>We may update this policy. You will be notified of any significant changes via the app or email.
                     </p>
                     <h3>Safety Standards</h3>
-                    <p> Muslim Lynk is committed to maintaining a safe, respectful, and inclusive platform for all
+                    <p> MuslimLynk is committed to maintaining a safe, respectful, and inclusive platform for all
                         users.</p>
                     <ol>
                         <li>
@@ -165,7 +165,7 @@
                         <li>
                             <h3>Data Safety</h3>
                             <ul>
-                                <li>Muslim Lynk collects only essential data and never shares it without consent.</li>
+                                <li>MuslimLynk collects only essential data and never shares it without consent.</li>
 
 
                                 <li>All user data is encrypted and stored on secure servers.</li>

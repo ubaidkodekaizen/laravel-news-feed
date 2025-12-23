@@ -5,11 +5,11 @@
          <meta charset="UTF-8">
          <meta name="viewport" content="width=device-width, initial-scale=1.0">
          <meta http-equiv="X-UA-Compatible" content="ie=edge">
-         <title>Muslim Lynk | Empowering Connections, Amplifying Impact</title>
+         <title>MuslimLynk | Empowering Connections, Amplifying Impact</title>
          <meta name="description"
-             content="Join Muslim Lynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
+             content="Join MuslimLynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
          <meta property="og:type" content="website">
-         <meta property="og:title" content="Muslim Lynk – Where Connections Create Impact">
+         <meta property="og:title" content="MuslimLynk – Where Connections Create Impact">
          <meta property="og:description"
              content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
          <meta property="og:url" content="{{ url('/') }}">
@@ -1460,12 +1460,12 @@
          <div id="homeHeroSec">
              <div class="homeHeroSecInner">
                  <h2>Connecting Muslims Worldwide</h2>
-                 <p><strong>Muslim Lynk</strong> is your gateway to empowerment, collaboration, and success within the
+                 <p><strong>MuslimLynk</strong> is your gateway to empowerment, collaboration, and success within the
                      Muslim
                      community.
                      Whether you’re an educator, student, entrepreneur, or professional, we are here to unlock a world
                      of
-                     opportunity for you. Built on the trusted foundation of AMCOB’s network, Muslim Lynk is more than a
+                     opportunity for you. Built on the trusted foundation of AMCOB’s network, MuslimLynk is more than a
                      platform – it’s a movement to help you thrive in your career, business, and life.</p>
                  <p>
                      Together, we can ensure that every dollar spent in our community multiplies its impact at least
@@ -1477,7 +1477,7 @@
                      <a href="{{ route('register.form') }}" class="homeHeroSecInnerActionBtn">Sign Up</a>
                  </div>
                  <div class="homeHeroSecInnerMobileStoreActionBtns">
-                     <h4>Download the Muslim Lynk App</h4>
+                     <h4>Download the MuslimLynk App</h4>
                      <div class="homeHeroSecInnerMobileStoreActionBtnsInner">
                          <a href="https://play.google.com/store/apps/details?id=com.MuslimLynk"
                              class="homeHeroSecInnerMobileStoreActionBtn">
@@ -1497,7 +1497,7 @@
 
          <div id="advantageSec">
              <div class="advantageSecInner">
-                 <h4 class="advantageSecInnerHeading">The Muslim Lynk <span>Advantage</span></h4>
+                 <h4 class="advantageSecInnerHeading">The MuslimLynk <span>Advantage</span></h4>
                  <div class="advantageSecInnerBoxOuterRow">
                      <div class="advantageSecInnerBoxRow">
                          <div class="advantageSecInnerBoxes active" data-img="{{ asset('assets/images/connectAndNetwork.png') }}">
@@ -1549,7 +1549,7 @@
              <div class="pricingSecInner">
                  <div class="pricingSecHead">
                      <h2>Join the Movement</h2>
-                     <p>Join Muslim Lynk today, and let’s shape a future where the collective strength of our community
+                     <p>Join MuslimLynk today, and let’s shape a future where the collective strength of our community
                          uplifts
                          every individual. Together, we’ll ensure the principle of “a dollar revolves seven times within
                          the
@@ -1576,7 +1576,7 @@
                          <div class="pricingSecBox">
                              <h4>PRO</h4>
                              <h2>$4.99 / month</h2>
-                             <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.
+                             <p>Access the full power of the MuslimLynk App and make meaningful connections with ease.
                              </p>
                              <ul>
                                  <li>
@@ -1608,7 +1608,7 @@
                          <div class="pricingSecBox">
                              <h4>PRO</h4>
                              <h2>$49.99 / year</h2>
-                             <p>Access the full power of the Muslim Lynk App and make meaningful connections with ease.
+                             <p>Access the full power of the MuslimLynk App and make meaningful connections with ease.
                              </p>
                              <ul>
                                  <li>
@@ -1652,12 +1652,12 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
                                          aria-expanded="false" aria-controls="flush-collapseOne">
-                                         What is Muslim Lynk?
+                                         What is MuslimLynk?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseOne" class="accordion-collapse collapse"
                                      aria-labelledby="flush-headingOne" data-bs-parent="#faqSecAccordion1">
-                                     <div class="accordion-body">Muslim Lynk is a networking platform designed to
+                                     <div class="accordion-body">MuslimLynk is a networking platform designed to
                                          connect Muslim professionals,
                                          entrepreneurs, business owners, and service providers across the world. It’s
                                          your community-powered business network. </div>
@@ -1668,7 +1668,7 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
                                          aria-expanded="false" aria-controls="flush-collapseTwo">
-                                         Who is Muslim Lynk for?
+                                         Who is MuslimLynk for?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseTwo" class="accordion-collapse collapse"
@@ -1684,13 +1684,13 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
                                          aria-expanded="false" aria-controls="flush-collapseThree">
-                                         How is Muslim Lynk different from LinkedIn?
+                                         How is MuslimLynk different from LinkedIn?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseThree" class="accordion-collapse collapse"
                                      aria-labelledby="flush-headingThree" data-bs-parent="#faqSecAccordion1">
                                      <div class="accordion-body">
-                                         LinkedIn is broad. Muslim Lynk is focused. It gives you direct access to Muslim
+                                         LinkedIn is broad. MuslimLynk is focused. It gives you direct access to Muslim
                                          business leaders and professionals inside a curated, values-aligned ecosystem.
                                      </div>
                                  </div>
@@ -1700,12 +1700,12 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseFour"
                                          aria-expanded="false" aria-controls="flush-collapseFour">
-                                         Who built Muslim Lynk?
+                                         Who built MuslimLynk?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseFour" class="accordion-collapse collapse"
                                      aria-labelledby="flush-headingFour" data-bs-parent="#faqSecAccordion1">
-                                     <div class="accordion-body">Muslim Lynk is created by AMCOB (Allied Muslim Chamber
+                                     <div class="accordion-body">MuslimLynk is created by AMCOB (Allied Muslim Chamber
                                          of Business), a premium ecosystem for Muslim entrepreneurs in the US, UK,
                                          Canada, the Gulf, and beyond.
                                      </div>
@@ -1716,7 +1716,7 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseFive"
                                          aria-expanded="false" aria-controls="flush-collapseFive">
-                                         What can I do on Muslim Lynk?
+                                         What can I do on MuslimLynk?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseFive" class="accordion-collapse collapse"
@@ -1738,12 +1738,12 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapsesix"
                                          aria-expanded="false" aria-controls="flush-collapsesix">
-                                         Is Muslim Lynk free?
+                                         Is MuslimLynk free?
                                      </button>
                                  </h2>
                                  <div id="flush-collapsesix" class="accordion-collapse collapse"
                                      aria-labelledby="flush-headingsix" data-bs-parent="#faqSecAccordion1">
-                                     <div class="accordion-body">Muslim Lynk works on a simple subscription model with
+                                     <div class="accordion-body">MuslimLynk works on a simple subscription model with
                                          monthly and annual plans. This keeps the platform clean, ad-free, and focused
                                          on real value.
                                      </div>
@@ -1800,7 +1800,7 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseNine"
                                          aria-expanded="false" aria-controls="flush-collapseNine">
-                                         Is Muslim Lynk global?
+                                         Is MuslimLynk global?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseNine" class="accordion-collapse collapse"
@@ -1820,7 +1820,7 @@
                                  </h2>
                                  <div id="flush-collapseTen" class="accordion-collapse collapse"
                                      aria-labelledby="flush-headingTen" data-bs-parent="#faqSecAccordion2">
-                                     <div class="accordion-body">Muslim Lynk does not sell or share your personal data.
+                                     <div class="accordion-body">MuslimLynk does not sell or share your personal data.
                                          Your profile is visible only inside the platform. Additional security
                                          enhancements are part of upcoming releases.</div>
                                  </div>
@@ -1835,7 +1835,7 @@
                                  </h2>
                                  <div id="flush-collapseEleven" class="accordion-collapse collapse"
                                      aria-labelledby="flush-headingEleven" data-bs-parent="#faqSecAccordion2">
-                                     <div class="accordion-body">You can join through the Muslim Lynk mobile app on
+                                     <div class="accordion-body">You can join through the MuslimLynk mobile app on
                                          Android or iOS.
                                          You can also sign up directly on muslimlynk.com.
                                          Create your profile, choose your plan, and you’re all set. It takes less than
@@ -1862,7 +1862,7 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseThirteen"
                                          aria-expanded="false" aria-controls="flush-collapseThirteen">
-                                         Can I use Muslim Lynk on my phone?
+                                         Can I use MuslimLynk on my phone?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseThirteen" class="accordion-collapse collapse"
@@ -1891,7 +1891,7 @@
                                      <button class="accordion-button collapsed" type="button"
                                          data-bs-toggle="collapse" data-bs-target="#flush-collapseFifteen"
                                          aria-expanded="false" aria-controls="flush-collapseFifteen">
-                                         How do I get the most out of Muslim Lynk?
+                                         How do I get the most out of MuslimLynk?
                                      </button>
                                  </h2>
                                  <div id="flush-collapseFifteen" class="accordion-collapse collapse"
@@ -1922,7 +1922,7 @@
                  <div class="row align-items-center">
                      <div class="col-lg-12 text-center">
                          <div class="content">
-                             <h1>Download the Muslim Lynk App</h1>
+                             <h1>Download the MuslimLynk App</h1>
                              <p>Now available on the App Store and Play Store</p>
                          </div>
                          <div class="btn_flex">

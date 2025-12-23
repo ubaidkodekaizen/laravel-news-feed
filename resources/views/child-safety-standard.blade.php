@@ -60,7 +60,7 @@
         <div class="container">
             <h1>Child Safety & Protection Standards</h1>
             <p class="font-weight-bold"> <strong>Effective Date:</strong> Jun 10, 2025<br>
-                Muslim Lynk is committed to protecting the well-being and privacy of all users, including minors. While
+                MuslimLynk is committed to protecting the well-being and privacy of all users, including minors. While
                 our
                 app is not intended for users under 13, we have implemented strict policies and safeguards to protect
                 against Child Sexual Abuse Material (CSAM) and other harmful content.</p>
@@ -71,7 +71,7 @@
                 <li>
                     <h3>Age Restriction</h3>
                     <ul>
-                        <li>Muslim Lynk does not permit users under the age of 13 to create an account.</li>
+                        <li>MuslimLynk does not permit users under the age of 13 to create an account.</li>
                         <li>During registration, we implement age-gate verification mechanisms.</li>
                     </ul>
 
@@ -113,7 +113,7 @@
                     <ul>
                         <li>Our team receives training on identifying, preventing, and responding to CSAM-related risks.
                         </li>
-                        <li>Muslim Lynk complies with applicable laws and works with trusted safety organizations when
+                        <li>MuslimLynk complies with applicable laws and works with trusted safety organizations when
                             needed.</li>
 
                     </ul>

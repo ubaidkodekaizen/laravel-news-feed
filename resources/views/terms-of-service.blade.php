@@ -54,12 +54,12 @@
             <ol>
                 <li>
                     <h3>Acceptance of Terms</h3>
-                    By accessing or using the Muslim Lynk platform (“Service”), you agree to be bound by these Terms of
+                    By accessing or using the MuslimLynk platform (“Service”), you agree to be bound by these Terms of
                     Service (“Terms”). If you do not agree, you may not use the Service.
                 </li>
                 <li>
-                    <h3>About Muslim Lynk</h3>
-                    Muslim Lynk is a platform operated as a DBA (“Doing Business As”) under AMCOB, LLC, a limited
+                    <h3>About MuslimLynk</h3>
+                    MuslimLynk is a platform operated as a DBA (“Doing Business As”) under AMCOB, LLC, a limited
                     liability company incorporated in the State of California, United States. The principal office of
                     AMCOB, LLC is located at: <br>
                     300 Spectrum Center Drive, Suite 400, Irvine, CA 92618. <br>

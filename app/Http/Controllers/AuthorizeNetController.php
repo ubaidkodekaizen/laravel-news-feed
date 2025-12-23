@@ -62,7 +62,7 @@ class AuthorizeNetController extends Controller
         $billingAddress->setState($request->state);
         $billingAddress->setZip($request->zip_code);
         $billingAddress->setCountry($request->country);
-        // $billingAddress->setPhoneNumber($request->phone); 
+        // $billingAddress->setPhoneNumber($request->phone);
 
         $interval = new AnetAPI\PaymentScheduleType\IntervalAType();
         $interval->setLength($request->type === 'Monthly' ? 1 : 12);
@@ -118,12 +118,12 @@ class AuthorizeNetController extends Controller
                 ]);
 
                 $token = Str::random(64);
-              
+
                 DB::table('password_reset_tokens')->updateOrInsert(
                     ['email' => $request->email],
                     ['token' => $token, 'created_at' => now()]
                 );
-              
+
               	Mail::send('emails.confirmation-email', [
                     'token' => $token,
                     'user' => $user,
@@ -143,10 +143,10 @@ class AuthorizeNetController extends Controller
                         "kashif.zubair@myadroit.com"
                     ]);
 
-                    $message->subject('A new customer for Muslim Lynk');
+                    $message->subject('A new customer for MuslimLynk');
                 });
 
-              
+
 
                 return back()->with('success', 'Please check your email to verify your account and set up your password.');
             } else {

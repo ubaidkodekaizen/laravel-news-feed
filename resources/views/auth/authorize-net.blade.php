@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muslim Lynk | Founders and CEO Database</title>
+    <title>MuslimLynk | Founders and CEO Database</title>
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -33,7 +33,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* height: 100vh; */
             width: 100%;
         }
 
@@ -43,13 +42,6 @@
             width: 100%;
         }
 
-        /* h2, p, label{
-            color: #000;
-            -webkit-text-fill-color: #000 !important;
-            font-family: "Inter", sans-serif;
-            font-optical-sizing: auto;
-            font-style: normal;
-        } */
 
         h2 {
             font-size: 58.7px;
@@ -96,9 +88,10 @@
 
         .input-box input {
             border-radius: 9.77px;
-            border: 3.91px solid #F4F4F4 !important;
             color: #000 !important;
             padding: 30px 16px;
+            background: #FFFFFF;
+            border: 2px solid #E9EBF0;
         }
 
         select {
@@ -123,10 +116,7 @@
             font-style: normal;
         }
 
-        /* form.form{
-    width: 684.18px;
-    margin: auto;
-    } */
+
 
         .form-section {
             background: #ffffff;
@@ -155,8 +145,6 @@
 
         .account_signup {
             margin-top: 10px;
-            /* display: flex; */
-            /* justify-content: space-between; */
             padding: 20px 3px 0px 3px;
         }
 
@@ -235,7 +223,6 @@
 
         .select {
             border-radius: 9.77px;
-            /* border: 3.91px solid #F4F4F4 !important; */
             height: 4em;
         }
 
@@ -247,7 +234,6 @@
             margin-bottom: -2.4px;
             border: 3px solid #273572;
             border-radius: 3.91px;
-            /* rounded corners */
             cursor: pointer;
             position: relative;
             outline: none;
@@ -263,19 +249,8 @@
         /* Checked state */
         .form-check input[type="checkbox"]:checked {
             background-color: #273572;
-            /* fill color */
             border-color: #273572;
         }
-
-        /* Add checkmark */
-        /* .form-check input[type="checkbox"]:checked::after {
-    content: "✔";
-    color: white;
-    font-size: 12px;
-    position: absolute;
-    top: -2px;
-    left: 2px;
-} */
 
         .bx-chevron-down:before {
             content: "\ea4a";
@@ -306,6 +281,36 @@
             background: #fff;
         }
 
+        #user_register .sectionInfoHead {
+            border: 2px solid #E9EBF0;
+            background: #27357205;
+            border-radius: 10.66px;
+            padding: 28px 15px 50px 15px;
+            margin-bottom: 30px;
+        }
+
+        #user_register .sectionInfoHead:last-child {
+            margin-bottom: 0;
+        }
+
+         #user_register .sectionInfoHead h4 {
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 100%;
+            color: #273572;
+            margin: 0 0 5px 0;
+        }
+
+         #user_register .sectionInfoHead p {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 140%;
+            color: #333333;
+            margin: 0;
+        }
+
         @media(max-width: 992px) {
             .mainHeadingCon {
                 flex-direction: column-reverse;
@@ -322,20 +327,25 @@
         @media only screen and (max-width: 768px) {
 
             .form_container .row:first-child {
-    border-radius: 0px;}
+                border-radius: 0px;
+            }
 
             .account_signup {
-    display: flex !important;}
+                display: flex !important;
+            }
 
             h2 {
-                 font-size: 30.7px;}
+                font-size: 30.7px;
+            }
 
             .para {
-                font-size: 18px;}
+                font-size: 18px;
+            }
 
             .form-section {
                 padding: 0;
-            width: 100%;}
+                width: 100%;
+            }
 
 
             .custom-btn {
@@ -353,12 +363,7 @@
     <div class="form_container">
         <div class="form_flex">
             <div class="row">
-                <!-- <div class="col-lg-6 mobile_hide">
-                    <div class="img_side_width">
-                        <img src="{{ asset('assets/images/logo.png') }}" alt="" class="img-fluid">
-                    </div>
 
-                </div> -->
                 <div class="col-lg-12">
                     <div class="form-section">
                         <div class="mainHeadingCon">
@@ -388,10 +393,14 @@
                         <form method="POST" action="{{ route('authorize.payment') }}" id="user_register"
                             autocomplete="off" class="form">
                             @csrf
-                            <div class="row">
+                            <div class="row sectionInfoHead">
+                                <div class="col-md-12 ">
+                                    <h4>Personal Information</h4>
+                                    <p>Who you are</p>
+                                </div>
+
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-user'></i></span> -->
                                         <input id="first_name" type="text"
                                             class="@error('first_name') is-invalid @enderror" name="first_name"
                                             value="{{ old('first_name') }}" required autocomplete="off"
@@ -406,7 +415,6 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-user'></i></span> -->
                                         <input id="last_name" type="text"
                                             class="@error('last_name') is-invalid @enderror" name="last_name"
                                             value="{{ old('last_name') }}" required autocomplete="off"
@@ -421,7 +429,6 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-envelope'></i></span> -->
                                         <input id="email" type="email"
                                             class="@error('email') is-invalid @enderror" name="email"
                                             value="{{ old('email') }}" required autocomplete="off"
@@ -434,12 +441,9 @@
                                         <label>{{ __('Email Address') }}</label>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-phone'></i></span> -->
                                         <input id="phone" type="text"
                                             class="@error('phone') is-invalid @enderror" name="phone"
                                             value="{{ old('phone') }}" required autocomplete="off"
@@ -452,9 +456,17 @@
                                         <label>{{ __('Phone Number') }}</label>
                                     </div>
                                 </div>
+
+                            </div>
+
+                            <div class="row sectionInfoHead">
+                                <div class="col-md-12 ">
+                                    <h4>Billing Address</h4>
+                                    <p>Used for payment & invoices</p>
+                                </div>
+
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-map'></i></span> -->
                                         <input id="address" type="text" name="billing_address"
                                             value="{{ old('billing_address') }}" required>
                                         <label>Card Billing Address</label>
@@ -462,18 +474,14 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-map'></i></span> -->
                                         <input id="country" type="text" name="country"
                                             placeholder="Enter Country" value="{{ old('country') }}" required>
                                         <label>Country</label>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-map'></i></span> -->
                                         <input id="state" type="text" name="state"
                                             placeholder="Enter State " value="{{ old('state') }}" required>
                                         <label>State</label>
@@ -481,7 +489,6 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-map'></i></span> -->
                                         <input id="city" type="text" name="city" placeholder="Enter City"
                                             value="{{ old('city') }}" required>
                                         <label>City</label>
@@ -489,7 +496,6 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-map-pin'></i></span> -->
                                         <input id="zipcode" type="text" name="zip_code"
                                             placeholder="Enter Zip Code" value="{{ old('zip_code') }}" required>
                                         <label>Zip Code</label>
@@ -497,101 +503,13 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="input-box">
-                                <span class="icon"><i class='bx bx-envelope'></i></span>
-                                <input id="email" type="email" class="@error('email') is-invalid @enderror"
-                                    name="email" value="{{ old('email') }}" required autocomplete="off"
-                                    maxlength="100">
-                                @error('email')
-    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-@enderror
-                                <label>{{ __('Email Address') }}</label>
-                            </div> -->
 
-                            <!-- <div class="input-box">
-                                <span class="icon"><i class='bx bx-phone'></i></span>
-                                <input id="phone" type="text" class="@error('phone') is-invalid @enderror"
-                                    name="phone" value="{{ old('phone') }}" required autocomplete="off"
-                                    maxlength="100">
-                                @error('phone')
-    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-@enderror
-                                <label>{{ __('Phone Number') }}</label>
-                            </div> -->
 
-                            <!-- <div class="input-box">
-                                <span class="icon"><i class='bx bx-map'></i></span>
-                                <input id="address" type="text" name="billing_address"
-                                    value="{{ old('billing_address') }}" required>
-                                <label>Card Billing Address</label>
-                            </div> -->
-
-                            <!-- <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-map'></i></span>
-                                        <input id="country" type="text" name="country"
-                                            value="{{ old('country') }}" required>
-                                        <label>Country</label>
-                                    </div>
+                            <div class="row sectionInfoHead">
+                                <div class="col-md-12 ">
+                                    <h4>Payment Details</h4>
+                                    <p>Secure payment information</p>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-map'></i></span>
-                                        <input id="state" type="text" name="state"
-                                            value="{{ old('state') }}" required>
-                                        <label>State</label>
-                                    </div>
-                                </div> -->
-                            <!--<div class="col-lg-6">-->
-                            <!--    <div class="input-box">-->
-                            <!--        <input id="country" type="text" name="country" value="{{ old('country') }}" required>-->
-                            <!--<div class="select">-->
-
-                            <!--    <select id="country" name="country" required>-->
-                            <!--        <option value="">Select Country</option>-->
-                            <!--        <option value="{{ old('country') }}" selected>{{ old('country') }}</option>-->
-                            <!--    </select>-->
-                            <!--</div>-->
-                            <!--    </div>-->
-                            <!--</div>-->
-                            <!--<div class="col-lg-6">-->
-                            <!--    <div class="input-box">-->
-                            <!--         <input id="state" type="text" name="state" value="{{ old('state') }}" required>-->
-                            <!--<div class="select">-->
-                            <!--    <select id="state" name="state" required>-->
-                            <!--        <option value="">Select State/Region</option>-->
-                            <!--        <option value="{{ old('state') }}" selected>{{ old('state') }}</option>-->
-                            <!--    </select>-->
-                            <!--</div>-->
-                            <!--    </div>-->
-                            <!--</div>-->
-                            <!-- </div> -->
-
-                            <!-- <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-map'></i></span>
-                                        <input id="city" type="text" name="city"
-                                            value="{{ old('city') }}" required>
-                                        <label>City</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-map-pin'></i></span>
-                                        <input id="zipcode" type="text" name="zip_code"
-                                            value="{{ old('zip_code') }}" required>
-                                        <label>Zip Code</label>
-                                    </div>
-                                </div>
-                            </div> -->
-
-                            <div class="row">
                                 <div class="col-lg-4">
                                     <div class="input-box">
                                         <div class="select">
@@ -638,12 +556,9 @@
                                         <label>{{ __('Expiration Date (MM/YY)') }}</label>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="col-lg-4">
                                     <div class="input-box">
-                                        <!-- <span class="icon"><i class='bx bx-shield-alt-2'></i></span> -->
                                         <input id="cvv" type="text"
                                             class="@error('cvv') is-invalid @enderror" name="cvv"
                                             placeholder="Enter CVV" value="{{ old('cvv') }}" required
@@ -658,61 +573,6 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="input-box">
-                                <div class="select">
-                                    <select id="plan_id" name="plan_id" required>
-                                        {!! \App\Helpers\DropdownHelper::getPlanDropdown() !!}
-                                    </select>
-                                </div>
-                                <input type="hidden" name="amount" id="amount" value="{{ old('amount') }}">
-                                <input type="hidden" name="type" id="type" value="{{ old('type') }}">
-                            </div> -->
-
-                            <!-- <div class="input-box">
-                                <span class="icon"><i class='bx bx-credit-card'></i></span>
-                                <input id="card_number" type="number"
-                                    class="@error('card_number') is-invalid @enderror" name="card_number"
-                                    value="{{ old('card_number') }}" required autocomplete="off" maxlength="16">
-                                @error('card_number')
-    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-@enderror
-                                <label>{{ __('Card Number (16 digits)') }}</label>
-                            </div> -->
-
-                            <!-- <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-calendar'></i></span>
-                                        <input id="expiration_date" type="text"
-                                            class="@error('expiration_date') is-invalid @enderror"
-                                            name="expiration_date" value="{{ old('expiration_date') }}" required
-                                            autocomplete="off" maxlength="5">
-                                        @error('expiration_date')
-    <span class="invalid-feedback" role="alert">
-                                                                                <strong>{{ $message }}</strong>
-                                                                            </span>
-@enderror
-                                        <label>{{ __('Expiration Date (MM/YY)') }}</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-shield-alt-2'></i></span>
-                                        <input id="cvv" type="text"
-                                            class="@error('cvv') is-invalid @enderror" name="cvv"
-                                            value="{{ old('cvv') }}" required autocomplete="off" maxlength="4">
-                                        @error('cvv')
-    <span class="invalid-feedback" role="alert">
-                                                                                <strong>{{ $message }}</strong>
-                                                                            </span>
-@enderror
-                                        <label>{{ __('CVV') }}</label>
-                                    </div>
-                                </div>
-                            </div> -->
 
 
                             <div class="form-check mt-3 account_signup">
@@ -1040,35 +900,7 @@
             });
         });
     </script>
-    {{-- <script>
-        $(document).ready(function() {
-            $('#togglePassword').on('click', function() {
-                const passwordField = $('#password');
-                const icon = $(this);
 
-                if (passwordField.attr('type') === 'password') {
-                    passwordField.attr('type', 'text');
-                    icon.removeClass('bx-show').addClass('bx-hide');
-                } else {
-                    passwordField.attr('type', 'password');
-                    icon.removeClass('bx-hide').addClass('bx-show');
-                }
-            });
-
-            $('#togglePasswordConfirmation').on('click', function() {
-                const passwordConfirmationField = $('#password_confirmation');
-                const icon = $(this);
-
-                if (passwordConfirmationField.attr('type') === 'password') {
-                    passwordConfirmationField.attr('type', 'text');
-                    icon.removeClass('bx-show').addClass('bx-hide');
-                } else {
-                    passwordConfirmationField.attr('type', 'password');
-                    icon.removeClass('bx-hide').addClass('bx-show');
-                }
-            });
-        });
-    </script> --}}
 
 
 </body>

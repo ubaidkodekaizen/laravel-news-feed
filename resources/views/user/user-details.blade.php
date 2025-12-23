@@ -89,8 +89,8 @@
         }
 
         /* .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
-                                                    max-width: 180px;
-                                                } */
+                                                            max-width: 180px;
+                                                        } */
 
         .select2-container .select2-selection--single .select2-selection__rendered {
             max-width: 200px;
@@ -1333,6 +1333,9 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
     <script>
         jQuery(document).ready(function($) {
+
+
+
 
             let typingTimer;
             const typingDelay = 1000;

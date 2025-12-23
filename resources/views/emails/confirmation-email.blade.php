@@ -325,7 +325,7 @@
                                                                                                         style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:start;">
                                                                                                         Congratulations
                                                                                                         and welcome to
-                                                                                                        Muslim Lynk!
+                                                                                                        MuslimLynk!
                                                                                                         We're thrilled
                                                                                                         to have you
                                                                                                         among the first
@@ -338,7 +338,7 @@
                                                                                                         $10 per month.
                                                                                                     </td>
                                                                                                 </tr>
-                                                                                               
+
                                                                                                 <br>
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
@@ -376,7 +376,7 @@
                                                                                                             target="_blank"
                                                                                                             rel="noopener noreferrer"
                                                                                                             style="color: #b8c034; text-decoration:underline;">authorize.net</a>
-                                                                                                        Muslim Lynk
+                                                                                                        MuslimLynk
                                                                                                         Gateway.
                                                                                                     </td>
                                                                                                 </tr>
@@ -473,7 +473,7 @@
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
                                                                                                         style="font-size:20px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:start;">
-                                                                                                        The Muslim Lynk
+                                                                                                        The MuslimLynk
                                                                                                         Team
                                                                                                     </td>
                                                                                                 </tr>
@@ -482,7 +482,7 @@
                                                                                                 {{-- <tr>
                                                                                                     <td align="center">
 
-                                                                                                        
+
                                                                                                         <table border="0" cellspacing="0" cellpadding="0" style="min-width:200px;margin-top:10px;margin-bottom:10px">
                                                                                                             <tbody>
                                                                                                                 <tr>
@@ -494,7 +494,7 @@
                                                                                                                 </tr>
                                                                                                             </tbody>
                                                                                                         </table>
-                                                                                                        
+
                                                                                                     </td>
                                                                                                 </tr> --}}
 

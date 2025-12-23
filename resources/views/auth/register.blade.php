@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | Muslim Lynk</title>
+    <title>Sign Up | MuslimLynk</title>
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -286,7 +286,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
 
 
                             <button type="submit" class="custom-btn btn-14">Register</button>

@@ -451,10 +451,10 @@
 <section class="leadGenSec">
     <div class="container">
         <h1 class="main_heading">
-            Muslim Lynk Redefines<span class="leadGenSecHeading"> Lead Generation</span>
+            MuslimLynk Redefines<span class="leadGenSecHeading"> Lead Generation</span>
         </h1>
         <p class="leadGenPara">MuslimLynk empowers its members through cutting-edge lead generation tools and
-            strategies. By leveraging advanced business intelligence and seamless communication platforms, Muslim Lynk
+            strategies. By leveraging advanced business intelligence and seamless communication platforms, MuslimLynk
             enables professionals to connect meaningfully and grow their network effectively. The key offerings include:
         </p>
 
