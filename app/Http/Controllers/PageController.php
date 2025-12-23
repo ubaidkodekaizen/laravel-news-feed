@@ -70,7 +70,7 @@ class PageController extends Controller
             })
             ->values();
 
-        // Get only one service per user (latest service for each user)
+        // Get only one service per user (latest service for each user) - limit to 3
         $services = Service::whereHas('user', function ($query) {
             $query->where('status', 'complete');
         })
@@ -81,7 +81,8 @@ class PageController extends Controller
             ->map(function ($group) {
                 return $group->first();
             })
-            ->values();
+            ->values()
+            ->take(3);
 
         return view('feed', compact('blogs', 'events', 'products', 'services', 'industries'));
     }
