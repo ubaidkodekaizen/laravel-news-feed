@@ -10,6 +10,28 @@
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
         rel="stylesheet" />
     <style>
+        /* Validation Error Styles */
+        label.error {
+            font-weight: 400 !important;
+        }
+
+        .error {
+            color: #dc3545 !important;
+            font-size: 14px !important;
+            margin-top: 0 !important;
+            display: block !important;
+        }
+
+        .form-control.error,
+        .form-select.error {
+            border-color: #dc3545 !important;
+        }
+
+        .select2-container--bootstrap-5.error .select2-selection {
+            border-color: #dc3545 !important;
+        }
+
+
         .profileMainHeading {
             font-family: "Inter", sans-serif;
             font-weight: 600;
@@ -43,8 +65,8 @@
         }
 
         /* .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
-                max-width: 180px;
-            } */
+                            max-width: 180px;
+                        } */
 
         .select2-container .select2-selection--single .select2-selection__rendered {
             max-width: 200px;
@@ -86,10 +108,10 @@
 
         .select2-container--bootstrap-5 .select2-selection--multiple .select2-search .select2-search__field {
             /* border: 2px solid #E9EBF0;
-                                                width: 100% !important;
-                                                padding: 5px 6px;
-                                                height: 36px;
-                                                border-radius: 4px; */
+                                                            width: 100% !important;
+                                                            padding: 5px 6px;
+                                                            height: 36px;
+                                                            border-radius: 4px; */
         }
 
         .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field {
@@ -229,13 +251,13 @@
         }
 
         /* .sidebar {
-                                                                                                                                                                                                                                            width: 100%;
-                                                                                                                                                                                                                                            max-width: 16%;
-                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                        width: 100%;
+                                                                                                                                                                                                                                                        max-width: 16%;
+                                                                                                                                                                                                                                                    } */
 
         /* .navbar_d_flex {
-                                                                                                                                                                                                                                            margin: 140px 0 0 0;
-                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                        margin: 140px 0 0 0;
+                                                                                                                                                                                                                                                    } */
 
         .main-content {
             width: 100%;
@@ -364,8 +386,8 @@
         @media (max-width: 1400px) {
 
             /* body{
-                                                                                                                                                                                                                                                overflow: hidden !important;
-                                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                                            overflow: hidden !important;
+                                                                                                                                                                                                                                                        } */
             .col-lg-3 {
                 width: 50% !important;
             }
@@ -442,10 +464,10 @@
         @media (max-width: 544px) {
 
             /* .profileTooltip {
-                                                                                                                                                                                                                                position: absolute;
-                                                                                                                                                                                                                                right: -18px;
-                                                                                                                                                                                                                                top: 0px;
-                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                            position: absolute;
+                                                                                                                                                                                                                                            right: -18px;
+                                                                                                                                                                                                                                            top: 0px;
+                                                                                                                                                                                                                                        } */
 
             .container {
                 padding: 0;
@@ -855,7 +877,7 @@
                                             <h4>Community & Giving</h4>
                                             <div class="new_user_details_inner_box_form_group_row">
                                                 <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="mosque_id">Mosque<span class="text-danger">*</span>
+                                                    <label for="mosque_id">Mosque
                                                         <div class="profileTooltip">
                                                             <div class="profileTooltipText">
                                                                 Why we ask this:
@@ -875,8 +897,7 @@
                                                 </div>
 
                                                 <div class="new_user_details_inner_box_form_group_box newMosqueCol d-none">
-                                                    <label for="mosque">Suggest New Mosque<span
-                                                            class="text-danger">*</span></label>
+                                                    <label for="mosque">Suggest New Mosque</label>
                                                     <input type="text" name="mosque" id="mosque"
                                                         class="form-control" value="{{ old('mosque', $user->mosque) }}">
                                                     {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!} --}}
@@ -1291,12 +1312,231 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
     <script>
         jQuery(document).ready(function($) {
 
             let typingTimer;
-            const typingDelay = 1000; // ms delay after typing stops
+            const typingDelay = 1000;
+
+            // ============================================
+            // CUSTOM VALIDATION METHODS
+            // ============================================
+
+            // Custom method for Select2 fields
+            $.validator.addMethod("select2Required", function(value, element) {
+                return $(element).val() && $(element).val().length > 0;
+            }, "This field is required");
+
+            // Custom method for phone validation
+            $.validator.addMethod("validPhone", function(value, element) {
+                if (!value) return true; // Skip if empty (use required separately)
+                const iti = $(element).data('iti');
+                return iti ? iti.intlTelInput("isValidNumber") : true;
+            }, "Please enter a valid phone number");
+
+            // Custom method for LinkedIn URL
+            $.validator.addMethod("linkedinUrl", function(value, element) {
+                if (!value) return true;
+                return /^https?:\/\/(www\.)?linkedin\.com\/(in|company)\/[\w-]+\/?$/.test(value);
+            }, "Please enter a valid LinkedIn URL");
+
+            // Custom method for URL
+            $.validator.addMethod("validUrl", function(value, element) {
+                if (!value) return true;
+                return /^https?:\/\/.+\..+/.test(value);
+            }, "Please enter a valid URL");
+
+            // ============================================
+            // FORM VALIDATION - PERSONAL DETAILS
+            // ============================================
+
+            $("#user_details").validate({
+                rules: {
+                    'are_you[]': {
+                        required: true,
+                        minlength: 1
+                    },
+                    first_name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    last_name: {
+                        required: true,
+                        minlength: 2
+                    },
+                    phone: {
+                        required: true,
+                        validPhone: true
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    city: {
+                        required: true
+                    },
+                    country: {
+                        required: true
+                    },
+                    mosque_id: {
+                        required: false
+                    },
+                    mosque: {
+                        required: function() {
+                            return $('#mosque_id').val() === 'other';
+                        }
+                    },
+                    linkedin_url: {
+                        required: true,
+                        linkedinUrl: true
+                    }
+                },
+                messages: {
+                    'are_you[]': {
+                        required: "Please select at least one option"
+                    },
+                    first_name: {
+                        required: "First name is required",
+                        minlength: "First name must be at least 2 characters"
+                    },
+                    last_name: {
+                        required: "Last name is required",
+                        minlength: "Last name must be at least 2 characters"
+                    },
+                    phone: {
+                        required: "Phone number is required"
+                    },
+                    email: {
+                        required: "Email is required",
+                        email: "Please enter a valid email address"
+                    },
+                    city: "City is required",
+                    country: "Country is required",
+                    mosque_id: "Please select a mosque",
+                    mosque: "Please suggest a mosque name",
+                    linkedin_url: {
+                        required: "LinkedIn URL is required"
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    if (element.attr("name") === "are_you[]") {
+                        error.insertAfter(element.closest('.list_check_flex'));
+                    } else if (element.hasClass('select2-hidden-accessible')) {
+                        error.insertAfter(element.next('.select2-container'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                highlight: function(element) {
+                    $(element).addClass('error');
+                    if ($(element).hasClass('select2-hidden-accessible')) {
+                        $(element).next('.select2-container').addClass('error');
+                    }
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('error');
+                    if ($(element).hasClass('select2-hidden-accessible')) {
+                        $(element).next('.select2-container').removeClass('error');
+                    }
+                },
+                submitHandler: function(form) {
+                    // Update phone number before submission
+                    $('.phone_number').each(function() {
+                        const iti = $(this).data('iti');
+                        if (iti && $(this).val().trim() && iti.intlTelInput("isValidNumber")) {
+                            $(this).val(iti.intlTelInput("getNumber"));
+                        }
+                    });
+                    form.submit();
+                }
+            });
+
+            // ============================================
+            // FORM VALIDATION - COMPANY DETAILS
+            // ============================================
+
+            $("#user_company").validate({
+                rules: {
+                    company_industry: {
+                        select2Required: true
+                    },
+                    business_location: {
+                        select2Required: true
+                    },
+                    company_no_of_employee: {
+                        required: true
+                    },
+                    is_decision_maker: {
+                        required: true
+                    },
+                    company_current_business_challenges: {
+                        select2Required: true
+                    },
+                    company_business_goals: {
+                        select2Required: true
+                    },
+                    company_phone: {
+                        validPhone: true
+                    },
+                    company_linkedin_url: {
+                        linkedinUrl: true
+                    },
+                    company_web_url: {
+                        validUrl: true
+                    }
+                },
+                messages: {
+                    company_industry: "Please select at least one industry",
+                    business_location: "Please select business location",
+                    company_no_of_employee: "Please select company size",
+                    is_decision_maker: "Please select an option",
+                    company_current_business_challenges: "Please select at least one challenge",
+                    company_business_goals: "Please select at least one goal",
+                    company_linkedin_url: "Please enter a valid LinkedIn URL",
+                    company_web_url: "Please enter a valid URL"
+                },
+                errorPlacement: function(error, element) {
+                    if (element.attr("type") === "radio") {
+                        error.insertAfter(element.closest('.form-check-row'));
+                    } else if (element.hasClass('select2-hidden-accessible')) {
+                        error.insertAfter(element.next('.select2-container'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                highlight: function(element) {
+                    $(element).addClass('error');
+                    if ($(element).hasClass('select2-hidden-accessible')) {
+                        $(element).next('.select2-container').addClass('error');
+                    }
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('error');
+                    if ($(element).hasClass('select2-hidden-accessible')) {
+                        $(element).next('.select2-container').removeClass('error');
+                    }
+                },
+                submitHandler: function(form) {
+                    // Update phone number before submission
+                    $('.phone_number').each(function() {
+                        const iti = $(this).data('iti');
+                        if (iti && $(this).val().trim() && iti.intlTelInput("isValidNumber")) {
+                            $(this).val(iti.intlTelInput("getNumber"));
+                        }
+                    });
+                    form.submit();
+                }
+            });
+
+            // ============================================
+            // TRIGGER VALIDATION ON SELECT2 CHANGE
+            // ============================================
+
+            $('.select2-hidden-accessible').on('change', function() {
+                $(this).valid();
+            });
 
             // --- Search Mosque API ---
             function searchMosque() {
@@ -1386,14 +1626,18 @@
 
                 if (selected === "other") {
                     $(".newMosqueCol").removeClass("d-none");
+                    $("#mosque").rules("add", {
+                        required: true
+                    });
                 } else if (selected) {
                     $(".newMosqueCol").addClass("d-none");
-                    // ✅ Store existing mosque immediately
+                    $("#mosque").rules("remove", "required");
                     storeMosque({
                         mosqueId: selected
                     });
                 } else {
                     $(".newMosqueCol").addClass("d-none");
+                    $("#mosque").rules("remove", "required");
                 }
             });
 
@@ -1404,7 +1648,6 @@
 
                 typingTimer = setTimeout(function() {
                     if (newMosque.length > 2) {
-                        // ✅ Store new mosque only when typing stops
                         storeMosque({
                             newMosque: newMosque
                         });
@@ -1416,39 +1659,30 @@
             searchMosque();
 
             $('#search_form').on('submit', function() {
-                // Disable empty input fields
                 $(this).find('input').each(function() {
                     if (!$(this).val().trim()) {
                         $(this).prop('disabled', true);
                     }
                 });
 
-                // Disable unselected select fields
                 $(this).find('select').each(function() {
-                    if (!$(this).val()) { // Check if no value is selected
+                    if (!$(this).val()) {
                         $(this).prop('disabled', true);
                     }
                 });
             });
 
-            // Initialize intlTelInput on all elements with class 'phone_number'
+            // ============================================
+            // PHONE NUMBER INITIALIZATION
+            // ============================================
+
             $(".phone_number").each(function() {
                 const phoneInput = $(this);
                 const iti = phoneInput.intlTelInput({
                     separateDialCode: true,
                     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js"
                 });
-
-                // Before form submission, update the input value to include the full number
-                phoneInput.closest("form").on("submit", function() {
-                    if (iti.intlTelInput("isValidNumber")) {
-                        const fullNumber = iti.intlTelInput("getNumber");
-                        phoneInput.val(fullNumber);
-                    } else {
-                        alert("Invalid phone number entered!");
-                        return false;
-                    }
-                });
+                phoneInput.data('iti', iti);
             });
 
             // ============================================
@@ -1468,11 +1702,34 @@
             $('#company_position').select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Select or type Title/Designation',
-                // allowClear: true,
                 multiple: true,
                 tags: true,
                 tokenSeparators: [','],
-                width: '100%'
+                width: '100%',
+                templateSelection: function(data, container) {
+                    const selectedValues = $('#company_position').val();
+
+                    if (!selectedValues || selectedValues.length === 0) {
+                        return data.text;
+                    }
+
+                    if (data.id === selectedValues[0]) {
+                        const moreCount = selectedValues.length - 1;
+                        if (moreCount > 0) {
+                            const $selection = $('<span></span>');
+                            $selection.append(data.text + ' ');
+                            $selection.append(
+                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
+                                    moreCount + ' more</span>')
+                            );
+                            return $selection;
+                        }
+                        return data.text;
+                    }
+
+                    $(container).css('display', 'none');
+                    return data.text;
+                }
             });
 
             let existingDesignation = $('#company_position_hidden').val();
@@ -1509,11 +1766,34 @@
             $('#company_industry').select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Select or type Industry',
-                // allowClear: true,
                 multiple: true,
                 tags: true,
                 tokenSeparators: [','],
-                width: '100%'
+                width: '100%',
+                templateSelection: function(data, container) {
+                    const selectedValues = $('#company_industry').val();
+
+                    if (!selectedValues || selectedValues.length === 0) {
+                        return data.text;
+                    }
+
+                    if (data.id === selectedValues[0]) {
+                        const moreCount = selectedValues.length - 1;
+                        if (moreCount > 0) {
+                            const $selection = $('<span></span>');
+                            $selection.append(data.text + ' ');
+                            $selection.append(
+                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
+                                    moreCount + ' more</span>')
+                            );
+                            return $selection;
+                        }
+                        return data.text;
+                    }
+
+                    $(container).css('display', 'none');
+                    return data.text;
+                }
             });
 
             let existingIndustry = $('#company_industry_hidden').val();
@@ -1549,7 +1829,6 @@
             $('#business_location').select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Select Business Location',
-                // allowClear: true,
                 width: '100%'
             });
 
@@ -1579,11 +1858,34 @@
             $('#company_current_business_challenges').select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Select Current Business Challenges',
-                // allowClear: true,
                 multiple: true,
                 tags: true,
                 tokenSeparators: [','],
-                width: '100%'
+                width: '100%',
+                templateSelection: function(data, container) {
+                    const selectedValues = $('#company_current_business_challenges').val();
+
+                    if (!selectedValues || selectedValues.length === 0) {
+                        return data.text;
+                    }
+
+                    if (data.id === selectedValues[0]) {
+                        const moreCount = selectedValues.length - 1;
+                        if (moreCount > 0) {
+                            const $selection = $('<span></span>');
+                            $selection.append(data.text + ' ');
+                            $selection.append(
+                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
+                                    moreCount + ' more</span>')
+                            );
+                            return $selection;
+                        }
+                        return data.text;
+                    }
+
+                    $(container).css('display', 'none');
+                    return data.text;
+                }
             });
 
             let existingChallenges = $('#company_current_business_challenges_hidden').val();
@@ -1614,11 +1916,34 @@
             $('#company_business_goals').select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Select Business Goals',
-                // allowClear: true,
                 multiple: true,
                 tags: true,
                 tokenSeparators: [','],
-                width: '100%'
+                width: '100%',
+                templateSelection: function(data, container) {
+                    const selectedValues = $('#company_business_goals').val();
+
+                    if (!selectedValues || selectedValues.length === 0) {
+                        return data.text;
+                    }
+
+                    if (data.id === selectedValues[0]) {
+                        const moreCount = selectedValues.length - 1;
+                        if (moreCount > 0) {
+                            const $selection = $('<span></span>');
+                            $selection.append(data.text + ' ');
+                            $selection.append(
+                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
+                                    moreCount + ' more</span>')
+                            );
+                            return $selection;
+                        }
+                        return data.text;
+                    }
+
+                    $(container).css('display', 'none');
+                    return data.text;
+                }
             });
 
             let existingGoals = $('#company_business_goals_hidden').val();
@@ -1648,11 +1973,34 @@
             $('#company_attributes').select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Select Company Attributes',
-                // allowClear: true,
                 multiple: true,
                 tags: true,
                 tokenSeparators: [','],
-                width: '100%'
+                width: '100%',
+                templateSelection: function(data, container) {
+                    const selectedValues = $('#company_attributes').val();
+
+                    if (!selectedValues || selectedValues.length === 0) {
+                        return data.text;
+                    }
+
+                    if (data.id === selectedValues[0]) {
+                        const moreCount = selectedValues.length - 1;
+                        if (moreCount > 0) {
+                            const $selection = $('<span></span>');
+                            $selection.append(data.text + ' ');
+                            $selection.append(
+                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
+                                    moreCount + ' more</span>')
+                            );
+                            return $selection;
+                        }
+                        return data.text;
+                    }
+
+                    $(container).css('display', 'none');
+                    return data.text;
+                }
             });
 
             let existingAttributes = $('#company_attributes_hidden').val();
@@ -1672,12 +2020,11 @@
             $('#mosque_id, #gender, #age_group, #ethnicity, #nationality, #marital_status, #company_experience, #company_business_type, #company_revenue, #company_no_of_employee')
                 .select2({
                     theme: 'bootstrap-5',
-                    width: '100%',
-                    // allowClear: true
+                    width: '100%'
                 });
 
             // ============================================
-            // HANDLE "OTHER" OPTIONS FOR ETHNICITY & MARITAL STATUS (SELECT2 COMPATIBLE)
+            // HANDLE "OTHER" OPTIONS
             // ============================================
 
             $('#ethnicity').on('change', function() {
@@ -1706,10 +2053,6 @@
                 }
             });
 
-            // ============================================
-            // HANDLE "OTHER" OPTION FOR COMPANY BUSINESS TYPE (SELECT2 COMPATIBLE)
-            // ============================================
-
             $('#company_business_type').on('change', function() {
                 const otherField = $('#business_type_other_field');
                 const otherInput = otherField.find('input');
@@ -1727,7 +2070,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if the script has already run
             if (window.languageScriptLoaded) {
                 return;
             }
@@ -1737,16 +2079,15 @@
             const languagesList = document.getElementById('languages-list');
             const languageHiddenInput = document.getElementById('languages-hidden');
 
-            // Initialize the languages array with the values from the backend
+            if (!languageInput || !languagesList || !languageHiddenInput) return;
+
             let languages = '{{ $user->languages }}'.split(',').map(lang => lang.trim()).filter(lang => lang);
 
-            // Display the existing languages as tags
             languages.forEach(language => {
                 const tag = createLanguageTag(language);
                 languagesList.appendChild(tag);
             });
 
-            // Function to create a tag for each language
             function createLanguageTag(language) {
                 const tag = document.createElement('span');
                 tag.classList.add('badge', 'bg-primary', 'me-2', 'mb-2');
@@ -1768,7 +2109,6 @@
                 return tag;
             }
 
-            // Handle the input field for adding languages
             languageInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -1784,16 +2124,16 @@
                 }
             });
 
-            // Update the hidden input field with the selected languages
             function updateHiddenInput() {
                 languageHiddenInput.value = languages.join(',');
             }
 
-            // Ensure the hidden input has the languages before submission
-            document.querySelector('form').addEventListener('submit', function(e) {
-                updateHiddenInput();
-            });
+            const parentForm = languageInput.closest('form');
+            if (parentForm) {
+                parentForm.addEventListener('submit', function(e) {
+                    updateHiddenInput();
+                });
+            }
         });
     </script>
-
 @endsection
