@@ -25,6 +25,16 @@
             font-style: normal;
         }
 
+        .alert ul {
+            margin: 0;
+        }
+
+        .alert {
+            max-width: 684.18px;
+            width: 100%;
+            margin: 10px auto 0 auto;
+        }
+
         .loginInner {
             flex-direction: row-reverse;
             gap: 0;
@@ -230,12 +240,12 @@
             user-select: none;
         }
 
-.signInImage{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
+        .signInImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
 
         @media(max-width: 768px) {
             h2 {
