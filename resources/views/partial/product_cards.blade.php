@@ -6,7 +6,8 @@
             data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
             data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
             data-user-name="{{ $product->user->first_name }}"
-            data-user-photo="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
+            data-user-photo="{{ $product->user_has_photo ? asset('storage/' . $product->user->photo) : '' }}"
+            data-user-initials="{{ $product->user_initials }}"
             data-date="{{ $product->created_at->format('d M Y') }}">
 
             <div class="event_slider_img_box">
@@ -37,8 +38,14 @@
 
                     <div class="service_posted_by mt-2">
                         <div class="person_profile">
-                            <img src="{{ $product->user->photo ? asset('storage/' . $product->user->photo) : 'https://placehold.co/50x50' }}"
-                                alt="{{ $product->user->first_name }}">
+                            @if ($product->user_has_photo)
+                                <img src="{{ asset('storage/' . $product->user->photo) }}"
+                                    alt="{{ $product->user->first_name }}">
+                            @else
+                                <div class="avatar-initials">
+                                    {{ $product->user_initials }}
+                                </div>
+                            @endif
                         </div>
                         <div class="posted_name_date">
                             <h6>{{ $product->user->first_name }}</h6>

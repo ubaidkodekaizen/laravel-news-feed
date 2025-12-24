@@ -284,6 +284,25 @@ class SearchController extends Controller
 
         $users = $query->paginate($perPage)->appends($request->except('page'));
 
+        $users->getCollection()->transform(function ($user) {
+            $photoPath = $user->photo ?? null;
+
+            // Check if photo exists
+            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+            // Generate initials
+            $initials = strtoupper(
+                substr($user->first_name, 0, 1) .
+                substr($user->last_name ?? '', 0, 1)
+            );
+
+            // Add computed properties
+            $user->user_has_photo = $hasPhoto;
+            $user->user_initials = $initials;
+
+            return $user;
+        });
+
         if ($request->ajax()) {
             return view('partial.search-result', ['users' => $users]);
         }

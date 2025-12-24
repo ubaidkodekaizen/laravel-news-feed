@@ -7,11 +7,11 @@ function initializeEcho() {
   const token = localStorage.getItem("sanctum-token");
 
   if (!token) {
-    console.warn("Sanctum token not found. Echo will not initialize yet.");
+    // console.warn("Sanctum token not found. Echo will not initialize yet.");
     return;
   }
 
-  console.log("Initializing Echo with token:", token);
+//   console.log("Initializing Echo with token:", token);
 
   window.Echo = new Echo({
     broadcaster: 'reverb',
@@ -32,19 +32,19 @@ function initializeEcho() {
     enabledTransports: ['ws', 'wss'],
   });
 
-  console.log("Echo initialized:", window.Echo);
+//   console.log("Echo initialized:", window.Echo);
 
   // Join presence channel to indicate online status
   if (window.userId) {
     window.Echo.join(`presence-online`)
       .here((users) => {
-        console.log('Online users:', users);
+        // console.log('Online users:', users);
       })
       .joining((user) => {
-        console.log('User joined:', user);
+        // console.log('User joined:', user);
       })
       .leaving((user) => {
-        console.log('User left:', user);
+        // console.log('User left:', user);
       });
 
     // Also ping the server every 5 minutes to update last active timestamp
@@ -64,7 +64,7 @@ function initializeEcho() {
 // Listen for token changes in localStorage
 window.addEventListener("storage", (event) => {
   if (event.key === "sanctum-token" && event.newValue) {
-    console.log("Sanctum token updated, re-initializing Echo...");
+    // console.log("Sanctum token updated, re-initializing Echo...");
     initializeEcho();
   }
 });

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
-use App\Events\NewMessageEvent; 
+use App\Events\NewMessageEvent;
 use App\Events\UserTyping;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -49,16 +49,23 @@ class ChatController extends Controller
 
     public function getUserForConversation(Conversation $conversation)
     {
-        $user = $conversation->user_one_id === auth()->id() 
-                ? $conversation->userTwo 
-                : $conversation->userOne;
+        $user = $conversation->user_one_id === auth()->id()
+            ? $conversation->userTwo
+            : $conversation->userOne;
 
         if ($user) {
-            $photoUrl = $user->photo 
-                ? (str_starts_with($user->photo, 'http') 
-                    ? $user->photo 
-                    : asset('storage/profile_photos/' . basename($user->photo)))
-                : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
+            $photoPath = $user->photo ?? null;
+            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
+            $initials = strtoupper(
+                substr($user->first_name, 0, 1) .
+                    substr($user->last_name ?? '', 0, 1)
+            );
+
+            $photoUrl = $hasPhoto
+                ? (str_starts_with($photoPath, 'http')
+                    ? $photoPath
+                    : asset('storage/profile_photos/' . basename($photoPath)))
+                : null;
 
             return response()->json([
                 'id' => $user->id,
@@ -67,13 +74,15 @@ class ChatController extends Controller
                 'email' => $user->email,
                 'slug' => $user->slug,
                 'photo' => $photoUrl,
+                'user_has_photo' => $hasPhoto,
+                'user_initials' => $initials,
             ]);
         }
 
         return response()->json(['message' => 'User not found'], 404);
     }
 
-    
+
 
     public function userIsTyping(Request $request)
     {
@@ -114,89 +123,113 @@ class ChatController extends Controller
 
 
     public function getMessages(Conversation $conversation)
-{
-    try {
-        $this->authorize('view-conversation', $conversation);
+    {
+        try {
+            $this->authorize('view-conversation', $conversation);
 
-        $messages = Message::where('conversation_id', $conversation->id)
-            ->with(['sender:id,first_name,last_name,email,photo,slug', 'reactions.user:id,first_name,last_name'])
-            ->orderBy('created_at', 'asc')
+            $messages = Message::where('conversation_id', $conversation->id)
+                ->with(['sender:id,first_name,last_name,email,photo,slug', 'reactions.user:id,first_name,last_name'])
+                ->orderBy('created_at', 'asc')
+                ->get()
+                ->map(function ($message) {
+                    $sender = $message->sender;
+                    $photoPath = $sender->photo ?? null;
+
+                    // Check if photo exists
+                    $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
+
+                    // Generate initials
+                    $initials = strtoupper(
+                        substr($sender->first_name, 0, 1) .
+                            substr($sender->last_name ?? '', 0, 1)
+                    );
+
+                    // Add computed properties
+                    $sender->user_has_photo = $hasPhoto;
+                    $sender->user_initials = $initials;
+
+                    // Set photo URL only if it exists
+                    $sender->photo = $hasPhoto
+                        ? (str_starts_with($photoPath, 'http')
+                            ? $photoPath
+                            : asset('storage/profile_photos/' . basename($photoPath)))
+                        : null;
+
+                    return $message;
+                });
+
+            // Mark unread messages as read
+            Message::where('conversation_id', $conversation->id)
+                ->where('receiver_id', auth()->id())
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
+
+            return response()->json($messages);
+        } catch (\Exception $e) {
+            \Log::error('Error in getMessages', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Error fetching messages',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function getConversations(): JsonResponse
+    {
+        $user = request()->user();
+        $userId = $user->id;
+
+        $conversations = Conversation::where(function ($query) use ($userId) {
+            $query->where('user_one_id', $userId)
+                ->orWhere('user_two_id', $userId);
+        })
+            ->with(['userOne', 'userTwo'])
+            ->withCount(['messages as unread_count' => function ($query) use ($userId) {
+                $query->where('receiver_id', $userId)
+                    ->whereNull('read_at');
+            }])
             ->get()
-            ->map(function ($message) {
-                $photoPath = $message->sender->photo;
-                $message->sender->photo = $photoPath
+            ->map(function ($conversation) use ($userId) {
+                $otherUser = $conversation->user_one_id === $userId
+                    ? $conversation->userTwo
+                    : $conversation->userOne;
+
+                $photoPath = $otherUser->photo ?? null;
+                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
+                $initials = strtoupper(
+                    substr($otherUser->first_name, 0, 1) .
+                        substr($otherUser->last_name ?? '', 0, 1)
+                );
+
+                $photoUrl = $hasPhoto
                     ? (str_starts_with($photoPath, 'http')
                         ? $photoPath
                         : asset('storage/profile_photos/' . basename($photoPath)))
-                    : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
+                    : null;
 
-                return $message;
+                return [
+                    'id' => $conversation->id,
+                    'user' => [
+                        'id' => $otherUser->id,
+                        'first_name' => $otherUser->first_name,
+                        'last_name' => $otherUser->last_name,
+                        'email' => $otherUser->email,
+                        'photo' => $photoUrl,
+                        'user_has_photo' => $hasPhoto,
+                        'user_initials' => $initials,
+                    ],
+                    'last_message' => $conversation->messages()->latest()->first(),
+                    'unread_count' => $conversation->unread_count,
+                ];
             });
 
-        // Mark unread messages as read
-        Message::where('conversation_id', $conversation->id)
-            ->where('receiver_id', auth()->id())
-            ->whereNull('read_at')
-            ->update(['read_at' => now()]);
-
-        return response()->json($messages);
-    } catch (\Exception $e) {
-        \Log::error('Error in getMessages', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        return response()->json([
-            'message' => 'Error fetching messages',
-            'error' => $e->getMessage()
-        ], 500);
+        return response()->json($conversations);
     }
-}
-
-    
-    public function getConversations(): JsonResponse
-{
-    $user = request()->user();
-    $userId = $user->id;
-
-    $conversations = Conversation::where(function($query) use ($userId) {
-        $query->where('user_one_id', $userId)
-              ->orWhere('user_two_id', $userId);
-    })
-    ->with(['userOne', 'userTwo'])
-    ->withCount(['messages as unread_count' => function ($query) use ($userId) {
-        $query->where('receiver_id', $userId)
-              ->whereNull('read_at');
-    }])
-    ->get()
-    ->map(function ($conversation) use ($userId) {
-        $otherUser = $conversation->user_one_id === $userId
-            ? $conversation->userTwo
-            : $conversation->userOne;
-
-        $photoPath = $otherUser->photo;
-        $photoUrl = $photoPath 
-            ? (str_starts_with($photoPath, 'http') 
-                ? $photoPath 
-                : asset('storage/profile_photos/' . basename($photoPath)))
-            : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
-
-        return [
-            'id' => $conversation->id,
-            'user' => [
-                'id' => $otherUser->id,
-                'first_name' => $otherUser->first_name,
-                'last_name' => $otherUser->last_name,
-                'email' => $otherUser->email,
-                'photo' => $photoUrl,
-            ],
-            'last_message' => $conversation->messages()->latest()->first(),
-            'unread_count' => $conversation->unread_count,
-        ];
-    });
-
-    return response()->json($conversations);
-}
 
 
 
@@ -231,12 +264,25 @@ class ChatController extends Controller
                 $message->load('sender:id,first_name,last_name,email,photo');
 
                 // Format sender's photo URL
-                $photoPath = $message->sender->photo;
-                $message->sender->photo = $photoPath
+                $sender = $message->sender;
+                $photoPath = $sender->photo ?? null;
+
+                // Check if photo exists
+                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
+
+                // Generate initials
+                $initials = strtoupper(
+                    substr($sender->first_name, 0, 1) .
+                        substr($sender->last_name ?? '', 0, 1)
+                );
+
+                $sender->user_has_photo = $hasPhoto;
+                $sender->user_initials = $initials;
+                $sender->photo = $hasPhoto
                     ? (str_starts_with($photoPath, 'http')
                         ? $photoPath
                         : asset('storage/profile_photos/' . basename($photoPath)))
-                    : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
+                    : null;
 
                 $conversation->update(['last_message_at' => now()]);
 
@@ -249,7 +295,7 @@ class ChatController extends Controller
                     // Get receiver
                     $receiver = User::find($receiverId);
                     $sender = auth()->user();
-                    
+
                     // Dispatch job to send email notification
                     SendOfflineMessageNotification::dispatch($sender, $receiver, $message);
                     \Log::info('Offline message email notification queued', [
@@ -287,10 +333,10 @@ class ChatController extends Controller
         $receiverId = $request->input('receiver_id');
         $userId = auth()->id();
 
-        $conversationExists = Conversation::where(function($query) use ($userId, $receiverId) {
+        $conversationExists = Conversation::where(function ($query) use ($userId, $receiverId) {
             $query->where('user_one_id', $userId)
                 ->where('user_two_id', $receiverId);
-        })->orWhere(function($query) use ($userId, $receiverId) {
+        })->orWhere(function ($query) use ($userId, $receiverId) {
             $query->where('user_one_id', $receiverId)
                 ->where('user_two_id', $userId);
         })->exists();
@@ -358,5 +404,4 @@ class ChatController extends Controller
 
         return response()->json(['message' => 'Reaction removed.']);
     }
-
-} 
+}
