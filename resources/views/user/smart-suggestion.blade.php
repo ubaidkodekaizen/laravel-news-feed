@@ -2,12 +2,28 @@
 
 
 @section('content')
+    <style>
+        .profile-pic .avatar-initials {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background: #394a93;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 34px;
+            letter-spacing: 1px;
+        }
+    </style>
     <section class="industry_specialist">
         <div class="container">
             <div class="industry-heading text-center mb-5">
                 <span class="subHeading">MuslimLynk</span>
                 <h1>Smart <span>Suggestion</span></h1>
-                <p>Smart Suggestions helps you find members and resources you may want to connect with. It’s a simple way to surface recommendations based on what you’re looking for.</p>
+                <p>Smart Suggestions helps you find members and resources you may want to connect with. It’s a simple way to
+                    surface recommendations based on what you’re looking for.</p>
             </div>
             <div class="row g-3">
 
@@ -21,9 +37,14 @@
                     <div class="col-md-4">
                         <div class="industry-profile-card">
                             <div class="profile-pic text-center">
-                                <img id="UserProfileImg" src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://via.placeholder.com/150' }}"
-                                    alt="{{ $user->first_name }} {{ $user->last_name }}'s Profile Picture">
-                                {{-- <img id="UserProfileImg" src="assets/images/user/Rectangle 240648925.png" class="img-fluid"> --}}
+                                @if ($suggestion['user_has_photo'])
+                                    <img id="UserProfileImg" src="{{ asset('storage/' . $user->photo) }}"
+                                        alt="{{ $user->first_name }} {{ $user->last_name }}'s Profile Picture">
+                                @else
+                                    <div class="avatar-initials" id="UserProfileImg">
+                                        {{ $suggestion['user_initials'] }}
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="profile_details mt-3">
@@ -100,16 +121,9 @@
         </div>
     </section>
 
-    <!-- <section class="lp_footer">
-        <div class="container">
-            <p class="powered_by">
-                Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
-            </p>
-        </div>
-    </section> -->
     <div id="footer">
-             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-         </div>
+        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+    </div>
 
 
     <script>

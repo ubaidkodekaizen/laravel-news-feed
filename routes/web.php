@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthorizeNetController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\PusherController;
+use App\Http\Controllers\SubscriptionController;
 use App\Models\Blog;
 use App\Models\Company;
 use App\Models\Event;
@@ -169,6 +170,11 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::post('/user/services/store/{id?}', [ServiceController::class, 'storeService'])->name('user.store.service');
     Route::delete('/user/services/delete/{id}', [ServiceController::class, 'deleteService'])->name('user.delete.service');
 
+    Route::get('/user/subscriptions', [SubscriptionController::class, 'index'])->name('user.subscriptions');
+    Route::get('/user/subscriptions/add', [SubscriptionController::class, 'addSubscription'])->name('user.add.subscriptions');
+    // Route::get('/user/subscriptions/edit/{id}', [SubscriptionController::class, 'editSubscription'])->name('user.edit.subscriptions');
+    // Route::post('/user/subscriptions/store/{id?}', [SubscriptionController::class, 'storeSubscription'])->name('user.store.subscriptions');
+    // Route::delete('/user/subscriptions/delete/{id}', [SubscriptionController::class, 'deleteSubscription'])->name('user.delete.subscriptions');
 
     Route::get('/user/qualifications', [EducationController::class, 'index'])->name('user.qualifications');
     Route::get('/user/qualifications/add', [EducationController::class, 'addEditEducation'])->name('user.add.qualifications');
@@ -269,7 +275,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
     Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
     Route::get('/setup-password/{token}', [PasswordResetController::class, 'showSetupPasswordForm'])->name('password.setup');
-    
+
     // Email Verification Route
     Route::get('/verify-email/{token}', [EmailVerificationController::class, 'verify'])->name('email.verify');
 

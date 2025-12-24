@@ -1,10 +1,6 @@
 <!-- resources/views/partials/dashboard-sidebar.blade.php -->
 
 <style>
-    /* body {
-        overflow: hidden;
-    } */
-
     .sidebar {
         width: 16% !important;
         background-color: #F4F5FB !important;
@@ -196,12 +192,10 @@
     <div id="dashboardMenu">
         <button class="dashboardMenuCollapseBtn"><img src="{{ asset('assets/images/dashboard/sidebarCollapseIcon.svg') }}"
                 alt=""></button>
-        <!-- Dashboard Menu Items -->
         <ul class="nav-list">
             <li class="nav-items">
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <!-- <i class="fa-solid fa-home"></i> -->
-                    <!-- <img src="assets/images/dashboard/sidebarDashboardIcon.svg" alt=""> -->
+
                     <img src="{{ asset('assets/images/dashboard/sidebarDashboardIcon.svg') }}" alt="">
                     <span class="menu-text">Dashboard</span>
                 </a>
@@ -209,7 +203,7 @@
             <li class="nav-items">
                 <a href="{{ route('user.details.show') }}"
                     class="{{ request()->routeIs('user.details.show') ? 'active' : '' }}">
-                    <!-- <i class="fa-solid fa-user"></i> -->
+
                     <img src="{{ asset('assets/images/dashboard/sidebarMyProfileIcon.svg') }}" alt="">
                     <!-- My Profile -->
                     <span class="menu-text">My Profile</span>
@@ -218,7 +212,7 @@
             <li class="nav-items">
                 <a href="{{ route('user.products') }}"
                     class="{{ request()->routeIs('user.products') ? 'active' : '' }}">
-                    <!-- <i class="fa-solid fa-diagram-project"></i> -->
+
                     <img src="{{ asset('assets/images/dashboard/sidebarProductIcon.svg') }}" alt="">
 
                     <span class="menu-text">Products</span>
@@ -227,7 +221,7 @@
             <li class="nav-items">
                 <a href="{{ route('user.services') }}"
                     class="{{ request()->routeIs('user.services') ? 'active' : '' }}">
-                    <!-- <i class="fa-brands fa-servicestack"></i> -->
+
                     <img src="{{ asset('assets/images/dashboard/sidebarServiceIcon.svg') }}" alt="">
 
 
@@ -237,30 +231,27 @@
             <li class="nav-items">
                 <a href="{{ route('user.qualifications') }}"
                     class="{{ request()->routeIs('user.qualifications') ? 'active' : '' }}">
-                    <!-- <i class="fa-solid fa-user-graduate"></i> -->
+
                     <img src="{{ asset('assets/images/dashboard/sidebarQualificationIcon.svg') }}" alt="">
 
                     <span class="menu-text">Qualifications</span>
                 </a>
             </li>
-            <!-- {{-- <li class="nav-items">
-                <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="fa-solid fa-money-bill-wheat"></i>
-                    Subscriptions
+
+            <li class="nav-items">
+                <a href="{{ route('user.subscriptions') }}"
+                    class="{{ request()->routeIs('user.subscriptions') ? 'active' : '' }}">
+
+                    <img src="{{ asset('assets/images/dashboard/sidebarQualificationIcon.svg') }}" alt="">
+
+                    <span class="menu-text">Subscriptions</span>
                 </a>
-            </li> --}} -->
+            </li>
+
 
         </ul>
     </div>
-    <!-- <div class="appSection">
-        <div class="appSecInner">
-            <h3>Download our Mobile App</h3>
-            <p>Get easy in another way</p>
-            <button>
-                <a href="#">Download</a>
-            </button>
-        </div>
-    </div> -->
+
 </div>
 
 <script>

@@ -4100,7 +4100,10 @@ p.industryProfileRole {
     .profile-pic::before {
         top: 44px;
     }
-
+    .profile-pic .avatar-initials {
+        min-height: 300px;
+        margin: 10px 0 0 0;
+    }
     .industry-profile-card {
         gap: 0px;
     }

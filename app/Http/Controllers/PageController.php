@@ -210,7 +210,25 @@ class PageController extends Controller
                 }
             })
             ->with('company')
-            ->get();
+            ->get()
+            ->map(function ($user) {
+                $photoPath = $user->photo ?? null;
+
+                // Check if photo exists
+                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+                // Generate initials
+                $initials = strtoupper(
+                    substr($user->first_name, 0, 1) .
+                        substr($user->last_name ?? '', 0, 1)
+                );
+
+                // Add computed properties
+                $user->user_has_photo = $hasPhoto;
+                $user->user_initials = $initials;
+
+                return $user;
+            });
 
         return view('industry', compact('users', 'industry'));
     }
@@ -273,10 +291,20 @@ class PageController extends Controller
                 }
             }
 
+            $photoPath = $user->photo ?? null;
+            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+            $initials = strtoupper(
+                substr($user->first_name, 0, 1) .
+                    substr($user->last_name ?? '', 0, 1)
+            );
+
+
             return [
                 'user' => $user,
                 'company' => $user->company,
                 'score' => $score,
+                'user_has_photo' => $hasPhoto,
+                'user_initials' => $initials,
             ];
         })->sortByDesc('score')->filter(fn($s) => $s['score'] > 0)->values();
 

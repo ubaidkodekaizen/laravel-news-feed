@@ -195,6 +195,16 @@ class UserController extends Controller
             ->with('company')
             ->firstOrFail();
 
+        // Add user photo and initials logic
+        $photoPath = $user->photo ?? null;
+        $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+        $initials = strtoupper(
+            substr($user->first_name, 0, 1) .
+                substr($user->last_name ?? '', 0, 1)
+        );
+
+        $user->user_has_photo = $hasPhoto;
+        $user->user_initials = $initials;
 
         return view('user.user-profile', compact('user'));
     }

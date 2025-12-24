@@ -88,9 +88,6 @@
             justify-content: center;
         }
 
-        /* .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
-                                                            max-width: 180px;
-                                                        } */
 
         .select2-container .select2-selection--single .select2-selection__rendered {
             max-width: 200px;
