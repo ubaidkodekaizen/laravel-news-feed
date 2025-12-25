@@ -45,7 +45,7 @@ return [
     ],
 
     'muslimlynk' => [
-        'api_url' => env('MUSLIMLYNK_API_URL', 'http://43.204.31.136:8080'),
+        'api_url' => env('MUSLIMLYNK_API_URL', 'https://muslimlynk.kodereach.com'),
         'api_key' => env('MUSLIMLYNK_API_KEY'), // API key for accessing the system (used in ApiKeyMiddleware)
         'api_key_ai' => env('MUSLIMLYNK_API_KEY_AI'), // API key for accessing external AI API
     ],
