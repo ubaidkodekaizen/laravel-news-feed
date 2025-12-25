@@ -172,6 +172,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     Route::get('/user/subscriptions', [SubscriptionController::class, 'index'])->name('user.subscriptions');
     Route::get('/user/subscriptions/add', [SubscriptionController::class, 'addSubscription'])->name('user.add.subscriptions');
+    Route::post('/user/subscriptions/process-payment', [SubscriptionController::class, 'processPayment'])->name('user.subscriptions.process-payment');
     // Route::get('/user/subscriptions/edit/{id}', [SubscriptionController::class, 'editSubscription'])->name('user.edit.subscriptions');
     // Route::post('/user/subscriptions/store/{id?}', [SubscriptionController::class, 'storeSubscription'])->name('user.store.subscriptions');
     // Route::delete('/user/subscriptions/delete/{id}', [SubscriptionController::class, 'deleteSubscription'])->name('user.delete.subscriptions');

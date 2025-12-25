@@ -86,7 +86,7 @@
     </style>
 
 
-    <form action="" method="POST" class="subscription_form">
+    <form action="{{ route('user.subscriptions.process-payment') }}" method="POST" class="subscription_form">
         @csrf
 
         <div class="row">
@@ -106,11 +106,61 @@
                             {!! \App\Helpers\DropdownHelper::getPlanDropdown() !!}
                         </select>
                     </div>
-                    <input type="hidden" name="amount" id="amount" value="{{ old('amount') }}">
-                    <input type="hidden" name="type" id="type" value="{{ old('type') }}">
-
                 </div>
             </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>First Name <span class="text-danger">*</span></label>
+                    <input id="first_name" type="text" class="form-control @error('first_name') is-invalid @enderror"
+                        name="first_name" placeholder="Enter First Name" value="{{ old('first_name', $user->first_name ?? '') }}" required>
+                    @error('first_name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>Last Name <span class="text-danger">*</span></label>
+                    <input id="last_name" type="text" class="form-control @error('last_name') is-invalid @enderror"
+                        name="last_name" placeholder="Enter Last Name" value="{{ old('last_name', $user->last_name ?? '') }}" required>
+                    @error('last_name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>Email <span class="text-danger">*</span></label>
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                        name="email" placeholder="Enter Email" value="{{ old('email', $user->email ?? '') }}" required>
+                    @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>Phone <span class="text-danger">*</span></label>
+                    <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror"
+                        name="phone" placeholder="Enter Phone" value="{{ old('phone', $user->phone ?? '') }}" required>
+                    @error('phone')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
             <div class="col-lg-12 mb-4">
                 <div class="input-box">
                     <label>Card Number (16 digits)</label>
@@ -157,6 +207,71 @@
                 </div>
             </div>
 
+            <div class="col-lg-12 mb-4">
+                <div class="input-box">
+                    <label>Billing Address <span class="text-danger">*</span></label>
+                    <input id="billing_address" type="text" class="form-control @error('billing_address') is-invalid @enderror"
+                        name="billing_address" placeholder="Enter Billing Address" value="{{ old('billing_address', $user->address ?? '') }}" required>
+                    @error('billing_address')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="city" type="text" class="form-control @error('city') is-invalid @enderror"
+                        name="city" placeholder="Enter City" value="{{ old('city', $user->city ?? '') }}" required>
+                    @error('city')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>State <span class="text-danger">*</span></label>
+                    <input id="state" type="text" class="form-control @error('state') is-invalid @enderror"
+                        name="state" placeholder="Enter State" value="{{ old('state', $user->state ?? '') }}" required>
+                    @error('state')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>Zip Code <span class="text-danger">*</span></label>
+                    <input id="zip_code" type="text" class="form-control @error('zip_code') is-invalid @enderror"
+                        name="zip_code" placeholder="Enter Zip Code" value="{{ old('zip_code', $user->zip_code ?? '') }}" required>
+                    @error('zip_code')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="input-box">
+                    <label>Country</label>
+                    <input id="country" type="text" class="form-control @error('country') is-invalid @enderror"
+                        name="country" placeholder="Enter Country" value="{{ old('country', $user->country ?? '') }}">
+                    @error('country')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
             <div class="col-12">
                 <button class="btn btn-primary submitBtn" type="submit">Submit</button>
             </div>
@@ -181,5 +296,9 @@
             width: '100%',
             minimumResultsForSearch: Infinity
         });
+
+        @if(isset($planId) && $planId)
+            $('#plan_id').val('{{ $planId }}').trigger('change');
+        @endif
     </script>
 @endsection

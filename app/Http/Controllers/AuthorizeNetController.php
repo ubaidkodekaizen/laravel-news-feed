@@ -115,6 +115,7 @@ class AuthorizeNetController extends Controller
                     'renewal_date' => $request->type === 'Monthly' ? now()->addMonth() : now()->addYear(),
                     'status' => 'active',
                     'transaction_id' => $subscriptionId,
+                    'platform' => 'Web',
                 ]);
 
                 $token = Str::random(64);

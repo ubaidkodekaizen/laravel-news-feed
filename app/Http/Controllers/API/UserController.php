@@ -189,7 +189,7 @@ class UserController extends Controller
             'subscription_amount' => 0.00,
             'start_date' => now(),
             'renewal_date' => now()->addDays(90), // 90 days free trial for AMCOB users
-            'status' => 'inactive',
+            'status' => 'active',
             'transaction_id' => null,
             'receipt_data' => null,
             'platform' => 'Amcob',
