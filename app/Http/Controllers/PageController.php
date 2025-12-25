@@ -12,10 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
+use App\Traits\HasUserPhotoData;
 
 class PageController extends Controller
 {
+
+    use HasUserPhotoData;
+
+
     public function ourCommunity()
     {
         $industries = [
@@ -202,9 +206,7 @@ class PageController extends Controller
 
         return view('services', compact('services'));
     }
-
-
-    public function industryExperts($industry)
+     public function industryExperts($industry)
     {
         $users = User::where('status', 'complete')
             ->whereHas('company', function ($query) use ($industry) {
@@ -221,25 +223,10 @@ class PageController extends Controller
                 }
             })
             ->with('company')
-            ->get()
-            ->map(function ($user) {
-                $photoPath = $user->photo ?? null;
+            ->get();
 
-                // Check if photo exists
-                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
-
-                // Generate initials
-                $initials = strtoupper(
-                    substr($user->first_name, 0, 1) .
-                        substr($user->last_name ?? '', 0, 1)
-                );
-
-                // Add computed properties
-                $user->user_has_photo = $hasPhoto;
-                $user->user_initials = $initials;
-
-                return $user;
-            });
+        // Add photo data using trait
+        $users = $this->addPhotoDataToCollection($users);
 
         return view('industry', compact('users', 'industry'));
     }
@@ -258,7 +245,7 @@ class PageController extends Controller
                 'accept' => 'application/json',
                 'X-API-Key' => $apiKey,
             ])->get("{$apiUrl}/muslimlynk-ai-suggestions/{$userId}", [
-                'top_k' => 100, // Unlimited - use maximum integer value
+                'top_k' => 100,
             ]);
 
             if ($response->successful()) {
@@ -293,6 +280,19 @@ class PageController extends Controller
                             'match_reasons' => $recommendation['match_reasons'] ?? [],
                         ];
                     })->filter()->values();
+
+                    // Add photo data to all users in the suggestions array
+                    $suggestions = $this->addPhotoDataToCollection($suggestions);
+
+                    // Debug: Check if photo data was added
+                    if ($suggestions->isNotEmpty()) {
+                        $firstUser = $suggestions->first()['user'] ?? null;
+                        Log::info('Photo data check', [
+                            'has_photo_property' => isset($firstUser->user_has_photo),
+                            'has_initials_property' => isset($firstUser->user_initials),
+                            'user_attributes' => $firstUser ? array_keys(get_object_vars($firstUser)) : null,
+                        ]);
+                    }
                 }
             } else {
                 Log::warning('Smart suggestions API call failed', [

@@ -210,8 +210,25 @@
                         </ul>
                     </div>
                     <div class="profile">
-                        <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
-                            alt="">
+                        @php
+                            $currentUser = Auth::user();
+                            $photoPath = $currentUser->photo ?? null;
+                            $hasPhoto =
+                                $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                            $initials = strtoupper(
+                                substr($currentUser->first_name ?? '', 0, 1) .
+                                    substr($currentUser->last_name ?? '', 0, 1),
+                            );
+                        @endphp
+
+                        @if ($hasPhoto)
+                            <img src="{{ asset('storage/' . $currentUser->photo) }}"
+                                alt="{{ $currentUser->first_name }}">
+                        @else
+                            <div class="avatar-initials-header">
+                                {{ $initials }}
+                            </div>
+                        @endif
                         <div class="dropdown">
                             <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"
                                 data-bs-toggle="dropdown" aria-expanded="false">

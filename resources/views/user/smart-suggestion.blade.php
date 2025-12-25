@@ -1,3 +1,4 @@
+
 @extends('layouts.main')
 
 
@@ -75,12 +76,12 @@
                     <div class="col-md-4">
                         <div class="industry-profile-card">
                             <div class="profile-pic text-center">
-                                @if ($suggestion['user_has_photo'])
+                                @if ($user->user_has_photo)
                                     <img id="UserProfileImg" src="{{ asset('storage/' . $user->photo) }}"
                                         alt="{{ $user->first_name }} {{ $user->last_name }}'s Profile Picture">
                                 @else
                                     <div class="avatar-initials" id="UserProfileImg">
-                                        {{ $suggestion['user_initials'] }}
+                                        {{ $user->user_initials }}
                                     </div>
                                 @endif
                             </div>

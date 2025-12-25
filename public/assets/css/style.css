@@ -98,7 +98,18 @@ body {
     object-position: center;
     border-radius: 40px;
 }
-
+.header .profile .avatar-initials-header {
+    width: 48.28px;
+    height: 48.28px;
+    border-radius: 50%;
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
 .header .profile {
     display: flex;
     align-items: center;

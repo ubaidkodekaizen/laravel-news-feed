@@ -77,18 +77,6 @@
             width: 414px !important;
         }
 
-
-
-        /* .company_card {
-                padding: 40px 20px;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                height: auto !important;
-                border-right: 1px solid #E9EBF0;
-                background: #f4f5fb;
-            } */
-
         .company_card {
             padding: 40px 34px;
             display: flex;
@@ -138,7 +126,6 @@
 
         .profile-container {
             border: none;
-            /* overflow: hidden; */
             margin: 0;
             height: auto;
         }
@@ -151,6 +138,18 @@
             bottom: 0px;
             transform: translateX(0%);
             position: unset;
+        }
+
+        .profile-image .avatar-initials {
+            height: 100%;
+            width: 100%;
+            background: #394a93;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 34px;
         }
 
         .profile-container .profile-details {
@@ -271,12 +270,6 @@
         .service_price p {
             margin-bottom: 1px !important;
         }
-
-        /* .company_profile_section .event_slider .event_price_label {
-
-            } */
-
-
 
         .company_profile_section .event_slider .card img,
         .company_profile_section .articles .card img {
@@ -463,7 +456,7 @@
         }
 
         /* .col-lg-3 {
-                 flex: 0 0 20%;} */
+                         flex: 0 0 20%;} */
 
         .profile-details .location {
             font-size: 20.92px;
@@ -588,10 +581,6 @@
         }
 
         @media (max-width: 788px) {
-            /* .company_profile_section .col-lg-3{
-                    width: 0%;
-                } */
-
             .offeredHeadingMain p {
                 font-size: 16px;
             }
@@ -724,10 +713,6 @@
                                         @endif
 
                                         @if (!empty($user->company->company_no_of_employee))
-                                            <!-- <p class="company_experience">
-                                                    <span><i class="fa-solid fa-people-group"></i></span>
-                                                    {{ $user->company->company_no_of_employee }}
-                                                </p>  -->
                                             <div class="company_experience">
                                                 <div><span><i class="fa-solid fa-people-group"></i></span></div>
                                                 <div data-kr-tooltip="true" title="Number of Employees">
@@ -736,10 +721,6 @@
                                         @endif
 
                                         @if (!empty($user->company->company_industry))
-                                            <!-- <p class="company_experience">
-                                                    <span><i class="fa-solid fa-industry"></i></span>
-                                                    {{ $user->company->company_industry }}
-                                                </p> -->
                                             <div class="company_experience">
                                                 <div><span><i class="fa-solid fa-industry"></i></span></div>
                                                 <div data-kr-tooltip="true" title="Industry">
@@ -776,8 +757,14 @@
                                     <div class="container">
                                         <div class="mainProfileImage">
                                             <div class="profile-image">
-                                                <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
-                                                    alt="Profile Image">
+                                                @if ($user->user_has_photo)
+                                                    <img src="{{ asset('storage/' . $user->photo) }}"
+                                                        alt="{{ $user->first_name }} {{ $user->last_name }}">
+                                                @else
+                                                    <div class="avatar-initials">
+                                                        {{ $user->user_initials }}
+                                                    </div>
+                                                @endif
                                             </div>
                                             <!-- Profile Details -->
                                             <div class="profile-details">
@@ -858,8 +845,7 @@
                                                     {{ $user->state ?? '' }},
                                                     {{ $user->country ?? '' }}
                                                 </p>
-                                                <!-- <a class="contact-info" href="javascript:void(0);" data-bs-toggle="modal"
-                                data-bs-target="#moreDetailsModal">More Details</a> -->
+
                                                 <div class="mt-3">
                                                     <a href="javascript:void(0)"
                                                         class="btn btn-secondary direct-message-btn"
@@ -951,88 +937,7 @@
                                         </div>
 
 
-                                        <!-- <div class="contact_social_flex">
-                                            <div class="contact_email">
-                                                @if ($user->phone_public == 'Yes')
-                                                    <div class="contact_info_flex">
-                                                        <i class="fa-solid fa-phone"></i>
-                                                        <div class="contact_name_info">
-                                                            <a
-                                                                href="tel:{{ $user->phone ?? '' }}">{{ $user->phone ?? '' }}</a>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                                @if ($user->email_public == 'Yes')
-                                                    <div class="contact_info_flex">
-                                                        <i class="fa-solid fa-envelope"></i>
-                                                        <div class="contact_name_info">
-                                                            <a
-                                                                href="mailto:{{ $user->email ?? '' }}">{{ $user->email ?? '' }}</a>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <!-- <ul class="list_check_flex">
-                                                @if ($user->linkedin_url)
-                                                    <li>
-                                                        <a href="{{ $user->linkedin_url }}" target="_blank"
-                                                            title="LinkedIn">
-                                                            <img src="{{ asset('assets/images/social-icons/linkedin.png') }}"
-                                                                alt="">
-                                                        </a>
-                                                    </li>
-                                                @endif
-                                                @if ($user->facebook_url)
-                                                    <li>
-                                                        <a href="{{ $user->facebook_url }}" target="_blank"
-                                                            title="Facebook">
-                                                            <img src="{{ asset('assets/images/social-icons/facebook.png') }}"
-                                                                alt="">
-                                                        </a>
-                                                    </li>
-                                                @endif
 
-                                                @if ($user->x_url)
-                                                    <li>
-                                                        <a href="{{ $user->x_url }}" target="_blank"
-                                                            title="X (Formerly Twitter)">
-                                                            <img src="{{ asset('assets/images/social-icons/twitter.png') }}"
-                                                                alt="">
-                                                        </a>
-                                                    </li>
-                                                @endif
-
-                                                @if ($user->instagram_url)
-                                                    <li>
-                                                        <a href="{{ $user->instagram_url }}" target="_blank"
-                                                            title="Instagram">
-                                                            <img src="{{ asset('assets/images/social-icons/instagram.png') }}"
-                                                                alt="">
-                                                        </a>
-                                                    </li>
-                                                @endif
-
-                                                @if ($user->tiktok_url)
-                                                    <li>
-                                                        <a href="{{ $user->tiktok_url }}" target="_blank"
-                                                            title="TikTok">
-                                                            <img src="{{ asset('assets/images/social-icons/tiktok.png') }}"
-                                                                alt="">
-                                                        </a>
-                                                    </li>
-                                                @endif
-
-                                                @if ($user->youtube_url)
-                                                    <li>
-                                                        <a href="{{ $user->youtube_url }}" target="_blank"
-                                                            title="YouTube">
-                                                            <img src="{{ asset('assets/images/social-icons/youtube.png') }}"
-                                                                alt="">
-                                                        </a>
-                                                    </li>
-                                                @endif
-                                            </ul>
-                                        </div> -->
 
                                         <div class="offeredHeadingMain">
 
