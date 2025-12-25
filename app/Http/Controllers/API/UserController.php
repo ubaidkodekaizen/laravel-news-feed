@@ -469,8 +469,9 @@ class UserController extends Controller
         $user->tiktok_url = $request->tiktok_url ?? '';
         $user->youtube_url = $request->youtube_url ?? '';
         $user->languages = $request->languages ?? '';
-        $user->email_public = $request->email_public ?? 'No';
-        $user->phone_public = $request->phone_public ?? 'No';
+        // Handle checkbox: if checked, value is 'Yes', if unchecked, it's not in request so set to 'No'
+        $user->email_public = $request->has('email_public') && $request->email_public == 'Yes' ? 'Yes' : 'No';
+        $user->phone_public = $request->has('phone_public') && $request->phone_public == 'Yes' ? 'Yes' : 'No';
 
         if ($request->has('are_you') && !empty($request->are_you)) {
             $user->user_position = implode(', ', $request->are_you);

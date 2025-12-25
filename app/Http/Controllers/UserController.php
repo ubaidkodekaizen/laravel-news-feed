@@ -164,8 +164,9 @@ class UserController extends Controller
         }
 
         $user->languages = $request->languages ?? '';
-        $user->email_public = $request->email_public ?? 'No';
-        $user->phone_public = $request->phone_public ?? 'No';
+        // Handle checkbox: if checked, value is 'Yes', if unchecked, it's not in request so set to 'No'
+        $user->email_public = $request->has('email_public') && $request->email_public == 'Yes' ? 'Yes' : 'No';
+        $user->phone_public = $request->has('phone_public') && $request->phone_public == 'Yes' ? 'Yes' : 'No';
 
 
         $slug = Str::slug($request->first_name . ' ' . $request->last_name);

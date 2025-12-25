@@ -18,10 +18,9 @@
     <section class="industry_specialist">
         <div class="container">
             <div class="industry-heading text-center mb-5">
-                <span class="subHeading">Technology</span>
+                <span class="subHeading">{{ urldecode($industry) }}</span>
                 <h1>Industry <span>Experts</span></h1>
-                <p>Here you’ll find members who are experts in their industries. Reach out, get advice, and learn from those
-                    who bring real-world experience to the community.</p>
+                <p>Here you'll find members who are experts in <strong>{{ urldecode($industry) }}</strong>. Reach out, get advice, and learn from those who bring real-world experience to the community.</p>
             </div>
         </div>
 

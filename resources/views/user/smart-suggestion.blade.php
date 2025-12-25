@@ -59,8 +59,7 @@
             <div class="industry-heading text-center mb-5">
                 <span class="subHeading">MuslimLynk</span>
                 <h1>Smart <span>Suggestion</span></h1>
-                <p>Smart Suggestions helps you find members and resources you may want to connect with. It’s a simple way to
-                    surface recommendations based on what you’re looking for.</p>
+                <p>Discover meaningful connections powered by AI. Our intelligent matching algorithm analyzes your profile, industry, location, goals, and preferences to recommend the most relevant members for networking, collaboration, and business opportunities.</p>
             </div>
             <div class="row g-3">
 
@@ -69,6 +68,8 @@
                         $user = $suggestion['user'];
                         $company = $suggestion['company'];
                         $education = $user->userEducations->first(); // first education if exists
+                        $matchReasons = $suggestion['match_reasons'] ?? [];
+                        $tooltipTitle = !empty($matchReasons) ? implode('<br>', $matchReasons) : 'No match reasons available';
                     @endphp
 
                     <div class="col-md-4">
@@ -106,7 +107,11 @@
 
 
                                         {{-- Match Score with hover tooltip --}}
-                                        <p class="userProfileScore">
+                                        <p class="userProfileScore"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-placement="top"
+                                           data-bs-html="true"
+                                           title="{!! $tooltipTitle !!}">
                                             Match Score: {{ $suggestion['score'] }}
                                         </p>
 

@@ -17,19 +17,6 @@
             border: 2px solid var(--primary);
         }
 
-        .profile-image .avatar-initials {
-            width: 144px;
-            height: 200px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 64px;
-            background: #394a93;
-            color: white;
-            font-weight: 600;
-        }
-
         .company_link,
         .company_contact,
         .company_position,
@@ -90,6 +77,18 @@
             width: 414px !important;
         }
 
+
+
+        /* .company_card {
+                padding: 40px 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                height: auto !important;
+                border-right: 1px solid #E9EBF0;
+                background: #f4f5fb;
+            } */
+
         .company_card {
             padding: 40px 34px;
             display: flex;
@@ -139,6 +138,7 @@
 
         .profile-container {
             border: none;
+            /* overflow: hidden; */
             margin: 0;
             height: auto;
         }
@@ -272,6 +272,12 @@
             margin-bottom: 1px !important;
         }
 
+        /* .company_profile_section .event_slider .event_price_label {
+
+            } */
+
+
+
         .company_profile_section .event_slider .card img,
         .company_profile_section .articles .card img {
             height: 414px;
@@ -355,6 +361,7 @@
             padding: 9px;
             width: 44px;
             height: 44px;
+            /* border-radius: 50%; */
             background: #B8C034;
             fill: #273572 !important;
             color: #273572 !important;
@@ -455,6 +462,8 @@
             position: relative;
         }
 
+        /* .col-lg-3 {
+                 flex: 0 0 20%;} */
 
         .profile-details .location {
             font-size: 20.92px;
@@ -524,6 +533,11 @@
             border-right-color: #0e1948;
         }
 
+
+
+
+
+
         @media (max-width: 1280px) {
             .company_profile_section .col-lg-3 {
                 width: 30%;
@@ -574,6 +588,9 @@
         }
 
         @media (max-width: 788px) {
+            /* .company_profile_section .col-lg-3{
+                    width: 0%;
+                } */
 
             .offeredHeadingMain p {
                 font-size: 16px;
@@ -653,8 +670,6 @@
         <div class="container">
             <!-- LinkedIn Profile View -->
             <div class="profile-container">
-
-
                 <!-- Profile Image -->
                 <div class="position-relative">
                     <div class="company_profile_section">
@@ -667,8 +682,6 @@
                                             alt="Company Logo" class="logo_img">
                                     </div>
                                     <div class="company_card_details">
-
-
                                         @if (!empty($user->company->company_business_type))
                                             <div class="company_experience">
                                                 <div><span><i class="fa-solid fa-landmark"></i></span></div>
@@ -711,6 +724,10 @@
                                         @endif
 
                                         @if (!empty($user->company->company_no_of_employee))
+                                            <!-- <p class="company_experience">
+                                                    <span><i class="fa-solid fa-people-group"></i></span>
+                                                    {{ $user->company->company_no_of_employee }}
+                                                </p>  -->
                                             <div class="company_experience">
                                                 <div><span><i class="fa-solid fa-people-group"></i></span></div>
                                                 <div data-kr-tooltip="true" title="Number of Employees">
@@ -719,6 +736,10 @@
                                         @endif
 
                                         @if (!empty($user->company->company_industry))
+                                            <!-- <p class="company_experience">
+                                                    <span><i class="fa-solid fa-industry"></i></span>
+                                                    {{ $user->company->company_industry }}
+                                                </p> -->
                                             <div class="company_experience">
                                                 <div><span><i class="fa-solid fa-industry"></i></span></div>
                                                 <div data-kr-tooltip="true" title="Industry">
@@ -731,7 +752,6 @@
                                         Qualifications
                                     </h1>
                                     <div class="profile_qualification_sec">
-
                                         <div id="userEducation">
                                             @forelse ($user->userEducations as $education)
                                                 <div class="education-item mb-3">
@@ -756,13 +776,8 @@
                                     <div class="container">
                                         <div class="mainProfileImage">
                                             <div class="profile-image">
-                                                @if ($user->user_has_photo)
-                                                    <img src="{{ asset('storage/' . $user->photo) }}" alt="Profile Image">
-                                                @else
-                                                    <div class="avatar-initials">
-                                                        {{ $user->user_initials }}
-                                                    </div>
-                                                @endif
+                                                <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                                    alt="Profile Image">
                                             </div>
                                             <!-- Profile Details -->
                                             <div class="profile-details">
@@ -772,7 +787,6 @@
                                                         {{ $user->first_name ?? '' }} {{ $user->last_name ?? '' }}
                                                     </h1>
                                                     <div class="contact_social_flex">
-
                                                         <ul class="list_check_flex">
                                                             @if ($user->linkedin_url)
                                                                 <li>
@@ -844,7 +858,8 @@
                                                     {{ $user->state ?? '' }},
                                                     {{ $user->country ?? '' }}
                                                 </p>
-
+                                                <!-- <a class="contact-info" href="javascript:void(0);" data-bs-toggle="modal"
+                                data-bs-target="#moreDetailsModal">More Details</a> -->
                                                 <div class="mt-3">
                                                     <a href="javascript:void(0)"
                                                         class="btn btn-secondary direct-message-btn"
@@ -870,7 +885,6 @@
                                                         <p class="profileInfoInnerInfoAns">{{ $user->last_name ?? '' }}
                                                         </p>
                                                     </div>
-
                                                     <div class="col-lg-3">
                                                         <h3 class="profileInfoInnerInfoHead">Ethnicity</h3>
                                                         <p class="profileInfoInnerInfoAns">{{ $user->ethnicity }}</p>
@@ -883,15 +897,20 @@
 
                                                 </div>
                                                 <div class="row">
-
-                                                    <div class="col-lg-3">
-                                                        <h3 class="profileInfoInnerInfoHead">Email Address</h3>
-                                                        <p class="profileInfoInnerInfoAns">{{ $user->email ?? '' }}</p>
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <h3 class="profileInfoInnerInfoHead">Phone Number</h3>
-                                                        <p class="profileInfoInnerInfoAns">{{ $user->phone ?? '' }}</p>
-                                                    </div>
+                                                    @if ($user->email_public == 'Yes')
+                                                        <div class="col-lg-3">
+                                                            <h3 class="profileInfoInnerInfoHead">Email Address</h3>
+                                                            <p class="profileInfoInnerInfoAns">{{ $user->email ?? '' }}
+                                                            </p>
+                                                        </div>
+                                                    @endif
+                                                    @if ($user->phone_public == 'Yes')
+                                                        <div class="col-lg-3">
+                                                            <h3 class="profileInfoInnerInfoHead">Phone Number</h3>
+                                                            <p class="profileInfoInnerInfoAns">{{ $user->phone ?? '' }}
+                                                            </p>
+                                                        </div>
+                                                    @endif
                                                     <div class="col-lg-3">
                                                         <h3 class="profileInfoInnerInfoHead">Martial Status</h3>
                                                         <p class="profileInfoInnerInfoAns">{{ $user->marital_status }}</p>
@@ -932,7 +951,88 @@
                                         </div>
 
 
+                                        <!-- <div class="contact_social_flex">
+                                            <div class="contact_email">
+                                                @if ($user->phone_public == 'Yes')
+                                                    <div class="contact_info_flex">
+                                                        <i class="fa-solid fa-phone"></i>
+                                                        <div class="contact_name_info">
+                                                            <a
+                                                                href="tel:{{ $user->phone ?? '' }}">{{ $user->phone ?? '' }}</a>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if ($user->email_public == 'Yes')
+                                                    <div class="contact_info_flex">
+                                                        <i class="fa-solid fa-envelope"></i>
+                                                        <div class="contact_name_info">
+                                                            <a
+                                                                href="mailto:{{ $user->email ?? '' }}">{{ $user->email ?? '' }}</a>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <!-- <ul class="list_check_flex">
+                                                @if ($user->linkedin_url)
+                                                    <li>
+                                                        <a href="{{ $user->linkedin_url }}" target="_blank"
+                                                            title="LinkedIn">
+                                                            <img src="{{ asset('assets/images/social-icons/linkedin.png') }}"
+                                                                alt="">
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                @if ($user->facebook_url)
+                                                    <li>
+                                                        <a href="{{ $user->facebook_url }}" target="_blank"
+                                                            title="Facebook">
+                                                            <img src="{{ asset('assets/images/social-icons/facebook.png') }}"
+                                                                alt="">
+                                                        </a>
+                                                    </li>
+                                                @endif
 
+                                                @if ($user->x_url)
+                                                    <li>
+                                                        <a href="{{ $user->x_url }}" target="_blank"
+                                                            title="X (Formerly Twitter)">
+                                                            <img src="{{ asset('assets/images/social-icons/twitter.png') }}"
+                                                                alt="">
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                                @if ($user->instagram_url)
+                                                    <li>
+                                                        <a href="{{ $user->instagram_url }}" target="_blank"
+                                                            title="Instagram">
+                                                            <img src="{{ asset('assets/images/social-icons/instagram.png') }}"
+                                                                alt="">
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                                @if ($user->tiktok_url)
+                                                    <li>
+                                                        <a href="{{ $user->tiktok_url }}" target="_blank"
+                                                            title="TikTok">
+                                                            <img src="{{ asset('assets/images/social-icons/tiktok.png') }}"
+                                                                alt="">
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                                @if ($user->youtube_url)
+                                                    <li>
+                                                        <a href="{{ $user->youtube_url }}" target="_blank"
+                                                            title="YouTube">
+                                                            <img src="{{ asset('assets/images/social-icons/youtube.png') }}"
+                                                                alt="">
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div> -->
 
                                         <div class="offeredHeadingMain">
 
@@ -995,7 +1095,6 @@
                                             <p>These services come directly from MuslimLynk members. Explore what fellow
                                                 members can support you with as you build and connect.</p>
                                         </div>
-
                                         <div
                                             class="services_slider services_profile_slider articles overflow-hidden pb-0 pt-0">
                                             <div class="swiper-wrapper">
