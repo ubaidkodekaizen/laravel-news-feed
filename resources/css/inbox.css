@@ -1,295 +1,654 @@
 /* resources/css/inbox.css */
 .inbox-container {
-  display: flex;
-  height: calc(100vh - 80px);
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    height: calc(100vh - 109px);
+    background: #fafbff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .inbox-sidebar {
-  width: 350px;
-  border-right: 1px solid #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  background: #f8f9fa;
+    width: 350px;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    background: #f8f9fa;
 }
 
 .inbox-sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fff;
+    padding: 24px 20px 0 20px;
 }
 
 .inbox-sidebar-header h2 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
+    margin: 0;
+    color: #333;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 150%;
 }
 
 .inbox-search {
-  position: relative;
-  padding: 15px;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    padding: 12px 20px 24px 20px;
 }
 
 .inbox-search-icon {
-  position: absolute;
-  left: 25px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #999;
-  width: 18px;
-  height: 18px;
+    position: absolute;
+    left: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    width: 18px;
+    height: 18px;
 }
 
 .inbox-search-input {
-  width: 100%;
-  padding: 10px 10px 10px 35px;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.3s;
+    width: 100%;
+    padding: 13px 10px 12px 35px;
+    border-radius: 10.66px;
+    outline: none;
+    transition: all 0.3s;
+    background: #27357205;
+    border: 2px solid #e9ebf0;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
 }
 
 .inbox-search-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .inbox-conversations-list {
-  flex: 1;
-  overflow-y: auto;
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px;
 }
 
 .inbox-conversation-item {
-  display: flex;
-  padding: 15px;
-  cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background 0.2s;
-  background: #fff;
+    display: flex;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #fff;
+    margin: 0px 0px 3px 0;
 }
 
 .inbox-conversation-item:hover {
-  background: #f8f9fa;
+    background: #f8f9fa;
 }
 
 .inbox-conversation-item.active {
-  background: #e7f3ff;
-  border-left: 3px solid #007bff;
+    background: #27357212;
+    border-radius: 10.66px;
 }
 
 .inbox-conversation-avatar {
-  position: relative;
-  margin-right: 12px;
-  flex-shrink: 0;
+    position: relative;
+    margin-right: 12px;
+    flex-shrink: 0;
 }
 
 .inbox-conversation-avatar img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
 }
-
+.inbox-conversation-avatar .avatar-initials {
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 1px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 .inbox-unread-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #dc3545;
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 10px;
-  min-width: 18px;
-  text-align: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
 }
 
 .inbox-conversation-details {
-  flex: 1;
-  min-width: 0;
+    flex: 1;
+    min-width: 0;
 }
 
 .inbox-conversation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
 }
 
 .inbox-conversation-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    color: #000929;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
 }
 
 .inbox-conversation-time {
-  font-size: 12px;
-  color: #999;
-  flex-shrink: 0;
-  margin-left: 10px;
+    color: #76767ccc;
+    flex-shrink: 0;
+    margin-left: 10px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
+    text-align: right;
 }
 
 .inbox-conversation-preview p {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    margin: 0;
+    color: #76767ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
 }
 
 .inbox-conversation-preview p.unread {
-  font-weight: 600;
-  color: #333;
+    font-weight: 600;
+    color: #333;
 }
 
 .inbox-no-conversations {
-  padding: 40px 20px;
-  text-align: center;
-  color: #999;
+    padding: 40px 20px;
+    text-align: center;
+    color: #999;
 }
 
 .inbox-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    margin: 24px 56px 30px 5px;
+    border: 2px solid #e9ebf0;
+    border-radius: 10.66px;
+    overflow: hidden;
 }
 
 .inbox-main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #ffffff;
 }
 
 .inbox-main-header-user {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .inbox-main-header-avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
 }
-
+.avatar-initials.inbox-main-header-avatar {
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 1px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 .inbox-main-header-info {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .inbox-main-header-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  text-decoration: none;
-  transition: color 0.2s;
+    color: #000929;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
 }
 
 .inbox-main-header-name:hover {
-  color: #007bff;
+    color: #007bff;
 }
 
 .inbox-typing-indicator {
-  font-size: 13px;
-  color: #007bff;
-  font-style: italic;
+    font-size: 13px;
+    color: #007bff;
+    font-style: italic;
 }
 
 .inbox-main-header-actions {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .inbox-action-btn {
-  background: transparent;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  color: #666;
-  border-radius: 50%;
-  transition: all 0.2s;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #666;
+    border-radius: 50%;
+    transition: all 0.2s;
 }
 
 .inbox-action-btn:hover {
-  background: #f0f0f0;
-  color: #333;
+    background: #f0f0f0;
+    color: #333;
 }
 
 .inbox-messages-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  background: #f8f9fa;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 0;
+    background: #f6f7fd;
 }
 
 .inbox-no-messages {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #999;
-  font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #999;
+    font-size: 16px;
 }
 
 .inbox-no-selection {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #f8f9fa;
 }
 
 .inbox-no-selection-content {
-  text-align: center;
+    text-align: center;
 }
 
 .inbox-no-selection-content h3 {
-  margin: 20px 0 10px;
-  font-size: 20px;
-  color: #333;
+    margin: 20px 0 10px;
+    font-size: 20px;
+    color: #333;
 }
 
 .inbox-no-selection-content p {
-  color: #999;
-  font-size: 14px;
+    color: #999;
+    font-size: 14px;
 }
 
 .inbox-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+#chat-container {
+    display: none;
 }
 
+.messageDateHeader {
+    padding: 10px 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: #000000;
+    text-transform: uppercase;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+}
+
+.messageDateHeader::before {
+    content: "";
+    background: #2735721a;
+    height: 2px;
+    flex: 1;
+    display: block;
+}
+
+.messageDateHeader::after {
+    content: "";
+    background: #cfccc1;
+    height: 1px;
+    flex: 1;
+    display: block;
+}
+.messageBoxListItem {
+    width: 100%;
+    padding: 10px 25px;
+}
+
+.messageBoxListItemInner {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    gap: 10px;
+    width: 100%;
+}
+
+.messageBoxListItemInner .messageSenderPhoto {
+    width: 45px;
+    height: 45px;
+    max-width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #9ca6d5;
+}
+.messageBoxListItemInner .messageSenderPhoto.avatar-initials {
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+.messageBoxListItemContent {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    gap: 5px;
+}
+
+.messageBoxListItemContentUsername {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    line-height: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
+.messageBoxListItemContentMsg {
+    color: #000;
+    background: #27357214;
+    padding: 8px 16px;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+    border-radius: 12px;
+}
+.messageBoxListItemContentUsername .messageBoxTime::before {
+    content: "•";
+    margin-right: 5px;
+}
+
+.messageBoxListItemContentUsername .messageBoxTime {
+    color: #848484;
+    font-weight: 400;
+    line-height: 1.3em;
+}
+
+.messageBoxListItemContentUsername {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    line-height: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+}
+
+.messageBoxListItem.messageRight .messageBoxListItemInner {
+    flex-direction: row-reverse;
+    justify-content: end;
+}
+
+.messageBoxListItem.messageRight .messageBoxListItemContent {
+    align-items: end;
+}
+
+.messageBoxListItem.messageRight .messageBoxListItemContentUsername {
+    flex-direction: row-reverse;
+}
+
+.messageBoxListItem .messageBoxListItemContentUsername a {
+    text-decoration: none;
+    color: #000;
+    transition: 0.3s;
+}
+
+.messageBoxListItem .messageBoxListItemContentUsername a:hover {
+    color: #273572;
+    text-decoration: underline;
+    transition: 0.3s;
+}
+
+.messageBoxListItem.messageRight .messageBoxTime {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.messageBoxListItem.messageRight .messageBoxTime::before {
+    margin-left: 5px;
+    margin-right: 0px;
+}
+
+.messageBoxInput .messageBoxInputInner {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.messageBoxInputInnerCol {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    gap: 10px;
+}
+.messageBoxInput {
+    width: 100%;
+    position: relative;
+    background: #f6f7fe;
+}
+
+.messageBoxInputField {
+    width: 100%;
+    padding: 13.5px 20px;
+    outline: none;
+    border-radius: 12px;
+    resize: none;
+    background: #ffffff;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+    color: #333333;
+    border: 2px solid #e9ebf0;
+    height: 48px;
+    overflow-y: auto;
+}
+
+.messageBoxInputBtn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    padding: 2px 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px;
+    width: 50px;
+}
+.messageBoxInputBtn img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    max-width: 100%;
+}
+.messageBoxInputBtn:hover {
+    background: #b8c034;
+    transition: 0.3s;
+}
+.messageBoxInputBtn .messageBoxEmojiBtnIcon {
+    height: 10px;
+    width: 10px;
+}
+.messageBoxInputBtnIcon {
+    height: 16px;
+    width: 16px;
+}
+
+.messageBox.messageBoxListClose .messageBoxInput {
+    display: none;
+}
+
+.messageBoxEmojiBtn {
+    border: none;
+    background: transparent;
+    max-width: 30px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+}
+
+.messageBoxEmojiBox {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+}
+/* reactions */
+.messageReactIconBtn {
+    position: relative;
+    padding: 5px 0;
+    cursor: pointer;
+}
+.messageReactIconBtn i {
+    color: #8e8e8e;
+}
+
+.messageReactions {
+    display: flex;
+    gap: 4px;
+    margin-top: -10px;
+}
+
+.reaction {
+    cursor: pointer;
+    background: #dadada;
+    padding: 2px 5px;
+    border-radius: 10px;
+    font-size: 14px;
+    box-shadow: 0px 1px 4px rgb(0 0 0 / 38%);
+}
+
+.messageReactionOptions {
+    display: flex;
+    gap: 4px;
+    margin-top: 0px;
+    position: absolute;
+    top: 5px;
+    background: #eeeff4;
+    box-shadow: 0px 1px 4px rgba(0 0 0 / 25%);
+    padding: 0px 0px;
+    border-radius: 5px;
+}
+
+.messageReactionOptions.messageReactionOptionsShow {
+    display: flex;
+}
+
+.messageReactionOptions.messageReactionOptionsHide {
+    display: none;
+}
+
+.messageBoxListItem.messageLeft .messageReactionOptions {
+    left: 20px;
+}
+
+.messageBoxListItem.messageRight .messageReactionOptions {
+    right: 20px;
+}
+
+.messageReactionOptions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+.messageBoxTime {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
+    margin: 5px 0 0 0;
+}
+.messageBoxListItem.messageLeft .messageBoxListItemContentMsg {
+    background: #b8c034;
+}
+.messageBoxListItem.messageRight .messageBoxListItemContentMsg {
+    background: #273572;
+    color: #fff;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
-  .inbox-container {
-    flex-direction: column;
-  }
+    .inbox-container {
+        flex-direction: column;
+    }
 
-  .inbox-sidebar {
-    width: 100%;
-    max-height: 50vh;
-  }
+    .inbox-sidebar {
+        width: 100%;
+        max-height: 50vh;
+    }
 
-  .inbox-main {
-    flex: 1;
-  }
+    .inbox-main {
+        flex: 1;
+    }
 }

@@ -14,10 +14,11 @@ use App\Jobs\BroadcastMessage;
 use App\Jobs\UserTypingJob;
 use App\Services\UserOnlineService;
 use App\Jobs\SendOfflineMessageNotification;
+use App\Traits\FormatsUserData;
 
 class ChatController extends Controller
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, FormatsUserData;
 
     protected $userOnlineService;
 
@@ -25,6 +26,7 @@ class ChatController extends Controller
     {
         $this->userOnlineService = $userOnlineService;
     }
+
     public function createConversation(Request $request)
     {
         $request->validate([
@@ -45,8 +47,6 @@ class ChatController extends Controller
         return response()->json($conversation);
     }
 
-
-
     public function getUserForConversation(Conversation $conversation)
     {
         $user = $conversation->user_one_id === auth()->id()
@@ -54,35 +54,11 @@ class ChatController extends Controller
             : $conversation->userOne;
 
         if ($user) {
-            $photoPath = $user->photo ?? null;
-            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
-            $initials = strtoupper(
-                substr($user->first_name, 0, 1) .
-                    substr($user->last_name ?? '', 0, 1)
-            );
-
-            $photoUrl = $hasPhoto
-                ? (str_starts_with($photoPath, 'http')
-                    ? $photoPath
-                    : asset('storage/profile_photos/' . basename($photoPath)))
-                : null;
-
-            return response()->json([
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'email' => $user->email,
-                'slug' => $user->slug,
-                'photo' => $photoUrl,
-                'user_has_photo' => $hasPhoto,
-                'user_initials' => $initials,
-            ]);
+            return response()->json($this->formatUserData($user));
         }
 
         return response()->json(['message' => 'User not found'], 404);
     }
-
-
 
     public function userIsTyping(Request $request)
     {
@@ -94,10 +70,8 @@ class ChatController extends Controller
                 return response()->json(['error' => 'Conversation ID is required'], 400);
             }
 
-            // Dispatch the job to broadcast the typing event
             UserTypingJob::dispatch($conversationId, $user);
 
-            // Log the event for debugging
             \Log::info('User is typing...', [
                 'user_id' => $user->id,
                 'conversation_id' => $conversationId
@@ -121,7 +95,6 @@ class ChatController extends Controller
         }
     }
 
-
     public function getMessages(Conversation $conversation)
     {
         try {
@@ -132,28 +105,11 @@ class ChatController extends Controller
                 ->orderBy('created_at', 'asc')
                 ->get()
                 ->map(function ($message) {
-                    $sender = $message->sender;
-                    $photoPath = $sender->photo ?? null;
-
-                    // Check if photo exists
-                    $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
-
-                    // Generate initials
-                    $initials = strtoupper(
-                        substr($sender->first_name, 0, 1) .
-                            substr($sender->last_name ?? '', 0, 1)
-                    );
-
-                    // Add computed properties
-                    $sender->user_has_photo = $hasPhoto;
-                    $sender->user_initials = $initials;
-
-                    // Set photo URL only if it exists
-                    $sender->photo = $hasPhoto
-                        ? (str_starts_with($photoPath, 'http')
-                            ? $photoPath
-                            : asset('storage/profile_photos/' . basename($photoPath)))
-                        : null;
+                    // Format sender data using trait
+                    $senderData = $this->formatUserData($message->sender);
+                    $message->sender->user_has_photo = $senderData['user_has_photo'];
+                    $message->sender->user_initials = $senderData['user_initials'];
+                    $message->sender->photo = $senderData['photo'];
 
                     return $message;
                 });
@@ -178,7 +134,6 @@ class ChatController extends Controller
         }
     }
 
-
     public function getConversations(): JsonResponse
     {
         $user = request()->user();
@@ -199,30 +154,9 @@ class ChatController extends Controller
                     ? $conversation->userTwo
                     : $conversation->userOne;
 
-                $photoPath = $otherUser->photo ?? null;
-                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
-                $initials = strtoupper(
-                    substr($otherUser->first_name, 0, 1) .
-                        substr($otherUser->last_name ?? '', 0, 1)
-                );
-
-                $photoUrl = $hasPhoto
-                    ? (str_starts_with($photoPath, 'http')
-                        ? $photoPath
-                        : asset('storage/profile_photos/' . basename($photoPath)))
-                    : null;
-
                 return [
                     'id' => $conversation->id,
-                    'user' => [
-                        'id' => $otherUser->id,
-                        'first_name' => $otherUser->first_name,
-                        'last_name' => $otherUser->last_name,
-                        'email' => $otherUser->email,
-                        'photo' => $photoUrl,
-                        'user_has_photo' => $hasPhoto,
-                        'user_initials' => $initials,
-                    ],
+                    'user' => $this->formatUserData($otherUser),
                     'last_message' => $conversation->messages()->latest()->first(),
                     'unread_count' => $conversation->unread_count,
                 ];
@@ -230,8 +164,6 @@ class ChatController extends Controller
 
         return response()->json($conversations);
     }
-
-
 
     public function sendMessage(Request $request): JsonResponse
     {
@@ -260,43 +192,17 @@ class ChatController extends Controller
                     'content' => $request->content,
                 ]);
 
-                // Eager load sender details
-                $message->load('sender:id,first_name,last_name,email,photo');
-
-                // Format sender's photo URL
-                $sender = $message->sender;
-                $photoPath = $sender->photo ?? null;
-
-                // Check if photo exists
-                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
-
-                // Generate initials
-                $initials = strtoupper(
-                    substr($sender->first_name, 0, 1) .
-                        substr($sender->last_name ?? '', 0, 1)
-                );
-
-                $sender->user_has_photo = $hasPhoto;
-                $sender->user_initials = $initials;
-                $sender->photo = $hasPhoto
-                    ? (str_starts_with($photoPath, 'http')
-                        ? $photoPath
-                        : asset('storage/profile_photos/' . basename($photoPath)))
-                    : null;
+                $message->load('sender:id,first_name,last_name,email,photo,slug');
 
                 $conversation->update(['last_message_at' => now()]);
 
                 BroadcastMessage::dispatch($message);
                 \Log::info('Message broadcasted:', ['message' => $message]);
 
-
                 // Check if receiver is offline
                 if (!$this->userOnlineService->isUserOnline($receiverId)) {
-                    // Get receiver
                     $receiver = User::find($receiverId);
                     $sender = auth()->user();
-
-                    // Dispatch job to send email notification
                     SendOfflineMessageNotification::dispatch($sender, $receiver, $message);
                     \Log::info('Offline message email notification queued', [
                         'receiver_id' => $receiverId,
@@ -313,13 +219,7 @@ class ChatController extends Controller
                     'read_at' => $message->read_at,
                     'created_at' => $message->created_at,
                     'updated_at' => $message->updated_at,
-                    'sender' => [
-                        'id' => $message->sender->id,
-                        'first_name' => $message->sender->first_name,
-                        'last_name' => $message->sender->last_name,
-                        'email' => $message->sender->email,
-                        'photo' => $message->sender->photo,
-                    ]
+                    'sender' => $this->formatUserData($message->sender),
                 ]);
             } catch (\Exception $e) {
                 \Log::error('Message send failed: ' . $e->getMessage());
@@ -341,28 +241,26 @@ class ChatController extends Controller
                 ->where('user_two_id', $userId);
         })->exists();
 
-        $receiver = null; // Default value
+        $receiver = null;
 
         if (!$conversationExists) {
-            // Fetch receiver's user data
             $receiver = User::find($receiverId);
         }
 
         return response()->json([
             'conversation_exists' => $conversationExists,
-            'receiver' => $receiver // Return receiver data if conversation doesn't exist
+            'receiver' => $receiver
         ]);
     }
 
     public function addReaction(Message $message, Request $request)
     {
         $request->validate([
-            'emoji' => 'required|string|max:10', // Validate the emoji
+            'emoji' => 'required|string|max:10',
         ]);
 
         $user = auth()->user();
 
-        // Check if the user has already reacted with this emoji
         $existingReaction = $message->reactions()
             ->where('user_id', $user->id)
             ->where('emoji', $request->emoji)
@@ -372,7 +270,6 @@ class ChatController extends Controller
             return response()->json(['message' => 'You have already reacted with this emoji.'], 400);
         }
 
-        // Add the reaction
         $reaction = $message->reactions()->create([
             'user_id' => $user->id,
             'emoji' => $request->emoji,
@@ -381,16 +278,14 @@ class ChatController extends Controller
         return response()->json($reaction);
     }
 
-
     public function removeReaction(Message $message, Request $request)
     {
         $request->validate([
-            'emoji' => 'required|string|max:10', // Validate the emoji
+            'emoji' => 'required|string|max:10',
         ]);
 
         $user = auth()->user();
 
-        // Find and delete the reaction
         $reaction = $message->reactions()
             ->where('user_id', $user->id)
             ->where('emoji', $request->emoji)

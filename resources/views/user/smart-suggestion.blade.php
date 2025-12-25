@@ -16,7 +16,44 @@
             font-size: 34px;
             letter-spacing: 1px;
         }
+
+        /* Custom theme called 'custom' */
+        .tippy-box[data-theme~='custom'] {
+            background-color: #fff;
+            font-family: "Inter", sans-serif;
+            font-size: 11.94px;
+            font-weight: 600;
+            color: #273572;
+            border-radius: 6px;
+            padding: 1px 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Optional: change arrow color */
+        .tippy-box[data-theme~='custom'][data-placement^='top']>.tippy-arrow::before {
+            border-top-color: #fff;
+        }
+
+        .tippy-box[data-theme~='custom'][data-placement^='bottom']>.tippy-arrow::before {
+            border-bottom-color: #fff;
+        }
+
+        .tippy-box[data-theme~='custom'][data-placement^='left']>.tippy-arrow::before {
+            border-left-color: #fff;
+        }
+
+        .tippy-box[data-theme~='custom'][data-placement^='right']>.tippy-arrow::before {
+            border-right-color: #fff;
+        }
     </style>
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css">
+
+
+
+
     <section class="industry_specialist">
         <div class="container">
             <div class="industry-heading text-center mb-5">
@@ -54,9 +91,15 @@
                                     <i class="fas fa-map-marker-alt"></i>
                                     {{ $user->country ?? 'N/A' }}
                                 </p>
-                                <p class="mb-1 userProfileCategory">
-                                    {{ $company->company_industry ?? 'N/A' }}
-                                </p>
+
+
+                                @if ($company && !empty(trim($company->company_industry)))
+                                    <p class="mb-1 userProfileCategory"
+                                        data-tippy-content="{{ e($company->company_industry) }}">
+                                        {{ $company->company_industry }}
+                                    </p>
+                                @endif
+
 
                                 <div class="userInfo">
                                     <div>
@@ -125,7 +168,19 @@
         <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
     </div>
 
+    <!-- Popper (required) -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
 
+    <!-- Tippy -->
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+    <script>
+        tippy('[data-tippy-content]', {
+            animation: 'scale',
+            theme: 'custom',
+            allowHTML: true,
+        });
+    </script>
     <script>
         // ==== CONFIG ====
         const recordsPerPageSelect = document.getElementById("recordsPerPage");

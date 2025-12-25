@@ -1047,7 +1047,7 @@ div.selected-filter-group {
 }
 
 .userProfileCategory {
-    display: inline;
+    display: inline-block;
     font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -1057,6 +1057,12 @@ div.selected-filter-group {
     color: #273572;
     padding: 7px 16px;
     border-radius: 33px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: max-content;
+    width: 50%;
+    line-height: 1;
 }
 
 .btn_flex {
@@ -2241,7 +2247,7 @@ p.description {
 }
 
 .toggle__label {
-     display: flex !important;
+    display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     width: 110px;
@@ -2289,7 +2295,7 @@ p.description {
     z-index: 1;
 }
 .toggle__label span {
- color: #fff;
+    color: #fff;
     font-size: 12px;
     width: 100%;
     max-width: 50px;

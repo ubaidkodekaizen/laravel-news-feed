@@ -37,10 +37,10 @@
 
     @yield('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('build/assets/App-C02OVGiM.css') }}"> --}}
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    {{-- <script src="{{ asset('build/assets/App-BMe8I_Aj.js') }}" defer></script> --}}
+
     {{-- Load built assets directly --}}
     @php
         $manifestPath = public_path('build/manifest.json');
@@ -60,7 +60,7 @@
         <link rel="stylesheet" href="{{ asset('build/' . $appCss) }}">
     @endif
 
-    @if ($chatCss)
+    @if (!request()->routeIs('inbox') && $chatCss)
         <link rel="stylesheet" href="{{ asset('build/' . $chatCss) }}">
     @endif
 
