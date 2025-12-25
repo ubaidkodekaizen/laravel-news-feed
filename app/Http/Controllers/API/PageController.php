@@ -9,6 +9,8 @@ use App\Models\Service;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 class PageController extends Controller
@@ -117,70 +119,70 @@ class PageController extends Controller
     public function smartSuggestions()
     {
         $authUser = Auth::user();
-        $authCompany = $authUser->company;
+        $suggestions = collect();
 
-        $users = User::with(['company', 'userEducations'])
-            ->where('id', '!=', $authUser->id)
-            ->whereNull('deleted_at')
-            ->get();
+        try {
+            $apiUrl = config('services.muslimlynk.api_url');
+            $apiKey = config('services.muslimlynk.api_key_ai');
+            $userId = $authUser->id;
 
-        $authEducations = $authUser->userEducations;
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-API-Key' => $apiKey,
+            ])->get("{$apiUrl}/muslimlynk-ai-suggestions/{$userId}", [
+                'top_k' => PHP_INT_MAX, // Unlimited - use maximum integer value
+            ]);
 
-        $suggestions = $users->map(function ($user) use ($authUser, $authCompany, $authEducations) {
-            $score = 0;
+            if ($response->successful()) {
+                $data = $response->json();
+                $recommendations = $data['recommendations'] ?? [];
 
-            // 📍 Location match
-            if ($authUser->country && $user->country == $authUser->country)
-                $score += 2;
-            if ($authUser->state && $user->state == $authUser->state)
-                $score += 2;
-            if ($authUser->city && $user->city == $authUser->city)
-                $score += 3;
+                // Extract user IDs from recommendations (preserving order)
+                $userIds = collect($recommendations)->pluck('id')->toArray();
 
-            // 🏢 Industry match
-            if ($authCompany && $user->company && $authCompany->company_industry && $user->company->company_industry) {
-                if (stripos($authCompany->company_industry, $user->company->company_industry) !== false) {
-                    $score += 5;
+                if (!empty($userIds)) {
+                    // Fetch users with their relationships
+                    $users = User::with(['company', 'userEducations'])
+                        ->whereIn('id', $userIds)
+                        ->whereNull('deleted_at')
+                        ->get()
+                        ->keyBy('id');
+
+                    // Transform API recommendations to match existing response format
+                    // Preserve the order from API response
+                    $suggestions = collect($recommendations)->map(function ($recommendation) use ($users) {
+                        $userId = $recommendation['id'];
+                        $user = $users->get($userId);
+
+                        if (!$user) {
+                            return null;
+                        }
+
+                        // Set score attribute to maintain compatibility with existing response
+                        $user->setAttribute('score', (int) ($recommendation['combined_score'] ?? $recommendation['match_score'] ?? 0));
+                        // Add match_reasons attribute
+                        $user->setAttribute('match_reasons', $recommendation['match_reasons'] ?? []);
+
+                        return $user;
+                    })->filter()->values();
                 }
+            } else {
+                Log::warning('Smart suggestions API call failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
             }
+        } catch (\Exception $e) {
+            Log::error('Smart suggestions API error: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+        }
 
-            // 🏢 Company type match
-            if ($authCompany && $user->company && $authCompany->company_business_type == $user->company->company_business_type) {
-                $score += 2;
-            }
-
-            // 👔 Position match
-            if ($authCompany && $user->company && $authCompany->company_position && $user->company->company_position) {
-                if (stripos($authCompany->company_position, $user->company->company_position) !== false) {
-                    $score += 3;
-                }
-            }
-
-            // 🎓 Education match
-            foreach ($authEducations as $edu) {
-                foreach ($user->userEducations as $uEdu) {
-                    if ($edu->college_university && $edu->college_university == $uEdu->college_university) {
-                        $score += 3;
-                    }
-                    if ($edu->degree_diploma && $edu->degree_diploma == $uEdu->degree_diploma) {
-                        $score += 2;
-                    }
-                    if ($edu->year && $uEdu->year && abs((int) $edu->year - (int) $uEdu->year) <= 2) {
-                        $score += 1;
-                    }
-                }
-            }
-
-            return $user->setAttribute('score', $score);
-        })
-            ->sortByDesc('score')
-            ->filter(fn($u) => $u->score > 0)
-            ->values();
-
-        // 👇 Manual pagination for collections
-        $perPage = 10;
+        // 👇 Manual pagination for collections (maintaining same response structure)
+        $perPage = request()->get('per_page', 10);
         $page = request()->get('page', 1);
         $offset = ($page - 1) * $perPage;
+        
         $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
             $suggestions->slice($offset, $perPage)->values(),
             $suggestions->count(),

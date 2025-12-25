@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 class PageController extends Controller
@@ -227,68 +229,65 @@ class PageController extends Controller
     public function smartSuggestion()
     {
         $authUser = Auth::user();
-        $authCompany = $authUser->company;
+        $suggestions = collect();
 
-        // preload userEducations for efficiency
-        $users = User::with(['company', 'userEducations'])
-            ->where('id', '!=', $authUser->id)
-            ->whereNull('deleted_at')
-            ->get();
+        try {
+            $apiUrl = config('services.muslimlynk.api_url');
+            $apiKey = config('services.muslimlynk.api_key_ai');
+            $userId = $authUser->id;
 
-        $authEducations = $authUser->userEducations;
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-API-Key' => $apiKey,
+            ])->get("{$apiUrl}/muslimlynk-ai-suggestions/{$userId}", [
+                'top_k' => 100, // Unlimited - use maximum integer value
+            ]);
 
-        $suggestions = $users->map(function ($user) use ($authUser, $authCompany, $authEducations) {
-            $score = 0;
+            if ($response->successful()) {
+                $data = $response->json();
+                $recommendations = $data['recommendations'] ?? [];
 
-            // 📍 Location
-            if ($authUser->country && $user->country == $authUser->country)
-                $score += 2;
-            if ($authUser->state && $user->state == $authUser->state)
-                $score += 2;
-            if ($authUser->city && $user->city == $authUser->city)
-                $score += 3;
+                // Extract user IDs from recommendations (preserving order)
+                $userIds = collect($recommendations)->pluck('id')->toArray();
 
-            // 🏢 Industry
-            if ($authCompany && $user->company && $authCompany->company_industry && $user->company->company_industry) {
-                if (stripos($authCompany->company_industry, $user->company->company_industry) !== false) {
-                    $score += 5;
+                if (!empty($userIds)) {
+                    // Fetch users with their relationships
+                    $users = User::with(['company', 'userEducations'])
+                        ->whereIn('id', $userIds)
+                        ->whereNull('deleted_at')
+                        ->get()
+                        ->keyBy('id');
+
+                    // Transform API recommendations to match view expectations
+                    // Preserve the order from API response
+                    $suggestions = collect($recommendations)->map(function ($recommendation) use ($users) {
+                        $userId = $recommendation['id'];
+                        $user = $users->get($userId);
+
+                        if (!$user) {
+                            return null;
+                        }
+
+                        return [
+                            'user' => $user,
+                            'company' => $user->company,
+                            'score' => (int) ($recommendation['combined_score'] ?? $recommendation['match_score'] ?? 0),
+                            'match_reasons' => $recommendation['match_reasons'] ?? [],
+                        ];
+                    })->filter()->values();
                 }
+            } else {
+                Log::warning('Smart suggestions API call failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
             }
-
-            // 🏢 Company type
-            if ($authCompany && $user->company && $authCompany->company_business_type == $user->company->company_business_type) {
-                $score += 2;
-            }
-
-            // 👔 Role
-            if ($authCompany && $user->company && $authCompany->company_position && $user->company->company_position) {
-                if (stripos($authCompany->company_position, $user->company->company_position) !== false) {
-                    $score += 3;
-                }
-            }
-
-            // 🎓 Education
-            foreach ($authEducations as $edu) {
-                foreach ($user->userEducations as $uEdu) {
-                    if ($edu->college_university && $edu->college_university == $uEdu->college_university) {
-                        $score += 3; // same uni
-                    }
-                    if ($edu->degree_diploma && $edu->degree_diploma == $uEdu->degree_diploma) {
-                        $score += 2; // same degree
-                    }
-                    if ($edu->year && $uEdu->year && abs((int) $edu->year - (int) $uEdu->year) <= 2) {
-                        $score += 1; // same grad year range
-                    }
-                }
-            }
-
-            return [
-                'user' => $user,
-                'company' => $user->company,
-                'score' => $score,
-            ];
-        })->sortByDesc('score')->filter(fn($s) => $s['score'] > 0)->values();
-
+        } catch (\Exception $e) {
+            Log::error('Smart suggestions API error: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+        }
+      
         return view('user.smart-suggestion', compact('suggestions'));
     }
 }
