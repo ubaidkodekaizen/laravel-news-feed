@@ -1,11 +1,12 @@
 // resources/js/components/InboxPage.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { Search, MoreVertical } from "lucide-react";
+import { Search, MoreVertical, ArrowLeft } from "lucide-react";
 import InboxMessageList from "./InboxMessageList.jsx";
 import InboxMessageInput from "./InboxMessageInput.jsx";
 import { format } from "date-fns";
 
 const InboxPage = () => {
+    const isMobile = () => window.innerWidth <= 768;
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
     const [activeConversation, setActiveConversation] = useState(null);
@@ -16,6 +17,7 @@ const InboxPage = () => {
     const messagesEndRef = useRef(null);
     const messageChannelRef = useRef(null);
     const typingChannelRef = useRef(null);
+    const [sidebarActive, setSidebarActive] = useState(isMobile());
     const token = localStorage.getItem("sanctum-token");
     const activeConversationRef = useRef(null);
     const DEFAULT_AVATAR =
@@ -24,6 +26,21 @@ const InboxPage = () => {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+
+     // Handle window resize to reset sidebar state
+    useEffect(() => {
+        const handleResize = () => {
+            if (!isMobile()) {
+                setSidebarActive(false); // Reset on desktop
+            } else if (!activeConversation) {
+                setSidebarActive(true); // Show sidebar on mobile if no active conversation
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [activeConversation]);
+
 
     // Update the ref whenever activeConversation changes
     useEffect(() => {
@@ -198,8 +215,17 @@ const InboxPage = () => {
     const handleConversationClick = async (conversation) => {
         console.log("Inbox - Conversation clicked:", conversation.id);
         setActiveConversation(conversation.id);
+         if (isMobile()) {
+            setSidebarActive(false);
+        }
         await fetchMessages(conversation.id);
         await fetchUserDetails(conversation.id);
+    };
+
+   const handleBackClick = () => {
+        setSidebarActive(true);
+        setActiveConversation(null);
+        setActiveUser(null);
     };
 
     const sendMessage = async (messageContent) => {
@@ -305,7 +331,7 @@ const InboxPage = () => {
 
     return (
         <div className="inbox-container">
-            <div className="inbox-sidebar">
+            <div className={`inbox-sidebar ${sidebarActive ? "active" : ""}`}>
                 <div className="inbox-sidebar-header">
                     <h2>Messages</h2>
                 </div>
@@ -430,7 +456,13 @@ const InboxPage = () => {
                             </div>
 
                             <div className="inbox-main-header-actions">
-                                {/* Optional actions */}
+                                <button
+                                    onClick={handleBackClick}
+                                    className="back-button"
+                                >
+                                    <ArrowLeft size={20} />
+                                    <span>Back</span>
+                                </button>
                             </div>
                         </div>
 

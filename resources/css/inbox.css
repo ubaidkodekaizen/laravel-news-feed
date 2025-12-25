@@ -637,18 +637,54 @@
     background: #273572;
     color: #fff;
 }
+
+.back-button {
+    display: none; /* Hide on desktop */
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #273572;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.back-button:hover {
+    background: #f5f5f5;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .inbox-container {
         flex-direction: column;
     }
 
-    .inbox-sidebar {
-        width: 100%;
-        max-height: 50vh;
+    .inbox-main {
+        flex: 1;
     }
 
+    .inbox-sidebar {
+        display: none;
+    }
     .inbox-main {
+        margin: 24px 20px 30px 20px;
+        max-width: 95%;
+    }
+    .inbox-sidebar.active {
+        display: block;
+        position: fixed;
+        top: 109px;
+        height: calc(100vh - 109px);
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .back-button {
+        display: flex; /* Show on mobile */
+    }
+    .messageBoxListItemContent {
         flex: 1;
     }
 }
