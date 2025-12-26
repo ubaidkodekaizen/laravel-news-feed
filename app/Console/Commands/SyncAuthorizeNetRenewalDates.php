@@ -33,7 +33,8 @@ class SyncAuthorizeNetRenewalDates extends Command
         $this->info('Starting to sync renewal dates from Authorize.Net...');
 
         // Get all active subscriptions with platform = 'Web'
-        $webSubscriptions = Subscription::where('platform', 'Web')
+        $webSubscriptions = Subscription::with('user')
+            ->where('platform', 'Web')
             ->where('status', 'active')
             ->whereNotNull('transaction_id')
             ->get();
@@ -53,6 +54,7 @@ class SyncAuthorizeNetRenewalDates extends Command
         $errorCount = 0;
         $cancelledCount = 0;
         $alreadyUpToDateCount = 0;
+        $invalidIdCount = 0;
 
         foreach ($webSubscriptions as $subscription) {
             try {
@@ -141,8 +143,22 @@ class SyncAuthorizeNetRenewalDates extends Command
                 } else {
                     $errorMessages = $response->getMessages()->getMessage();
                     $errorMessage = isset($errorMessages[0]) ? $errorMessages[0]->getText() : 'Unknown error';
-                    $this->error("Failed to get subscription status for ID {$subscription->id}: {$errorMessage}");
-                    $errorCount++;
+                    
+                    // Check if the error is due to invalid subscription ID
+                    if (stripos($errorMessage, 'invalid') !== false || stripos($errorMessage, 'not found') !== false) {
+                        // Mark subscription as cancelled since the ID is invalid
+                        $userEmail = $subscription->user ? $subscription->user->email : 'N/A';
+                        $this->warn("Subscription ID {$subscription->id} (User: {$userEmail}, Transaction ID: {$subscription->transaction_id}) has invalid Authorize.Net subscription ID - marking as cancelled");
+                        
+                        $subscription->status = 'cancelled';
+                        $subscription->save();
+                        $this->updateUserPaidStatus($subscription->user_id);
+                        $invalidIdCount++;
+                        $cancelledCount++;
+                    } else {
+                        $this->error("Failed to get subscription status for ID {$subscription->id}: {$errorMessage}");
+                        $errorCount++;
+                    }
                 }
             } catch (\Exception $e) {
                 $this->error("Error processing subscription ID {$subscription->id}: " . $e->getMessage());
@@ -150,7 +166,7 @@ class SyncAuthorizeNetRenewalDates extends Command
             }
         }
 
-        $this->info("Sync completed. Updated: {$updatedCount}, Cancelled: {$cancelledCount}, Already up-to-date: {$alreadyUpToDateCount}, Errors: {$errorCount}");
+        $this->info("Sync completed. Updated: {$updatedCount}, Cancelled: {$cancelledCount} (including {$invalidIdCount} with invalid IDs), Already up-to-date: {$alreadyUpToDateCount}, Errors: {$errorCount}");
         return 0;
     }
 
