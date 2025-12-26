@@ -831,7 +831,7 @@ $companyLogo =
                                                 <div class="company_experience">
                                                     <div><span><i class="fa-solid fa-money-bill-trend-up"></i></span></div>
                                                     <div data-kr-tooltip="true" title="Revenue">
-                                                        ${{ number_format((float) $company->company_revenue, 0, '.', ',') }}
+                                                        {{ \App\Helpers\DropDownHelper::formatRevenueForDisplay($company->company_revenue) }}
                                                     </div>
                                                 </div>
                                             @endif
@@ -840,7 +840,7 @@ $companyLogo =
                                                 <div class="company_experience">
                                                     <div><span><i class="fa-solid fa-people-group"></i></span></div>
                                                     <div data-kr-tooltip="true" title="Number of Employees">
-                                                        {{ number_format((int) $company->company_no_of_employee) }}
+                                                        {{ \App\Helpers\DropDownHelper::formatEmployeeSizeForDisplay($company->company_no_of_employee) }}
                                                     </div>
                                                 </div>
                                             @endif
