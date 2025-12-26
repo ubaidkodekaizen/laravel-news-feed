@@ -1019,10 +1019,32 @@
 
                                                 </div>
                                                 <div class="avatar-preview">
+                                                    @php
+                                                        $companyLogoPreview = null;
+
+                                                        if (isset($company) && $company->company_logo) {
+                                                            // Check if the file exists in storage
+                                                            if (
+                                                                \Illuminate\Support\Facades\Storage::exists(
+                                                                    $company->company_logo,
+                                                                )
+                                                            ) {
+                                                                $companyLogoPreview = asset(
+                                                                    'storage/' . $company->company_logo,
+                                                                );
+                                                            }
+                                                        }
+
+                                                        // Fallback placeholder if logo doesn't exist
+$companyLogoPreview =
+    $companyLogoPreview ??
+    asset('assets/images/servicePlaceholderImg.png');
+                                                    @endphp
+
                                                     <div id="imagePreviewCompany">
-                                                        <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : '/assets/images/servicePlaceholderImg.png' }}"
-                                                            alt="">
+                                                        <img src="{{ $companyLogoPreview }}" alt="Company Logo Preview">
                                                     </div>
+
                                                 </div>
                                             </div>
                                             <button type="button" class="profile_pic_btn companyProfilePicBtn">
