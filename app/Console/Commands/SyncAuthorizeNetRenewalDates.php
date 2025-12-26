@@ -71,7 +71,16 @@ class SyncAuthorizeNetRenewalDates extends Command
                     
                     // Handle different Authorize.Net subscription statuses
                     if ($anetStatus === 'active') {
-                        // Active: Processing normally - calculate and update renewal date
+                        // Active: Processing normally - ensure status is active in DB
+                        $needsSave = false;
+                        $oldStatus = $subscription->status;
+                        if ($subscription->status !== 'active') {
+                            $subscription->status = 'active';
+                            $needsSave = true;
+                            $this->info("Subscription ID {$subscription->id} - status updated to 'active' (was: {$oldStatus})");
+                        }
+                        
+                        // Calculate and update renewal date
                         $startDate = Carbon::parse($subscription->start_date);
                         $now = Carbon::now();
                         
@@ -91,17 +100,29 @@ class SyncAuthorizeNetRenewalDates extends Command
                             }
                         }
                         
+                        // Check if current renewal date is in the past
+                        $currentRenewalDate = $subscription->renewal_date ? Carbon::parse($subscription->renewal_date) : null;
+                        if ($currentRenewalDate && $currentRenewalDate->isPast()) {
+                            $this->warn("Subscription ID {$subscription->id} - renewal date ({$subscription->renewal_date}) is in the past, updating to {$nextBillingDate->format('Y-m-d')}");
+                        }
+                        
                         // Only update if the date is different
                         if ($subscription->renewal_date != $nextBillingDate->format('Y-m-d')) {
                             $oldDate = $subscription->renewal_date;
                             $subscription->renewal_date = $nextBillingDate->format('Y-m-d');
-                            $subscription->save();
+                            $needsSave = true;
                             
                             $updatedCount++;
                             $this->info("Updated subscription ID {$subscription->id} - Renewal date: {$oldDate} → {$subscription->renewal_date}");
                         } else {
                             $alreadyUpToDateCount++;
                             $this->line("Subscription ID {$subscription->id} - renewal date already up to date");
+                        }
+                        
+                        // Save if any changes were made
+                        if ($needsSave) {
+                            $subscription->save();
+                            $this->updateUserPaidStatus($subscription->user_id);
                         }
                     } elseif ($anetStatus === 'suspended') {
                         // Suspended: Payment issue, needs merchant action
