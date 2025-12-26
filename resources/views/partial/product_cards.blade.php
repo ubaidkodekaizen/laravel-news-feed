@@ -1,14 +1,13 @@
 @forelse ($products as $product)
     <div class="col-lg-4 mb-3">
-        <div class="card product-trigger-wrapper" data-id="{{ $product->user->id }}"
-            data-title="{{ $product->title }}" data-description="{{ $product->short_description }}"
+        <div class="card product-trigger-wrapper" data-id="{{ $product->user->id }}" data-title="{{ $product->title }}"
+            data-description="{{ $product->short_description }}"
             data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'assets/images/servicePlaceholderImg.png' }}"
             data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
             data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
             data-user-name="{{ $product->user->first_name }}"
             data-user-photo="{{ $product->user_has_photo ? asset('storage/' . $product->user->photo) : '' }}"
-            data-user-initials="{{ $product->user_initials }}"
-            data-date="{{ $product->created_at->format('d M Y') }}">
+            data-user-initials="{{ $product->user_initials }}" data-date="{{ $product->created_at->format('d M Y') }}">
 
             <div class="event_slider_img_box">
                 <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'assets/images/servicePlaceholderImg.png' }}"
@@ -53,8 +52,10 @@
                         </div>
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="view-more direct-message-btn w-100"
-                    data-receiver-id="{{ $product->user->id }}">Message Now</a>
+                @if (Auth::id() !== $product->user->id)
+                    <a href="javascript:void(0)" class="view-more direct-message-btn w-100"
+                        data-receiver-id="{{ $product->user->id }}">Message Now</a>
+                @endif
             </div>
         </div>
     </div>

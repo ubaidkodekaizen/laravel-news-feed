@@ -463,7 +463,7 @@
         }
 
         /* .col-lg-3 {
-                                                                 flex: 0 0 20%;} */
+                                                                     flex: 0 0 20%;} */
 
         .profile-details .location {
             font-size: 20.92px;
@@ -1003,14 +1003,15 @@ $companyLogo =
                                                     {{ collect([$user->city, $user->county, $user->state, $user->country])->filter()->implode(', ') }}
                                                 </p>
 
-
-                                                <div class="mt-3">
-                                                    <a href="javascript:void(0)"
-                                                        class="btn btn-secondary direct-message-btn"
-                                                        data-receiver-id="{{ $user->id }}">
-                                                        Direct Message
-                                                    </a>
-                                                </div>
+                                                @if (Auth::id() !== $user->id)
+                                                    <div class="mt-3">
+                                                        <a href="javascript:void(0)"
+                                                            class="btn btn-secondary direct-message-btn"
+                                                            data-receiver-id="{{ $user->id }}">
+                                                            Direct Message
+                                                        </a>
+                                                    </div>
+                                                @endif
                                             </div>
 
                                         </div>

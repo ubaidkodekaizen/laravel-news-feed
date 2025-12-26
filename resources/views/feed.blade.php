@@ -396,9 +396,10 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <button class="sliderUserMessageBtn view-more direct-message-btn"
-                                    data-receiver-id="{{ $product->user->id }}">Message now</button>
+                                @if (Auth::id() !== $product->user->id)
+                                    <button class="sliderUserMessageBtn view-more direct-message-btn"
+                                        data-receiver-id="{{ $product->user->id }}">Message now</button>
+                                @endif
 
                             </div>
                             <div class="productSliderSecInnerCol">
@@ -551,10 +552,12 @@
                                         {{ $service->short_description }}
                                     </p>
 
-                                    <button class="message-btn direct-message-btn"
-                                        data-receiver-id="{{ $service->user->id }}">
-                                        Message Now
-                                    </button>
+                                    @if (Auth::id() !== $service->user->id)
+                                        <button class="message-btn direct-message-btn"
+                                            data-receiver-id="{{ $service->user->id }}">
+                                            Message Now
+                                        </button>
+                                    @endif
 
 
                                     <div class="author-info">
@@ -971,6 +974,9 @@ Best Regards,
         });
     </script>
     <script>
+        window.AUTH_USER_ID = {{ Auth::id() ?? 'null' }};
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('productModal');
             const bsModal = new bootstrap.Modal(modal);
@@ -992,6 +998,17 @@ Best Regards,
                 modal.querySelector('#productModalDate').textContent = "Posted on " + wrapper.dataset.date;
                 modal.querySelector('.direct-message-btn').setAttribute('data-receiver-id', wrapper.dataset
                     .id);
+
+                const receiverId = wrapper.dataset.id;
+                // hide button if it's the same user
+                if (window.AUTH_USER_ID && parseInt(window.AUTH_USER_ID) === parseInt(receiverId)) {
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'none';
+                } else {
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'inline-flex'; // or 'block' based on your CSS
+                }
+
 
                 // Handle user photo or initials
                 const userPhotoElement = modal.querySelector('#productModalUserPhoto');

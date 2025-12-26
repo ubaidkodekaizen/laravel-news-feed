@@ -4,8 +4,7 @@
             data-description="{{ $service->short_description }}"
             data-image="{{ $service->service_image ? asset('storage/' . $service->service_image) : 'assets/images/servicePlaceholderImg.png' }}"
             data-price="{{ $service->discounted_price && $service->discounted_price < $service->original_price ? '$' . $service->discounted_price . ' (was $' . $service->original_price . ')' : '$' . $service->original_price }}"
-            data-quantity="{{ $service->duration }}"
-            data-user-name="{{ $service->user->first_name }}"
+            data-quantity="{{ $service->duration }}" data-user-name="{{ $service->user->first_name }}"
             data-user-photo="{{ $service->user_has_photo ? asset('storage/' . $service->user->photo) : '' }}"
             data-user-initials="{{ $service->user_initials }}" data-date="{{ $service->created_at->format('d M Y') }}">
             <div class="card-header p-0 border-0 service_slider_img_box">
@@ -57,8 +56,10 @@
 
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100"
-                    data-receiver-id="{{ $service->user->id }}">Message Now</a>
+                @if (Auth::id() !== $service->user->id)
+                    <a href="javascript:void(0)" class="btn btn-primary direct-message-btn w-100"
+                        data-receiver-id="{{ $service->user->id }}">Message Now</a>
+                @endif
 
             </div>
         </div>
