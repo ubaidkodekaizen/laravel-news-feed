@@ -1,4 +1,55 @@
 @extends('admin.layouts.main')
+<style>
+    .profile_pic {
+        justify-self: center;
+        margin-top: 40px !important;
+    }
+
+    .user_company_profile .new_user_details .profile_heading {
+        font-family: Inter;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 122% !important; 
+        color: #273572;
+        margin: 0px 0px 32px 0;
+    }
+
+    .row {
+        background: #27357205;
+        border: 2px solid #e9ebf0;
+        padding: 32px 37px 32px 37px;
+        border-radius: 10.66px;
+        margin-top: 30px !important;
+    }
+
+    .user_company_profile .new_user_details label:not(.form-check-label) {
+        margin: 20px 0 10px !important;
+    }
+
+    .new_user_details .form-control,
+    .new_user_details .form-select {
+        border-radius: 9.77px;
+        border: 2px solid #E9EBF0;
+        padding: 19px 16px;
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 120% !important;
+        color: #000;
+    }
+
+    .btn-primary {
+        border-radius: 9.77px !important;
+        padding: 15px 56px !important;
+        font-family: "Poppins", sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 22px !important;
+        line-height: 100% !important;
+        letter-spacing: 0px !important;
+        text-align: center !important;
+        margin: 0 0 0 0;
+    }
+</style>
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />
 
@@ -36,7 +87,7 @@
                                     id="user_details">
                                     @csrf
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-12 mb-5">
                                             <h1 class="profile_heading text-center">
                                                 Personal Information
                                             </h1>

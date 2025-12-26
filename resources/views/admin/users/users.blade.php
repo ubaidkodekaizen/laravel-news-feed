@@ -65,7 +65,7 @@
         font-family: 'Inter';
         border: 1px solid #E9EBF0 !important;
         border-radius: 10.66px !important;
-        padding: 16px 15px !important;
+        padding: 16px 15px !important; 
         background-color: transparent;
         transition: background-color 0.2s ease;
     }
@@ -76,6 +76,25 @@
 
     div#usersTable_filter {
         position: relative;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter label,
+    div.dataTables_wrapper div.dataTables_length label {
+        font-family: 'Poppins';
+        font-size: 18px;
+    }
+
+    .col-sm-12.col-md-6 {
+        align-content: center;
+    }
+
+    a.btn.btn-primary.btn-sm,
+    a.btn.btn-warning.btn-sm,
+    table.dataTable td form button {
+        font-family: 'Poppins';
+        font-size: 14px;
+        padding: 8px 18px;
+        border-radius: 14px;
     }
 
     div#usersTable_filter label::after {
@@ -146,6 +165,45 @@
         height: 100px;
         text-wrap-mode: nowrap;
         box-shadow: none !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_info {
+        font-size: 17.33px;
+        color: #696969;
+        font-family: "Inter", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-weight: 300;
+    }
+
+    .pagination .page-item:first-child .page-link, 
+    .pagination .page-item:last-child .page-link {
+        border: none;
+        background: #FFFFFF;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        background-color: transparent;
+        border-color: #dee2e6;
+        color: #6c757d;
+    }
+
+    .pagination .page-link {
+        color: #696969;
+        padding: 10.83px 15.83px;
+        margin: 0 2px;
+        border-radius: 10.67px;
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 17.33px;
+        line-height: 100%;
+        border: 1.33px solid #E1E0E0;
+    }
+
+    .pagination .page-item.active .page-link {
+        border: 1.33px solid #37488E;
+        background: #37488E14;
+        color:  #37488E;
     }
 </style>
 @section('content')
