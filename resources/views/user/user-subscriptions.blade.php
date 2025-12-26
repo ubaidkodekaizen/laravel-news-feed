@@ -5,7 +5,7 @@
     <style>
         .subscriptionBoxRow {
             display: flex;
-            align-items: center;
+            align-items: start;
             justify-content: center;
             gap: 20px;
         }
@@ -13,6 +13,7 @@
         .subscriptionBoxCol {
             width: 100%;
             max-width: 50%;
+
         }
 
         #subscriptionSec .subscriptionBox {
@@ -25,7 +26,8 @@
         }
 
         #subscriptionSec .subscriptionBox.inactive {
-            background: #E9EBF0;
+
+            background-image: linear-gradient(#e9ebf0d1, #e9ebf0eb), url("{{ asset('assets/images/pricingSecComponent.png') }}");
         }
 
         #subscriptionSec .subscriptionBox h6 {
@@ -35,7 +37,7 @@
             line-height: 140%;
             letter-spacing: 0px;
 
-            color: #848484;
+            color: #333;
         }
 
 
@@ -55,7 +57,7 @@
             font-size: 18px;
             line-height: 140%;
             letter-spacing: 0px;
-            color: #848484;
+            color: #333;
             margin: 0 0 20px 0;
         }
 
@@ -69,13 +71,16 @@
             font-size: 18px;
             line-height: 140%;
             letter-spacing: 0px;
-            color: #848484;
+            color: #333;
             list-style: none;
             margin: 0px 0px 5px 0;
         }
 
         #subscriptionSec .subscriptionBox ul li img {
-            filter: grayscale(1);
+            filter: invert(1) brightness(0);
+            border: 1px solid #333;
+            border-radius: 50%;
+            padding: 5px;
         }
 
         #subscriptionSec .subscriptionBox ul li span {
@@ -86,7 +91,7 @@
             text-decoration: none;
             background: #848484;
             font-family: "Inter", sans-serif;
-            font-weight: 500;
+            font-weight: 700;
             font-size: 18px;
             line-height: 140%;
             letter-spacing: 0px;
@@ -111,7 +116,8 @@
         }
 
         #subscriptionSec .subscriptionBox.blue-active {
-            background: #273572;
+            /* background: #273572; */
+            background-image: linear-gradient(#000000c7, #213baed1), url("{{ asset('assets/images/pricingSecComponent.png') }}");
         }
 
         #subscriptionSec .subscriptionBox.active h6 {
@@ -133,6 +139,7 @@
 
         #subscriptionSec .subscriptionBox.blue-active a {
             background: #B8C034;
+            color: #333;
             transition: .3s;
             cursor: default;
         }
@@ -143,7 +150,7 @@
         }
 
         #subscriptionSec .subscriptionBox.inactive a {
-            background: #848484;
+            background: #273572;
         }
 
         #subscriptionSec .subscriptionBox.active p {
@@ -168,6 +175,9 @@
 
         #subscriptionSec .subscriptionBox.blue-active ul li img {
             filter: unset;
+            border: 1px solid #b8c035;
+            border-radius: 50%;
+            padding: 5px;
         }
 
         #subscriptionSec .subscriptionBox.active a:hover {
@@ -179,53 +189,34 @@
         #subscriptionSec .subscriptionBox .renewal-date {
             font-family: "Inter", sans-serif;
             font-weight: 400;
-            font-size: 14px;
+            font-size: 18px;
             line-height: 140%;
             letter-spacing: 0px;
-            color: #848484;
-            margin: 8px 0 6px 0;
-            padding: 0;
-            text-align: left;
+            color: #fff;
+            margin: 0 0 10px 0;
         }
 
-        #subscriptionSec .subscriptionBox.blue-active .renewal-date {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        #subscriptionSec .subscriptionBox .renewal-date-label {
-            font-weight: 500;
-            margin-right: 6px;
-        }
-
-        #subscriptionSec .subscriptionBox .renewal-date-value {
-            font-weight: 600;
+        #subscriptionSec .subscriptionBox .renewal-date .renewal-date-label {
+            font-weight: 700;
+            color: #b8c035;
         }
 
         #subscriptionSec .subscriptionBox .platform-info {
             font-family: "Inter", sans-serif;
             font-weight: 400;
-            font-size: 14px;
+            font-size: 18px;
             line-height: 140%;
             letter-spacing: 0px;
-            color: #848484;
-            margin: 0 0 16px 0;
-            padding: 0;
-            text-align: left;
+            color: #fff;
+            margin: 0 0 20px 0;
         }
 
-        #subscriptionSec .subscriptionBox.blue-active .platform-info {
-            color: rgba(255, 255, 255, 0.9);
+        #subscriptionSec .subscriptionBox .platform-info .platform-label {
+            font-weight: 700;
+            color: #b8c035;
         }
 
-        #subscriptionSec .subscriptionBox .platform-label {
-            font-weight: 500;
-            margin-right: 6px;
-        }
 
-        #subscriptionSec .subscriptionBox .platform-value {
-            font-weight: 600;
-            text-transform: capitalize;
-        }
 
         #subscriptionSec .subscriptionSecHeading {
             border-radius: 0;
@@ -236,6 +227,46 @@
             margin: 0px 0px 30px 0;
         }
 
+        .swal2-popup.swal2-modal.swal2-icon-info.swal2-show {
+            max-width: 700px;
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        h2#swal2-title {
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            font-size: 34px;
+            line-height: 140%;
+            letter-spacing: 0px;
+            color: #b8c035;
+        }
+
+        div#swal2-html-container {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 140%;
+            letter-spacing: 0px;
+            color: #333;
+            margin: 0 0 0px 0;
+        }
+
+        .swal2-actions {
+            width: 94%;
+        }
+
+        div:where(.swal2-icon).swal2-info {
+            border-color: #878787;
+            color: #878787;
+        }
+
+        button.swal2-confirm.swal2-styled {
+            width: 100%;
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+
         @media(max-width: 768px) {
             .subscriptionBoxRow {
                 flex-direction: column;
@@ -244,6 +275,14 @@
             .subscriptionBoxCol {
                 width: 100%;
                 max-width: 100%;
+            }
+
+            h2#swal2-title {
+                font-size: 18px;
+            }
+
+            div#swal2-html-container {
+                font-size: 14px;
             }
         }
     </style>
@@ -281,13 +320,14 @@
                 <h4>Premium Monthly</h4>
                 <div class="subscriptionBox {{ $isMonthlyActive ? 'blue-active' : 'inactive' }}">
                     <h6>$4.99 / month</h6>
-                    @if($isMonthlyActive && $renewalDate)
+                    @if ($isMonthlyActive && $renewalDate)
                         <div class="renewal-date">
                             <span class="renewal-date-label">Renews on:</span>
-                            <span class="renewal-date-value">{{ \Carbon\Carbon::parse($renewalDate)->format('F d, Y') }}</span>
+                            <span
+                                class="renewal-date-value">{{ \Carbon\Carbon::parse($renewalDate)->format('F d, Y') }}</span>
                         </div>
                     @endif
-                    @if($isMonthlyActive && $platform)
+                    @if ($isMonthlyActive && $platform)
                         <div class="platform-info">
                             <span class="platform-label">Platform:</span>
                             <span class="platform-value">{{ ucfirst($platform) }}</span>
@@ -313,12 +353,14 @@
                         </li>
                     </ul>
 
-                    @if($isMonthlyActive)
+                    @if ($isMonthlyActive)
                         <a href="javascript:void(0);" style="pointer-events: none;">Current Active</a>
                     @elseif($isYearlyActive)
-                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $monthlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Change Plan</a>
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $monthlyPlanId]) }}"
+                            class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Change Plan</a>
                     @else
-                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $monthlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Choose Plan</a>
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $monthlyPlanId]) }}"
+                            class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Choose Plan</a>
                     @endif
                 </div>
             </div>
@@ -326,13 +368,14 @@
                 <h4>Premium Yearly</h4>
                 <div class="subscriptionBox {{ $isYearlyActive ? 'blue-active' : 'inactive' }}">
                     <h6>$49.99 / year</h6>
-                    @if($isYearlyActive && $renewalDate)
+                    @if ($isYearlyActive && $renewalDate)
                         <div class="renewal-date">
                             <span class="renewal-date-label">Renews on:</span>
-                            <span class="renewal-date-value">{{ \Carbon\Carbon::parse($renewalDate)->format('F d, Y') }}</span>
+                            <span
+                                class="renewal-date-value">{{ \Carbon\Carbon::parse($renewalDate)->format('F d, Y') }}</span>
                         </div>
                     @endif
-                    @if($isYearlyActive && $platform)
+                    @if ($isYearlyActive && $platform)
                         <div class="platform-info">
                             <span class="platform-label">Platform:</span>
                             <span class="platform-value">{{ ucfirst($platform) }}</span>
@@ -358,12 +401,14 @@
                         </li>
                     </ul>
 
-                    @if($isYearlyActive)
+                    @if ($isYearlyActive)
                         <a href="javascript:void(0);" style="pointer-events: none;">Current Active</a>
                     @elseif($isMonthlyActive)
-                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $yearlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Change Plan</a>
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $yearlyPlanId]) }}"
+                            class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Change Plan</a>
                     @else
-                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $yearlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Choose Plan</a>
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $yearlyPlanId]) }}"
+                            class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Choose Plan</a>
                     @endif
                 </div>
 
@@ -377,20 +422,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const choosePlanLinks = document.querySelectorAll('.choose-plan-link');
-            const activePlatform = '{{ $platform ?? "" }}';
-            
+            const activePlatform = '{{ $platform ?? '' }}';
+
             choosePlanLinks.forEach(function(link) {
                 link.addEventListener('click', function(e) {
-                    if (activePlatform && (activePlatform.toLowerCase() === 'apple' || activePlatform.toLowerCase() === 'google')) {
+                    if (activePlatform && (activePlatform.toLowerCase() === 'apple' ||
+                            activePlatform.toLowerCase() === 'google')) {
                         e.preventDefault();
-                        
-                        const platformDisplay = activePlatform.toLowerCase() === 'apple' ? 'Apple App Store' : 'Google Play Store';
-                        const platformName = activePlatform.toLowerCase() === 'apple' ? 'Apple' : 'Google';
-                        
+
+                        const platformDisplay = activePlatform.toLowerCase() === 'apple' ?
+                            'Apple App Store' : 'Google Play Store';
+                        const platformName = activePlatform.toLowerCase() === 'apple' ? 'Apple' :
+                            'Google';
+
                         Swal.fire({
                             icon: 'info',
                             title: 'Manage Subscription on ' + platformName,
-                            html: 'Your subscription is managed through ' + platformDisplay + '. You cannot subscribe or change your plan here.<br><br>Please go to ' + platformDisplay + ' to manage your subscription.',
+                            html: 'Your subscription is managed through ' +
+                                platformDisplay +
+                                '. You cannot subscribe or change your plan here.<br><br>Please go to ' +
+                                platformDisplay + ' to manage your subscription.',
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#273572'
                         });
