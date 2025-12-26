@@ -1,13 +1,66 @@
+
 @extends('layouts.main')
 
 
 @section('content')
+    <style>
+        .profile-pic .avatar-initials {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background: #394a93;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 34px;
+            letter-spacing: 1px;
+        }
+
+        /* Custom theme called 'custom' */
+        .tippy-box[data-theme~='custom'] {
+            background-color: #fff;
+            font-family: "Inter", sans-serif;
+            font-size: 11.94px;
+            font-weight: 600;
+            color: #273572;
+            border-radius: 6px;
+            padding: 1px 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Optional: change arrow color */
+        .tippy-box[data-theme~='custom'][data-placement^='top']>.tippy-arrow::before {
+            border-top-color: #fff;
+        }
+
+        .tippy-box[data-theme~='custom'][data-placement^='bottom']>.tippy-arrow::before {
+            border-bottom-color: #fff;
+        }
+
+        .tippy-box[data-theme~='custom'][data-placement^='left']>.tippy-arrow::before {
+            border-left-color: #fff;
+        }
+
+        .tippy-box[data-theme~='custom'][data-placement^='right']>.tippy-arrow::before {
+            border-right-color: #fff;
+        }
+    </style>
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css">
+
+
+
+
     <section class="industry_specialist">
         <div class="container">
             <div class="industry-heading text-center mb-5">
                 <span class="subHeading">MuslimLynk</span>
                 <h1>Smart <span>Suggestion</span></h1>
-                <p>Smart Suggestions helps you find members and resources you may want to connect with. It’s a simple way to surface recommendations based on what you’re looking for.</p>
+                <p>Discover meaningful connections powered by AI. Our intelligent matching algorithm analyzes your profile, industry, location, goals, and preferences to recommend the most relevant members for networking, collaboration, and business opportunities.</p>
             </div>
             <div class="row g-3">
 
@@ -16,14 +69,21 @@
                         $user = $suggestion['user'];
                         $company = $suggestion['company'];
                         $education = $user->userEducations->first(); // first education if exists
+                        $matchReasons = $suggestion['match_reasons'] ?? [];
+                        $tooltipTitle = !empty($matchReasons) ? implode('<br>', $matchReasons) : 'No match reasons available';
                     @endphp
 
                     <div class="col-md-4">
                         <div class="industry-profile-card">
                             <div class="profile-pic text-center">
-                                <img id="UserProfileImg" src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://via.placeholder.com/150' }}"
-                                    alt="{{ $user->first_name }} {{ $user->last_name }}'s Profile Picture">
-                                {{-- <img id="UserProfileImg" src="assets/images/user/Rectangle 240648925.png" class="img-fluid"> --}}
+                                @if ($user->user_has_photo)
+                                    <img id="UserProfileImg" src="{{ asset('storage/' . $user->photo) }}"
+                                        alt="{{ $user->first_name }} {{ $user->last_name }}'s Profile Picture">
+                                @else
+                                    <div class="avatar-initials" id="UserProfileImg">
+                                        {{ $user->user_initials }}
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="profile_details mt-3">
@@ -33,16 +93,26 @@
                                     <i class="fas fa-map-marker-alt"></i>
                                     {{ $user->country ?? 'N/A' }}
                                 </p>
-                                <p class="mb-1 userProfileCategory">
-                                    {{ $company->company_industry ?? 'N/A' }}
-                                </p>
+
+
+                                @if ($company && !empty(trim($company->company_industry)))
+                                    <p class="mb-1 userProfileCategory"
+                                        data-tippy-content="{{ e($company->company_industry) }}">
+                                        {{ $company->company_industry }}
+                                    </p>
+                                @endif
+
 
                                 <div class="userInfo">
                                     <div>
 
 
                                         {{-- Match Score with hover tooltip --}}
-                                        <p class="userProfileScore">
+                                        <p class="userProfileScore"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-placement="top"
+                                           data-bs-html="true"
+                                           title="{!! $tooltipTitle !!}">
                                             Match Score: {{ $suggestion['score'] }}
                                         </p>
 
@@ -100,18 +170,23 @@
         </div>
     </section>
 
-    <!-- <section class="lp_footer">
-        <div class="container">
-            <p class="powered_by">
-                Powered By <a href="https://amcob.org/" target="_blank" rel="noopener noreferrer">AMCOB</a>
-            </p>
-        </div>
-    </section> -->
     <div id="footer">
-             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-         </div>
+        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+    </div>
 
+    <!-- Popper (required) -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
 
+    <!-- Tippy -->
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+    <script>
+        tippy('[data-tippy-content]', {
+            animation: 'scale',
+            theme: 'custom',
+            allowHTML: true,
+        });
+    </script>
     <script>
         // ==== CONFIG ====
         const recordsPerPageSelect = document.getElementById("recordsPerPage");

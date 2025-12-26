@@ -13,23 +13,33 @@ function initializeEcho() {
 
   console.log("Initializing Echo with token:", token);
 
+  // Get scheme from env, default to http for local
+  const scheme = import.meta.env.VITE_REVERB_SCHEME || 'http';
+  const useTLS = scheme === 'https';
+
+  console.log("Echo config:", {
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    host: import.meta.env.VITE_REVERB_HOST,
+    port: import.meta.env.VITE_REVERB_PORT,
+    scheme: scheme,
+    useTLS: useTLS
+  });
+
   window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    host: import.meta.env.VITE_REVERB_HOST ,
-    port: import.meta.env.VITE_REVERB_PORT ,
     wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ,
-    wssPort: import.meta.env.VITE_REVERB_PORT ,
-    forceTLS: true,
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+    wssPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+    forceTLS: useTLS,
     disableStats: true,
+    enabledTransports: useTLS ? ['wss'] : ['ws'], // Only use the appropriate transport
     auth: {
       headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-        'Authorization': `Bearer ${token}`,
+        'Authorization': token,
       },
     },
-    enabledTransports: ['ws', 'wss'],
   });
 
   console.log("Echo initialized:", window.Echo);
@@ -45,19 +55,22 @@ function initializeEcho() {
       })
       .leaving((user) => {
         console.log('User left:', user);
+      })
+      .error((error) => {
+        console.error('Presence channel error:', error);
       });
 
-    // Also ping the server every 5 minutes to update last active timestamp
+    // Ping server every 5 minutes
     setInterval(() => {
       fetch(userPing, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-          'Authorization': `Bearer ${token}`
+          'Authorization': token
         }
       }).catch(err => console.warn('Failed to ping server for online status'));
-    }, 5 * 60 * 1000); // Every 5 minutes
+    }, 5 * 60 * 1000);
   }
 }
 
@@ -78,11 +91,8 @@ if (localStorage.getItem("sanctum-token")) {
 window.addEventListener('beforeunload', () => {
   const token = localStorage.getItem("sanctum-token");
   if (token && window.Echo) {
-    // Attempt to leave the presence channel
     try {
       window.Echo.leave('presence-online');
-
-      // Make a synchronous request to mark user offline
       navigator.sendBeacon(userOffline, JSON.stringify({
         token: token
       }));

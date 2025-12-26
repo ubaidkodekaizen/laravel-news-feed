@@ -9,10 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Str;
 use Illuminate\Support\Facades\DB;
+use App\Traits\HasUserPhotoData;
+
 
 class UserController extends Controller
 {
-
+    use HasUserPhotoData;
     public function showRegistrationForm()
     {
         if (Auth::check()) {
@@ -96,6 +98,10 @@ class UserController extends Controller
     public function showUserDetailsForm()
     {
         $user = Auth::user();
+
+        // Add photo data using the trait
+        $this->addPhotoData($user);
+
         $company = Company::where('user_id', $user->id)->first();
         $userIcp = \App\Models\UserIcp::where('user_id', $user->id)->first();
 
@@ -196,6 +202,8 @@ class UserController extends Controller
             ->with('company')
             ->firstOrFail();
 
+        // Use trait to add photo data
+        $this->addPhotoData($user);
 
         return view('user.user-profile', compact('user'));
     }

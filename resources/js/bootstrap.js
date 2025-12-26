@@ -16,12 +16,12 @@ axios.defaults.withCredentials = true; // Required for Sanctum with cookies
 // ✅ Fetch the Sanctum token
 const fetchSanctumToken = async () => {
     try {
-        console.log('Attempting to fetch Sanctum token');
+        // console.log('Attempting to fetch Sanctum token');
 
         const response = await axios.get(userTokenRoute);
         const token = response.data.token;
 
-        console.log('Received raw token:', token);
+        // console.log('Received raw token:', token);
 
         if (token) {
             // Set the token globally in Axios headers
@@ -34,7 +34,7 @@ const fetchSanctumToken = async () => {
             event.newValue = `Bearer ${token}`;
             window.dispatchEvent(event);
 
-            console.log('Token set in Axios from bootstrap.js:', axios.defaults.headers.common['Authorization']);
+            // console.log('Token set in Axios from bootstrap.js:', axios.defaults.headers.common['Authorization']);
           } else {
             console.error('No token received from server');
         }

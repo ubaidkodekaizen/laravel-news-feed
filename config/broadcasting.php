@@ -2,7 +2,7 @@
 
 return [
 
-   'default' => env('BROADCAST_DRIVER', 'reverb'),
+   'default' => env('BROADCAST_CONNECTION', 'reverb'),
 
     'connections' => [
 
@@ -15,7 +15,7 @@ return [
                 'host' => env('REVERB_HOST', 'muslimlynk.com'),
                 'port' => env('REVERB_PORT', 8080),
                 'scheme' => env('REVERB_SCHEME', 'http'),
-                'useTLS' => env('REVERB_USE_TLS', true),
+                // 'useTLS' => env('REVERB_USE_TLS', true),
             ],
         ],
 

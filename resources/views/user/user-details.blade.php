@@ -88,9 +88,6 @@
             justify-content: center;
         }
 
-        /* .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
-                                                            max-width: 180px;
-                                                        } */
 
         .select2-container .select2-selection--single .select2-selection__rendered {
             max-width: 200px;
@@ -579,8 +576,15 @@
                                                 </div>
                                                 <div class="avatar-preview">
                                                     <div id="imagePreview">
-                                                        <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
-                                                            alt="">
+                                                        @if ($user->user_has_photo)
+                                                            <img src="{{ asset('storage/' . $user->photo) }}"
+                                                                alt="">
+                                                        @else
+                                                            <div class="avatar-initials"
+                                                                style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #394a93; color: white; font-size: 34px; font-weight: 600;">
+                                                                {{ $user->user_initials }}
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -1016,7 +1020,7 @@
                                                 </div>
                                                 <div class="avatar-preview">
                                                     <div id="imagePreviewCompany">
-                                                        <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
+                                                        <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : '/assets/images/servicePlaceholderImg.png' }}"
                                                             alt="">
                                                     </div>
                                                 </div>

@@ -10,12 +10,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Message;
-
+use App\Traits\FormatsUserData;
 
 class NewMessageEvent implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels, FormatsUserData;
+
     public $message;
+
     /**
      * Create a new event instance.
      */
@@ -38,9 +40,6 @@ class NewMessageEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
-
-        $photoPath = $this->message->sender->photo;
-        $defaultPath = 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
         return [
             'id' => $this->message->id,
             'conversation_id' => $this->message->conversation_id,
@@ -50,22 +49,12 @@ class NewMessageEvent implements ShouldBroadcast
             'read_at' => $this->message->read_at,
             'created_at' => $this->message->created_at,
             'updated_at' => $this->message->updated_at,
-            'sender' => [
-                'id' => $this->message->sender->id,
-                'first_name' => $this->message->sender->first_name,
-                'last_name' => $this->message->sender->last_name,
-                'email' => $this->message->sender->email,
-                'photo' => $photoPath
-                ? (str_starts_with($photoPath, 'http')
-                    ? $photoPath
-                    : asset('storage/profile_photos/' . basename($photoPath)))
-                : $defaultPath ,
-            ]
+            'sender' => $this->formatUserData($this->message->sender),
         ];
     }
 
     public function broadcastAs()
     {
-        return 'message.new'; // Make sure event name matches
+        return 'message.new';
     }
 }

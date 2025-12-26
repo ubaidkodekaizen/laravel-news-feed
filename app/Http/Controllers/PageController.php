@@ -10,10 +10,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use App\Traits\HasUserPhotoData;
 
 class PageController extends Controller
 {
+
+    use HasUserPhotoData;
+
+
     public function ourCommunity()
     {
         $industries = [
@@ -56,19 +62,34 @@ class PageController extends Controller
 
         $blogs = Blog::orderByDesc('id')->get();
         $events = Event::orderByDesc('id')->get();
-        
+
         // Get only one product per user (latest product for each user)
-        $products = Product::whereHas('user', function ($query) {
-            $query->where('status', 'complete');
-        })
+        $products = Product::with('user')
+            ->whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            })
             ->with('user')
             ->orderByDesc('id')
             ->get()
-            ->groupBy('user_id')
-            ->map(function ($group) {
-                return $group->first();
-            })
-            ->values();
+            ->map(function ($product) {
+                $user = $product->user;
+                $photoPath = $user->photo ?? null;
+
+                // Check if photo exists
+                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+                // Generate initials
+                $initials = strtoupper(
+                    substr($user->first_name, 0, 1) .
+                        substr($user->last_name ?? '', 0, 1)
+                );
+
+                // Add computed properties to the product object
+                $product->user_has_photo = $hasPhoto;
+                $product->user_initials = $initials;
+
+                return $product;
+            });
 
         // Get only one service per user (latest service for each user) - limit to 3
         $services = Service::whereHas('user', function ($query) {
@@ -82,31 +103,66 @@ class PageController extends Controller
                 return $group->first();
             })
             ->values()
-            ->take(3);
+            ->take(3)
+            ->map(function ($service) {
+                $user = $service->user;
+                $photoPath = $user->photo ?? null;
+
+                // Check if photo exists
+                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+                // Generate initials
+                $initials = strtoupper(
+                    substr($user->first_name, 0, 1) .
+                        substr($user->last_name ?? '', 0, 1)
+                );
+
+                // Add computed properties to the service object
+                $service->user_has_photo = $hasPhoto;
+                $service->user_initials = $initials;
+
+                return $service;
+            });
 
         return view('feed', compact('blogs', 'events', 'products', 'services', 'industries'));
     }
 
     public function products(Request $request)
     {
-        $query = Product::whereHas('user', function ($query) {
+        $query = Product::with('user')->whereHas('user', function ($query) {
             $query->where('status', 'complete');
         });
 
+        if ($request->has('search') && $request->search !== null) {
+            $search = $request->search;
+            $query->where('title', 'like', "%$search%");
+        }
+
+        $products = $query->orderByDesc('id')->get()->map(function ($product) {
+            $user = $product->user;
+            $photoPath = $user->photo ?? null;
+
+            // Check if photo exists
+            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+            // Generate initials
+            $initials = strtoupper(
+                substr($user->first_name, 0, 1) .
+                    substr($user->last_name ?? '', 0, 1)
+            );
+
+            // Add computed properties to the product object
+            $product->user_has_photo = $hasPhoto;
+            $product->user_initials = $initials;
+
+            return $product;
+        });
+
         if ($request->ajax()) {
-            if ($request->has('search') && $request->search !== null) {
-                $search = $request->search;
-                $query->where('title', 'like', "%$search%");
-            }
-
-            $products = $query->orderByDesc('id')->get();
-
             return response()->json([
                 'html' => view('partial.product_cards', compact('products'))->render()
             ]);
         }
-
-        $products = $query->orderByDesc('id')->get();
         return view('products', compact('products'));
     }
 
@@ -116,24 +172,41 @@ class PageController extends Controller
         $query = Service::whereHas('user', function ($query) {
             $query->where('status', 'complete');
         });
+
+        if ($request->has('search') && $request->search !== null) {
+            $search = $request->search;
+            $query->where('title', 'like', "%$search%");
+        }
+
+        $services = $query->orderByDesc('id')->get()->map(function ($service) {
+            $user = $service->user;
+            $photoPath = $user->photo ?? null;
+
+            // Check if photo exists
+            $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+
+            // Generate initials
+            $initials = strtoupper(
+                substr($user->first_name, 0, 1) .
+                    substr($user->last_name ?? '', 0, 1)
+            );
+
+            // Add computed properties to the service object
+            $service->user_has_photo = $hasPhoto;
+            $service->user_initials = $initials;
+
+            return $service;
+        });
+
         if ($request->ajax()) {
-            if ($request->has('search') && $request->search !== null) {
-                $search = $request->search;
-                $query->where('title', 'like', "%$search%");
-            }
-
-            $services = $query->orderByDesc('id')->get();
-
             return response()->json([
                 'html' => view('partial.service_cards', compact('services'))->render()
             ]);
         }
-        $services = $query->orderByDesc('id')->get();
+
         return view('services', compact('services'));
     }
-
-
-    public function industryExperts($industry)
+     public function industryExperts($industry)
     {
         $users = User::where('status', 'complete')
             ->whereHas('company', function ($query) use ($industry) {
@@ -152,77 +225,87 @@ class PageController extends Controller
             ->with('company')
             ->get();
 
+        // Add photo data using trait
+        $users = $this->addPhotoDataToCollection($users);
+
         return view('industry', compact('users', 'industry'));
     }
 
     public function smartSuggestion()
     {
         $authUser = Auth::user();
-        $authCompany = $authUser->company;
+        $suggestions = collect();
 
-        // preload userEducations for efficiency
-        $users = User::with(['company', 'userEducations'])
-            ->where('id', '!=', $authUser->id)
-            ->whereNull('deleted_at')
-            ->get();
+        try {
+            $apiUrl = config('services.muslimlynk.api_url');
+            $apiKey = config('services.muslimlynk.api_key_ai');
+            $userId = $authUser->id;
 
-        $authEducations = $authUser->userEducations;
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'X-API-Key' => $apiKey,
+            ])->get("{$apiUrl}/muslimlynk-ai-suggestions/{$userId}", [
+                'top_k' => 100,
+            ]);
 
-        $suggestions = $users->map(function ($user) use ($authUser, $authCompany, $authEducations) {
-            $score = 0;
+            if ($response->successful()) {
+                $data = $response->json();
+                $recommendations = $data['recommendations'] ?? [];
 
-            // 📍 Location
-            if ($authUser->country && $user->country == $authUser->country)
-                $score += 2;
-            if ($authUser->state && $user->state == $authUser->state)
-                $score += 2;
-            if ($authUser->city && $user->city == $authUser->city)
-                $score += 3;
+                // Extract user IDs from recommendations (preserving order)
+                $userIds = collect($recommendations)->pluck('id')->toArray();
 
-            // 🏢 Industry
-            if ($authCompany && $user->company && $authCompany->company_industry && $user->company->company_industry) {
-                if (stripos($authCompany->company_industry, $user->company->company_industry) !== false) {
-                    $score += 5;
-                }
-            }
+                if (!empty($userIds)) {
+                    // Fetch users with their relationships
+                    $users = User::with(['company', 'userEducations'])
+                        ->whereIn('id', $userIds)
+                        ->whereNull('deleted_at')
+                        ->get()
+                        ->keyBy('id');
 
-            // 🏢 Company type
-            if ($authCompany && $user->company && $authCompany->company_business_type == $user->company->company_business_type) {
-                $score += 2;
-            }
+                    // Transform API recommendations to match view expectations
+                    // Preserve the order from API response
+                    $suggestions = collect($recommendations)->map(function ($recommendation) use ($users) {
+                        $userId = $recommendation['id'];
+                        $user = $users->get($userId);
 
-            // 👔 Role
-            if ($authCompany && $user->company && $authCompany->company_position && $user->company->company_position) {
-                if (stripos($authCompany->company_position, $user->company->company_position) !== false) {
-                    $score += 3;
-                }
-            }
+                        if (!$user) {
+                            return null;
+                        }
 
-            // 🎓 Education
-            foreach ($authEducations as $edu) {
-                foreach ($user->userEducations as $uEdu) {
-                    if ($edu->college_university && $edu->college_university == $uEdu->college_university) {
-                        $score += 3; // same uni
+                        return [
+                            'user' => $user,
+                            'company' => $user->company,
+                            'score' => (int) ($recommendation['combined_score'] ?? $recommendation['match_score'] ?? 0),
+                            'match_reasons' => $recommendation['match_reasons'] ?? [],
+                        ];
+                    })->filter()->values();
+
+                    // Add photo data to all users in the suggestions array
+                    $suggestions = $this->addPhotoDataToCollection($suggestions);
+
+                    // Debug: Check if photo data was added
+                    if ($suggestions->isNotEmpty()) {
+                        $firstUser = $suggestions->first()['user'] ?? null;
+                        Log::info('Photo data check', [
+                            'has_photo_property' => isset($firstUser->user_has_photo),
+                            'has_initials_property' => isset($firstUser->user_initials),
+                            'user_attributes' => $firstUser ? array_keys(get_object_vars($firstUser)) : null,
+                        ]);
                     }
-                    if ($edu->degree_diploma && $edu->degree_diploma == $uEdu->degree_diploma) {
-                        $score += 2; // same degree
-                    }
-                    if ($edu->year && $uEdu->year && abs((int) $edu->year - (int) $uEdu->year) <= 2) {
-                        $score += 1; // same grad year range
-                    }
                 }
+            } else {
+                Log::warning('Smart suggestions API call failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
             }
-
-            return [
-                'user' => $user,
-                'company' => $user->company,
-                'score' => $score,
-            ];
-        })->sortByDesc('score')->filter(fn($s) => $s['score'] > 0)->values();
+        } catch (\Exception $e) {
+            Log::error('Smart suggestions API error: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+        }
 
         return view('user.smart-suggestion', compact('suggestions'));
     }
-
-
-
 }

@@ -98,7 +98,18 @@ body {
     object-position: center;
     border-radius: 40px;
 }
-
+.header .profile .avatar-initials-header {
+    width: 48.28px;
+    height: 48.28px;
+    border-radius: 50%;
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
 .header .profile {
     display: flex;
     align-items: center;
@@ -1047,7 +1058,7 @@ div.selected-filter-group {
 }
 
 .userProfileCategory {
-    display: inline;
+    display: inline-block;
     font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -1057,6 +1068,12 @@ div.selected-filter-group {
     color: #273572;
     padding: 7px 16px;
     border-radius: 33px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: max-content;
+    width: 50%;
+    line-height: 1;
 }
 
 .btn_flex {
@@ -1444,6 +1461,7 @@ h2.industriesMainHeading::after {
     font-weight: 500;
     padding: 6px 12px;
     border-radius: 50px;
+    text-wrap-mode: nowrap;
 }
 
 .sliderUserAndPricingInfo .author-info {
@@ -2240,7 +2258,7 @@ p.description {
 }
 
 .toggle__label {
-     display: flex !important;
+    display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     width: 110px;
@@ -2288,7 +2306,7 @@ p.description {
     z-index: 1;
 }
 .toggle__label span {
- color: #fff;
+    color: #fff;
     font-size: 12px;
     width: 100%;
     max-width: 50px;
@@ -4099,7 +4117,10 @@ p.industryProfileRole {
     .profile-pic::before {
         top: 44px;
     }
-
+    .profile-pic .avatar-initials {
+        min-height: 300px;
+        margin: 10px 0 0 0;
+    }
     .industry-profile-card {
         gap: 0px;
     }
