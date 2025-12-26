@@ -1,7 +1,7 @@
 @extends('layouts.dashboard-layout')
 
-
 @section('dashboard-content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css" />
     <style>
         .subscriptionBoxRow {
             display: flex;
@@ -16,12 +16,16 @@
         }
 
         #subscriptionSec .subscriptionBox {
-            background: #2735721f;
+            background: #E9EBF0;
             border-radius: 10px;
 
             padding: 20px 15px 20px 27px;
             width: 100%;
             max-width: 100%;
+        }
+
+        #subscriptionSec .subscriptionBox.inactive {
+            background: #E9EBF0;
         }
 
         #subscriptionSec .subscriptionBox h6 {
@@ -52,6 +56,7 @@
             line-height: 140%;
             letter-spacing: 0px;
             color: #848484;
+            margin: 0 0 20px 0;
         }
 
         #subscriptionSec .subscriptionBox ul {
@@ -105,7 +110,15 @@
             background: #273572;
         }
 
+        #subscriptionSec .subscriptionBox.blue-active {
+            background: #273572;
+        }
+
         #subscriptionSec .subscriptionBox.active h6 {
+            color: #b8c035;
+        }
+
+        #subscriptionSec .subscriptionBox.blue-active h6 {
             color: #b8c035;
         }
 
@@ -118,7 +131,26 @@
             transition: .3s;
         }
 
+        #subscriptionSec .subscriptionBox.blue-active a {
+            background: #B8C034;
+            transition: .3s;
+            cursor: default;
+        }
+
+        #subscriptionSec .subscriptionBox.blue-active a:hover {
+            background: #B8C034;
+            color: #FFFFFF;
+        }
+
+        #subscriptionSec .subscriptionBox.inactive a {
+            background: #848484;
+        }
+
         #subscriptionSec .subscriptionBox.active p {
+            color: #fff;
+        }
+
+        #subscriptionSec .subscriptionBox.blue-active p {
             color: #fff;
         }
 
@@ -126,7 +158,15 @@
             color: #fff;
         }
 
+        #subscriptionSec .subscriptionBox.blue-active ul li {
+            color: #fff;
+        }
+
         #subscriptionSec .subscriptionBox.active ul li img {
+            filter: unset;
+        }
+
+        #subscriptionSec .subscriptionBox.blue-active ul li img {
             filter: unset;
         }
 
@@ -134,6 +174,57 @@
             background: #fff;
             color: #333;
             transition: .3s;
+        }
+
+        #subscriptionSec .subscriptionBox .renewal-date {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 140%;
+            letter-spacing: 0px;
+            color: #848484;
+            margin: 8px 0 6px 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        #subscriptionSec .subscriptionBox.blue-active .renewal-date {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        #subscriptionSec .subscriptionBox .renewal-date-label {
+            font-weight: 500;
+            margin-right: 6px;
+        }
+
+        #subscriptionSec .subscriptionBox .renewal-date-value {
+            font-weight: 600;
+        }
+
+        #subscriptionSec .subscriptionBox .platform-info {
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 140%;
+            letter-spacing: 0px;
+            color: #848484;
+            margin: 0 0 16px 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        #subscriptionSec .subscriptionBox.blue-active .platform-info {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        #subscriptionSec .subscriptionBox .platform-label {
+            font-weight: 500;
+            margin-right: 6px;
+        }
+
+        #subscriptionSec .subscriptionBox .platform-value {
+            font-weight: 600;
+            text-transform: capitalize;
         }
 
         #subscriptionSec .subscriptionSecHeading {
@@ -160,61 +251,120 @@
     <section id="subscriptionSec">
         <h2 class="subscriptionSecHeading">Subscriptions</h2>
 
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
         <div class="subscriptionBoxRow">
-            <div class="subscriptionBoxCol">
+            <div class="subscriptionBoxCol {{ $isMonthlyActive ? 'active' : '' }}">
                 <h4>Premium Monthly</h4>
-                <div class="subscriptionBox active">
+                <div class="subscriptionBox {{ $isMonthlyActive ? 'blue-active' : 'inactive' }}">
                     <h6>$4.99 / month</h6>
-                    <p>Access the full power of the MuslimLynk App and make meaningful connections with ease.</p>
+                    @if($isMonthlyActive && $renewalDate)
+                        <div class="renewal-date">
+                            <span class="renewal-date-label">Renews on:</span>
+                            <span class="renewal-date-value">{{ \Carbon\Carbon::parse($renewalDate)->format('F d, Y') }}</span>
+                        </div>
+                    @endif
+                    @if($isMonthlyActive && $platform)
+                        <div class="platform-info">
+                            <span class="platform-label">Platform:</span>
+                            <span class="platform-value">{{ ucfirst($platform) }}</span>
+                        </div>
+                    @endif
+                    <p>Connect with Muslim professionals, entrepreneurs, and community leaders.</p>
                     <ul>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>Access to all advanced filters</span>
+                            <span>Unlimited connections</span>
                         </li>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>View full user profiles, including contact information</span>
+                            <span>Direct messaging</span>
                         </li>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>In-app messaging to connect directly with other users</span>
+                            <span>Promote products & services</span>
                         </li>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>Add and promote your products and services within the app</span>
+                            <span>Advanced search filters</span>
                         </li>
                     </ul>
 
-                    <a href="{{ route('user.add.subscriptions') }}">Choose Plan</a>
+                    @if($isMonthlyActive)
+                        <a href="javascript:void(0);" style="pointer-events: none;">Current Active</a>
+                    @elseif($isYearlyActive)
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $monthlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Change Plan</a>
+                    @else
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $monthlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Choose Plan</a>
+                    @endif
                 </div>
             </div>
-            <div class="subscriptionBoxCol">
+            <div class="subscriptionBoxCol {{ $isYearlyActive ? 'active' : '' }}">
                 <h4>Premium Yearly</h4>
-                <div class="subscriptionBox">
+                <div class="subscriptionBox {{ $isYearlyActive ? 'blue-active' : 'inactive' }}">
                     <h6>$49.99 / year</h6>
-                    <p>Access the full power of the MuslimLynk App and make meaningful connections with ease.</p>
+                    @if($isYearlyActive && $renewalDate)
+                        <div class="renewal-date">
+                            <span class="renewal-date-label">Renews on:</span>
+                            <span class="renewal-date-value">{{ \Carbon\Carbon::parse($renewalDate)->format('F d, Y') }}</span>
+                        </div>
+                    @endif
+                    @if($isYearlyActive && $platform)
+                        <div class="platform-info">
+                            <span class="platform-label">Platform:</span>
+                            <span class="platform-value">{{ ucfirst($platform) }}</span>
+                        </div>
+                    @endif
+                    <p>Connect with Muslim professionals, entrepreneurs, and community leaders.</p>
                     <ul>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>Access to all advanced filters</span>
+                            <span>Unlimited connections</span>
                         </li>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>View full user profiles, including contact information</span>
+                            <span>Direct messaging</span>
                         </li>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>In-app messaging to connect directly with other users</span>
+                            <span>Promote products & services</span>
                         </li>
                         <li>
                             <img src="{{ asset('assets/images/checkIcon.png') }}" class="img-fluid" alt="">
-                            <span>Add and promote your products and services within the app</span>
+                            <span>Advanced search filters</span>
                         </li>
                     </ul>
 
-                    <a href="{{ route('user.add.subscriptions') }}">Choose Plan</a>
+                    @if($isYearlyActive)
+                        <a href="javascript:void(0);" style="pointer-events: none;">Current Active</a>
+                    @elseif($isMonthlyActive)
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $yearlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Change Plan</a>
+                    @else
+                        <a href="{{ route('user.add.subscriptions', ['plan_id' => $yearlyPlanId]) }}" class="choose-plan-link" data-platform="{{ $platform ?? '' }}">Choose Plan</a>
+                    @endif
                 </div>
 
             </div>
@@ -223,4 +373,30 @@
     </section>
 @endsection
 @section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const choosePlanLinks = document.querySelectorAll('.choose-plan-link');
+            const activePlatform = '{{ $platform ?? "" }}';
+            
+            choosePlanLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    if (activePlatform && (activePlatform.toLowerCase() === 'apple' || activePlatform.toLowerCase() === 'google')) {
+                        e.preventDefault();
+                        
+                        const platformDisplay = activePlatform.toLowerCase() === 'apple' ? 'Apple App Store' : 'Google Play Store';
+                        const platformName = activePlatform.toLowerCase() === 'apple' ? 'Apple' : 'Google';
+                        
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Manage Subscription on ' + platformName,
+                            html: 'Your subscription is managed through ' + platformDisplay + '. You cannot subscribe or change your plan here.<br><br>Please go to ' + platformDisplay + ' to manage your subscription.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#273572'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
