@@ -25,6 +25,8 @@
              href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
              rel="stylesheet">
          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" />
+
+         <link rel="stylesheet" href="{{asset('assets/css/footer.css')}}">
          <style>
              *,
              body {
@@ -32,19 +34,6 @@
                  padding: 0;
                  box-sizing: border-box;
              }
-
-             /* mobile navbar  */
-             /* Existing Navbar Styles */
-
-
-             /* .mainNavbarInner {
-                 display: flex;
-                 justify-content: space-between;
-                 align-items: center;
-                 padding: 15px 30px;
-                 max-width: 1400px;
-                 margin: 0 auto;
-             } */
 
              .mainNavbarBrand img {
                  vertical-align: middle;
@@ -793,19 +782,7 @@
              }
 
 
-             #footer {
-                 background-color: #B8C034;
-             }
 
-             #footer p {
-                 text-align: center;
-                 color: #273572;
-                 font-family: "Inter", Sans-serif;
-                 font-size: 18px;
-                 font-weight: 700;
-                 margin: 0;
-                 padding: 20px 0;
-             }
 
              /* Download Banner css */
              .home_banner_sec {
@@ -1266,9 +1243,7 @@
                      font-size: 16px;
                  }
 
-                 #footer p {
-                     font-size: 16px;
-                 }
+
 
                  .tab-container.active {
                      flex-direction: column;
@@ -1283,9 +1258,7 @@
              }
 
              @media(max-width: 500px) {
-                 #footer p {
-                     font-size: 12px;
-                 }
+
 
                  .homeSec2Head {
                      font-size: 18px;
@@ -2010,9 +1983,8 @@
              </div>
          </div>
 
-         <div id="footer">
-             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-         </div>
+         @include('layouts.home-footer')
+
          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
              integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
          </script>

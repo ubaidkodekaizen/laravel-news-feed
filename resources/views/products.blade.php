@@ -475,6 +475,8 @@
         }
     </style>
 
+    <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}">
+
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
@@ -503,9 +505,8 @@
             </div>
         </div>
     </section>
-    <div id="footer">
-        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-    </div>
+
+    @include('layouts.home-footer')
 
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">
@@ -735,9 +736,11 @@ Best Regards,
                 const receiverId = wrapper.dataset.id;
                 // hide button if it's the same user
                 if (window.AUTH_USER_ID && parseInt(window.AUTH_USER_ID) === parseInt(receiverId)) {
-                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style.display = 'none';
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'none';
                 } else {
-                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style.display = 'inline-flex'; // or 'block' based on your CSS
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'inline-flex'; // or 'block' based on your CSS
                 }
                 // Handle user photo or initials
                 const userPhotoElement = modal.querySelector('#productModalUserPhoto');

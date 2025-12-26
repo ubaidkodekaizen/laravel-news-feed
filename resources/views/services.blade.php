@@ -374,10 +374,6 @@
             overflow: hidden;
         }
 
-        /* #productModalLabel {
-                                    font-size: 18px;
-                                    line-height: 1.3em;
-                                } */
 
         h5.customHeading {
             color: #fff !important;
@@ -431,7 +427,7 @@
 
         }
     </style>
-
+    <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}">
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
@@ -461,9 +457,8 @@
             </div>
         </div>
     </section>
-    <div id="footer">
-        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-    </div>
+
+   @include('layouts.home-footer')
 
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">

@@ -2,6 +2,10 @@
 @section('content')
 
     <style>
+        .feedbackSec {
+            padding: 100px 20px;
+        }
+
         #feedback_form label {
             margin-bottom: .5rem;
             font-family: "Inter", sans-serif;
@@ -56,6 +60,10 @@
             width: 100%;
         }
     </style>
+
+    <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}">
+
+
     <div class="container py-5 feedbackSec">
         <div class="row justify-content-center">
             <div class="col-lg-8">
@@ -121,7 +129,7 @@
                             </div>
 
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary submitBtn">Send Message</button>
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
 
                             </div>
                         </form>
@@ -131,6 +139,8 @@
             </div>
         </div>
     </div>
+
+    @include('layouts.home-footer')
 @endsection
 
 

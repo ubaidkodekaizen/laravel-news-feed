@@ -260,19 +260,7 @@
             color: #fff;
         }
 
-        #footer {
-            background-color: #B8C034;
-        }
 
-        #footer p {
-            text-align: center;
-            color: #273572;
-            font-family: "Inter", Sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0;
-            padding: 20px 0;
-        }
 
         .productSliderSection .container a.viewMoreBtn,
         .articles .container a.viewMoreBtn {
@@ -328,6 +316,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}">
+
 
     <section class="feed_lp">
         <div class="container">
@@ -614,9 +604,7 @@
     </section>
 
 
-    <div id="footer">
-        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-    </div>
+    @include('layouts.home-footer')
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">
         <div class="modal-dialog modal-dialog-centered">
