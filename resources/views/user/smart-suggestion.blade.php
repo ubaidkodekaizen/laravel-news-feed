@@ -1,4 +1,3 @@
-
 @extends('layouts.main')
 
 
@@ -52,7 +51,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css">
 
-
+    <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}">
 
 
     <section class="industry_specialist">
@@ -60,7 +59,9 @@
             <div class="industry-heading text-center mb-5">
                 <span class="subHeading">MuslimLynk</span>
                 <h1>Smart <span>Suggestion</span></h1>
-                <p>Discover meaningful connections powered by AI. Our intelligent matching algorithm analyzes your profile, industry, location, goals, and preferences to recommend the most relevant members for networking, collaboration, and business opportunities.</p>
+                <p>Discover meaningful connections powered by AI. Our intelligent matching algorithm analyzes your profile,
+                    industry, location, goals, and preferences to recommend the most relevant members for networking,
+                    collaboration, and business opportunities.</p>
             </div>
             <div class="row g-3">
 
@@ -70,7 +71,9 @@
                         $company = $suggestion['company'];
                         $education = $user->userEducations->first(); // first education if exists
                         $matchReasons = $suggestion['match_reasons'] ?? [];
-                        $tooltipTitle = !empty($matchReasons) ? implode('<br>', $matchReasons) : 'No match reasons available';
+                        $tooltipTitle = !empty($matchReasons)
+                            ? implode('<br>', $matchReasons)
+                            : 'No match reasons available';
                     @endphp
 
                     <div class="col-md-4">
@@ -108,11 +111,8 @@
 
 
                                         {{-- Match Score with hover tooltip --}}
-                                        <p class="userProfileScore"
-                                           data-bs-toggle="tooltip"
-                                           data-bs-placement="top"
-                                           data-bs-html="true"
-                                           title="{!! $tooltipTitle !!}">
+                                        <p class="userProfileScore" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            data-bs-html="true" title="{!! $tooltipTitle !!}">
                                             Match Score: {{ $suggestion['score'] }}
                                         </p>
 
@@ -170,9 +170,7 @@
         </div>
     </section>
 
-    <div id="footer">
-        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-    </div>
+    @include('layouts.home-footer')
 
     <!-- Popper (required) -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>

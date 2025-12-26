@@ -28,6 +28,7 @@
             margin-bottom: 36px;
             line-height: 150%;
             display: flex;
+            align-items: center;
         }
 
         a {
@@ -37,8 +38,9 @@
         .company_card span i {
             margin-right: 0;
             color: #273572;
-            width: 20px;
-            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .fa-people-group:before {
@@ -54,6 +56,11 @@
             background: #B8C034;
             border-radius: 50%;
             margin-right: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
         }
 
         .event_slider .card,
@@ -456,7 +463,7 @@
         }
 
         /* .col-lg-3 {
-                         flex: 0 0 20%;} */
+                                                                     flex: 0 0 20%;} */
 
         .profile-details .location {
             font-size: 20.92px;
@@ -649,6 +656,49 @@
                 z-index: 99;
                 padding: 0;
             }
+
+            .contact_social_flex {
+                margin: 20px 0 0 0;
+            }
+        }
+
+        @media(max-width: 480px) {
+            .profile-image {
+                width: 100%;
+                height: 400px;
+            }
+
+            .profile-details h1 {
+                text-align: center;
+                font-size: 24px;
+                justify-content: center;
+            }
+
+            .contact_social_flex {
+                justify-content: center;
+            }
+
+            p.mainProfilePosition {
+                text-align: center;
+            }
+
+            .profile-details .location {
+                text-align: center;
+            }
+
+            .direct-message-btn {
+                padding: 8px 20px;
+                width: 100%;
+            }
+
+            .profileInfoMain {
+                padding: 20px 20px;
+            }
+
+            .offeredHeadingMain p {
+                width: 90%;
+            }
+
         }
     </style>
 
@@ -666,68 +716,176 @@
                             <div id="sidebar" class="col-lg-3 sidebar">
                                 <div class="company_card">
                                     <h2 class="generalInfoHeading">Company Info</h2>
+                                    @php
+                                        $companyLogo = null;
+
+                                        if (isset($user->company) && $user->company->company_logo) {
+                                            // Check if file exists in storage
+                                            if (
+                                                \Illuminate\Support\Facades\Storage::exists(
+                                                    $user->company->company_logo,
+                                                )
+                                            ) {
+                                                $companyLogo = asset('storage/' . $user->company->company_logo);
+                                            }
+                                        }
+
+                                        // Fallback image if logo doesn't exist
+$companyLogo =
+    $companyLogo ??
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s';
+                                    @endphp
+
                                     <div class="company_logo">
-                                        <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
-                                            alt="Company Logo" class="logo_img">
+                                        <img src="{{ $companyLogo }}" alt="Company Logo" class="logo_img">
                                     </div>
-                                    <div class="company_card_details">
-                                        @if (!empty($user->company->company_business_type))
-                                            <div class="company_experience">
-                                                <div><span><i class="fa-solid fa-landmark"></i></span></div>
-                                                <div data-kr-tooltip="true" title="Business Type">
-                                                    {{ $user->company->company_business_type }}</div>
-                                            </div>
-                                        @endif
 
-                                        @if (!empty($user->company->company_position))
-                                            <div class="company_position">
-                                                <div> <span><i class="fa-solid fa-user-tie"></i></span></div>
-                                                <div data-kr-tooltip="true" title="Position">
-                                                    {{ $user->company->company_position }}</div>
-                                            </div>
-                                        @endif
+                                    @php
+                                        $company = $user->company ?? null;
+                                    @endphp
 
-                                        @if (!empty($user->company->company_experience))
-                                            <div class="company_experience">
-                                                <div><span><i class="fa-solid fa-business-time"></i></span></div>
-                                                <div data-kr-tooltip="true" title="Experience">
-                                                    {{ $user->company->company_experience }}</div>
-                                            </div>
-                                        @endif
+                                    @if ($company)
+                                        <div class="company_card_details">
 
-                                        @if (!empty($user->company->company_phone))
-                                            <a href="tel:{{ $user->company->company_phone }}">
-                                                <div class="company_contact">
-                                                    <div><span><i class="fa-solid fa-phone"></i></span></div>
-                                                    <div>{{ $user->company->company_phone }}</div>
+                                            @if (!empty($company->company_name))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-warehouse"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Company Name">
+                                                        {{ $company->company_name }}</div>
                                                 </div>
-                                            </a>
-                                        @endif
+                                            @endif
 
-                                        @if (!empty($user->company->company_revenue))
-                                            <div class="company_experience">
-                                                <div><span><i class="fa-solid fa-money-bill-trend-up"></i></span></div>
-                                                <div data-kr-tooltip="true" title="Revenue">
-                                                    ${{ $user->company->company_revenue }}</div>
-                                            </div>
-                                        @endif
+                                            @if (!empty($company->company_business_type))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-landmark"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Business Type">
+                                                        {{ $company->company_business_type }}</div>
+                                                </div>
+                                            @endif
 
-                                        @if (!empty($user->company->company_no_of_employee))
-                                            <div class="company_experience">
-                                                <div><span><i class="fa-solid fa-people-group"></i></span></div>
-                                                <div data-kr-tooltip="true" title="Number of Employees">
-                                                    {{ $user->company->company_no_of_employee }}</div>
-                                            </div>
-                                        @endif
+                                            @if (!empty($company->company_position))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-user-tie"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Position">
+                                                        {{ $company->company_position }}</div>
+                                                </div>
+                                            @endif
 
-                                        @if (!empty($user->company->company_industry))
-                                            <div class="company_experience">
-                                                <div><span><i class="fa-solid fa-industry"></i></span></div>
-                                                <div data-kr-tooltip="true" title="Industry">
-                                                    {{ $user->company->company_industry }}</div>
-                                            </div>
-                                        @endif
-                                    </div>
+                                            @if (!empty($company->company_experience))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-business-time"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Experience">
+                                                        {{ $company->company_experience }}</div>
+                                                </div>
+                                            @endif
+
+                                            @if (!empty($company->company_phone))
+                                                <a href="tel:{{ $company->company_phone }}">
+                                                    <div class="company_experience">
+                                                        <div><span><i class="fa-solid fa-phone"></i></span></div>
+                                                        <div data-kr-tooltip="true" title="Phone">
+                                                            {{ $company->company_phone }}</div>
+                                                    </div>
+                                                </a>
+                                            @endif
+
+                                            @if (!empty($company->company_email))
+                                                <a href="mailto:{{ $company->company_email }}">
+                                                    <div class="company_experience">
+                                                        <div><span><i class="fa-solid fa-envelope"></i></span></div>
+                                                        <div data-kr-tooltip="true" title="Email">
+                                                            {{ $company->company_email }}</div>
+                                                    </div>
+                                                </a>
+                                            @endif
+
+                                            @if (!empty($company->company_web_url))
+                                                @php
+                                                    $web = $company->company_web_url;
+                                                    $web = strpos($web, 'http') === 0 ? $web : 'https://' . $web;
+                                                    $webLabel = preg_replace('#https?://#', '', rtrim($web, '/'));
+                                                @endphp
+                                                <a href="{{ $web }}" target="_blank" rel="noopener noreferrer">
+                                                    <div class="company_experience">
+                                                        <div><span><i class="fa-solid fa-globe"></i></span></div>
+                                                        <div data-kr-tooltip="true" title="Website">{{ $webLabel }}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            @endif
+
+                                            @if (!empty($company->company_linkedin_url))
+                                                @php
+                                                    $ln = $company->company_linkedin_url;
+                                                    $ln = strpos($ln, 'http') === 0 ? $ln : 'https://' . $ln;
+                                                @endphp
+                                                <a href="{{ $ln }}" target="_blank" rel="noopener noreferrer">
+                                                    <div class="company_experience">
+                                                        <div><span><i class="fa-brands fa-linkedin"></i></span></div>
+                                                        <div data-kr-tooltip="true" title="LinkedIn">LinkedIn</div>
+                                                    </div>
+                                                </a>
+                                            @endif
+
+                                            @if (!empty($company->company_revenue))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-money-bill-trend-up"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Revenue">
+                                                        ${{ number_format((float) $company->company_revenue, 0, '.', ',') }}
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            @if (!empty($company->company_no_of_employee))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-people-group"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Number of Employees">
+                                                        {{ number_format((int) $company->company_no_of_employee) }}
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            @if (!empty($company->company_industry))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-industry"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Industry">
+                                                        {{ $company->company_industry }}</div>
+                                                </div>
+                                            @endif
+
+                                            @if (!empty($company->company_sub_category))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-tags"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Sub Category">
+                                                        {{ $company->company_sub_category }}</div>
+                                                </div>
+                                            @endif
+
+                                            {{-- Address assembled smartly but using same structure --}}
+                                            @php
+                                                $addressParts = collect([
+                                                    $company->company_address,
+                                                    $company->company_city,
+                                                    $company->company_county,
+                                                    $company->company_state,
+                                                    $company->company_zip_code,
+                                                    $company->company_country,
+                                                ])
+                                                    ->filter()
+                                                    ->toArray();
+                                                $addressLine = $addressParts ? implode(', ', $addressParts) : null;
+                                            @endphp
+
+                                            @if (!empty($addressLine))
+                                                <div class="company_experience">
+                                                    <div><span><i class="fa-solid fa-location-dot"></i></span></div>
+                                                    <div data-kr-tooltip="true" title="Address">{{ $addressLine }}</div>
+                                                </div>
+                                            @endif
+
+                                        </div>
+                                    @endif
+
 
                                     <h1 class="profile_data profile_heading">
                                         Qualifications
@@ -839,20 +997,21 @@
                                                 </div>
                                                 <p class="mainProfilePosition">
                                                     {{ $user->user_position ?? 'Not Provided' }} </p>
-                                                <p class="location mainProfileLocation"> <span><img
-                                                            src="{{ asset('assets/images/location.svg') }}"></span>
-                                                    {{ $user->city ?? '' }}, {{ $user->county ?? '' }},
-                                                    {{ $user->state ?? '' }},
-                                                    {{ $user->country ?? '' }}
+                                                <p class="location mainProfileLocation">
+                                                    <span><img src="{{ asset('assets/images/location.svg') }}"
+                                                            alt="Location"></span>
+                                                    {{ collect([$user->city, $user->county, $user->state, $user->country])->filter()->implode(', ') }}
                                                 </p>
 
-                                                <div class="mt-3">
-                                                    <a href="javascript:void(0)"
-                                                        class="btn btn-secondary direct-message-btn"
-                                                        data-receiver-id="{{ $user->id }}">
-                                                        Direct Message
-                                                    </a>
-                                                </div>
+                                                @if (Auth::id() !== $user->id)
+                                                    <div class="mt-3">
+                                                        <a href="javascript:void(0)"
+                                                            class="btn btn-secondary direct-message-btn"
+                                                            data-receiver-id="{{ $user->id }}">
+                                                            Direct Message
+                                                        </a>
+                                                    </div>
+                                                @endif
                                             </div>
 
                                         </div>
@@ -996,7 +1155,7 @@
                                         <div class="offeredHeadingMain">
 
                                             <span class="offeredProductSubHeading">MuslimLynk</span>
-                                            <h2 class="mb-3 offeredProductMainHeading">Offered <span>Service</span></h2>
+                                            <h2 class="mb-3 offeredProductMainHeading">Offered <span>Services</span></h2>
                                             <p>These services come directly from MuslimLynk members. Explore what fellow
                                                 members can support you with as you build and connect.</p>
                                         </div>

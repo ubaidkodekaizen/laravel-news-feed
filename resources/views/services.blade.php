@@ -374,10 +374,6 @@
             overflow: hidden;
         }
 
-        /* #productModalLabel {
-                            font-size: 18px;
-                            line-height: 1.3em;
-                        } */
 
         h5.customHeading {
             color: #fff !important;
@@ -431,7 +427,7 @@
 
         }
     </style>
-
+    <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}">
     <section class="feed_lp">
         <div class="container">
             <h1 class="main_heading">
@@ -461,9 +457,8 @@
             </div>
         </div>
     </section>
-    <div id="footer">
-        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-    </div>
+
+   @include('layouts.home-footer')
 
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">
@@ -662,6 +657,9 @@ Best Regards,
         });
     </script>
     <script>
+        window.AUTH_USER_ID = {{ Auth::id() ?? 'null' }};
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('productModal');
             const bsModal = new bootstrap.Modal(modal);
@@ -682,7 +680,15 @@ Best Regards,
                 modal.querySelector('#productModalDate').textContent = "Posted on " + wrapper.dataset.date;
                 modal.querySelector('.direct-message-btn').setAttribute('data-receiver-id', wrapper.dataset
                     .id);
-
+                const receiverId = wrapper.dataset.id;
+                // hide button if it's the same user
+                if (window.AUTH_USER_ID && parseInt(window.AUTH_USER_ID) === parseInt(receiverId)) {
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'none';
+                } else {
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'inline-flex'; // or 'block' based on your CSS
+                }
                 // Handle user photo or initials
                 const userPhotoElement = modal.querySelector('#productModalUserPhoto');
                 const userPhoto = wrapper.dataset.userPhoto;
