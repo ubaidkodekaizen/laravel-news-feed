@@ -25,25 +25,31 @@ class PageController extends Controller
     {
         // Industry consolidation mapping - groups similar industries together
         $industryConsolidation = [
-            'Finance' => ['Finance', 'Financial Advisor', 'Financial Services', 'FinTech', 'Sharia Compliant Financial Services', 'Investment', 'Private Equity', 'Residential Mortgage', 'Payment Solution'],
-            'Healthcare' => ['Healthcare', 'Medical Practices', 'Medical Billing', 'MedTech', 'Mental Health Therapist', 'Biopharma', 'Pharmaceuticals', 'FemTech'],
-            'Technology' => ['Technology', 'Salesforce', 'Salesforce Consulting', 'Telecommunications', '3D Printing'],
-            'Marketing' => ['Marketing', 'Marketing Services', 'Digital Marketing', 'Advertising Services'],
+            'Finance' => ['Finance', 'Financial Advisor', 'Financial Services', 'FinTech', 'Sharia Compliant Financial Services', 'Investment', 'Private Equity', 'Residential Mortgage', 'Payment Solution', 'Banking', 'Venture Capital', 'Insurance And Employee Benefit Funds'],
+            'Healthcare' => ['Healthcare', 'Medical Practices', 'Medical Billing', 'MedTech', 'Mental Health Therapist', 'Biopharma', 'Pharmaceuticals', 'FemTech', 'Hospital & Health Care', 'Hospitals And Health Care', 'Medical And Diagnostic Laboratories', 'Medical Equipment Manufacturing', 'Mental Health Care', 'Pharmaceutical Manufacturing'],
+            'Technology' => ['Technology', 'Salesforce', 'Salesforce Consulting', 'Telecommunications', '3D Printing', 'Computer And Network Security', 'Computer Hardware', 'Data Infrastructure And Analytics', 'It Services And It Consulting', 'It System Installation And Disposal', 'Software', 'Software Development', 'Information And Internet', 'Internet Marketplace', 'Social Networking Platforms', 'Point Of Sale'],
+            'Marketing' => ['Marketing', 'Marketing Services', 'Digital Marketing', 'Advertising Services', 'Media Production'],
             'Construction' => ['Construction', 'Interior design'],
-            'Educational Services' => ['Educational Services', 'Coaching'],
+            'Educational Services' => ['Educational Services', 'Coaching', 'E-learning Provider', 'Education Management', 'Primary And Secondary Education'],
             'Legal' => ['Legal', 'Law Practice'],
-            'Non-profit' => ['Non Profit', 'Non-profit', 'Non-profit Organizations'],
-            'Business Consulting' => ['Business Consulting', 'Business Consulting and Services', 'Outsourcing and Offshoring Consulting'],
-            'Staffing' => ['Staffing', 'Head Hunter', 'Resource Augmentation'],
-            'Retail' => ['Retail', 'Restaurant', 'Halal Meat'],
-            'Real Estate and Rental and Leasing' => ['Real Estate and Rental and Leasing'],
-            'Administrative and Support and Waste Management and Remediation Services' => ['Administrative and Support and Waste Management and Remediation Services', 'Cleaning Services'],
-            'Professional, Scientific, and Technical Services' => ['Professional, Scientific, and Technical Services', 'Creative Design', 'Writing and Editing', 'Ideation'],
+            'Non-profit' => ['Non Profit', 'Non-profit', 'Non-profit Organizations', 'Civic And Social Organizations', 'Philanthropic Fundraising Services', 'Think Tanks', 'Professional Organizations'],
+            'Business Consulting' => ['Business Consulting', 'Business Consulting and Services', 'Outsourcing and Offshoring Consulting', 'Strategic Management Services', 'Executive Offices', 'Holding Companies'],
+            'Staffing' => ['Staffing', 'Head Hunter', 'Resource Augmentation', 'Human Resources Services'],
+            'Retail' => ['Retail', 'Restaurant', 'Halal Meat', 'Food & Beverages', 'Food And Beverage Manufacturing', 'Consumer Services', 'Personal Care', 'Muslim Marketplace'],
+            'Real Estate and Rental and Leasing' => ['Real Estate and Rental and Leasing', 'Leasing Non-residential Real Estate'],
+            'Administrative and Support and Waste Management and Remediation Services' => ['Administrative and Support and Waste Management and Remediation Services', 'Cleaning Services', 'Facilities Services'],
+            'Professional, Scientific, and Technical Services' => ['Professional, Scientific, and Technical Services', 'Creative Design', 'Writing and Editing', 'Ideation', 'Graphic Design', 'Research Services', 'Translation And Localization'],
             'Engineering' => ['Engineering', 'mechanical or industrial engineering'],
             'Logistics' => ['Logistics'],
+            'Transportation and Warehousing' => ['Transportation and Warehousing', 'Transportation'],
             'Accounting' => ['Accounting'],
             'Printing' => ['Printing'],
-            'InsurTech' => ['InsurTech'],
+            'InsurTech' => ['InsurTech', 'Insurance And Employee Benefit Funds'],
+            'Manufacturing' => ['Manufacturing', 'Automation Machinery Manufacturing', 'Textile Manufacturing', 'Motor Vehicle Manufacturing'],
+            'Wholesale Trade' => ['Wholesale Trade', 'Business Supplies & Equipment'],
+            'Utilities' => ['Utilities'],
+            'Public Administration' => ['Public Administration'],
+            'Other Services (except Public Administration)' => ['Other Services (except Public Administration)', 'Wellness And Fitness Services', 'Resources Enterprise'],
         ];
 
         // Icon mapping for consolidated industries
@@ -136,24 +142,19 @@ class PageController extends Controller
                     }
                     
                     // Case-insensitive partial match - check if industry name contains variation
-                    // or if variation contains industry name (for longer variations)
-                    if (stripos($industryName, $variation) !== false) {
-                        // Make sure it's a word boundary match to avoid false positives
-                        // e.g., "Finance" in "Financial Services" is OK, but "Finance" in "Non-Financial" should be more careful
-                        $pos = stripos($industryName, $variation);
-                        if ($pos !== false) {
-                            // Check if it's at the start or after a space/hyphen (word boundary)
-                            if ($pos === 0 || 
-                                in_array(substr($industryName, $pos - 1, 1), [' ', '-', ',']) ||
-                                strlen($industryName) === $pos + strlen($variation) ||
-                                in_array(substr($industryName, $pos + strlen($variation), 1), [' ', '-', ',', ''])) {
-                                return $mainCategory;
-                            }
+                    if (stripos($industryNameLower, $variationLower) !== false) {
+                        $pos = stripos($industryNameLower, $variationLower);
+                        // Check if it's at the start, end, or has word boundaries
+                        if ($pos === 0 || 
+                            in_array(substr($industryName, max(0, $pos - 1), 1), [' ', '-', ',', '&']) ||
+                            $pos + strlen($variation) >= strlen($industryName) ||
+                            in_array(substr($industryName, $pos + strlen($variation), 1), [' ', '-', ',', '&', ''])) {
+                            return $mainCategory;
                         }
                     }
                     
                     // Also check if variation contains industry name (for cases where variation is longer)
-                    if (stripos($variation, $industryName) !== false && strlen($variation) > strlen($industryName)) {
+                    if (stripos($variationLower, $industryNameLower) !== false && strlen($variation) > strlen($industryName)) {
                         return $mainCategory;
                     }
                 }
