@@ -59,8 +59,8 @@
 @section('dashboard-content')
     <div class="qualifications">
         <div class="section_heading_flex">
-            <!-- <h2>Add Qualifications</h2> -->
-            <h2><a href="{{ route('user.qualifications')}}"><img src="{{ asset('assets/images/dashboard/dashboardBackChevron.svg')}}" alt=""></a> Add Qualifications</h2>
+            <!-- <h2>Add Education</h2> -->
+            <h2><a href="{{ route('user.qualifications')}}"><img src="{{ asset('assets/images/dashboard/dashboardBackChevron.svg')}}" alt=""></a> Add Education</h2>
         </div>
         <div class="add_form">
             <form action="{{ route('user.store.qualifications', $education->id ?? '') }}" method="POST"

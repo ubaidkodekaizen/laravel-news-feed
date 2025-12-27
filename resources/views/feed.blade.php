@@ -854,7 +854,13 @@
                     }
                 });
 
-                showMoreBtn.textContent = isExpanded ? "View Less" : "View All";
+                // Hide button if all industries are already visible
+                if (industries.length <= initialRows * itemsPerRow) {
+                    showMoreBtn.style.display = "none";
+                } else {
+                    showMoreBtn.style.display = "block";
+                    showMoreBtn.textContent = isExpanded ? "View Less" : "View All";
+                }
             }
 
             // Initial Setup

@@ -888,7 +888,7 @@ $companyLogo =
 
 
                                     <h1 class="profile_data profile_heading">
-                                        Qualifications
+                                        Education
                                     </h1>
                                     <div class="profile_qualification_sec">
                                         <div id="userEducation">

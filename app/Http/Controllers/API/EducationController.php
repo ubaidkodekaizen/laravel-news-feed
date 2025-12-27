@@ -9,26 +9,26 @@ use App\Http\Controllers\Controller;
 
 class EducationController extends Controller
 {
-    // API: List all qualifications
+    // API: List all education
     public function apiIndex()
     {
         $educations = UserEducation::where('user_id', Auth::id())->orderByDesc('id')->get();
         return response()->json(['success' => true, 'data' => $educations]);
     }
 
-    // API: Show single qualification by ID
+    // API: Show single education by ID
     public function apiShow($id)
     {
         $education = UserEducation::where('user_id', Auth::id())->find($id);
 
         if (!$education) {
-            return response()->json(['success' => false, 'message' => 'Qualification not found.'], 404);
+            return response()->json(['success' => false, 'message' => 'Education not found.'], 404);
         }
 
         return response()->json(['success' => true, 'data' => $education]);
     }
 
-    // API: Store or update a qualification
+    // API: Store or update an education
     public function apiStore(Request $request, $id = null)
     {
         $request->validate([
@@ -41,7 +41,7 @@ class EducationController extends Controller
             $education = UserEducation::where('user_id', Auth::id())->find($id);
 
             if (!$education) {
-                return response()->json(['success' => false, 'message' => 'Qualification not found.'], 404);
+                return response()->json(['success' => false, 'message' => 'Education not found.'], 404);
             }
 
             $education->update([
@@ -50,7 +50,7 @@ class EducationController extends Controller
                 'year' => $request->year_graduated,
             ]);
 
-            return response()->json(['success' => true, 'message' => 'Qualification updated successfully.', 'data' => $education]);
+            return response()->json(['success' => true, 'message' => 'Education updated successfully.', 'data' => $education]);
         } else {
             $education = UserEducation::create([
                 'user_id' => Auth::id(),
@@ -59,21 +59,21 @@ class EducationController extends Controller
                 'year' => $request->year_graduated,
             ]);
 
-            return response()->json(['success' => true, 'message' => 'Qualification added successfully.', 'data' => $education]);
+            return response()->json(['success' => true, 'message' => 'Education added successfully.', 'data' => $education]);
         }
     }
 
-    // API: Delete a qualification
+    // API: Delete an education
     public function apiDelete($id)
     {
         $education = UserEducation::where('user_id', Auth::id())->find($id);
 
         if (!$education) {
-            return response()->json(['success' => false, 'message' => 'Qualification not found.'], 404);
+            return response()->json(['success' => false, 'message' => 'Education not found.'], 404);
         }
 
         $education->delete();
 
-        return response()->json(['success' => true, 'message' => 'Qualification deleted successfully.']);
+        return response()->json(['success' => true, 'message' => 'Education deleted successfully.']);
     }
 }

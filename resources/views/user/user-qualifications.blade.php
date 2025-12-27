@@ -390,8 +390,8 @@
     <div class="row">
         <div class="col-12">
             <div class="section_heading_flex">
-                <h2>Qualifications</h2>
-                <a href="{{ Route('user.add.qualifications') }}" class="btn btn-primary">Add Qualifications</a>
+                <h2>Education</h2>
+                <a href="{{ Route('user.add.qualifications') }}" class="btn btn-primary">Add Education</a>
             </div>
             <div class="table-resposive data_table_user">
                 <table id="qualifications-table" class="display" style="width:100%">
@@ -445,7 +445,7 @@
         $('#qualifications-table').DataTable({
             responsive: true,
             language: {
-                emptyTable: "No qualifications available" // Custom message instead of warning
+                emptyTable: "No education available" // Custom message instead of warning
             }
         });
     });
