@@ -722,7 +722,7 @@
                                         if (isset($user->company) && $user->company->company_logo) {
                                             // Check if file exists in storage
                                             if (
-                                                \Illuminate\Support\Facades\Storage::exists(
+                                                \Illuminate\Support\Facades\Storage::disk('public')->exists(
                                                     $user->company->company_logo,
                                                 )
                                             ) {
