@@ -118,11 +118,11 @@
                     @php
                         $filters = \App\Helpers\DropDownHelper::searchFilter();
                     @endphp
-                    <h5 class="filter_heading subheading_line">Professional</h5>
+                    <h5 class="filter_heading subheading_line" data-bs-toggle="tooltip" data-bs-placement="right" title="Use this section to find professionals based on their career and business information. Filter by job titles, years of experience, company types, revenue ranges, and the products or services they offer.">Professional Information</h5>
                     <div class="filterContainerInner">
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#positionFilter">
-                                Position/Designation <span class="toggle-icon">+</span>
+                                Professional Position <span class="toggle-icon">+</span>
                             </div>
                             <div id="positionFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedPositionFilters"></div>
@@ -148,7 +148,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#experienceFilter">
-                                Years of Experience <span class="toggle-icon">+</span>
+                                Years of Professional Experience <span class="toggle-icon">+</span>
                             </div>
                             <div id="experienceFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedExperienceFilters">
@@ -175,7 +175,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#businessTypeFilter">
-                                Business Type <span class="toggle-icon">+</span>
+                                Company Type <span class="toggle-icon">+</span>
                             </div>
                             <div id="businessTypeFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedBusinessTypeFilters"></div>
@@ -199,7 +199,7 @@
                         <!-- Revenue Filter Section -->
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse" data-bs-target="#revenueFilter">
-                                Business Revenue <span class="toggle-icon">+</span>
+                                Annual Revenue <span class="toggle-icon">+</span>
                             </div>
                             <div id="revenueFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedRevenueFilters"></div>
@@ -273,13 +273,13 @@
                     </div>
 
                     <!-- ICP Section -->
-                    <h5 class="filter_heading subheading_line mt-5">ICP</h5>
+                    <h5 class="filter_heading subheading_line mt-5" data-bs-toggle="tooltip" data-bs-placement="right" title="Use this section to identify your ideal customers by filtering companies based on their industry sector, organization size, geographic location, current business challenges, strategic goals, organizational attributes, and whether they have decision-making authority for purchases.">Ideal Customer Profile (ICP)</h5>
                     <div class="filterContainerInner">
                         <!-- Industry Filter Section -->
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#industryFilter">
-                                Industry <span class="toggle-icon">+</span>
+                                Industry Sector <span class="toggle-icon">+</span>
                             </div>
                             <div id="industryFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedIndustryFilters">
@@ -308,7 +308,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#employeesFilter">
-                                Company Size <span class="toggle-icon">+</span>
+                                Organization Size <span class="toggle-icon">+</span>
                             </div>
                             <div id="employeesFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedEmployeesFilters"></div>
@@ -334,7 +334,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#businessLocationFilter">
-                                Business Location <span class="toggle-icon">+</span>
+                                Geographic Location <span class="toggle-icon">+</span>
                             </div>
                             <div id="businessLocationFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedBusinessLocationFilters"></div>
@@ -359,7 +359,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#businessChallengesFilter">
-                                Business Challenges <span class="toggle-icon">+</span>
+                                Current Business Challenges <span class="toggle-icon">+</span>
                             </div>
                             <div id="businessChallengesFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedBusinessChallengesFilters"></div>
@@ -385,7 +385,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#businessGoalsFilter">
-                                Business Goals <span class="toggle-icon">+</span>
+                                Strategic Business Goals <span class="toggle-icon">+</span>
                             </div>
                             <div id="businessGoalsFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedBusinessGoalsFilters"></div>
@@ -410,7 +410,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#companyAttributesFilter">
-                                Company Attributes <span class="toggle-icon">+</span>
+                                Organizational Attributes <span class="toggle-icon">+</span>
                             </div>
                             <div id="companyAttributesFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedCompanyAttributesFilters"></div>
@@ -435,7 +435,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#decisionMakerFilter">
-                                Decision Maker <span class="toggle-icon">+</span>
+                                Decision-Making Authority <span class="toggle-icon">+</span>
                             </div>
                             <div id="decisionMakerFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedDecisionMakerFilters"></div>
@@ -463,14 +463,14 @@
                     <!-- Position Filter Section -->
 
 
-                    <h5 class="filter_heading  subheading_line mt-5">Personal</h5>
+                    <h5 class="filter_heading  subheading_line mt-5" data-bs-toggle="tooltip" data-bs-placement="right" title="Use this section to find people based on personal characteristics. Filter by the type of person you want to connect with, their gender, age range, marital status, and ethnic background to refine your search results.">Personal Information</h5>
 
                     <div class="filterContainerInner">
                         {{-- Position Filter --}}
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#userPositionFilter">
-                                Person You're Looking To Connect <span class="toggle-icon">+</span>
+                                Target Connection Profile <span class="toggle-icon">+</span>
                             </div>
                             <div id="userPositionFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedUserPositionFilters"></div>
@@ -524,7 +524,7 @@
                         <div class="filter-section">
                             <div class="filter-header collapsed" data-bs-toggle="collapse"
                                 data-bs-target="#ageGroupFilter">
-                                Age Group <span class="toggle-icon">+</span>
+                                Age Range <span class="toggle-icon">+</span>
                             </div>
                             <div id="ageGroupFilter" class="filterCollapseBox collapse">
                                 <div class="selected-filter-group" id="selectedAgeGroupFilters"></div>
@@ -599,7 +599,7 @@
                         </div>
                     </div>
 
-                    <h5 class="filter_heading subheading_line mt-5">Geographical</h5>
+                    <h5 class="filter_heading subheading_line mt-5" data-bs-toggle="tooltip" data-bs-placement="right" title="Use this section to narrow down your search by location. Filter users based on their nationality, country, state or province, and city to find connections in specific geographic regions.">Geographical Information</h5>
                     <div class="filterContainerInner">
                         {{-- Nationality Filter --}}
 
@@ -1147,6 +1147,12 @@ Best Regards,
                             `<div class="alert alert-danger">${errorMsg}</div>`);
                     }
                 });
+            });
+
+            // Initialize Bootstrap tooltips for section headings
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         });
     </script>
