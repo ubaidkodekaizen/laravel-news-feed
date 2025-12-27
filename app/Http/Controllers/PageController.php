@@ -123,16 +123,37 @@ class PageController extends Controller
         // Function to consolidate industry name
         $consolidateIndustry = function ($industryName) use ($industryConsolidation) {
             $industryName = trim($industryName);
+            $industryNameLower = strtolower($industryName);
             
             // Check each consolidation group
             foreach ($industryConsolidation as $mainCategory => $variations) {
                 foreach ($variations as $variation) {
+                    $variationLower = strtolower(trim($variation));
+                    
                     // Case-insensitive exact match
                     if (strcasecmp($industryName, $variation) === 0) {
                         return $mainCategory;
                     }
-                    // Case-insensitive partial match
-                    if (stripos($industryName, $variation) !== false || stripos($variation, $industryName) !== false) {
+                    
+                    // Case-insensitive partial match - check if industry name contains variation
+                    // or if variation contains industry name (for longer variations)
+                    if (stripos($industryName, $variation) !== false) {
+                        // Make sure it's a word boundary match to avoid false positives
+                        // e.g., "Finance" in "Financial Services" is OK, but "Finance" in "Non-Financial" should be more careful
+                        $pos = stripos($industryName, $variation);
+                        if ($pos !== false) {
+                            // Check if it's at the start or after a space/hyphen (word boundary)
+                            if ($pos === 0 || 
+                                in_array(substr($industryName, $pos - 1, 1), [' ', '-', ',']) ||
+                                strlen($industryName) === $pos + strlen($variation) ||
+                                in_array(substr($industryName, $pos + strlen($variation), 1), [' ', '-', ',', ''])) {
+                                return $mainCategory;
+                            }
+                        }
+                    }
+                    
+                    // Also check if variation contains industry name (for cases where variation is longer)
+                    if (stripos($variation, $industryName) !== false && strlen($variation) > strlen($industryName)) {
                         return $mainCategory;
                     }
                 }
