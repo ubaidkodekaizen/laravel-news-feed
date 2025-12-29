@@ -27,15 +27,38 @@
 
     .row.dt-row .col-sm-12{
         padding: 0 !important;
-    }
-
-    table#usersTable {
+        overflow: scroll;
+        overflow-y: hidden;
         border-radius: 15.99px 15.99px 0 0;
-        overflow: hidden;
         border-top: 2px solid #F2F2F2;
         border-right: 2px solid #F2F2F2;
         border-bottom: 1px solid #F2F2F2 !important;
         border-left: 2px solid #F2F2F2;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar-thumb {
+        background: #273572;
+        border-radius: 10px;
+    }
+
+    table#usersTable {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        /* border-radius: 15.99px 15.99px 0 0;
+        overflow: hidden;
+        border-top: 2px solid #F2F2F2;
+        border-right: 2px solid #F2F2F2;
+        border-bottom: 1px solid #F2F2F2 !important;
+        border-left: 2px solid #F2F2F2; */
     }
 
     .card-title {

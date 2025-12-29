@@ -83,6 +83,10 @@
         fill: #fff;
         color: #fff;
     }
+
+@media (max-width: 768px) {
+    
+}
 </style>
 </head>
 
