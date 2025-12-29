@@ -28,10 +28,13 @@
                 </p>
             </div>
             <div class="btn_flex gap-2">
-                <a href="javascript:void(0)" class="btn btn-secondary  btn-sm direct-message-btn"
-                    data-receiver-id="{{ $user->id }}">
-                    <i class="fa-solid fa-comment-dots"></i>
-                </a>
+                @if (Auth::id() !== $user->id)
+                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm direct-message-btn"
+                        data-receiver-id="{{ $user->id }}">
+                        <i class="fa-solid fa-comment-dots"></i>
+                    </a>
+                @endif
+
                 <a href="{{ route('user.profile', ['slug' => $user->slug]) }}" target="_blank"
                     class="btn btn-success btn-sm">
                     <i class="fa-solid fa-eye"></i>

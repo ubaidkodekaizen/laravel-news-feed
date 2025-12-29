@@ -900,7 +900,7 @@ class DropDownHelper
 
         foreach ($employee_sizes as $value => $label) {
             $isSelected = $value == $selectedEmployeeSize ? 'selected' : '';
-            $html .= '<option value="' . $value . '" ' . $isSelected . '>' . $label . '</option>';
+            $html .= '<option value="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '" ' . $isSelected . '>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</option>';
         }
 
         $html .= '</select>';
@@ -946,12 +946,57 @@ class DropDownHelper
 
         foreach ($revenue_ranges as $value => $label) {
             $isSelected = $value == $selectedRevenue ? 'selected' : '';
-            $html .= '<option value="' . $value . '" ' . $isSelected . '>' . $label . '</option>';
+            $html .= '<option value="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '" ' . $isSelected . '>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</option>';
         }
 
         $html .= '</select>';
 
         return $html;
+    }
+
+    /**
+     * Format revenue value for display
+     * Converts stored value (key) to display label
+     */
+    public static function formatRevenueForDisplay($revenueValue)
+    {
+        if (empty($revenueValue)) {
+            return '';
+        }
+
+        $revenue_ranges = [
+            '< 1M' => '< $1M',
+            '1-5M' => '$1M -$5M',
+            '5-25M' => '$5M - $25M',
+            '25-100M' => '$25M - $100M',
+            '100M +' => '$100M+',
+        ];
+
+        return $revenue_ranges[$revenueValue] ?? $revenueValue;
+    }
+
+    /**
+     * Format employee size value for display
+     * Converts stored value (key) to display label
+     */
+    public static function formatEmployeeSizeForDisplay($employeeValue)
+    {
+        if (empty($employeeValue)) {
+            return '';
+        }
+
+        $employee_sizes = [
+            '1-10' => '1-10 employees',
+            '11-50' => '11-50 employees',
+            '51-200' => '51-200 employees',
+            '201-500' => '201-500 employees',
+            '501-1000' => '501-1000 employees',
+            '1001-5000' => '1001-5000 employees',
+            '5001-10,000' => '5001-10,000 employees',
+            '10,001+' => '10,001+ employees',
+        ];
+
+        return $employee_sizes[$employeeValue] ?? $employeeValue;
     }
 
 

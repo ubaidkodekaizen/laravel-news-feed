@@ -389,7 +389,7 @@
                                     Revenue
                                 </h2>
                                 <p class="profile_data">
-                                    ${{ $user->company->company_revenue ?? '' }}
+                                    {{ \App\Helpers\DropDownHelper::formatRevenueForDisplay($user->company->company_revenue ?? '') }}
                                 </p>
                             </div>
                             <div class="col-lg-6">
@@ -397,7 +397,7 @@
                                     No. of Employees
                                 </h2>
                                 <p class="profile_data">
-                                    {{ $user->company->company_no_of_employee ?? '' }}
+                                    {{ \App\Helpers\DropDownHelper::formatEmployeeSizeForDisplay($user->company->company_no_of_employee ?? '') }}
                                 </p>
                             </div>
                             <div class="col-lg-6">

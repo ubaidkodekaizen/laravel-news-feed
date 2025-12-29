@@ -613,6 +613,7 @@ class UserController extends Controller
                 'products',
                 'services',
                 'userEducations',
+                'userIcp',
                 'subscriptions' => function ($query) {
                     $query->where('status', 'active');
                 }

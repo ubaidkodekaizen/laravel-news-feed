@@ -25,6 +25,8 @@
              href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
              rel="stylesheet">
          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" />
+
+         <link rel="stylesheet" href="{{asset('assets/css/footer.css')}}">
          <style>
              *,
              body {
@@ -33,29 +35,16 @@
                  box-sizing: border-box;
              }
 
-             /* mobile navbar  */
-             /* Existing Navbar Styles */
-
-
-             /* .mainNavbarInner {
-                 display: flex;
-                 justify-content: space-between;
-                 align-items: center;
-                 padding: 15px 30px;
-                 max-width: 1400px;
-                 margin: 0 auto;
-             } */
-
              .mainNavbarBrand img {
                  vertical-align: middle;
              }
 
              .mainNavbarMenu {
-                display: flex;
-                align-items: center;
-                gap: 50px;
-                width: 100%;
-                justify-content: space-between;
+                 display: flex;
+                 align-items: center;
+                 gap: 50px;
+                 width: 100%;
+                 justify-content: space-between;
              }
 
              .mainNavbarListCenter,
@@ -95,6 +84,19 @@
                  object-fit: cover;
              }
 
+             .avatar-initials.userProfilePic {
+                 width: 48.28px;
+                 height: 48.28px;
+                 border-radius: 50%;
+                 background: #394a93;
+                 display: flex;
+                 align-items: center;
+                 justify-content: center;
+                 color: white;
+                 font-weight: 600;
+                 font-size: 16px;
+             }
+
              .profile_name_dd {
                  text-decoration: none;
                  color: #333;
@@ -106,12 +108,12 @@
                  min-width: 150px;
              }
 
-             #bigDeviceLogo{
-                display: block;
+             #bigDeviceLogo {
+                 display: block;
              }
 
-             #smallDeviceLogo{
-                display: none;
+             #smallDeviceLogo {
+                 display: none;
              }
 
              /* Mobile Menu Toggle Button */
@@ -780,19 +782,7 @@
              }
 
 
-             #footer {
-                 background-color: #B8C034;
-             }
 
-             #footer p {
-                 text-align: center;
-                 color: #273572;
-                 font-family: "Inter", Sans-serif;
-                 font-size: 18px;
-                 font-weight: 700;
-                 margin: 0;
-                 padding: 20px 0;
-             }
 
              /* Download Banner css */
              .home_banner_sec {
@@ -855,11 +845,11 @@
              }
 
              img#advantageMainImg {
-                width: 734px;
-                height: 756px;
-                object-fit: cover;
-                object-position: center;
-            }
+                 width: 734px;
+                 height: 756px;
+                 object-fit: cover;
+                 object-position: center;
+             }
 
              @media (min-width: 100%) {
                  .banner_container {
@@ -875,15 +865,15 @@
 
              @media (max-width: 992px) {
 
-             #bigDeviceLogo{
+                 #bigDeviceLogo {
 
-                display: none;
-             }
+                     display: none;
+                 }
 
-             #smallDeviceLogo{
-                display: block;
+                 #smallDeviceLogo {
+                     display: block;
+                 }
              }
-            }
 
              @media (min-width: 992px) {
                  .banner_container {
@@ -1253,9 +1243,7 @@
                      font-size: 16px;
                  }
 
-                 #footer p {
-                     font-size: 16px;
-                 }
+
 
                  .tab-container.active {
                      flex-direction: column;
@@ -1270,9 +1258,7 @@
              }
 
              @media(max-width: 500px) {
-                 #footer p {
-                     font-size: 12px;
-                 }
+
 
                  .homeSec2Head {
                      font-size: 18px;
@@ -1363,10 +1349,11 @@
                  </button>
 
                  <!-- Navigation Menu -->
-                 <div  class="mainNavbarMenu">
-                    <a id="bigDeviceLogo" class="mainNavbarBrand" href="{{ route('home') }}">
-                     <img src="{{ asset('assets/images/logo.png') }}" width="70" class="img-fluid" alt="">
-                 </a>
+                 <div class="mainNavbarMenu">
+                     <a id="bigDeviceLogo" class="mainNavbarBrand" href="{{ route('home') }}">
+                         <img src="{{ asset('assets/images/logo.png') }}" width="70" class="img-fluid"
+                             alt="">
+                     </a>
                      <ul class="mainNavbarListCenter">
                          <li class="mainNavbarListItem">
                              <a class="mainNavbarLink" href="{{ route('home') }}">Home</a>
@@ -1385,8 +1372,45 @@
                      <ul class="mainNavbarListRight">
                          <li class="mainNavbarListItem">
                              @if (Auth::check())
-                                 <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
-                                     width="50" class="img-fluid userProfilePic" alt="">
+                                 @php
+                                     $user = Auth::user();
+                                     $photo = $user->photo ?? null;
+
+                                     // Resolve a usable photo URL if available (supports absolute URLs or files stored in public disk)
+                                     $photoUrl = null;
+                                     if ($photo) {
+                                         if (strpos($photo, 'http://') === 0 || strpos($photo, 'https://') === 0) {
+                                             $photoUrl = $photo;
+                                         } elseif (
+                                             \Illuminate\Support\Facades\Storage::disk('public')->exists($photo)
+                                         ) {
+                                             $photoUrl = asset('storage/' . $photo);
+                                         }
+                                     }
+
+                                     // Build initials (first letters of first + last name; fallback to first letter of email)
+                                     $first = trim($user->first_name ?? '');
+                                     $last = trim($user->last_name ?? '');
+                                     $initials = strtoupper(
+                                         (mb_substr($first, 0, 1) ?: '') . (mb_substr($last, 0, 1) ?: ''),
+                                     );
+
+                                     if (empty($initials)) {
+                                         $initials = strtoupper(mb_substr($user->email ?? 'U', 0, 1));
+                                     }
+                                 @endphp
+
+                                 @if ($photoUrl)
+                                     <img src="{{ $photoUrl }}" width="50" class="img-fluid userProfilePic"
+                                         alt="{{ trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: 'User' }}"
+                                         loading="lazy">
+                                 @else
+                                     <div class="avatar-initials userProfilePic" role="img"
+                                         aria-label="{{ $user->first_name ?? 'User' }}">
+                                         {{ $initials }}
+                                     </div>
+                                 @endif
+
                                  <div class="dropdown">
                                      <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"
                                          data-bs-toggle="dropdown" aria-expanded="false">
@@ -1500,21 +1524,24 @@
                  <h4 class="advantageSecInnerHeading">The MuslimLynk <span>Advantage</span></h4>
                  <div class="advantageSecInnerBoxOuterRow">
                      <div class="advantageSecInnerBoxRow">
-                         <div class="advantageSecInnerBoxes active" data-img="{{ asset('assets/images/connectAndNetwork.png') }}">
+                         <div class="advantageSecInnerBoxes active"
+                             data-img="{{ asset('assets/images/connectAndNetwork.png') }}">
                              <span>01</span>
                              <h4>Connect & Network</h4>
                              <p>Discover and connect with professionals who share your vision, industry, or goals,
                                  organized
                                  by expertise and location.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/directMessaging.png') }}">
+                         <div class="advantageSecInnerBoxes"
+                             data-img="{{ asset('assets/images/directMessaging.png') }}">
                              <span>02</span>
                              <h4>Direct Messaging</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
                                  delays.
                              </p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/smartSuggestions.png') }}">
+                         <div class="advantageSecInnerBoxes"
+                             data-img="{{ asset('assets/images/smartSuggestions.png') }}">
                              <span>03</span>
                              <h4>Smart Suggestions</h4>
                              <p>Let our technology guide you to valuable connections, resources, and opportunities
@@ -1528,7 +1555,8 @@
                                  within
                                  the Muslim community.</p>
                          </div>
-                         <div class="advantageSecInnerBoxes" data-img="{{ asset('assets/images/mobileAccess.png') }}">
+                         <div class="advantageSecInnerBoxes"
+                             data-img="{{ asset('assets/images/mobileAccess.png') }}">
                              <span>05</span>
                              <h4>Mobile Access</h4>
                              <p>Build meaningful relationships with seamless, direct communication – no barriers, no
@@ -1537,8 +1565,8 @@
                          </div>
                      </div>
                      <div class="advantageSecInnerBoxRow">
-                         <img id="advantageMainImg" src="{{ asset('assets/images/homeAdvantageSecImg.png') }}" class="img-fluid"
-                             alt="">
+                         <img id="advantageMainImg" src="{{ asset('assets/images/homeAdvantageSecImg.png') }}"
+                             class="img-fluid" alt="">
                      </div>
                  </div>
 
@@ -1955,9 +1983,8 @@
              </div>
          </div>
 
-         <div id="footer">
-             <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-         </div>
+         @include('layouts.home-footer')
+
          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
              integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
          </script>
@@ -2016,58 +2043,58 @@
                  });
              });
          </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const boxes = Array.from(document.querySelectorAll('.advantageSecInnerBoxes'));
-                const mainImg = document.getElementById('advantageMainImg');
+         <script>
+             document.addEventListener('DOMContentLoaded', () => {
+                 const boxes = Array.from(document.querySelectorAll('.advantageSecInnerBoxes'));
+                 const mainImg = document.getElementById('advantageMainImg');
 
-                if (!mainImg || boxes.length === 0) return; // safety guard
+                 if (!mainImg || boxes.length === 0) return; // safety guard
 
-                // Helper to change image and active class
-                function activateBox(box) {
-                boxes.forEach(b => b.classList.remove('active'));
-                box.classList.add('active');
+                 // Helper to change image and active class
+                 function activateBox(box) {
+                     boxes.forEach(b => b.classList.remove('active'));
+                     box.classList.add('active');
 
-                const newImg = box.dataset.img || box.getAttribute('data-img');
-                if (newImg) {
-                    // optional: fade effect
-                    mainImg.style.transition = 'opacity 200ms ease';
-                    mainImg.style.opacity = 0;
-                    // small timeout to allow fade-out
-                    setTimeout(() => {
-                    mainImg.src = newImg;
-                    mainImg.style.opacity = 1;
-                    }, 180);
-                }
-                }
+                     const newImg = box.dataset.img || box.getAttribute('data-img');
+                     if (newImg) {
+                         // optional: fade effect
+                         mainImg.style.transition = 'opacity 200ms ease';
+                         mainImg.style.opacity = 0;
+                         // small timeout to allow fade-out
+                         setTimeout(() => {
+                             mainImg.src = newImg;
+                             mainImg.style.opacity = 1;
+                         }, 180);
+                     }
+                 }
 
-                // Set initial image from the active box (if any)
-                const initial = boxes.find(b => b.classList.contains('active'));
-                if (initial && (initial.dataset.img || initial.getAttribute('data-img'))) {
-                mainImg.src = initial.dataset.img || initial.getAttribute('data-img');
-                }
+                 // Set initial image from the active box (if any)
+                 const initial = boxes.find(b => b.classList.contains('active'));
+                 if (initial && (initial.dataset.img || initial.getAttribute('data-img'))) {
+                     mainImg.src = initial.dataset.img || initial.getAttribute('data-img');
+                 }
 
-                // Preload images to avoid flicker
-                boxes.forEach(b => {
-                const url = b.dataset.img || b.getAttribute('data-img');
-                if (url) {
-                    const img = new Image();
-                    img.src = url;
-                }
-                });
+                 // Preload images to avoid flicker
+                 boxes.forEach(b => {
+                     const url = b.dataset.img || b.getAttribute('data-img');
+                     if (url) {
+                         const img = new Image();
+                         img.src = url;
+                     }
+                 });
 
-                // Add listeners for hover and touch/click
-                boxes.forEach(box => {
-                box.addEventListener('mouseenter', () => activateBox(box));
-                box.addEventListener('focus', () => activateBox(box)); // keyboard accessibility
-                // support taps on mobile
-                box.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    activateBox(box);
-                });
-                });
-            });
-        </script>
+                 // Add listeners for hover and touch/click
+                 boxes.forEach(box => {
+                     box.addEventListener('mouseenter', () => activateBox(box));
+                     box.addEventListener('focus', () => activateBox(box)); // keyboard accessibility
+                     // support taps on mobile
+                     box.addEventListener('click', (e) => {
+                         e.preventDefault();
+                         activateBox(box);
+                     });
+                 });
+             });
+         </script>
      </body>
 
      </html>

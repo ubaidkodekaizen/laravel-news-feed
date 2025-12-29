@@ -207,6 +207,13 @@
                                     <img src="{{ asset('assets/images/suggestion.svg') }}" alt="Suggestions">
                                 </a>
                             </li>
+                             <li>
+                                <a href="{{ route('inbox') }}" class="btn btn-primary" data-toggle="tooltip"
+                                    data-placement="bottom" title="Inbox">
+
+                                    <img src="{{ asset('assets/images/inboxIcon.png') }}" alt="Inbox">
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div class="profile">

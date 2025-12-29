@@ -234,7 +234,7 @@
 
                     <img src="{{ asset('assets/images/dashboard/sidebarQualificationIcon.svg') }}" alt="">
 
-                    <span class="menu-text">Qualifications</span>
+                    <span class="menu-text">Education</span>
                 </a>
             </li>
 

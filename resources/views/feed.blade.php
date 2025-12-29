@@ -260,19 +260,7 @@
             color: #fff;
         }
 
-        #footer {
-            background-color: #B8C034;
-        }
 
-        #footer p {
-            text-align: center;
-            color: #273572;
-            font-family: "Inter", Sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0;
-            padding: 20px 0;
-        }
 
         .productSliderSection .container a.viewMoreBtn,
         .articles .container a.viewMoreBtn {
@@ -328,6 +316,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}">
+
 
     <section class="feed_lp">
         <div class="container">
@@ -396,9 +386,10 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <button class="sliderUserMessageBtn view-more direct-message-btn"
-                                    data-receiver-id="{{ $product->user->id }}">Message now</button>
+                                @if (Auth::id() !== $product->user->id)
+                                    <button class="sliderUserMessageBtn view-more direct-message-btn"
+                                        data-receiver-id="{{ $product->user->id }}">Message now</button>
+                                @endif
 
                             </div>
                             <div class="productSliderSecInnerCol">
@@ -551,10 +542,12 @@
                                         {{ $service->short_description }}
                                     </p>
 
-                                    <button class="message-btn direct-message-btn"
-                                        data-receiver-id="{{ $service->user->id }}">
-                                        Message Now
-                                    </button>
+                                    @if (Auth::id() !== $service->user->id)
+                                        <button class="message-btn direct-message-btn"
+                                            data-receiver-id="{{ $service->user->id }}">
+                                            Message Now
+                                        </button>
+                                    @endif
 
 
                                     <div class="author-info">
@@ -611,9 +604,7 @@
     </section>
 
 
-    <div id="footer">
-        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
-    </div>
+    @include('layouts.home-footer')
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">
         <div class="modal-dialog modal-dialog-centered">
@@ -863,7 +854,13 @@
                     }
                 });
 
-                showMoreBtn.textContent = isExpanded ? "View Less" : "View All";
+                // Hide button if all industries are already visible
+                if (industries.length <= initialRows * itemsPerRow) {
+                    showMoreBtn.style.display = "none";
+                } else {
+                    showMoreBtn.style.display = "block";
+                    showMoreBtn.textContent = isExpanded ? "View Less" : "View All";
+                }
             }
 
             // Initial Setup
@@ -971,6 +968,9 @@ Best Regards,
         });
     </script>
     <script>
+        window.AUTH_USER_ID = {{ Auth::id() ?? 'null' }};
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('productModal');
             const bsModal = new bootstrap.Modal(modal);
@@ -992,6 +992,17 @@ Best Regards,
                 modal.querySelector('#productModalDate').textContent = "Posted on " + wrapper.dataset.date;
                 modal.querySelector('.direct-message-btn').setAttribute('data-receiver-id', wrapper.dataset
                     .id);
+
+                const receiverId = wrapper.dataset.id;
+                // hide button if it's the same user
+                if (window.AUTH_USER_ID && parseInt(window.AUTH_USER_ID) === parseInt(receiverId)) {
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'none';
+                } else {
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
+                        .display = 'inline-flex'; // or 'block' based on your CSS
+                }
+
 
                 // Handle user photo or initials
                 const userPhotoElement = modal.querySelector('#productModalUserPhoto');

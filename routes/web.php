@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ProductController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\AuthorizeNetController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\PusherController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SupportController;
 use App\Models\Blog;
 use App\Models\Company;
 use App\Models\Event;
@@ -153,9 +155,13 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
         return view('user.news-feed');
     })->name('news-feed');
 
-     Route::get('/inbox', function () {
+    Route::get('/inbox', function () {
         return view('inbox');
     })->name('inbox');
+
+
+    Route::get('/feedback', [SupportController::class, 'create'])->name('support.create');
+    Route::post('/feedback/create', [SupportController::class, 'store'])->name('support.submit');
 
     Route::get('/user/products', [ProductController::class, 'index'])->name('user.products');
     Route::get('/user/products/add', [ProductController::class, 'addEditProduct'])->name('user.add.product');
@@ -250,7 +256,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
 
     //Subscriptions
     Route::get('/admin/subscriptions', [AdminController::class, 'showSubscriptions'])->name('admin.subscriptions');
-
 });
 
 
@@ -283,8 +288,6 @@ Route::middleware('guest')->group(function () {
     // Admin Routes
     Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/post/admin/login', [AdminController::class, 'login'])->name('post.admin.login');
-
-
 });
 
 // Unauthenticated Routes
