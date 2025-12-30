@@ -98,19 +98,27 @@ Route::middleware('auth:sanctum')->group(function () {
   // Remove reaction from a message
   Route::delete('/messages/{message}/react', [ChatController::class, 'removeReaction'])->name('remove.reaction');
 
-  Route::post('/user/ping', function (Request $request) {
-    app(App\Services\UserOnlineService::class)->markUserActive(auth()->id());
-    return response()->json(['status' => 'success']);
-  })->name('user.ping');
+   Route::post('/user/ping', function (Request $request) {
+        app(App\Services\FirebaseService::class)->updateUserOnlineStatus(auth()->id(), true);
+        return response()->json(['status' => 'success']);
+    })->name('user.ping');
 
   Route::post('/user/offline', function (Request $request) {
-    Redis::del('user:last_active:' . auth()->id());
-    return response()->json(['status' => 'success']);
-  })->name('user.offline');
+        app(App\Services\FirebaseService::class)->updateUserOnlineStatus(auth()->id(), false);
+        return response()->json(['status' => 'success']);
+    })->name('user.offline');
+
+   // Firebase custom token endpoint
+    Route::get('/firebase-token', function (Request $request) {
+        $firebaseService = app(App\Services\FirebaseService::class);
+        $customToken = $firebaseService->createCustomToken(auth()->id());
+
+        return response()->json(['firebase_token' => $customToken]);
+    })->name('firebase.token');
 
   // Mobile API Routes
 
- 
+
   Route::post('/user/update/personal', [UserController::class, 'updatePersonal']);
   Route::post('/user/update/professional', [UserController::class, 'updateProfessional']);
 

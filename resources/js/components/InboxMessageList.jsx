@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { format, isToday, isYesterday, isSameDay } from "date-fns";
+import { ref, onChildAdded, onChildRemoved } from "firebase/database";
+import { database } from "../firebase.js";
+import Avatar from "./Avatar.jsx";
 
 const DEFAULT_AVATAR =
     "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
@@ -13,7 +16,6 @@ const InboxMessageList = ({ messages, conversationId }) => {
 
     const [messageList, setMessageList] = useState(messages);
     const [showReactBtns, setReactBtns] = useState({});
-    const messageChannelRef = useRef(null);
     const conversationIdRef = useRef(conversationId);
 
     // Update ref when conversationId changes
@@ -26,105 +28,75 @@ const InboxMessageList = ({ messages, conversationId }) => {
         setMessageList(messages);
     }, [messages]);
 
-    // Subscribe to real-time events
+    // ✅ ADD THIS ENTIRE BLOCK
+    // FIREBASE: Listen to reaction changes
     useEffect(() => {
-        if (!window.Echo) {
-            console.error("Echo is not initialized yet.");
-            return;
-        }
+        if (!conversationId || messageList.length === 0) return;
 
-        console.log("InboxMessageList - Setting up real-time listeners...");
+        const unsubscribers = [];
 
-        // Subscribe to the private channel for this user
-        const messageChannel = window.Echo.private(`private-chat.${window.userId}`);
-        messageChannelRef.current = messageChannel;
-
-        // Listen for new messages
-        messageChannel.listen('.message.new', (data) => {
-            console.log("InboxMessageList - New message received:", data);
-
-            // Only add message if it's for the current conversation
-            if (data.conversation_id !== conversationIdRef.current) {
-                console.log("InboxMessageList - Message not for current conversation");
+        messageList.forEach((msg) => {
+            // ✅ Skip optimistic/temp messages
+            if (msg._optimistic || msg.id.toString().startsWith("temp-")) {
                 return;
             }
 
-            setMessageList((prevMessages) => {
-                // Check if message already exists
-                const messageExists = prevMessages.some(msg => msg.id === data.id);
-                if (messageExists) {
-                    console.log("InboxMessageList - Message already exists");
-                    return prevMessages;
+            const reactionsRef = ref(
+                database,
+                `messages/${conversationId}/${msg.id}/reactions`
+            );
+
+            const unsubAdd = onChildAdded(reactionsRef, (snapshot) => {
+                const newReaction = snapshot.val();
+
+                if (newReaction) {
+                    setMessageList((prevMessages) =>
+                        prevMessages.map((message) =>
+                            message.id === msg.id
+                                ? {
+                                      ...message,
+                                      reactions: [
+                                          ...(message.reactions || []).filter(
+                                              (r) => r.id !== newReaction.id
+                                          ),
+                                          newReaction,
+                                      ],
+                                  }
+                                : message
+                        )
+                    );
                 }
-
-                console.log("InboxMessageList - Adding new message");
-                return [
-                    ...prevMessages,
-                    {
-                        id: data.id,
-                        conversation_id: data.conversation_id,
-                        sender_id: data.sender.id,
-                        content: data.content,
-                        created_at: data.created_at,
-                        sender: {
-                            id: data.sender.id,
-                            first_name: data.sender.first_name,
-                            last_name: data.sender.last_name,
-                            email: data.sender.email,
-                            photo: data.sender.photo,
-                            user_has_photo: data.sender.user_has_photo,
-                            user_initials: data.sender.user_initials,
-                            slug: data.sender.slug,
-                        },
-                        reactions: [],
-                    },
-                ];
             });
-        });
 
-        // Listen for new reactions
-        messageChannel.listen('.reaction.added', (data) => {
-            console.log("InboxMessageList - Reaction added:", data);
+            const unsubRemove = onChildRemoved(reactionsRef, (snapshot) => {
+                const removedReaction = snapshot.val();
 
-            setMessageList((prevMessages) =>
-                prevMessages.map((msg) =>
-                    msg.id === data.message_id
-                        ? {
-                              ...msg,
-                              reactions: [
-                                  ...(msg.reactions || []),
-                                  data.reaction,
-                              ],
-                          }
-                        : msg
-                )
-            );
-        });
+                if (removedReaction) {
+                    setMessageList((prevMessages) =>
+                        prevMessages.map((message) =>
+                            message.id === msg.id
+                                ? {
+                                      ...message,
+                                      reactions: (
+                                          message.reactions || []
+                                      ).filter(
+                                          (r) => r.id !== removedReaction.id
+                                      ),
+                                  }
+                                : message
+                        )
+                    );
+                }
+            });
 
-        // Listen for removed reactions
-        messageChannel.listen('.reaction.removed', (data) => {
-            console.log("InboxMessageList - Reaction removed:", data);
-
-            setMessageList((prevMessages) =>
-                prevMessages.map((msg) =>
-                    msg.id === data.message_id
-                        ? {
-                              ...msg,
-                              reactions: (msg.reactions || []).filter(
-                                  (r) => r.id !== data.reaction_id
-                              ),
-                          }
-                        : msg
-                )
-            );
+            unsubscribers.push(unsubAdd, unsubRemove);
         });
 
         return () => {
-            console.log("InboxMessageList - Cleaning up listeners...");
-            // Don't leave the channel as it might be shared
-            // The parent component should handle channel cleanup
+            unsubscribers.forEach((unsub) => unsub());
         };
-    }, []); // Empty dependency - only set up once
+    }, [conversationId, messageList.length]);
+    // ✅ END OF NEW BLOCK
 
     const toggleReactBtns = (messageId) => {
         setReactBtns((prev) => ({
@@ -266,22 +238,10 @@ const InboxMessageList = ({ messages, conversationId }) => {
                             }`}
                         >
                             <div className="messageBoxListItemInner">
-                                {msg.sender?.user_has_photo ? (
-                                    <img
-                                        src={msg.sender.photo}
-                                        alt="Sender"
-                                        className="messageSenderPhoto"
-                                        onError={(e) => (e.target.src = DEFAULT_AVATAR)}
-                                    />
-                                ) : (
-                                    <div className="avatar-initials messageSenderPhoto">
-                                        {msg.sender?.user_initials ||
-                                            getInitials(
-                                                msg.sender?.first_name,
-                                                msg.sender?.last_name
-                                            )}
-                                    </div>
-                                )}
+                                <Avatar
+                                    user={msg.sender}
+                                    className="messageSenderPhoto"
+                                />
                                 <div
                                     className={`messageBoxListItemContent ${
                                         msg.sender_id === window.userId
@@ -292,6 +252,20 @@ const InboxMessageList = ({ messages, conversationId }) => {
                                     <div className="messageBoxListItemContentMsg">
                                         {msg.content}
 
+                                        {/* ✅ Show sending indicator for optimistic messages */}
+                                        {msg._optimistic && (
+                                            <span
+                                                className="messageSending"
+                                                style={{
+                                                    fontSize: "0.75rem",
+                                                    color: "#999",
+                                                    marginLeft: "8px",
+                                                }}
+                                            >
+                                                ⏳ Sending...
+                                            </span>
+                                        )}
+
                                         <div className="messageBoxTime">
                                             {format(
                                                 new Date(msg.created_at),
@@ -300,27 +274,32 @@ const InboxMessageList = ({ messages, conversationId }) => {
                                         </div>
                                     </div>
 
-                                    {msg.reactions && msg.reactions.length > 0 && (
-                                        <div className="messageReactions">
-                                            {msg.reactions.map((reaction) => (
-                                                <span
-                                                    key={reaction.id}
-                                                    className="reaction"
-                                                    onClick={() =>
-                                                        handleRemoveReaction(
-                                                            msg.id,
-                                                            reaction.id,
-                                                            reaction.emoji
-                                                        )
-                                                    }
-                                                    title="Click to remove"
-                                                    style={{ cursor: 'pointer' }}
-                                                >
-                                                    {reaction.emoji}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    )}
+                                    {msg.reactions &&
+                                        msg.reactions.length > 0 && (
+                                            <div className="messageReactions">
+                                                {msg.reactions.map(
+                                                    (reaction) => (
+                                                        <span
+                                                            key={reaction.id}
+                                                            className="reaction"
+                                                            onClick={() =>
+                                                                handleRemoveReaction(
+                                                                    msg.id,
+                                                                    reaction.id,
+                                                                    reaction.emoji
+                                                                )
+                                                            }
+                                                            title="Click to remove"
+                                                            style={{
+                                                                cursor: "pointer",
+                                                            }}
+                                                        >
+                                                            {reaction.emoji}
+                                                        </span>
+                                                    )
+                                                )}
+                                            </div>
+                                        )}
 
                                     <div
                                         className="messageReactIconBtn"

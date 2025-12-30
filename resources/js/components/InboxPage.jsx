@@ -1,8 +1,18 @@
 // resources/js/components/InboxPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Search, MoreVertical, ArrowLeft } from "lucide-react";
+import {
+    ref,
+    onChildAdded,
+    onValue,
+    set,
+    query,
+    orderByChild,
+} from "firebase/database";
+import { database } from "../firebase.js";
 import InboxMessageList from "./InboxMessageList.jsx";
 import InboxMessageInput from "./InboxMessageInput.jsx";
+
 import { format } from "date-fns";
 
 const InboxPage = () => {
@@ -20,6 +30,8 @@ const InboxPage = () => {
     const [sidebarActive, setSidebarActive] = useState(isMobile());
     const token = localStorage.getItem("sanctum-token");
     const activeConversationRef = useRef(null);
+    const firebaseUnsubscribers = useRef([]);
+    const typingTimeoutRef = useRef(null);
     const DEFAULT_AVATAR =
         "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
 
@@ -27,7 +39,7 @@ const InboxPage = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-     // Handle window resize to reset sidebar state
+    // Handle window resize to reset sidebar state
     useEffect(() => {
         const handleResize = () => {
             if (!isMobile()) {
@@ -37,131 +49,192 @@ const InboxPage = () => {
             }
         };
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, [activeConversation]);
-
 
     // Update the ref whenever activeConversation changes
     useEffect(() => {
         activeConversationRef.current = activeConversation;
     }, [activeConversation]);
 
-    // Initial setup - subscribe to main message channel
+    // Initial setup
     useEffect(() => {
-        if (!window.Echo) {
-            console.error("Echo is not initialized yet.");
-            return;
-        }
-
         fetchConversations();
+    }, []);
 
-        // Subscribe to the private channel for new messages
-        console.log("Inbox - Setting up main message channel...");
-        const messageChannel = window.Echo.private(
-            `private-chat.${window.userId}`
-        );
-        messageChannelRef.current = messageChannel;
+    // ✅ FIREBASE: Listen to new messages
+    useEffect(() => {
+        if (!activeConversation) return;
 
-        messageChannel.listen(".message.new", async (message) => {
-            console.log("Inbox - New message received:", message);
+        const messagesRef = ref(database, `messages/${activeConversation}`);
+        const messagesQuery = query(messagesRef, orderByChild("created_at"));
 
-            // Use ref to get current value
-            if (message.conversation_id !== activeConversationRef.current) {
-                console.log(
-                    "Message is not for active conversation, skipping message update"
-                );
-                fetchConversations(); // Still update conversation list
+        setMessages([]);
+
+        const unsubscribe = onChildAdded(messagesQuery, (snapshot) => {
+            const newMessage = snapshot.val();
+
+            if (newMessage) {
+                setMessages((prevMessages) => {
+                    // ✅ Check if we already have this message (by ID)
+                    if (prevMessages.some((msg) => msg.id === newMessage.id)) {
+                        return prevMessages;
+                    }
+
+                    // ✅ Check if there's an optimistic version with same content
+                    // Look for messages from the same sender with identical content
+                    const optimisticIndex = prevMessages.findIndex(
+                        (msg) =>
+                            msg._optimistic &&
+                            msg.content.trim() === newMessage.content.trim() &&
+                            msg.sender_id === newMessage.sender_id &&
+                            msg.receiver_id === newMessage.receiver_id
+                    );
+
+                    if (optimisticIndex !== -1) {
+                        // ✅ Replace optimistic with real message (no flash!)
+                        const updated = [...prevMessages];
+                        updated[optimisticIndex] = {
+                            ...newMessage,
+                            _optimistic: false,
+                        };
+                        return updated.sort(
+                            (a, b) =>
+                                new Date(a.created_at) - new Date(b.created_at)
+                        );
+                    }
+
+                    // ✅ New message, add it
+                    return [...prevMessages, newMessage].sort(
+                        (a, b) =>
+                            new Date(a.created_at) - new Date(b.created_at)
+                    );
+                });
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, [activeConversation]);
+
+    // ✅ FIREBASE: Listen to typing indicators
+    useEffect(() => {
+        if (!activeConversation) return;
+
+        const typingRef = ref(database, `typing/${activeConversation}`);
+
+        const unsubscribe = onValue(typingRef, (snapshot) => {
+            const typingData = snapshot.val();
+
+            if (!typingData) {
+                setTypingUser(null);
                 return;
             }
 
-            // Update messages if this message belongs to the active conversation
-            setMessages((prevMessages) => {
-                // Check if message already exists to avoid duplicates
-                const messageExists = prevMessages.some(
-                    (msg) => msg.id === message.id
-                );
-                if (messageExists) {
-                    console.log("Message already exists, skipping...");
-                    return prevMessages;
-                }
+            const now = Date.now();
+            const typingUsers = Object.entries(typingData)
+                .filter(([uid, data]) => {
+                    const userId = parseInt(uid);
+                    const timestamp = data.timestamp * 1000;
+                    const timeDiff = now - timestamp;
 
-                console.log("Adding new message to active conversation");
-                return [
-                    ...prevMessages,
-                    {
-                        id: message.id,
-                        conversation_id: message.conversation_id,
-                        sender_id: message.sender_id,
-                        content: message.content,
-                        created_at: message.created_at,
-                        sender: {
-                            id: message.sender.id,
-                            first_name: message.sender.first_name,
-                            last_name: message.sender.last_name,
-                            email: message.sender.email,
-                            photo: message.sender.photo,
-                            user_has_photo: message.sender.user_has_photo,
-                            user_initials: message.sender.user_initials,
-                            slug: message.sender.slug,
-                        },
-                        reactions: [],
-                    },
-                ];
-            });
+                    console.log("Typing check:", {
+                        userId,
+                        currentUserId: window.userId,
+                        timestamp,
+                        now,
+                        timeDiff,
+                        isValid: userId !== window.userId && timeDiff < 3000,
+                    });
 
-            // Always refresh conversations to update last message and unread count
-            console.log("Refreshing conversations list...");
-            fetchConversations();
+                    return userId !== window.userId && timeDiff < 3000;
+                })
+                .map(([uid, data]) => ({
+                    id: parseInt(uid),
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                }));
+
+            console.log("Typing users:", typingUsers);
+            setTypingUser(typingUsers[0] || null);
         });
 
+        // ✅ Cleanup stale typing indicators every second
+        const interval = setInterval(() => {
+            const typingRef = ref(database, `typing/${activeConversation}`);
+            onValue(
+                typingRef,
+                (snapshot) => {
+                    const typingData = snapshot.val();
+
+                    if (!typingData) {
+                        setTypingUser(null);
+                        return;
+                    }
+
+                    const now = Date.now();
+
+                    Object.entries(typingData).forEach(async ([uid, data]) => {
+                        const timestamp = data.timestamp * 1000;
+                        const timeDiff = now - timestamp;
+
+                        if (timeDiff >= 3000) {
+                            console.log(
+                                "Removing stale typing indicator for user:",
+                                uid
+                            );
+                            const staleRef = ref(
+                                database,
+                                `typing/${activeConversation}/${uid}`
+                            );
+                            try {
+                                await set(staleRef, null);
+                            } catch (e) {
+                                console.warn(
+                                    "Failed to remove stale typing:",
+                                    e
+                                );
+                            }
+                        }
+                    });
+                },
+                { onlyOnce: true }
+            );
+        }, 1000);
+
         return () => {
-            console.log(`Inbox - Cleaning up main message channel...`);
-            if (messageChannelRef.current) {
-                window.Echo.leave(`private-chat.${window.userId}`);
+            unsubscribe();
+            clearInterval(interval);
+        };
+    }, [activeConversation]);
+
+    // ✅ Clear typing indicator on window blur/close
+    useEffect(() => {
+        if (!activeConversation) return;
+
+        const clearTyping = async () => {
+            try {
+                const typingRef = ref(
+                    database,
+                    `typing/${activeConversation}/${window.userId}`
+                );
+                await set(typingRef, null);
+                console.log("Cleared typing indicator");
+            } catch (e) {
+                console.warn("Failed to clear typing:", e);
             }
         };
-    }, []); // Empty dependency array - only run once on mount
 
-    // Separate effect for typing indicators based on active conversation
-    useEffect(() => {
-        if (!window.Echo || !activeConversation) {
-            return;
-        }
-
-        console.log(
-            `Inbox - Setting up typing channel for conversation ${activeConversation}...`
-        );
-
-        // Clean up previous typing channel if it exists
-        if (typingChannelRef.current) {
-            console.log("Inbox - Cleaning up previous typing channel...");
-            window.Echo.leave(`user-activity.${typingChannelRef.current}`);
-        }
-
-        // Subscribe to new typing channel
-        const typingChannel = window.Echo.private(
-            `user-activity.${activeConversation}`
-        );
-        typingChannelRef.current = activeConversation;
-
-        typingChannel.listen(".user.typing", (e) => {
-            console.log("Inbox - Typing event received:", e);
-            if (
-                e.conversation_id === activeConversation &&
-                e.user.id !== window.userId
-            ) {
-                showTypingIndicator(e.user);
-            }
-        });
+        // Clear on window events
+        window.addEventListener("beforeunload", clearTyping);
+        window.addEventListener("blur", clearTyping);
 
         return () => {
-            if (typingChannelRef.current) {
-                console.log(
-                    `Inbox - Cleaning up typing channel ${typingChannelRef.current}...`
-                );
-                window.Echo.leave(`user-activity.${typingChannelRef.current}`);
-            }
+            window.removeEventListener("beforeunload", clearTyping);
+            window.removeEventListener("blur", clearTyping);
+            clearTyping();
         };
     }, [activeConversation]);
 
@@ -215,28 +288,69 @@ const InboxPage = () => {
     const handleConversationClick = async (conversation) => {
         console.log("Inbox - Conversation clicked:", conversation.id);
         setActiveConversation(conversation.id);
-         if (isMobile()) {
+        if (isMobile()) {
             setSidebarActive(false);
         }
         await fetchMessages(conversation.id);
         await fetchUserDetails(conversation.id);
     };
 
-   const handleBackClick = () => {
+    const handleBackClick = () => {
         setSidebarActive(true);
         setActiveConversation(null);
         setActiveUser(null);
     };
 
     const sendMessage = async (messageContent) => {
-        console.log("Inbox - Sending message:", messageContent);
+        console.log("Sending message:", messageContent);
 
         if (!messageContent.trim() || !activeConversation) return;
+
+        // ✅ Clear typing indicator immediately when sending message
+        try {
+            const typingRef = ref(
+                database,
+                `typing/${activeConversation}/${window.userId}`
+            );
+            await set(typingRef, null);
+        } catch (e) {
+            console.warn("Failed to clear typing on send:", e);
+        }
 
         const activeUserData = conversations.find(
             (convo) => convo.id === activeConversation
         )?.user;
         if (!activeUserData) return;
+
+        // ✅ CREATE OPTIMISTIC MESSAGE with Firebase-safe ID
+        const tempId = `temp-${Date.now()}-${Math.floor(
+            Math.random() * 1000000
+        )}`;
+
+        // ✅ CREATE OPTIMISTIC MESSAGE
+        const optimisticMessage = {
+            id: tempId,
+            conversation_id: activeConversation,
+            sender_id: window.userId,
+            receiver_id: activeUserData.id,
+            content: messageContent,
+            created_at: new Date().toISOString(),
+            sender: {
+                id: window.userId,
+                first_name: window.userFirstName || "",
+                last_name: window.userLastName || "",
+                email: window.userEmail || "",
+                photo: window.userPhoto || "",
+                slug: window.userSlug || "",
+                user_has_photo: !!window.userPhoto,
+                user_initials: window.userInitials || "",
+            },
+            reactions: [],
+            _optimistic: true,
+        };
+
+        // ✅ ADD MESSAGE IMMEDIATELY
+        setMessages((prev) => [...prev, optimisticMessage]);
 
         try {
             const response = await window.axios.post(
@@ -250,42 +364,67 @@ const InboxPage = () => {
                 }
             );
 
-            console.log("Inbox - Message sent successfully:", response.data);
+            console.log("Message sent successfully:", response.data);
+            // Firebase listener will replace optimistic message automatically
 
-            // Add message to the list immediately (optimistic update)
-            setMessages((prev) => {
-                // Check if message already exists
-                const messageExists = prev.some(
-                    (msg) => msg.id === response.data.id
-                );
-                if (messageExists) {
-                    return prev;
-                }
-                return [...prev, response.data];
-            });
-
-            // Refresh conversations to update last message
             await fetchConversations();
         } catch (error) {
-            console.error("Inbox - Error sending message:", error);
+            console.error("Error sending message:", error);
+
+            // ✅ REMOVE OPTIMISTIC MESSAGE ON ERROR
+            setMessages((prev) =>
+                prev.filter((msg) => msg.id !== optimisticMessage.id)
+            );
+
+            alert("Failed to send message. Please try again.");
         }
     };
 
     const handleTyping = async () => {
         if (!activeConversation) return;
 
+        // Clear previous timeout
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
         try {
-            await window.axios.post(
-                userIsTyping,
-                {
-                    conversation_id: activeConversation,
-                },
-                {
-                    headers: { Authorization: token },
-                }
+            const typingRef = ref(
+                database,
+                `typing/${activeConversation}/${window.userId}`
             );
+
+            // ✅ Set typing status with current timestamp
+            await set(typingRef, {
+                user_id: window.userId,
+                first_name: window.userFirstName || "",
+                last_name: window.userLastName || "",
+                timestamp: Math.floor(Date.now() / 1000),
+            });
+
+            // ✅ Debounce API call (reduce server load)
+            typingTimeoutRef.current = setTimeout(async () => {
+                try {
+                    await axios.post(
+                        userIsTyping,
+                        { conversation_id: activeConversation },
+                        { headers: { Authorization: token } }
+                    );
+                } catch (e) {
+                    console.warn("API typing call failed:", e);
+                }
+            }, 500);
+
+            // ✅ Auto-remove after 3 seconds
+            setTimeout(async () => {
+                try {
+                    await set(typingRef, null);
+                } catch (e) {
+                    console.warn("Failed to clear typing indicator:", e);
+                }
+            }, 3000);
         } catch (error) {
-            console.error("Inbox - Error sending typing event:", error);
+            console.error("Error sending typing event:", error);
         }
     };
 
