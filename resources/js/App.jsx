@@ -1,5 +1,4 @@
 import './bootstrap.js';
-import './echo.js';
 import '../css/chat.css';
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';

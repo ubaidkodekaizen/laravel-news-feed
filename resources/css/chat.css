@@ -81,17 +81,17 @@
     width: 30px;
     height: 25px;
     color: #fff;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .chatBoxHead button:hover {
     background: #8f8f8f45;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .chatBox {
     bottom: 0;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .chatBoxContent {
@@ -117,8 +117,6 @@
     padding-top: 45px;
 }
 
-
-
 .conversationBox .conversationBoxInner {
     border-bottom: 1px solid #ddd;
     display: flex;
@@ -128,12 +126,12 @@
     position: relative;
     padding: 5px 5px;
     cursor: pointer;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .conversationBox .conversationBoxInner:hover {
     background: #b8c034;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .conversationUserProfile img {
@@ -219,12 +217,11 @@
     flex-direction: column;
 }
 .messageBoxInputInnerCol {
-    display: flex
-    ;
-        align-items: center;
-        justify-content: space-between;
-        border-top: 1px solid #dddddd;
-        padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #dddddd;
+    padding: 10px;
 }
 .messageBoxInput {
     width: 100%;
@@ -248,17 +245,16 @@
     color: #fff;
     padding: 2px 12px;
     cursor: pointer;
-    transition: .3s;
+    transition: 0.3s;
     border-radius: 5px;
-    display: flex
-    ;
-        align-items: center;
-        justify-content: space-between;
-        gap: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
 }
 .messageBoxInputBtn:hover {
     background: #b8c034;
-    transition: .3s;
+    transition: 0.3s;
 }
 .messageBoxInputBtn .messageBoxEmojiBtnIcon {
     height: 10px;
@@ -356,6 +352,7 @@
     padding: 5px 10px;
     background: #273572;
     cursor: pointer;
+    min-height: 49.6px;
 }
 
 .messageBoxHead .messageBoxHeadInner {
@@ -394,12 +391,12 @@
     color: #fff;
     line-height: 1.3em;
     text-decoration: none;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .messageBoxHead .messageBoxHeadUsername:hover {
     text-decoration: underline;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .messageBox.messageBoxListClose .messageBoxList {
@@ -464,13 +461,13 @@
 .messageBoxListItem .messageBoxListItemContentUsername a {
     text-decoration: none;
     color: #000;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .messageBoxListItem .messageBoxListItemContentUsername a:hover {
     color: #273572;
     text-decoration: underline;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .messageBoxListItem.messageRight .messageBoxTime {
@@ -585,7 +582,7 @@
 }
 
 .messageReactionOptions.messageReactionOptionsShow {
-    display: flex
+    display: flex;
 }
 
 .messageReactionOptions.messageReactionOptionsHide {

@@ -15,16 +15,21 @@ use App\Jobs\UserTypingJob;
 use App\Services\UserOnlineService;
 use App\Jobs\SendOfflineMessageNotification;
 use App\Traits\FormatsUserData;
+use App\Services\FirebaseService;
 
 class ChatController extends Controller
 {
     use AuthorizesRequests, FormatsUserData;
 
-    protected $userOnlineService;
+       protected $userOnlineService;
+    protected $firebaseService; // ✅ ADD THIS
 
-    public function __construct(UserOnlineService $userOnlineService)
-    {
+    public function __construct(
+        UserOnlineService $userOnlineService,
+        FirebaseService $firebaseService // ✅ ADD THIS
+    ) {
         $this->userOnlineService = $userOnlineService;
+        $this->firebaseService = $firebaseService; // ✅ ADD THIS
     }
 
     public function createConversation(Request $request)
@@ -70,7 +75,7 @@ class ChatController extends Controller
                 return response()->json(['error' => 'Conversation ID is required'], 400);
             }
 
-            UserTypingJob::dispatch($conversationId, $user);
+            $this->firebaseService->updateTypingStatus($conversationId, $user->id, $user, true);
 
             \Log::info('User is typing...', [
                 'user_id' => $user->id,
@@ -196,7 +201,7 @@ class ChatController extends Controller
 
                 $conversation->update(['last_message_at' => now()]);
 
-                BroadcastMessage::dispatch($message);
+                $this->firebaseService->sendMessage($conversation->id, $message);
                 \Log::info('Message broadcasted:', ['message' => $message]);
 
                 // Check if receiver is offline
@@ -275,6 +280,15 @@ class ChatController extends Controller
             'emoji' => $request->emoji,
         ]);
 
+        $reaction->load('user:id,first_name,last_name');
+
+        // ✅ ADD THESE LINES
+        $this->firebaseService->addReaction(
+            $message->conversation_id,
+            $message->id,
+            $reaction
+        );
+
         return response()->json($reaction);
     }
 
@@ -295,7 +309,17 @@ class ChatController extends Controller
             return response()->json(['message' => 'Reaction not found.'], 404);
         }
 
+
+
+        $reactionId = $reaction->id;
         $reaction->delete();
+
+        // ✅ ADD THESE LINES
+        $this->firebaseService->removeReaction(
+            $message->conversation_id,
+            $message->id,
+            $reactionId
+        );
 
         return response()->json(['message' => 'Reaction removed.']);
     }

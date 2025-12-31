@@ -1,4 +1,61 @@
 @extends('admin.layouts.main')
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+</style>
+<style>
+    .user_company_profile .profile_heading {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 28px;
+        line-height: 1;
+    }
+
+    .user_company_profile .profile_div {
+        border-bottom: 2px solid var(--primary) !important;
+        font-family: Inter;
+        font-weight: 400;
+        font-size: 16px;
+    }
+
+    .user_company_profile .profile_div label {
+        font-family: Inter;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .user_company_profile .profile_heading {
+        font-family: Inter;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 100%;
+        color: #273572;
+        padding-top: 41px;
+    }
+
+    img:not(.logo img, .user_company_profile .company_logo img, .user_company_profile .profile_pic img) {
+        margin-top: 20px;
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .company_logo{
+        border-bottom: 2px solid var(--primary) !important;
+    }
+
+    .user_company_profile .btn-flex .btn {
+        border-radius: 9.77px;
+        background: var(--primary) !important;
+        padding: 15px 56px !important;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600 !important;
+        font-size: 22px !important;
+        line-height: 100%;
+        letter-spacing: 0px;
+        text-align: center;
+        margin: 0 0 0 0;
+    }
+</style>
+
 @section('content')
 <main class="main-content">
 
