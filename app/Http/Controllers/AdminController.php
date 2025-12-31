@@ -135,21 +135,20 @@ class AdminController extends Controller
             'duration' => $request->duration ?? '',
         ]);
 
-        // Create subscription for AMCOB users with 90 days free trial
-        if (($request->amcob_member ?? 'No') === 'Yes') {
-            Subscription::create([
-                'user_id' => $user->id,
-                'plan_id' => 1,
-                'subscription_type' => 'Free',
-                'subscription_amount' => 0.00,
-                'start_date' => now(),
-                'renewal_date' => now()->addDays(90), // 90 days free trial for AMCOB users
-                'status' => 'inactive',
-                'transaction_id' => null,
-                'receipt_data' => null,
-                'platform' => 'Amcob',
-            ]);
-        }
+        // Create subscription for all admin-created users with 90 days free trial
+        $isAmcob = ($request->amcob_member ?? 'No') === 'Yes';
+        Subscription::create([
+            'user_id' => $user->id,
+            'plan_id' => 1,
+            'subscription_type' => 'Free',
+            'subscription_amount' => 0.00,
+            'start_date' => now(),
+            'renewal_date' => now()->addDays(90), // 90 days free trial
+            'status' => 'active',
+            'transaction_id' => null,
+            'receipt_data' => null,
+            'platform' => $isAmcob ? 'Amcob' : 'Admin',
+        ]);
 
         // Create password reset token for password setup
         $token = Str::random(64);

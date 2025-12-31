@@ -50,6 +50,7 @@ class User extends Authenticatable
         'marital_status',
         'is_amcob',
         'duration',
+        'email_verified_at',
     ];
 
     public function company()
