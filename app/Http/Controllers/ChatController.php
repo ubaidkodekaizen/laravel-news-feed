@@ -6,12 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
-use App\Events\NewMessageEvent;
-use App\Events\UserTyping;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Jobs\BroadcastMessage;
-use App\Jobs\UserTypingJob;
 use App\Services\UserOnlineService;
 use App\Jobs\SendOfflineMessageNotification;
 use App\Traits\FormatsUserData;
@@ -141,33 +137,50 @@ class ChatController extends Controller
 
     public function getConversations(): JsonResponse
     {
-        $user = request()->user();
-        $userId = $user->id;
+        try {
+            $user = request()->user();
+            $userId = $user->id;
 
-        $conversations = Conversation::where(function ($query) use ($userId) {
-            $query->where('user_one_id', $userId)
-                ->orWhere('user_two_id', $userId);
-        })
-            ->with(['userOne', 'userTwo'])
-            ->withCount(['messages as unread_count' => function ($query) use ($userId) {
-                $query->where('receiver_id', $userId)
-                    ->whereNull('read_at');
-            }])
-            ->get()
-            ->map(function ($conversation) use ($userId) {
-                $otherUser = $conversation->user_one_id === $userId
-                    ? $conversation->userTwo
-                    : $conversation->userOne;
+            $conversations = Conversation::where(function ($query) use ($userId) {
+                $query->where('user_one_id', $userId)
+                    ->orWhere('user_two_id', $userId);
+            })
+                ->with(['userOne', 'userTwo'])
+                ->withCount(['messages as unread_count' => function ($query) use ($userId) {
+                    $query->where('receiver_id', $userId)
+                        ->whereNull('read_at');
+                }])
+                ->get()
+                ->map(function ($conversation) use ($userId) {
+                    $otherUser = $conversation->user_one_id === $userId
+                        ? $conversation->userTwo
+                        : $conversation->userOne;
 
-                return [
-                    'id' => $conversation->id,
-                    'user' => $this->formatUserData($otherUser),
-                    'last_message' => $conversation->messages()->latest()->first(),
-                    'unread_count' => $conversation->unread_count,
-                ];
-            });
+                    if (!$otherUser) {
+                        return null;
+                    }
 
-        return response()->json($conversations);
+                    return [
+                        'id' => $conversation->id,
+                        'user' => $this->formatUserData($otherUser),
+                        'last_message' => $conversation->messages()->latest()->first(),
+                        'unread_count' => $conversation->unread_count,
+                    ];
+                })
+                ->filter(); // Remove null entries
+
+            return response()->json($conversations->values());
+        } catch (\Exception $e) {
+            \Log::error('Error fetching conversations: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to fetch conversations',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function sendMessage(Request $request): JsonResponse

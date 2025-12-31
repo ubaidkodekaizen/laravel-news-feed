@@ -20,8 +20,11 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Broadcast::routes();
+        // Broadcasting disabled - using Firebase for real-time messaging
+        // Broadcast::routes();
 
-        require base_path('routes/channels.php');
+        // if (file_exists(base_path('routes/channels.php'))) {
+        //     require base_path('routes/channels.php');
+        // }
     }
 }

@@ -13,12 +13,37 @@ class FirebaseService
 
     public function __construct()
     {
-        $factory = (new Factory)
-            ->withServiceAccount(config('services.firebase.credentials'))
-            ->withDatabaseUri(config('services.firebase.database_url'));
+        try {
+            $credentialsPath = config('services.firebase.credentials');
+            $databaseUrl = config('services.firebase.database_url');
 
-        $this->database = $factory->createDatabase();
-        $this->auth = $factory->createAuth();
+            if (empty($credentialsPath)) {
+                throw new \Exception('Firebase credentials path is not configured. Please set FIREBASE_CREDENTIALS in .env');
+            }
+
+            // If path contains placeholder text or is empty, use default location
+            if (empty($credentialsPath) || str_contains($credentialsPath, '/full/absolute/path/to/')) {
+                $credentialsPath = storage_path('app/firebase-credentials.json');
+            }
+
+            if (!file_exists($credentialsPath)) {
+                throw new \Exception("Firebase credentials file not found at: {$credentialsPath}. Please check your FIREBASE_CREDENTIALS setting in .env");
+            }
+
+            if (empty($databaseUrl)) {
+                throw new \Exception('Firebase database URL is not configured. Please set FIREBASE_DATABASE_URL in .env');
+            }
+
+            $factory = (new Factory)
+                ->withServiceAccount($credentialsPath)
+                ->withDatabaseUri($databaseUrl);
+
+            $this->database = $factory->createDatabase();
+            $this->auth = $factory->createAuth();
+        } catch (\Exception $e) {
+            \Log::error('FirebaseService initialization failed: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**

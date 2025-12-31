@@ -110,10 +110,22 @@ Route::middleware('auth:sanctum')->group(function () {
 
    // Firebase custom token endpoint
     Route::get('/firebase-token', function (Request $request) {
-        $firebaseService = app(App\Services\FirebaseService::class);
-        $customToken = $firebaseService->createCustomToken(auth()->id());
+        try {
+            $firebaseService = app(App\Services\FirebaseService::class);
+            $customToken = $firebaseService->createCustomToken(auth()->id());
 
-        return response()->json(['firebase_token' => $customToken]);
+            return response()->json(['firebase_token' => $customToken]);
+        } catch (\Exception $e) {
+            \Log::error('Firebase token generation failed: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to generate Firebase token',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     })->name('firebase.token');
 
   // Mobile API Routes

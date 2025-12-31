@@ -14,7 +14,6 @@ use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthorizeNetController;
 use App\Http\Middleware\RoleMiddleware;
-use App\Http\Controllers\PusherController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SupportController;
 use App\Models\Blog;
@@ -217,7 +216,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('user/get-token', function () {
         return response()->json(['token' => session('sanctum_token')]);
     })->name("user.token");
-    Route::post('/pusher/user-auth', [PusherController::class, 'pusherAuth']);
+    // Pusher route removed - using Firebase now
 });
 
 
