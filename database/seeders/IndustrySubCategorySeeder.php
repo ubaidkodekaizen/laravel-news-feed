@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Industry;
-use App\Models\SubCategory;
+use App\Models\Reference\Industry;
+use App\Models\Reference\SubCategory;
 use Illuminate\Database\Seeder;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 

@@ -1,44 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\Business\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
-    public function apiIndex()
+    public function index()
     {
-        $products = Product::where('user_id', Auth::id())
-            ->orderBy('id', 'desc')
-            ->get();
-
-        return response()->json(['success' => true, 'data' => $products]);
+        $products = Product::where('user_id', Auth::id())->get();
+        return view('user.user-products', compact('products'));
     }
 
-    public function apiShow($id)
+    public function addEditProduct($id = null)
     {
-        $product = Product::where('user_id', Auth::id())->where('id', $id)->first();
-
-        if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product not found.'
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $product
-        ]);
+        $product = $id ? Product::findOrFail($id) : new Product();
+        return view('user.add-product', compact('product'));
     }
 
-
-
-    public function apiStore(Request $request, $id = null)
+    public function storeProduct(Request $request, $id = null)
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -50,7 +35,7 @@ class ProductController extends Controller
             'product_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
         ]);
 
-        $product = $id ? Product::where('user_id', Auth::id())->findOrFail($id) : new Product();
+        $product = $id ? Product::findOrFail($id) : new Product();
 
         if ($request->hasFile('product_image')) {
             if ($product->product_image && Storage::exists('public/' . $product->product_image)) {
@@ -69,31 +54,20 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
         $product->unit_of_quantity = $request->unit_of_quantity;
         $product->product_image = $imagePath;
+
         $product->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => $id ? 'Product updated successfully!' : 'Product created successfully!',
-            'data' => $product
-        ]);
+        $message = $id ? 'Product updated successfully!' : 'Product created successfully!';
+        return redirect()->route('user.products')->with('success', $message);
     }
 
-    public function apiDelete($id)
+    public function deleteProduct($id)
     {
-        $product = Product::where('user_id', Auth::id())->where('id', $id)->first();
-
-        if (!$product) {
-            return response()->json(['success' => false, 'message' => 'Product not found.'], 404);
-        }
-
+        $product = Product::findOrFail($id);
         if ($product->product_image && Storage::exists('public/' . $product->product_image)) {
             Storage::delete('public/' . $product->product_image);
         }
-
         $product->delete();
-
-        return response()->json(['success' => true, 'message' => 'Product deleted successfully!']);
+        return redirect()->route('user.products')->with('success', 'Product deleted successfully!');
     }
-
-
 }

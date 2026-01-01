@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Company;
-use App\Models\Conversation;
-use App\Models\Subscription;
+use App\Models\Business\Company;
+use App\Models\Chat\Conversation;
+use App\Models\Business\Subscription;
 use App\Models\User;
 use App\Services\GooglePlayService;
 use Auth;
@@ -17,9 +17,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Designation;
-use App\Models\Industry;
-use App\Models\BusinessType;
+use App\Models\Reference\Designation;
+use App\Models\Reference\Industry;
+use App\Models\Reference\BusinessType;
 use App\Models\UserIcp;
 use App\Http\Resources\UserResource;
 use Illuminate\Validation\ValidationException;
@@ -227,7 +227,7 @@ class UserController extends Controller
         }
 
         $planData = $planMapping[$request->type];
-        $plan = \App\Models\Plan::find($planData['id']);
+        $plan = \App\Models\Business\Plan::find($planData['id']);
 
         if (!$plan) {
             return response()->json([

@@ -142,7 +142,7 @@ class UserResource extends JsonResource
                         'id' => $conversation->id,
                         'user_one_id' => $conversation->user_one_id,
                         'user_two_id' => $conversation->user_two_id,
-                        'last_message_at' => $conversation->last_message_at,
+                        'last_message_at' => $conversation->last_message_at ? $conversation->last_message_at->toIso8601String() : null,
                         'messages' => $conversation->relationLoaded('messages') ? $conversation->messages->map(function ($message) {
                             return [
                                 'id' => $message->id,
@@ -150,7 +150,9 @@ class UserResource extends JsonResource
                                 'sender_id' => $message->sender_id,
                                 'receiver_id' => $message->receiver_id,
                                 'content' => $message->content,
-                                'read_at' => $message->read_at,
+                                'read_at' => $message->read_at ? $message->read_at->toIso8601String() : null,
+                                'created_at' => $message->created_at ? $message->created_at->toIso8601String() : null,
+                                'updated_at' => $message->updated_at ? $message->updated_at->toIso8601String() : null,
                             ];
                         }) : [],
                     ];

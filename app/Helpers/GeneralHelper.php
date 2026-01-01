@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Helpers;
-use App\Models\Blog;
-use App\Models\Company;
-use App\Models\Event;
-use App\Models\Product;
-use App\Models\Service;
-use App\Models\Subscription;
+use App\Models\Content\Blog;
+use App\Models\Business\Company;
+use App\Models\Content\Event;
+use App\Models\Business\Product;
+use App\Models\Business\Service;
+use App\Models\Business\Subscription;
 use App\Models\User;
 use App\Models\UserEducation;
-use App\Models\Plan;
-use App\Models\ProductService;
+use App\Models\Business\Plan;
+use App\Models\Business\ProductService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 

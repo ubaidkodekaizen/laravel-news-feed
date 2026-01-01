@@ -52,7 +52,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Company;
+use App\Models\Business\Company;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
