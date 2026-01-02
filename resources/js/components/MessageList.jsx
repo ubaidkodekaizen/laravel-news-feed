@@ -30,10 +30,14 @@ const MessageList = ({ messages, conversationId }) => {
         const unsubscribers = [];
 
         messageList.forEach((msg) => {
+            // ✅ Skip if no valid ID
+            if (!msg.id) return;
+
             // ✅ Skip optimistic/temp messages
-            if (msg._optimistic || msg.id.toString().startsWith("temp-")) {
+            if (msg._optimistic || String(msg.id).startsWith("temp-")) {
                 return;
             }
+
             const reactionsRef = ref(
                 database,
                 `messages/${conversationId}/${msg.id}/reactions`
@@ -271,60 +275,82 @@ const MessageList = ({ messages, conversationId }) => {
                                             </div>
                                         )}
 
-                                    <div
-                                        className="messageReactIconBtn"
-                                        onClick={() => toggleReactBtns(msg.id)}
-                                    >
-                                        <i className="fa-regular fa-face-smile"></i>
-                                        <div
-                                            className={`messageReactionOptions ${
-                                                showReactBtns[msg.id]
-                                                    ? "messageReactionOptionsShow"
-                                                    : "messageReactionOptionsHide"
-                                            }`}
-                                        >
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleReact(msg.id, "👍");
-                                                }}
+                                    {/* Only show reaction button for non-optimistic messages */}
+                                    {!msg._optimistic &&
+                                        msg.id &&
+                                        !String(msg.id).startsWith("temp-") && (
+                                            <div
+                                                className="messageReactIconBtn"
+                                                onClick={() =>
+                                                    toggleReactBtns(msg.id)
+                                                }
                                             >
-                                                👍
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleReact(msg.id, "❤️");
-                                                }}
-                                            >
-                                                ❤️
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleReact(msg.id, "😂");
-                                                }}
-                                            >
-                                                😂
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleReact(msg.id, "😮");
-                                                }}
-                                            >
-                                                😮
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleReact(msg.id, "😢");
-                                                }}
-                                            >
-                                                😢
-                                            </button>
-                                        </div>
-                                    </div>
+                                                <i className="fa-regular fa-face-smile"></i>
+                                                <div
+                                                    className={`messageReactionOptions ${
+                                                        showReactBtns[msg.id]
+                                                            ? "messageReactionOptionsShow"
+                                                            : "messageReactionOptionsHide"
+                                                    }`}
+                                                >
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleReact(
+                                                                msg.id,
+                                                                "👍"
+                                                            );
+                                                        }}
+                                                    >
+                                                        👍
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleReact(
+                                                                msg.id,
+                                                                "❤️"
+                                                            );
+                                                        }}
+                                                    >
+                                                        ❤️
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleReact(
+                                                                msg.id,
+                                                                "😂"
+                                                            );
+                                                        }}
+                                                    >
+                                                        😂
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleReact(
+                                                                msg.id,
+                                                                "😮"
+                                                            );
+                                                        }}
+                                                    >
+                                                        😮
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleReact(
+                                                                msg.id,
+                                                                "😢"
+                                                            );
+                                                        }}
+                                                    >
+                                                        😢
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                 </div>
                             </div>
                         </div>
