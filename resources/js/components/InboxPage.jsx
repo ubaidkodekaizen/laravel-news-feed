@@ -32,9 +32,27 @@ const InboxPage = () => {
     const activeConversationRef = useRef(null);
     const firebaseUnsubscribers = useRef([]);
     const typingTimeoutRef = useRef(null);
+    const notificationSound = useRef(null);
     const DEFAULT_AVATAR =
         "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
 
+    // Initialize audio
+    useEffect(() => {
+        notificationSound.current = new Audio(
+            "/assets/sounds/message-notification.mp3"
+        );
+        notificationSound.current.volume = 0.5;
+    }, []);
+
+    // Play notification sound function
+    const playNotificationSound = () => {
+        if (notificationSound.current) {
+            notificationSound.current.currentTime = 0;
+            notificationSound.current.play().catch((error) => {
+                console.warn("Could not play notification sound:", error);
+            });
+        }
+    };
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -71,19 +89,17 @@ const InboxPage = () => {
         const messagesQuery = query(messagesRef, orderByChild("created_at"));
 
         setMessages([]);
+        let isInitialLoad = true;
 
         const unsubscribe = onChildAdded(messagesQuery, (snapshot) => {
             const newMessage = snapshot.val();
 
             if (newMessage) {
                 setMessages((prevMessages) => {
-                    // ✅ Check if we already have this message (by ID)
                     if (prevMessages.some((msg) => msg.id === newMessage.id)) {
                         return prevMessages;
                     }
 
-                    // ✅ Check if there's an optimistic version with same content
-                    // Look for messages from the same sender with identical content
                     const optimisticIndex = prevMessages.findIndex(
                         (msg) =>
                             msg._optimistic &&
@@ -93,7 +109,6 @@ const InboxPage = () => {
                     );
 
                     if (optimisticIndex !== -1) {
-                        // ✅ Replace optimistic with real message (no flash!)
                         const updated = [...prevMessages];
                         updated[optimisticIndex] = {
                             ...newMessage,
@@ -105,7 +120,14 @@ const InboxPage = () => {
                         );
                     }
 
-                    // ✅ New message, add it
+                    // ✅ Play sound for incoming messages
+                    if (
+                        !isInitialLoad &&
+                        newMessage.sender_id !== window.userId
+                    ) {
+                        playNotificationSound();
+                    }
+
                     return [...prevMessages, newMessage].sort(
                         (a, b) =>
                             new Date(a.created_at) - new Date(b.created_at)
@@ -114,8 +136,13 @@ const InboxPage = () => {
             }
         });
 
+        const timer = setTimeout(() => {
+            isInitialLoad = false;
+        }, 1000);
+
         return () => {
             unsubscribe();
+            clearTimeout(timer);
         };
     }, [activeConversation]);
 

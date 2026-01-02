@@ -34,8 +34,30 @@ const ChatBox = () => {
     const [typingUser, setTypingUser] = useState(null);
     const [search, setSearch] = useState("");
     const token = localStorage.getItem("sanctum-token");
+    // ✅ Add audio ref for notification sound
+    const notificationSound = useRef(null);
+
     const DEFAULT_AVATAR =
         "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
+
+    // ✅ Initialize audio on component mount
+    useEffect(() => {
+        notificationSound.current = new Audio(
+            "/assets/sounds/message-notification.mp3"
+        );
+        notificationSound.current.volume = 0.5; // Set volume (0.0 to 1.0)
+    }, []);
+
+    // ✅ Play notification sound
+    const playNotificationSound = () => {
+        if (notificationSound.current) {
+            notificationSound.current.currentTime = 0; // Reset to start
+            notificationSound.current.play().catch((error) => {
+                console.warn("Could not play notification sound:", error);
+            });
+        }
+    };
+
     const getInitials = (firstName, lastName) => {
         const first = firstName?.charAt(0)?.toUpperCase() || "";
         const last = lastName?.charAt(0)?.toUpperCase() || "";
@@ -54,7 +76,7 @@ const ChatBox = () => {
         fetchConversations(); // Fetch new conversations for the logged-in user
     }, [userId]); // Run this effect whenever userId changes
 
-    // ✅ FIREBASE: Listen to new messages
+    // ✅ FIREBASE: Listen to new messages with sound notification
     useEffect(() => {
         if (!activeConversation) return;
 
@@ -62,18 +84,17 @@ const ChatBox = () => {
         const messagesQuery = query(messagesRef, orderByChild("created_at"));
 
         setMessages([]);
+        let isInitialLoad = true; // Track initial load
 
         const unsubscribe = onChildAdded(messagesQuery, (snapshot) => {
             const newMessage = snapshot.val();
 
             if (newMessage) {
                 setMessages((prevMessages) => {
-                    // ✅ Check if we already have this message (by ID)
                     if (prevMessages.some((msg) => msg.id === newMessage.id)) {
                         return prevMessages;
                     }
 
-                    // ✅ Check if there's an optimistic version with same content
                     const optimisticIndex = prevMessages.findIndex(
                         (msg) =>
                             msg._optimistic &&
@@ -83,7 +104,6 @@ const ChatBox = () => {
                     );
 
                     if (optimisticIndex !== -1) {
-                        // ✅ Replace optimistic with real message (no flash!)
                         const updated = [...prevMessages];
                         updated[optimisticIndex] = {
                             ...newMessage,
@@ -95,7 +115,15 @@ const ChatBox = () => {
                         );
                     }
 
-                    // ✅ New message, add it
+                    // ✅ Play sound only for incoming messages (not sent by current user)
+                    // And not during initial load
+                    if (
+                        !isInitialLoad &&
+                        newMessage.sender_id !== window.userId
+                    ) {
+                        playNotificationSound();
+                    }
+
                     return [...prevMessages, newMessage].sort(
                         (a, b) =>
                             new Date(a.created_at) - new Date(b.created_at)
@@ -104,8 +132,14 @@ const ChatBox = () => {
             }
         });
 
+        // Mark initial load as complete after a short delay
+        const timer = setTimeout(() => {
+            isInitialLoad = false;
+        }, 1000);
+
         return () => {
             unsubscribe();
+            clearTimeout(timer);
         };
     }, [activeConversation]);
 
