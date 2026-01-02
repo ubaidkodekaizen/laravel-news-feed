@@ -81,7 +81,7 @@ const InboxPage = () => {
         fetchConversations();
     }, []);
 
-    // ✅ FIREBASE: Listen to new messages
+    // ✅ FIREBASE: Listen to new messages with validation
     useEffect(() => {
         if (!activeConversation) return;
 
@@ -94,46 +94,63 @@ const InboxPage = () => {
         const unsubscribe = onChildAdded(messagesQuery, (snapshot) => {
             const newMessage = snapshot.val();
 
-            if (newMessage) {
-                setMessages((prevMessages) => {
-                    if (prevMessages.some((msg) => msg.id === newMessage.id)) {
-                        return prevMessages;
-                    }
+            // ✅ Validate that this is actually a message
+            if (
+                !newMessage ||
+                !newMessage.id ||
+                !newMessage.content ||
+                !newMessage.created_at ||
+                !newMessage.sender_id
+            ) {
+                console.warn("Invalid message data received:", newMessage);
+                return;
+            }
 
-                    const optimisticIndex = prevMessages.findIndex(
-                        (msg) =>
-                            msg._optimistic &&
-                            msg.content.trim() === newMessage.content.trim() &&
-                            msg.sender_id === newMessage.sender_id &&
-                            msg.receiver_id === newMessage.receiver_id
-                    );
+            // ✅ Ensure reactions is an array
+            if (
+                newMessage.reactions &&
+                typeof newMessage.reactions === "object" &&
+                !Array.isArray(newMessage.reactions)
+            ) {
+                newMessage.reactions = Object.values(newMessage.reactions);
+            } else if (!newMessage.reactions) {
+                newMessage.reactions = [];
+            }
 
-                    if (optimisticIndex !== -1) {
-                        const updated = [...prevMessages];
-                        updated[optimisticIndex] = {
-                            ...newMessage,
-                            _optimistic: false,
-                        };
-                        return updated.sort(
-                            (a, b) =>
-                                new Date(a.created_at) - new Date(b.created_at)
-                        );
-                    }
+            setMessages((prevMessages) => {
+                if (prevMessages.some((msg) => msg.id === newMessage.id)) {
+                    return prevMessages;
+                }
 
-                    // ✅ Play sound for incoming messages
-                    if (
-                        !isInitialLoad &&
-                        newMessage.sender_id !== window.userId
-                    ) {
-                        playNotificationSound();
-                    }
+                const optimisticIndex = prevMessages.findIndex(
+                    (msg) =>
+                        msg._optimistic &&
+                        msg.content.trim() === newMessage.content.trim() &&
+                        msg.sender_id === newMessage.sender_id &&
+                        msg.receiver_id === newMessage.receiver_id
+                );
 
-                    return [...prevMessages, newMessage].sort(
+                if (optimisticIndex !== -1) {
+                    const updated = [...prevMessages];
+                    updated[optimisticIndex] = {
+                        ...newMessage,
+                        _optimistic: false,
+                    };
+                    return updated.sort(
                         (a, b) =>
                             new Date(a.created_at) - new Date(b.created_at)
                     );
-                });
-            }
+                }
+
+                // ✅ Play sound for incoming messages
+                if (!isInitialLoad && newMessage.sender_id !== window.userId) {
+                    playNotificationSound();
+                }
+
+                return [...prevMessages, newMessage].sort(
+                    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+                );
+            });
         });
 
         const timer = setTimeout(() => {
@@ -271,6 +288,15 @@ const InboxPage = () => {
         }, 100);
         return () => clearTimeout(timer);
     }, [messages]);
+
+    // useEffect(() => {
+    //     console.log("📨 Messages state:", messages);
+    //     messages.forEach((msg, i) => {
+    //         if (!msg.created_at || isNaN(new Date(msg.created_at).getTime())) {
+    //             console.error(`❌ Invalid message ${i}:`, msg);
+    //         }
+    //     });
+    // }, [messages]);
 
     const fetchConversations = async () => {
         try {
@@ -471,17 +497,31 @@ const InboxPage = () => {
 
     const formatLastMessageTime = (date) => {
         if (!date) return "";
-        const messageDate = new Date(date);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
 
-        if (messageDate.toDateString() === today.toDateString()) {
-            return format(messageDate, "h:mm a");
-        } else if (messageDate.toDateString() === yesterday.toDateString()) {
-            return "Yesterday";
-        } else {
-            return format(messageDate, "MMM d");
+        try {
+            const messageDate = new Date(date);
+
+            // Check if date is valid
+            if (isNaN(messageDate.getTime())) {
+                return "";
+            }
+
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (messageDate.toDateString() === today.toDateString()) {
+                return format(messageDate, "h:mm a");
+            } else if (
+                messageDate.toDateString() === yesterday.toDateString()
+            ) {
+                return "Yesterday";
+            } else {
+                return format(messageDate, "MMM d");
+            }
+        } catch (error) {
+            console.error("Error formatting date:", error, date);
+            return "";
         }
     };
 

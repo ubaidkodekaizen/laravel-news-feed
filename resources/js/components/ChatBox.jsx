@@ -76,7 +76,7 @@ const ChatBox = () => {
         fetchConversations(); // Fetch new conversations for the logged-in user
     }, [userId]); // Run this effect whenever userId changes
 
-    // ✅ FIREBASE: Listen to new messages with sound notification
+    // ✅ FIREBASE: Listen to new messages with better validation
     useEffect(() => {
         if (!activeConversation) return;
 
@@ -84,55 +84,70 @@ const ChatBox = () => {
         const messagesQuery = query(messagesRef, orderByChild("created_at"));
 
         setMessages([]);
-        let isInitialLoad = true; // Track initial load
+        let isInitialLoad = true;
 
         const unsubscribe = onChildAdded(messagesQuery, (snapshot) => {
             const newMessage = snapshot.val();
 
-            if (newMessage) {
-                setMessages((prevMessages) => {
-                    if (prevMessages.some((msg) => msg.id === newMessage.id)) {
-                        return prevMessages;
-                    }
+            // ✅ Validate that this is actually a message, not a reaction or metadata
+            if (
+                !newMessage ||
+                !newMessage.id ||
+                !newMessage.content ||
+                !newMessage.created_at ||
+                !newMessage.sender_id
+            ) {
+                console.warn("Invalid message data received:", newMessage);
+                return;
+            }
 
-                    const optimisticIndex = prevMessages.findIndex(
-                        (msg) =>
-                            msg._optimistic &&
-                            msg.content.trim() === newMessage.content.trim() &&
-                            msg.sender_id === newMessage.sender_id &&
-                            msg.receiver_id === newMessage.receiver_id
-                    );
+            // ✅ Ensure reactions is an array
+            if (
+                newMessage.reactions &&
+                typeof newMessage.reactions === "object" &&
+                !Array.isArray(newMessage.reactions)
+            ) {
+                newMessage.reactions = Object.values(newMessage.reactions);
+            } else if (!newMessage.reactions) {
+                newMessage.reactions = [];
+            }
 
-                    if (optimisticIndex !== -1) {
-                        const updated = [...prevMessages];
-                        updated[optimisticIndex] = {
-                            ...newMessage,
-                            _optimistic: false,
-                        };
-                        return updated.sort(
-                            (a, b) =>
-                                new Date(a.created_at) - new Date(b.created_at)
-                        );
-                    }
+            setMessages((prevMessages) => {
+                if (prevMessages.some((msg) => msg.id === newMessage.id)) {
+                    return prevMessages;
+                }
 
-                    // ✅ Play sound only for incoming messages (not sent by current user)
-                    // And not during initial load
-                    if (
-                        !isInitialLoad &&
-                        newMessage.sender_id !== window.userId
-                    ) {
-                        playNotificationSound();
-                    }
+                const optimisticIndex = prevMessages.findIndex(
+                    (msg) =>
+                        msg._optimistic &&
+                        msg.content.trim() === newMessage.content.trim() &&
+                        msg.sender_id === newMessage.sender_id &&
+                        msg.receiver_id === newMessage.receiver_id
+                );
 
-                    return [...prevMessages, newMessage].sort(
+                if (optimisticIndex !== -1) {
+                    const updated = [...prevMessages];
+                    updated[optimisticIndex] = {
+                        ...newMessage,
+                        _optimistic: false,
+                    };
+                    return updated.sort(
                         (a, b) =>
                             new Date(a.created_at) - new Date(b.created_at)
                     );
-                });
-            }
+                }
+
+                // ✅ Play sound only for incoming messages
+                if (!isInitialLoad && newMessage.sender_id !== window.userId) {
+                    playNotificationSound();
+                }
+
+                return [...prevMessages, newMessage].sort(
+                    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+                );
+            });
         });
 
-        // Mark initial load as complete after a short delay
         const timer = setTimeout(() => {
             isInitialLoad = false;
         }, 1000);

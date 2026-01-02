@@ -177,22 +177,27 @@
 }
 
 .conversationUserDetails .conversationLastMessage {
-    font-size: 14px;
-    font-weight: 400;
-    color: #848484;
-    line-height: 1.3em;
+    margin: 0;
+    color: #76767ccc;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 220px;
-    width: 100%;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 100%;
 }
 
 .conversationUserDetails .conversationUsername {
-    font-size: 16px;
-    font-weight: 500;
-    color: #000;
-    line-height: 1.3em;
+    color: #000929;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
 }
 
 .messageBox {
@@ -325,14 +330,15 @@
 }
 
 .messageBoxListItemContentMsg {
-    font-size: 14px;
-    font-weight: 400;
-    color: #000000;
-    line-height: 1.3em;
+    color: #000;
     background: #27357214;
-    padding: 5px 10px;
-    border-radius: 5px;
-    box-shadow: 0px 1px 4px rgba(0 0 0 / 25%);
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px #00000040;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
 }
 
 .messageReactIconBtn {
@@ -423,15 +429,14 @@
     color: #848484;
 }
 
-.messageBoxListItemContentUsername .messageBoxTime::before {
-    content: "•";
-    margin-right: 5px;
-}
 
-.messageBoxListItemContentUsername .messageBoxTime {
-    color: #848484;
+
+.messageBoxTime {
+    font-family: "Plus Jakarta Sans", sans-serif;
     font-weight: 400;
-    line-height: 1.3em;
+    font-size: 12px;
+    line-height: 100%;
+    margin: 5px 0 0;
 }
 
 .messageBoxListItemContentUsername {
@@ -452,6 +457,7 @@
 
 .messageBoxListItem.messageRight .messageBoxListItemContent {
     align-items: end;
+    flex: 1;
 }
 
 .messageBoxListItem.messageRight .messageBoxListItemContentUsername {
@@ -475,11 +481,10 @@
     flex-direction: row-reverse;
 }
 
-.messageBoxListItem.messageRight .messageBoxTime::before {
-    margin-left: 5px;
-    margin-right: 0px;
+.messageBoxListItem.messageRight .messageBoxListItemContentMsg {
+    background: #273572;
+    color: #fff;
 }
-
 .typing-indicator {
     padding: 0;
     line-height: 1.3em;
@@ -551,6 +556,10 @@
     outline: none;
     background: #eeeff4;
     border-radius: 5px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
 }
 
 /* reactions */
@@ -592,7 +601,9 @@
 .messageBoxListItem.messageLeft .messageReactionOptions {
     left: 20px;
 }
-
+.messageBoxListItem.messageLeft .messageBoxListItemContentMsg {
+    background: #b8c034;
+}
 .messageBoxListItem.messageRight .messageReactionOptions {
     right: 20px;
 }
