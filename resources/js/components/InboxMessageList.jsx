@@ -23,10 +23,35 @@ const InboxMessageList = ({ messages, conversationId }) => {
         conversationIdRef.current = conversationId;
     }, [conversationId]);
 
-    // Update local state when props change
+    // ✅ Filter and validate messages before setting state
     useEffect(() => {
-        setMessageList(messages);
+        const validMessages = messages
+            .filter(
+                (msg) =>
+                    msg &&
+                    msg.id &&
+                    msg.content &&
+                    msg.created_at &&
+                    msg.sender_id
+            )
+            .map((msg) => {
+                // ✅ Ensure reactions is always an array
+                if (
+                    msg.reactions &&
+                    typeof msg.reactions === "object" &&
+                    !Array.isArray(msg.reactions)
+                ) {
+                    msg.reactions = Object.values(msg.reactions);
+                } else if (!msg.reactions) {
+                    msg.reactions = [];
+                }
+                return msg;
+            });
+
+        setMessageList(validMessages);
     }, [messages]);
+
+
 
     // FIREBASE: Listen to reaction changes
     useEffect(() => {
@@ -35,11 +60,11 @@ const InboxMessageList = ({ messages, conversationId }) => {
         const unsubscribers = [];
 
         messageList.forEach((msg) => {
-            // ✅ Skip if no valid ID
-            if (!msg.id) return;
-
-            // ✅ Skip optimistic/temp messages
-            if (msg._optimistic || String(msg.id).startsWith("temp-")) {
+            if (
+                !msg.id ||
+                msg._optimistic ||
+                String(msg.id).startsWith("temp-")
+            ) {
                 return;
             }
 
@@ -58,7 +83,10 @@ const InboxMessageList = ({ messages, conversationId }) => {
                                 ? {
                                       ...message,
                                       reactions: [
-                                          ...(message.reactions || []).filter(
+                                          ...(Array.isArray(message.reactions)
+                                              ? message.reactions
+                                              : []
+                                          ).filter(
                                               (r) => r.id !== newReaction.id
                                           ),
                                           newReaction,
@@ -79,8 +107,11 @@ const InboxMessageList = ({ messages, conversationId }) => {
                             message.id === msg.id
                                 ? {
                                       ...message,
-                                      reactions: (
-                                          message.reactions || []
+                                      reactions: (Array.isArray(
+                                          message.reactions
+                                      )
+                                          ? message.reactions
+                                          : []
                                       ).filter(
                                           (r) => r.id !== removedReaction.id
                                       ),
@@ -182,7 +213,19 @@ const InboxMessageList = ({ messages, conversationId }) => {
         let currentDate = null;
 
         messages.forEach((message) => {
+            // ✅ Check if created_at exists and is valid
+            if (!message.created_at) {
+                console.warn("Message missing created_at:", message);
+                return;
+            }
+
             const messageDate = new Date(message.created_at);
+
+            // ✅ Check if date is valid
+            if (isNaN(messageDate.getTime())) {
+                console.warn("Invalid date for message:", message);
+                return;
+            }
 
             if (!currentDate || !isSameDay(currentDate, messageDate)) {
                 if (currentGroup.length > 0) {
@@ -229,159 +272,173 @@ const InboxMessageList = ({ messages, conversationId }) => {
                             {formatDateHeader(group.date)}
                         </div>
                     </div>
-                    {group.messages.map((msg, index) => (
-                        <div
-                            key={msg.id || `msg-${index}`}
-                            className={`messageBoxListItem ${
-                                msg.sender_id === window.userId
-                                    ? "messageRight"
-                                    : "messageLeft"
-                            }`}
-                        >
-                            <div className="messageBoxListItemInner">
-                                <Avatar
-                                    user={msg.sender}
-                                    className="messageSenderPhoto"
-                                />
-                                <div
-                                    className={`messageBoxListItemContent ${
-                                        msg.sender_id === window.userId
-                                            ? "bg-blue-600 text-black"
-                                            : "bg-gray-100 text-gray-900"
-                                    }`}
-                                >
-                                    <div className="messageBoxListItemContentMsg">
-                                        {msg.content}
+                    {group.messages.map((msg, index) => {
+                        // ✅ Skip messages with invalid dates
+                        if (!msg.created_at) return null;
 
-                                        {/* ✅ Show sending indicator for optimistic messages */}
-                                        {msg._optimistic && (
-                                            <span
-                                                className="messageSending"
-                                                style={{
-                                                    fontSize: "0.75rem",
-                                                    color: "#999",
-                                                    marginLeft: "8px",
-                                                }}
-                                            >
-                                                ⏳ Sending...
-                                            </span>
-                                        )}
+                        const messageDate = new Date(msg.created_at);
+                        if (isNaN(messageDate.getTime())) return null;
 
-                                        <div className="messageBoxTime">
-                                            {format(
-                                                new Date(msg.created_at),
-                                                "h:mm a"
+                        return (
+                            <div
+                                key={msg.id || `msg-${index}`}
+                                className={`messageBoxListItem ${
+                                    msg.sender_id === window.userId
+                                        ? "messageRight"
+                                        : "messageLeft"
+                                }`}
+                            >
+                                <div className="messageBoxListItemInner">
+                                    <Avatar
+                                        user={msg.sender}
+                                        className="messageSenderPhoto"
+                                    />
+                                    <div
+                                        className={`messageBoxListItemContent ${
+                                            msg.sender_id === window.userId
+                                                ? "bg-blue-600 text-black"
+                                                : "bg-gray-100 text-gray-900"
+                                        }`}
+                                    >
+                                        <div className="messageBoxListItemContentMsg">
+                                            {msg.content}
+
+                                            {/* ✅ Show sending indicator for optimistic messages */}
+                                            {msg._optimistic && (
+                                                <span
+                                                    className="messageSending"
+                                                    style={{
+                                                        fontSize: "0.75rem",
+                                                        color: "#999",
+                                                        marginLeft: "8px",
+                                                    }}
+                                                >
+                                                    ⏳ Sending...
+                                                </span>
                                             )}
-                                        </div>
-                                    </div>
 
-                                    {msg.reactions &&
-                                        msg.reactions.length > 0 && (
-                                            <div className="messageReactions">
-                                                {msg.reactions.map(
-                                                    (reaction) => (
-                                                        <span
-                                                            key={reaction.id}
-                                                            className="reaction"
-                                                            onClick={() =>
-                                                                handleRemoveReaction(
-                                                                    msg.id,
-                                                                    reaction.id,
-                                                                    reaction.emoji
-                                                                )
-                                                            }
-                                                            title="Click to remove"
-                                                            style={{
-                                                                cursor: "pointer",
-                                                            }}
-                                                        >
-                                                            {reaction.emoji}
-                                                        </span>
-                                                    )
+                                            <div className="messageBoxTime">
+                                                {format(
+                                                    new Date(msg.created_at),
+                                                    "h:mm a"
                                                 )}
                                             </div>
-                                        )}
+                                        </div>
 
-                                    {/* Only show reaction button for non-optimistic messages */}
-                                    {!msg._optimistic &&
-                                        msg.id &&
-                                        !String(msg.id).startsWith("temp-") && (
-                                            <div
-                                                className="messageReactIconBtn"
-                                                onClick={() =>
-                                                    toggleReactBtns(msg.id)
-                                                }
-                                            >
-                                                <i className="fa-regular fa-face-smile"></i>
-                                                <div
-                                                    className={`messageReactionOptions ${
-                                                        showReactBtns[msg.id]
-                                                            ? "messageReactionOptionsShow"
-                                                            : "messageReactionOptionsHide"
-                                                    }`}
-                                                >
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleReact(
-                                                                msg.id,
-                                                                "👍"
-                                                            );
-                                                        }}
-                                                    >
-                                                        👍
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleReact(
-                                                                msg.id,
-                                                                "❤️"
-                                                            );
-                                                        }}
-                                                    >
-                                                        ❤️
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleReact(
-                                                                msg.id,
-                                                                "😂"
-                                                            );
-                                                        }}
-                                                    >
-                                                        😂
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleReact(
-                                                                msg.id,
-                                                                "😮"
-                                                            );
-                                                        }}
-                                                    >
-                                                        😮
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleReact(
-                                                                msg.id,
-                                                                "😢"
-                                                            );
-                                                        }}
-                                                    >
-                                                        😢
-                                                    </button>
+                                        {msg.reactions &&
+                                            msg.reactions.length > 0 && (
+                                                <div className="messageReactions">
+                                                    {msg.reactions.map(
+                                                        (reaction) => (
+                                                            <span
+                                                                key={
+                                                                    reaction.id
+                                                                }
+                                                                className="reaction"
+                                                                onClick={() =>
+                                                                    handleRemoveReaction(
+                                                                        msg.id,
+                                                                        reaction.id,
+                                                                        reaction.emoji
+                                                                    )
+                                                                }
+                                                                title="Click to remove"
+                                                                style={{
+                                                                    cursor: "pointer",
+                                                                }}
+                                                            >
+                                                                {reaction.emoji}
+                                                            </span>
+                                                        )
+                                                    )}
                                                 </div>
-                                            </div>
-                                        )}
+                                            )}
+
+                                        {/* Only show reaction button for non-optimistic messages */}
+                                        {!msg._optimistic &&
+                                            msg.id &&
+                                            !String(msg.id).startsWith(
+                                                "temp-"
+                                            ) && (
+                                                <div
+                                                    className="messageReactIconBtn"
+                                                    onClick={() =>
+                                                        toggleReactBtns(msg.id)
+                                                    }
+                                                >
+                                                    <i className="fa-regular fa-face-smile"></i>
+                                                    <div
+                                                        className={`messageReactionOptions ${
+                                                            showReactBtns[
+                                                                msg.id
+                                                            ]
+                                                                ? "messageReactionOptionsShow"
+                                                                : "messageReactionOptionsHide"
+                                                        }`}
+                                                    >
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleReact(
+                                                                    msg.id,
+                                                                    "👍"
+                                                                );
+                                                            }}
+                                                        >
+                                                            👍
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleReact(
+                                                                    msg.id,
+                                                                    "❤️"
+                                                                );
+                                                            }}
+                                                        >
+                                                            ❤️
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleReact(
+                                                                    msg.id,
+                                                                    "😂"
+                                                                );
+                                                            }}
+                                                        >
+                                                            😂
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleReact(
+                                                                    msg.id,
+                                                                    "😮"
+                                                                );
+                                                            }}
+                                                        >
+                                                            😮
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleReact(
+                                                                    msg.id,
+                                                                    "😢"
+                                                                );
+                                                            }}
+                                                        >
+                                                            😢
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             ))}
         </div>

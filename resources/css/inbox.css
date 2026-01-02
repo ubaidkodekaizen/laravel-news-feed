@@ -689,3 +689,9 @@
         flex: 1;
     }
 }
+
+@media (max-width: 480px) {
+    .inbox-conversations-list {
+        height: 390px;
+    }
+}
