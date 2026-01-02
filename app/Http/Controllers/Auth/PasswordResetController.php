@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PasswordReset;
+use App\Models\User;
 
 class PasswordResetController extends Controller
 {
@@ -75,13 +76,35 @@ class PasswordResetController extends Controller
             return back()->withErrors(['token' => 'Invalid or expired token.']);
         }
 
-        DB::table('users')
-            ->where('email', $request->email)
-            ->update(['password' => Hash::make($request->password)]);
+        // Find the user
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user) {
+            return back()->withErrors(['email' => 'User not found.']);
+        }
 
+        // Check if email was already verified
+        $wasEmailVerified = (bool) $user->email_verified_at;
+
+        // Update password
+        $user->password = Hash::make($request->password);
+        
+        // Verify email if not already verified
+        if (!$user->email_verified_at) {
+            $user->email_verified_at = now();
+        }
+        
+        $user->save();
+
+        // Delete the password reset token
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
-        return redirect()->route('login')->with('success', 'Password reset successfully. You can now login.');
+        // Determine success message based on whether email was verified
+        $message = $wasEmailVerified
+            ? 'Password reset successfully. You can now login.'
+            : 'Password set and email verified successfully! You can now login.';
+
+        return redirect()->route('login')->with('success', $message);
     }
 
 
