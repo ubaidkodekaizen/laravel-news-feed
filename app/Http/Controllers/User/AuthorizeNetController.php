@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Mail\ConfirmationEmail;
+use App\Mail\AdminNotification;
 use net\authorize\api\contract\v1\IntervalType;
 use net\authorize\api\contract\v1\SubscriptionType;
 use DB;
@@ -127,27 +130,29 @@ class AuthorizeNetController extends Controller
                     ['token' => $token, 'created_at' => now()]
                 );
 
-              	Mail::send('emails.confirmation-email', [
-                    'token' => $token,
-                    'user' => $user,
-                    'subscription' => $subscription,
-                ], function ($message) use ($request) {
-                    $message->to($request->email);
-                    $message->subject('Verify Email & Setup Password');
-                });
-                Mail::send('emails.admin-email', [
-                    'user' => $user,
-                    'subscription' => $subscription,
-                ], function ($message) use ($request) {
-                    $message->to([
-                        "kashif.zubair@amcob.org",
-                        "ubaid.syed@kodekaizen.com",
-                        "samar.naeem@amcob.org",
-                        "kashif.zubair@myadroit.com"
+                try {
+                    Mail::to($request->email)->queue(new ConfirmationEmail($token, $user, $subscription));
+                    
+                    Log::info('Confirmation email queued successfully', ['email' => $request->email]);
+                } catch (\Exception $e) {
+                    Log::error('Confirmation email failed to queue', [
+                        'email' => $request->email,
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
                     ]);
-
-                    $message->subject('A new customer for MuslimLynk');
-                });
+                }
+                
+                try {
+                    Mail::queue(new AdminNotification($user, $subscription));
+                    
+                    Log::info('Admin notification email queued successfully', ['user_id' => $user->id]);
+                } catch (\Exception $e) {
+                    Log::error('Admin notification email failed to queue', [
+                        'user_id' => $user->id,
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
 
 
 

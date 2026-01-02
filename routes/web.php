@@ -5,6 +5,7 @@ use App\Http\Controllers\User\EducationController;
 use App\Http\Controllers\User\ProductController;
 use App\Http\Controllers\User\SearchController;
 use App\Http\Controllers\User\ServiceController;
+use App\Http\Controllers\User\FeedController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
@@ -258,9 +259,24 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     // Dashboard & Navigation
-    Route::get('/news-feed', function () {
-        return view('user.news-feed');
-    })->name('news-feed');
+    Route::get('/news-feed', [FeedController::class, 'index'])->name('news-feed');
+    
+    // News Feed API Routes (for AJAX calls)
+    Route::prefix('feed')->group(function () {
+        Route::get('/posts', [FeedController::class, 'getFeed'])->name('feed.posts');
+        Route::get('/posts/{id}', [FeedController::class, 'getPost'])->name('feed.post.show');
+        Route::post('/posts', [FeedController::class, 'createPost'])->name('feed.post.create');
+        Route::put('/posts/{id}', [FeedController::class, 'updatePost'])->name('feed.post.update');
+        Route::delete('/posts/{id}', [FeedController::class, 'deletePost'])->name('feed.post.delete');
+        Route::post('/reactions', [FeedController::class, 'addReaction'])->name('feed.reaction.add');
+        Route::delete('/reactions', [FeedController::class, 'removeReaction'])->name('feed.reaction.remove');
+        Route::post('/posts/{postId}/comments', [FeedController::class, 'addComment'])->name('feed.comment.add');
+        Route::put('/comments/{commentId}', [FeedController::class, 'updateComment'])->name('feed.comment.update');
+        Route::delete('/comments/{commentId}', [FeedController::class, 'deleteComment'])->name('feed.comment.delete');
+        Route::get('/posts/{postId}/comments', [FeedController::class, 'getComments'])->name('feed.comments');
+        Route::post('/posts/{postId}/share', [FeedController::class, 'sharePost'])->name('feed.post.share');
+        Route::get('/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('feed.user.posts');
+    });
 
     Route::get('/inbox', function () {
         return view('user.inbox');

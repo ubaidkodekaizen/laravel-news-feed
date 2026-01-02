@@ -25,6 +25,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Mail\PasswordReset;
+use App\Mail\WelcomeNewUser;
 
 
 
@@ -77,11 +80,19 @@ class AdminController extends Controller
             ['token' => $token, 'created_at' => now()]
         );
 
-
-        Mail::send('emails.password-reset', ['token' => $token], function ($message) use ($request) {
-            $message->to($request->email);
-            $message->subject('Reset Password Notification');
-        });
+        try {
+            Mail::to($request->email)->queue(new PasswordReset($token));
+            
+            Log::info('Admin password reset email queued successfully', ['email' => $request->email]);
+        } catch (\Exception $e) {
+            Log::error('Admin password reset email failed to queue', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()->withErrors(['email' => 'Failed to send email. Please try again later or contact support.']);
+        }
 
         return back()->with('success', 'Password reset link sent to your email.');
     }
@@ -169,10 +180,20 @@ class AdminController extends Controller
             'is_amcob' => $request->amcob_member ?? 'No',
             'duration' => $request->duration ?? ''
         ];
-        Mail::send('emails.welcome-new-user', $emailData, function ($message) use ($request) {
-            $message->to($request->email);
-            $message->subject('Welcome to MuslimLynk - Your Account Credentials');
-        });
+        
+        try {
+            Mail::to($request->email)->queue(new WelcomeNewUser($emailData));
+            
+            Log::info('Welcome email queued successfully', ['email' => $request->email]);
+        } catch (\Exception $e) {
+            Log::error('Welcome email failed to queue', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            // Continue anyway - user is created, just email failed
+        }
+        
         return redirect()->route('admin.users')->with('success', 'User created successfully!');
 
 

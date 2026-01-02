@@ -9,6 +9,7 @@ use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\EducationController;
+use App\Http\Controllers\API\FeedController;
 use App\Services\GooglePlayService;
 use Illuminate\Support\Facades\Log;
 
@@ -190,6 +191,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/qualifications/{id}', [EducationController::class, 'apiShow']);
     Route::post('/user/qualifications/store/{id?}', [EducationController::class, 'apiStore']);
     Route::delete('/user/qualifications/delete/{id}', [EducationController::class, 'apiDelete']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | News Feed Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/feed/posts', [FeedController::class, 'getFeed'])->name('api.feed.posts');
+    Route::get('/feed/posts/{id}', [FeedController::class, 'getPost'])->name('api.feed.post.show');
+    Route::post('/feed/posts', [FeedController::class, 'createPost'])->name('api.feed.post.create');
+    Route::put('/feed/posts/{id}', [FeedController::class, 'updatePost'])->name('api.feed.post.update');
+    Route::delete('/feed/posts/{id}', [FeedController::class, 'deletePost'])->name('api.feed.post.delete');
+    Route::post('/feed/reactions', [FeedController::class, 'addReaction'])->name('api.feed.reaction.add');
+    Route::delete('/feed/reactions', [FeedController::class, 'removeReaction'])->name('api.feed.reaction.remove');
+    Route::post('/feed/posts/{postId}/comments', [FeedController::class, 'addComment'])->name('api.feed.comment.add');
+    Route::put('/feed/comments/{commentId}', [FeedController::class, 'updateComment'])->name('api.feed.comment.update');
+    Route::delete('/feed/comments/{commentId}', [FeedController::class, 'deleteComment'])->name('api.feed.comment.delete');
+    Route::get('/feed/posts/{postId}/comments', [FeedController::class, 'getComments'])->name('api.feed.comments');
+    Route::post('/feed/posts/{postId}/share', [FeedController::class, 'sharePost'])->name('api.feed.post.share');
+    Route::get('/feed/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('api.feed.user.posts');
 
     /*
     |--------------------------------------------------------------------------
