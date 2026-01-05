@@ -32,7 +32,7 @@
         padding-top: 41px;
     }
 
-    img:not(.logo img, .user_company_profile .company_logo img, .user_company_profile .profile_pic img) {
+    ul.list_check_flex.px-3 li a img {
         margin-top: 20px;
         width: 40px !important;
         height: 40px !important;
@@ -444,11 +444,11 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <p>No Product or Service to show.</p>
+                                    <p class="mt-4">No Product or Service to show.</p>
                                 @endforelse
                             </div>
                         @else
-                            <p>No Product or Service to show.</p>
+                            <p class="mt-4">No Product or Service to show.</p>
                         @endif
                     </div>
                 </div>

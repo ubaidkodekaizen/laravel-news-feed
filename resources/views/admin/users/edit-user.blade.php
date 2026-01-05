@@ -49,6 +49,57 @@
         text-align: center !important;
         margin: 0 0 0 0;
     }
+
+    .toggle__label {
+        margin: 0 0 !important;
+    }
+
+    @media (max-width: 768px) {
+        .row {
+            padding: 20px 16px;
+            margin: 10px 0;
+        }
+        .custom_card_profile .nav-tabs .nav-link {
+            padding: 10px 11px !important;
+            font-size: 16px !important;
+            min-height: 50px !important;
+        }
+
+        .custom_card_profile .nav-tabs .nav-item {
+            max-width: 145px !important;
+        }
+
+        .custom_card_profile .nav-tabs {
+            justify-content: center !important;
+        }
+
+        .user_company_profile .new_user_details .list_check_flex label {
+            margin: 8px 0 !important;
+        }
+
+        .btn-primary {
+            font-size: 18px !important;
+        }
+
+        .cont {
+            font-size: 14px !important;
+        }
+        .toggle__label {
+            width: 70px !important;
+            height: 24px !important;
+        }
+
+        .toggle__input:checked + .toggle__label::after {
+            left: 32px !important;
+        }
+
+        .toggle__label::after {
+            top: 1.9px !important;
+            left: 2px !important;
+            width: 36px !important;
+            height: 20px !important;
+        }
+    }
 </style>
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css" />

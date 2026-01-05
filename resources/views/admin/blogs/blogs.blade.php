@@ -16,8 +16,8 @@
         background: #fafbff !important;
     }
 
-    table.dataTable {
-        margin: 0px !important;
+    table#blogsTable {
+        margin: 0 !important;
     }
 
     div.dataTables_wrapper div.dt-row {
@@ -26,12 +26,27 @@
 
     .row.dt-row .col-sm-12{
         padding: 0 !important;
-        overflow: hidden;
+        overflow-x: scroll !important;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar-thumb {
+        background: #273572;
+        border-radius: 10px;
     }
 
 
     table.dataTable {
-        margin: 0 !important;
+        margin-top: 0px !important; 
+        margin-bottom: 0px !important;
         border-radius: 15.99px 15.99px 0 0;
         overflow: hidden;
         border-top: 2px solid #F2F2F2;
