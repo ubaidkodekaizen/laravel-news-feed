@@ -387,6 +387,7 @@
     letter-spacing: 1px;
 }
 .messageBoxListItemContent {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -444,6 +445,9 @@
 
 .messageBoxListItem.messageRight .messageBoxListItemContent {
     align-items: end;
+    flex: 1;
+    max-width: 500px;
+    width: 100%;
 }
 
 .messageBoxListItem.messageRight .messageBoxListItemContentUsername {
@@ -575,6 +579,20 @@
     color: #8e8e8e;
 }
 
+/* Ensure menu button and react button are on same line */
+.messageReactIconBtn,
+.messageMenuBtn {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Container for reaction and menu buttons */
+.messageBoxListItemContent .messageActionBtns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .messageReactions {
     display: flex;
     gap: 4px;
@@ -656,6 +674,189 @@
 .back-button:hover {
     background: #f5f5f5;
 }
+
+/* ============================================
+   MESSAGE MENU (EDIT/DELETE) BUTTON
+   ============================================ */
+.messageMenuBtn {
+    position: relative;
+    margin-left: 8px;
+    display: inline-block;
+}
+
+.messageMenuBtn > button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    color: #666;
+    font-size: 14px;
+    transition: color 0.2s;
+    border-radius: 4px;
+}
+
+.messageMenuBtn > button:hover {
+    color: #333;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Message Menu Dropdown */
+.messageMenu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 140px;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.messageMenuShow {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+.messageMenuHide {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.messageMenu button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    color: #333;
+}
+
+.messageMenu button:hover {
+    background: #f5f5f5;
+}
+
+.messageMenu button:active {
+    background: #e9ecef;
+}
+
+.messageMenu button i {
+    margin-right: 10px;
+    width: 16px;
+    text-align: center;
+}
+
+.messageMenu button:last-child {
+    border-top: 1px solid #eee;
+}
+
+/* Delete button specific styling */
+.messageMenu button[style*="color: red"] {
+    color: #dc3545 !important;
+}
+
+.messageMenu button[style*="color: red"]:hover {
+    background: #fff5f5;
+}
+
+/* ============================================
+   MESSAGE EDIT BOX
+   ============================================ */
+.messageEditBox {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.messageEditInput {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #eaebf1;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fff;
+}
+
+.messageEditInput:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Edit Actions Buttons */
+.messageEditActions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.messageEditSaveBtn,
+.messageEditCancelBtn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.messageEditSaveBtn {
+    background: #394a93;
+    color: white;
+}
+
+.messageEditSaveBtn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.messageEditSaveBtn:active {
+    transform: translateY(0);
+}
+
+.messageEditCancelBtn {
+    background: #6c757d;
+    color: white;
+}
+
+.messageEditCancelBtn:hover {
+    background: #5a6268;
+}
+
+.messageEditCancelBtn:active {
+    background: #545b62;
+}
+
+/* Edited Label */
+.messageEdited {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.85em;
+    margin-left: 4px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .inbox-container {

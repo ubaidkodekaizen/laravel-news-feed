@@ -25,6 +25,7 @@ class Message extends Model
         'receiver_id',
         'content',
         'read_at',
+        'edited_at',
     ];
 
     // Define date casting
@@ -32,6 +33,7 @@ class Message extends Model
         'read_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'edited_at' => 'datetime',
     ];
 
     // Define relationships

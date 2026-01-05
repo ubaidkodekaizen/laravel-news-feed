@@ -93,6 +93,51 @@ class FirebaseService
     }
 
     /**
+     * Update message in Firebase
+     */
+    public function updateMessage(int $conversationId, int $messageId, array $data): void
+    {
+        try {
+            $reference = $this->database->getReference("messages/{$conversationId}/{$messageId}");
+            $reference->update($data);
+
+            \Log::info('Message updated in Firebase', [
+                'conversation_id' => $conversationId,
+                'message_id' => $messageId,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to update message in Firebase: ' . $e->getMessage(), [
+                'conversation_id' => $conversationId,
+                'message_id' => $messageId
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Delete message from Firebase
+     */
+    public function deleteMessage(int $conversationId, int $messageId): void
+    {
+        try {
+            $reference = $this->database->getReference("messages/{$conversationId}/{$messageId}");
+            $reference->remove();
+
+            \Log::info('Message deleted from Firebase', [
+                'conversation_id' => $conversationId,
+                'message_id' => $messageId
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete message from Firebase: ' . $e->getMessage(), [
+                'conversation_id' => $conversationId,
+                'message_id' => $messageId
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Add reaction to message in Firebase
      */
     public function addReaction($conversationId, $messageId, $reaction)

@@ -114,6 +114,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/conversations/create', [ChatController::class, 'createConversation'])->name('create.conversation');
     Route::get('/conversations/{conversation}/messages', [ChatController::class, 'getMessages'])->name('get.message');
     Route::post('/messages/send', [ChatController::class, 'sendMessage'])->name('sendMessage');
+     Route::put('/messages/{message}', [ChatController::class, 'updateMessage'])->name('update.message'); // ✅ Add
+    Route::delete('/messages/{message}', [ChatController::class, 'destroyMessage'])->name('destroy.message'); // ✅ Add
     Route::get('conversations/{conversation}/user', [ChatController::class, 'getUserForConversation'])->name('get.user.conversation');
     Route::post('/typing', [ChatController::class, 'userIsTyping'])->name('user.is.typing');
     Route::get('/check-conversation', [ChatController::class, 'checkConversation'])->name('check.conversation');

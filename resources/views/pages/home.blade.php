@@ -1945,7 +1945,7 @@
 
 
          <div class="home_banner_sec"
-             style="background-image: linear-gradient(#000000bf, #213baec4), url(http://127.0.0.1:8000/assets/images/downloadMuslimLynkBanner.jpg);">
+             style="background-image: linear-gradient(#000000bf, #213baec4), url({{asset('assets/images/downloadMuslimLynkBanner.jpg')}});">
              <div class="banner_container">
                  <div class="row align-items-center">
                      <div class="col-lg-12 text-center">

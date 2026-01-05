@@ -19,7 +19,7 @@ class ChatController extends Controller
 {
     use AuthorizesRequests, FormatsUserData;
 
-       protected $userOnlineService;
+    protected $userOnlineService;
     protected $firebaseService; // ✅ ADD THIS
 
     public function __construct(
@@ -116,13 +116,11 @@ class ChatController extends Controller
                 ->orderBy('created_at', 'asc')
                 ->get()
                 ->map(function ($message) {
-                    // Format sender data using trait
                     $senderData = $this->formatUserData($message->sender);
                     $message->sender->user_has_photo = $senderData['user_has_photo'];
                     $message->sender->user_initials = $senderData['user_initials'];
                     $message->sender->photo = $senderData['photo'];
 
-                    // Format dates properly, handling null values
                     return [
                         'id' => $message->id,
                         'conversation_id' => $message->conversation_id,
@@ -132,13 +130,14 @@ class ChatController extends Controller
                         'read_at' => $message->read_at ? $message->read_at->toIso8601String() : null,
                         'created_at' => $message->created_at ? $message->created_at->toIso8601String() : null,
                         'updated_at' => $message->updated_at ? $message->updated_at->toIso8601String() : null,
+                        'edited_at' => $message->edited_at ? $message->edited_at->toIso8601String() : null, // ✅ Add this
                         'sender' => $message->sender,
-                        'reactions' => $message->relationLoaded('reactions') && $message->reactions 
+                        'reactions' => $message->relationLoaded('reactions') && $message->reactions
                             ? $message->reactions->map(function ($reaction) {
                                 return [
                                     'id' => $reaction->id,
                                     'user_id' => $reaction->user_id,
-                                    'emoji' => $reaction->emoji, // Message reactions use emoji field
+                                    'emoji' => $reaction->emoji,
                                     'user' => $reaction->relationLoaded('user') && $reaction->user ? [
                                         'id' => $reaction->user->id,
                                         'first_name' => $reaction->user->first_name,
@@ -166,6 +165,112 @@ class ChatController extends Controller
             return response()->json([
                 'message' => 'Error fetching messages',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateMessage(Request $request, Message $message): JsonResponse
+    {
+        try {
+            if ($message->sender_id !== auth()->id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $request->validate([
+                'content' => 'required|string|max:1000',
+            ]);
+
+            // create the timestamp once
+            $editedAt = now();
+
+            // ensure edited_at is fillable or set explicitly
+            $message->update([
+                'content' => $request->content,
+                'edited_at' => $editedAt,
+            ]);
+
+            // refresh to ensure model attributes/casts are applied
+            $message->refresh();
+
+            // Update in Firebase using the timestamp we created (guaranteed not null)
+            $this->firebaseService->updateMessage(
+                $message->conversation_id,
+                $message->id,
+                [
+                    'content' => $message->content,
+                    'edited_at' => $editedAt->toIso8601String(),
+                ]
+            );
+
+            $message->load('sender:id,first_name,last_name,email,photo,slug');
+
+            return response()->json([
+                'id' => $message->id,
+                'conversation_id' => $message->conversation_id,
+                'sender_id' => $message->sender_id,
+                'receiver_id' => $message->receiver_id,
+                'content' => $message->content,
+                'read_at' => optional($message->read_at)->toIso8601String(),
+                'created_at' => optional($message->created_at)->toIso8601String(),
+                'updated_at' => optional($message->updated_at)->toIso8601String(),
+                'edited_at' => optional($message->edited_at)->toIso8601String(),
+                'sender' => $this->formatUserData($message->sender),
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error updating message: ' . $e->getMessage(), [
+                'message_id' => $message->id ?? null,
+                'user_id' => auth()->id() ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to update message',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    /**
+     * Delete a message
+     */
+    public function destroyMessage(Message $message): JsonResponse
+    {
+        try {
+            // Check if user owns the message
+            if ($message->sender_id !== auth()->id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $conversationId = $message->conversation_id;
+            $messageId = $message->id;
+
+            // Delete from Firebase first
+            $this->firebaseService->deleteMessage($conversationId, $messageId);
+
+            // Delete from database
+            $message->delete();
+
+            \Log::info('Message deleted successfully', [
+                'message_id' => $messageId,
+                'conversation_id' => $conversationId,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Message deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting message: ' . $e->getMessage(), [
+                'message_id' => $message->id,
+                'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Failed to delete message',
+                'message' => $e->getMessage()
             ], 500);
         }
     }

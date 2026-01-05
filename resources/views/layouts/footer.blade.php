@@ -23,6 +23,13 @@
     }
     var userPing = "{{ route('user.ping') }}";
     var userOffline = "{{ route('user.offline') }}";
+
+    window.updateMessageRoute = function(messageId) {
+        return "{{ url('api/messages') }}/" + messageId;
+    };
+    window.deleteMessageRoute = function(messageId) {
+        return "{{ url('api/messages') }}/" + messageId;
+    };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
