@@ -7,6 +7,16 @@ import {
     Square,
     User,
 } from "lucide-react";
+import {
+    ref,
+    onChildAdded,
+    onValue,
+    set,
+    query,
+    orderByChild,
+} from "firebase/database";
+import { database } from "../firebase.js";
+
 import MessageList from "./MessageList.jsx";
 import MessageInput from "./MessageInput.jsx";
 const ChatBox = () => {
@@ -19,12 +29,35 @@ const ChatBox = () => {
     const [activeConversation, setActiveConversation] = useState(null);
     const [activeUser, setActiveUser] = useState(null); // Store the user data
     const messagesEndRef = useRef(null);
+    const typingTimeoutRef = useRef(null);
     const [userId, setUserId] = useState(window.userId);
     const [typingUser, setTypingUser] = useState(null);
     const [search, setSearch] = useState("");
     const token = localStorage.getItem("sanctum-token");
+    // ✅ Add audio ref for notification sound
+    const notificationSound = useRef(null);
+
     const DEFAULT_AVATAR =
         "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
+
+    // ✅ Initialize audio on component mount
+    useEffect(() => {
+        notificationSound.current = new Audio(
+            "/assets/sounds/message-notification.mp3"
+        );
+        notificationSound.current.volume = 0.5; // Set volume (0.0 to 1.0)
+    }, []);
+
+    // ✅ Play notification sound
+    const playNotificationSound = () => {
+        if (notificationSound.current) {
+            notificationSound.current.currentTime = 0; // Reset to start
+            notificationSound.current.play().catch((error) => {
+                console.warn("Could not play notification sound:", error);
+            });
+        }
+    };
+
     const getInitials = (firstName, lastName) => {
         const first = firstName?.charAt(0)?.toUpperCase() || "";
         const last = lastName?.charAt(0)?.toUpperCase() || "";
@@ -43,76 +76,210 @@ const ChatBox = () => {
         fetchConversations(); // Fetch new conversations for the logged-in user
     }, [userId]); // Run this effect whenever userId changes
 
+    // ✅ FIREBASE: Listen to new messages with better validation
     useEffect(() => {
-        if (!window.Echo) {
-            console.error("Echo is not initialized yet.");
-            return;
-        }
+        if (!activeConversation) return;
 
-        // Fetch conversations from the API
-        fetchConversations();
+        const messagesRef = ref(database, `messages/${activeConversation}`);
+        const messagesQuery = query(messagesRef, orderByChild("created_at"));
 
-        // Subscribe to the private channel for new messages
-        const messageChannel = window.Echo.private(
-            `private-chat.${window.userId}`
-        );
-        // console.log("Message Channel initialized:", messageChannel);
+        setMessages([]);
+        let isInitialLoad = true;
 
-        messageChannel.listen(".message.new", async (message) => {
-            console.log("message.new received:", message);
+        const unsubscribe = onChildAdded(messagesQuery, (snapshot) => {
+            const newMessage = snapshot.val();
 
-            if (message.conversation_id === activeConversation) {
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    {
-                        id: message.id,
-                        conversation_id: message.conversation_id,
-                        sender_id: message.sender.id,
-                        content: message.content,
-                        created_at: message.created_at,
-                        sender: {
-                            id: message.sender.id,
-                            first_name: message.sender.first_name,
-                            last_name: message.sender.last_name,
-                            email: message.sender.email,
-                            photo: message.sender.photo,
-                        },
-                    },
-                ]);
-            } else {
-                await fetchConversations(activeConversation);
+            // ✅ Validate that this is actually a message, not a reaction or metadata
+            if (
+                !newMessage ||
+                !newMessage.id ||
+                !newMessage.content ||
+                !newMessage.created_at ||
+                !newMessage.sender_id
+            ) {
+                console.warn("Invalid message data received:", newMessage);
+                return;
             }
+
+            // ✅ Ensure reactions is an array
+            if (
+                newMessage.reactions &&
+                typeof newMessage.reactions === "object" &&
+                !Array.isArray(newMessage.reactions)
+            ) {
+                newMessage.reactions = Object.values(newMessage.reactions);
+            } else if (!newMessage.reactions) {
+                newMessage.reactions = [];
+            }
+
+            setMessages((prevMessages) => {
+                if (prevMessages.some((msg) => msg.id === newMessage.id)) {
+                    return prevMessages;
+                }
+
+                const optimisticIndex = prevMessages.findIndex(
+                    (msg) =>
+                        msg._optimistic &&
+                        msg.content.trim() === newMessage.content.trim() &&
+                        msg.sender_id === newMessage.sender_id &&
+                        msg.receiver_id === newMessage.receiver_id
+                );
+
+                if (optimisticIndex !== -1) {
+                    const updated = [...prevMessages];
+                    updated[optimisticIndex] = {
+                        ...newMessage,
+                        _optimistic: false,
+                    };
+                    return updated.sort(
+                        (a, b) =>
+                            new Date(a.created_at) - new Date(b.created_at)
+                    );
+                }
+
+                // ✅ Play sound only for incoming messages
+                if (!isInitialLoad && newMessage.sender_id !== window.userId) {
+                    playNotificationSound();
+                }
+
+                return [...prevMessages, newMessage].sort(
+                    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+                );
+            });
         });
 
-        // Subscribe to the user activity channel for typing indicators
-        let userActivityChannel;
-        if (activeConversation) {
-            console.log(
-                `Subscribing to user-activity.${activeConversation}...`
-            );
-            userActivityChannel = window.Echo.private(
-                `user-activity.${activeConversation}`
-            );
+        const timer = setTimeout(() => {
+            isInitialLoad = false;
+        }, 1000);
 
-            userActivityChannel.listen(".user.typing", (e) => {
-                console.log("Typing event received:", e);
-                if (e.conversation_id === activeConversation) {
-                    showTypingIndicator(e.user);
-                }
-            });
-        }
-
-        // Cleanup function
         return () => {
-            console.log(`Leaving private-chat.${window.userId}...`);
-            window.Echo.leave(`private-chat.${window.userId}`);
+            unsubscribe();
+            clearTimeout(timer);
+        };
+    }, [activeConversation]);
 
-            if (activeConversation) {
-                console.log(`Leaving user-activity.${activeConversation}...`);
-                window.Echo.leave(`user-activity.${activeConversation}`);
+    // ✅ FIREBASE: Listen to typing indicators
+    useEffect(() => {
+        if (!activeConversation) return;
+
+        const typingRef = ref(database, `typing/${activeConversation}`);
+
+        const unsubscribe = onValue(typingRef, (snapshot) => {
+            const typingData = snapshot.val();
+
+            if (!typingData) {
+                setTypingUser(null);
+                return;
+            }
+
+            const now = Date.now();
+            const typingUsers = Object.entries(typingData)
+                .filter(([uid, data]) => {
+                    const userId = parseInt(uid);
+                    const timestamp = data.timestamp * 1000; // Convert to milliseconds
+                    const timeDiff = now - timestamp;
+
+                    // Debug log
+                    console.log("Typing check:", {
+                        userId,
+                        currentUserId: window.userId,
+                        timestamp,
+                        now,
+                        timeDiff,
+                        isValid: userId !== window.userId && timeDiff < 3000,
+                    });
+
+                    // Only show if: not current user AND within last 3 seconds
+                    return userId !== window.userId && timeDiff < 3000;
+                })
+                .map(([uid, data]) => ({
+                    id: parseInt(uid),
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                }));
+
+            console.log("Typing users:", typingUsers);
+            setTypingUser(typingUsers[0] || null);
+        });
+
+        // ✅ Check every second and clear stale typing indicators
+        const interval = setInterval(() => {
+            const typingRef = ref(database, `typing/${activeConversation}`);
+            onValue(
+                typingRef,
+                (snapshot) => {
+                    const typingData = snapshot.val();
+
+                    if (!typingData) {
+                        setTypingUser(null);
+                        return;
+                    }
+
+                    const now = Date.now();
+
+                    // Check each typing entry and remove if stale
+                    Object.entries(typingData).forEach(async ([uid, data]) => {
+                        const timestamp = data.timestamp * 1000;
+                        const timeDiff = now - timestamp;
+
+                        // If older than 3 seconds, remove from Firebase
+                        if (timeDiff >= 3000) {
+                            console.log(
+                                "Removing stale typing indicator for user:",
+                                uid
+                            );
+                            const staleRef = ref(
+                                database,
+                                `typing/${activeConversation}/${uid}`
+                            );
+                            try {
+                                await set(staleRef, null);
+                            } catch (e) {
+                                console.warn(
+                                    "Failed to remove stale typing:",
+                                    e
+                                );
+                            }
+                        }
+                    });
+                },
+                { onlyOnce: true }
+            ); // Only read once per interval
+        }, 1000);
+
+        return () => {
+            unsubscribe();
+            clearInterval(interval);
+        };
+    }, [activeConversation]);
+
+    // ✅ Clear typing indicator on window blur/close
+    useEffect(() => {
+        if (!activeConversation) return;
+
+        const clearTyping = async () => {
+            try {
+                const typingRef = ref(
+                    database,
+                    `typing/${activeConversation}/${window.userId}`
+                );
+                await set(typingRef, null);
+                console.log("Cleared typing indicator");
+            } catch (e) {
+                console.warn("Failed to clear typing:", e);
             }
         };
-    }, [activeConversation, userId]);
+
+        // Clear on window events
+        window.addEventListener("beforeunload", clearTyping);
+        window.addEventListener("blur", clearTyping);
+
+        return () => {
+            window.removeEventListener("beforeunload", clearTyping);
+            window.removeEventListener("blur", clearTyping);
+            clearTyping(); // Also clear when component unmounts or conversation changes
+        };
+    }, [activeConversation]);
 
     useEffect(() => {
         // Scroll to the bottom when the component is first loaded or when messages change
@@ -172,34 +339,81 @@ const ChatBox = () => {
     };
 
     const sendMessage = async (messageContent) => {
-        console.log("Sending message:", messageContent); // Debugging
+        console.log("Sending message:", messageContent);
 
         if (!messageContent.trim() || !activeConversation) return;
 
-        const activeUser = conversations.find(
+        // ✅ Clear typing indicator immediately when sending message
+        try {
+            const typingRef = ref(
+                database,
+                `typing/${activeConversation}/${window.userId}`
+            );
+            await set(typingRef, null);
+        } catch (e) {
+            console.warn("Failed to clear typing on send:", e);
+        }
+
+        const activeUserData = conversations.find(
             (convo) => convo.id === activeConversation
         )?.user;
-        if (!activeUser) return;
+        if (!activeUserData) return;
+
+        // ✅ CREATE OPTIMISTIC MESSAGE with Firebase-safe ID (no dots!)
+        const tempId = `temp-${Date.now()}-${Math.floor(
+            Math.random() * 1000000
+        )}`;
+
+        // ✅ CREATE OPTIMISTIC MESSAGE
+        const optimisticMessage = {
+            id: tempId,
+            conversation_id: activeConversation,
+            sender_id: window.userId,
+            receiver_id: activeUserData.id,
+            content: messageContent,
+            created_at: new Date().toISOString(),
+            sender: {
+                id: window.userId,
+                first_name: window.userFirstName || "",
+                last_name: window.userLastName || "",
+                email: window.userEmail || "",
+                photo: window.userPhoto || "",
+                slug: window.userSlug || "",
+                user_has_photo: !!window.userPhoto,
+                user_initials: window.userInitials || "",
+            },
+            reactions: [],
+            _optimistic: true,
+        };
+
+        // ✅ ADD MESSAGE IMMEDIATELY
+        setMessages((prev) => [...prev, optimisticMessage]);
 
         try {
             const response = await window.axios.post(
                 sendMsg,
                 {
                     content: messageContent,
-                    receiver_id: activeUser.id,
+                    receiver_id: activeUserData.id,
                 },
                 {
                     headers: { Authorization: token },
                 }
             );
 
-            console.log("Message sent successfully:", response.data); // Debugging
+            console.log("Message sent successfully:", response.data);
+            // Firebase listener will replace optimistic message automatically
 
-            setMessages((prev) => [...prev, response.data]);
             await fetchConversations();
-            await fetchMessages(activeConversation);
         } catch (error) {
             console.error("Error sending message:", error);
+
+            // ✅ REMOVE OPTIMISTIC MESSAGE ON ERROR
+            setMessages((prev) =>
+                prev.filter((msg) => msg.id !== optimisticMessage.id)
+            );
+
+            alert("Failed to send message. Please try again.");
         }
     };
 
@@ -304,18 +518,46 @@ const ChatBox = () => {
     const handleTyping = async () => {
         if (!activeConversation) return;
 
+        // Clear previous timeout
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+
         try {
-            await axios.post(
-                userIsTyping,
-                {
-                    conversation_id: activeConversation,
-                },
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                }
+            const typingRef = ref(
+                database,
+                `typing/${activeConversation}/${window.userId}`
             );
+
+            // ✅ Set typing status with current timestamp
+            await set(typingRef, {
+                user_id: window.userId,
+                first_name: window.userFirstName || "",
+                last_name: window.userLastName || "",
+                timestamp: Math.floor(Date.now() / 1000),
+            });
+
+            // ✅ Debounce API call (reduce server load)
+            typingTimeoutRef.current = setTimeout(async () => {
+                try {
+                    await axios.post(
+                        userIsTyping,
+                        { conversation_id: activeConversation },
+                        { headers: { Authorization: token } }
+                    );
+                } catch (e) {
+                    console.warn("API typing call failed:", e);
+                }
+            }, 500);
+
+            // ✅ Auto-remove after 3 seconds
+            setTimeout(async () => {
+                try {
+                    await set(typingRef, null);
+                } catch (e) {
+                    console.warn("Failed to clear typing indicator:", e);
+                }
+            }, 3000);
         } catch (error) {
             console.error("Error sending typing event:", error);
         }
@@ -383,7 +625,10 @@ const ChatBox = () => {
                                 No messages found yet
                             </div>
                         ) : (
-                            <MessageList messages={messages} />
+                            <MessageList
+                                messages={messages}
+                                conversationId={activeConversation}
+                            />
                         )}
                         <div ref={messagesEndRef}></div>
                     </div>

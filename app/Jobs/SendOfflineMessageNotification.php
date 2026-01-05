@@ -8,7 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
-use App\Models\Message;
+use App\Models\Chat\Message;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewMessageNotification;
 

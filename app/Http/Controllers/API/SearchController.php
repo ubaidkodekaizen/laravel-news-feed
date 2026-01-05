@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\Service;
+use App\Models\Business\Company;
+use App\Models\Business\Product;
+use App\Models\Business\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,6 +20,49 @@ class SearchController extends Controller
                 $query->where('status', 'complete');
             })
             ->with(['company', 'userIcp']);
+
+        // General search query parameter - searches across all fields
+        if ($request->filled('query')) {
+            $searchTerm = $request->input('query');
+            
+            $query->where(function ($q) use ($searchTerm) {
+                // Search in user names
+                $q->where('first_name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('last_name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchTerm}%"]);
+                
+                // Search in user position/designation
+                $q->orWhere('user_position', 'LIKE', "%{$searchTerm}%");
+                
+                // Search in locations
+                $q->orWhere('city', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('state', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('county', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('country', 'LIKE', "%{$searchTerm}%");
+                
+                // Search in company fields
+                $q->orWhereHas('company', function ($companyQuery) use ($searchTerm) {
+                    $companyQuery->where('company_industry', 'LIKE', "%{$searchTerm}%")
+                                  ->orWhere('company_position', 'LIKE', "%{$searchTerm}%")
+                                  ->orWhere('company_name', 'LIKE', "%{$searchTerm}%");
+                });
+                
+                // Search in products
+                $q->orWhereHas('products', function ($productQuery) use ($searchTerm) {
+                    $productQuery->where('title', 'LIKE', "%{$searchTerm}%");
+                });
+                
+                // Search in services
+                $q->orWhereHas('services', function ($serviceQuery) use ($searchTerm) {
+                    $serviceQuery->where('title', 'LIKE', "%{$searchTerm}%");
+                });
+                
+                // Search in business location (userIcp)
+                $q->orWhereHas('userIcp', function ($icpQuery) use ($searchTerm) {
+                    $icpQuery->where('business_location', 'LIKE', "%{$searchTerm}%");
+                });
+            });
+        }
 
         if ($request->filled('company_position')) {
             $positions = (array) $request->company_position;
@@ -188,7 +231,8 @@ class SearchController extends Controller
             });
         }
 
-        $query->orderByRaw("CASE WHEN city IS NULL THEN 2 WHEN city = 'N/A' THEN 1 ELSE 0 END")
+        // Order results - prioritize non-N/A values but don't exclude them
+        $query->orderByRaw("CASE WHEN city IS NULL OR city = 'N/A' OR city = '' THEN 1 ELSE 0 END")
             ->orderBy('id', 'desc');
 
         $perPage = $request->get('per_page', 10);

@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use App\Mail\PasswordReset;
+use App\Models\User;
 
 class PasswordResetController extends Controller
 {
@@ -29,11 +32,19 @@ class PasswordResetController extends Controller
             ['token' => $token, 'created_at' => now()]
         );
 
-
-        Mail::send('emails.password-reset', ['token' => $token], function ($message) use ($request) {
-            $message->to($request->email);
-            $message->subject('Reset Password Notification');
-        });
+        try {
+            Mail::to($request->email)->queue(new PasswordReset($token));
+            
+            Log::info('Password reset email queued successfully', ['email' => $request->email]);
+        } catch (\Exception $e) {
+            Log::error('Password reset email failed to queue', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()->withErrors(['email' => 'Failed to send email. Please try again later or contact support.']);
+        }
 
         return back()->with('success', 'Password reset link sent to your email.');
     }
@@ -65,13 +76,35 @@ class PasswordResetController extends Controller
             return back()->withErrors(['token' => 'Invalid or expired token.']);
         }
 
-        DB::table('users')
-            ->where('email', $request->email)
-            ->update(['password' => Hash::make($request->password)]);
+        // Find the user
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user) {
+            return back()->withErrors(['email' => 'User not found.']);
+        }
 
+        // Check if email was already verified
+        $wasEmailVerified = (bool) $user->email_verified_at;
+
+        // Update password
+        $user->password = Hash::make($request->password);
+        
+        // Verify email if not already verified
+        if (!$user->email_verified_at) {
+            $user->email_verified_at = now();
+        }
+        
+        $user->save();
+
+        // Delete the password reset token
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
-        return redirect()->route('login')->with('success', 'Password reset successfully. You can now login.');
+        // Determine success message based on whether email was verified
+        $message = $wasEmailVerified
+            ? 'Password reset successfully. You can now login.'
+            : 'Password set and email verified successfully! You can now login.';
+
+        return redirect()->route('login')->with('success', $message);
     }
 
 

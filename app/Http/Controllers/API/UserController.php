@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Company;
-use App\Models\Conversation;
-use App\Models\Subscription;
+use App\Models\Business\Company;
+use App\Models\Chat\Conversation;
+use App\Models\Business\Subscription;
 use App\Models\User;
 use App\Services\GooglePlayService;
 use Auth;
@@ -17,9 +17,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Designation;
-use App\Models\Industry;
-use App\Models\BusinessType;
+use App\Models\Reference\Designation;
+use App\Models\Reference\Industry;
+use App\Models\Reference\BusinessType;
 use App\Models\UserIcp;
 use App\Http\Resources\UserResource;
 use Illuminate\Validation\ValidationException;
@@ -126,10 +126,18 @@ class UserController extends Controller
         );
 
         // Send verification email
-        Mail::send('emails.email-verification', ['token' => $verificationToken], function ($message) use ($request) {
-            $message->to($request->email);
-            $message->subject('Verify Your Email - MuslimLynk');
-        });
+        try {
+            Mail::to($request->email)->queue(new \App\Mail\EmailVerification($verificationToken));
+            
+            \Log::info('Email verification queued successfully', ['email' => $request->email]);
+        } catch (\Exception $e) {
+            \Log::error('Email verification failed to queue', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            // Continue anyway - user is registered, just email failed
+        }
 
         $token = $user->createToken('api_token')->plainTextToken;
 
@@ -227,7 +235,7 @@ class UserController extends Controller
         }
 
         $planData = $planMapping[$request->type];
-        $plan = \App\Models\Plan::find($planData['id']);
+        $plan = \App\Models\Business\Plan::find($planData['id']);
 
         if (!$plan) {
             return response()->json([
@@ -286,20 +294,15 @@ class UserController extends Controller
         $user->save();
 
         try {
-            Mail::send('emails.admin-email', [
-                'user' => $user,
-                'subscription' => $subscription,
-            ], function ($message) {
-                $message->to([
-                    'kashif.zubair@amcob.org',
-                    'ubaid.syed@kodekaizen.com',
-                    'samar.naeem@amcob.org',
-                    'kashif.zubair@myadroit.com'
-                ]);
-                $message->subject('A new customer for MuslimLynk');
-            });
+            Mail::queue(new \App\Mail\AdminNotification($user, $subscription));
+            
+            \Log::info('Admin notification email queued successfully', ['user_id' => $user->id]);
         } catch (\Exception $e) {
-            \Log::error('Admin email failed to send: ' . $e->getMessage());
+            \Log::error('Admin notification email failed to queue', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
 
         return response()->json([
@@ -694,10 +697,22 @@ class UserController extends Controller
             ['token' => $token, 'created_at' => now()]
         );
 
-        Mail::send('emails.password-reset', ['token' => $token], function ($message) use ($request) {
-            $message->to($request->email);
-            $message->subject('Reset Password Notification');
-        });
+        try {
+            Mail::to($request->email)->queue(new \App\Mail\PasswordReset($token));
+            
+            \Log::info('API password reset email queued successfully', ['email' => $request->email]);
+        } catch (\Exception $e) {
+            \Log::error('API password reset email failed to queue', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to send email. Please try again later or contact support.',
+            ], 500);
+        }
 
         return response()->json([
             'status' => true,

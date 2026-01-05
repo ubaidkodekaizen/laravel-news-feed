@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider; 
 use Illuminate\Support\Facades\Gate;
-use App\Models\Conversation;
+use App\Models\Chat\Conversation;
 use App\Models\User;
 use App\Policies\ConversationPolicy;
 

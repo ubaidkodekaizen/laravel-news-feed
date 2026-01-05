@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Conversation;
-use App\Models\Reaction;
+use App\Models\Chat\Conversation;
+use App\Models\Feed\Reaction;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
@@ -50,25 +50,26 @@ class User extends Authenticatable
         'marital_status',
         'is_amcob',
         'duration',
+        'email_verified_at',
     ];
 
     public function company()
     {
-        return $this->hasOne(Company::class)->whereHas('user', function ($query) {
+        return $this->hasOne(\App\Models\Business\Company::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
 
     public function products()
     {
-        return $this->hasMany(Product::class)->whereHas('user', function ($query) {
+        return $this->hasMany(\App\Models\Business\Product::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
 
     public function services()
     {
-        return $this->hasMany(Service::class)->whereHas('user', function ($query) {
+        return $this->hasMany(\App\Models\Business\Service::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
@@ -76,7 +77,7 @@ class User extends Authenticatable
 
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class)->whereHas('user', function ($query) {
+        return $this->hasMany(\App\Models\Business\Subscription::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
@@ -105,6 +106,30 @@ class User extends Authenticatable
         return $this->hasMany(Reaction::class);
     }
 
+    public function posts()
+    {
+        return $this->hasMany(\App\Models\Feed\Post::class);
+    }
+
+    public function postReactions()
+    {
+        return $this->hasMany(\App\Models\Feed\Reaction::class)->where('reactionable_type', \App\Models\Feed\Post::class);
+    }
+
+    public function postComments()
+    {
+        return $this->hasMany(\App\Models\Feed\PostComment::class);
+    }
+
+    public function commentReactions()
+    {
+        return $this->hasMany(\App\Models\Feed\Reaction::class)->where('reactionable_type', \App\Models\Feed\PostComment::class);
+    }
+
+    public function postShares()
+    {
+        return $this->hasMany(\App\Models\Feed\PostShare::class);
+    }
 
 
 

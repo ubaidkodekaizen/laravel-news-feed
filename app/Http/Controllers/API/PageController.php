@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\Service;
+use App\Models\Business\Company;
+use App\Models\Business\Product;
+use App\Models\Business\Service;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

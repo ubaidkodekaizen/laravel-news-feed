@@ -50,4 +50,10 @@ return [
         'api_key_ai' => env('MUSLIMLYNK_API_KEY_AI'), // API key for accessing external AI API
     ],
 
+     'firebase' => [
+        'credentials' => env('FIREBASE_CREDENTIALS', storage_path('app/firebase-credentials.json')),
+        'database_url' => env('FIREBASE_DATABASE_URL'),
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+    ],
+
 ];

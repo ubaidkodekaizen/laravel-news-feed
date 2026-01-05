@@ -34,6 +34,14 @@ const fetchSanctumToken = async () => {
             event.newValue = `Bearer ${token}`;
             window.dispatchEvent(event);
 
+            const { authenticateFirebase, setupPresence } = await import('./firebase.js');
+            const authenticated = await authenticateFirebase();
+
+            if (authenticated && window.userId) {
+                await setupPresence(window.userId);
+                console.log('✅ Firebase initialized successfully');
+            }
+
             // console.log('Token set in Axios from bootstrap.js:', axios.defaults.headers.common['Authorization']);
           } else {
             console.error('No token received from server');

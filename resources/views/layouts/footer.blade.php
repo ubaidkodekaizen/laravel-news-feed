@@ -38,7 +38,33 @@
 <script src="{{ asset('assets/js/custom.js?v1') }}"></script>
 @auth
     <script>
-        window.userId = {{ auth()->id() }};
+        window.userId = {{ auth()->id() ?? 'null' }};
+
+        @auth
+        window.userFirstName = "{{ auth()->user()->first_name }}";
+        window.userLastName = "{{ auth()->user()->last_name }}";
+        window.userEmail = "{{ auth()->user()->email }}";
+
+        @php
+            $userPhoto = auth()->user()->photo;
+            // Generate full URL for photo
+            if ($userPhoto) {
+                // Check if it's already a full URL
+    if (filter_var($userPhoto, FILTER_VALIDATE_URL)) {
+        $photoUrl = $userPhoto;
+    } else {
+        $photoUrl = asset('storage/' . $userPhoto);
+    }
+} else {
+    $photoUrl = '';
+            }
+        @endphp
+
+        window.userPhoto = "{{ $photoUrl }}";
+        window.userSlug = "{{ auth()->user()->slug }}";
+        window.userInitials =
+            "{{ strtoupper(substr(auth()->user()->first_name, 0, 1) . substr(auth()->user()->last_name, 0, 1)) }}";
+        @endauth
     </script>
     <div id="chat-container"></div>
 @endauth

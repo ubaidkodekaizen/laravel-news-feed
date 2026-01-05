@@ -2,12 +2,12 @@
 
 namespace App\Helpers;
 
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\Service;
+use App\Models\Business\Company;
+use App\Models\Business\Product;
+use App\Models\Business\Service;
 use App\Models\User;
-use App\Models\Plan;
-use App\Models\ProductService;
+use App\Models\Business\Plan;
+use App\Models\Business\ProductService;
 use DB;
 
 class DropDownHelper
