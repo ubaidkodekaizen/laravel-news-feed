@@ -21,8 +21,74 @@ class FeedController extends Controller
      */
     public function index()
     {
-        return view('user.news-feed');
+        // eager load relations we need
+        $postsPaginator = \App\Models\Feed\Post::with([
+            'user',
+            'media',
+            'comments.user',
+            'reactions',
+        ])->latest()->paginate(10);
+
+        // transform to the shape used in your Blade partials
+        $posts = $postsPaginator->getCollection()->map(function ($p) {
+            // derive user name & avatar with sensible fallbacks
+            $user = $p->user;
+            $name = $user->name ?? trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?? 'Unknown User';
+            $avatar = $user->avatar_url ?? $user->avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
+            $position = $user->position ?? ($user->job_title ?? '');
+
+            return [
+                'id' => $p->id,
+                'content' => $p->content,
+                'created_at' => $p->created_at,
+                'likes_count' => $p->reactions_count ?? $p->reactions()->count(),
+                'comments_count' => $p->comments_count ?? $p->comments()->count(),
+                'user' => [
+                    'id' => $user->id ?? null,
+                    'name' => $name,
+                    'position' => $position,
+                    'avatar' => $avatar,
+                ],
+                'media' => $p->media->map(function ($m) {
+                    return [
+                        'media_type' => $m->media_type,
+                        'media_url' => $m->media_url,
+                        'mime_type' => $m->mime_type,
+                        'file_name' => $m->file_name,
+                    ];
+                })->toArray(),
+                'comments' => $p->comments->take(2)->map(function ($c) {
+                    $commentUser = $c->user;
+                    $commentName = $commentUser->name ?? trim(($commentUser->first_name ?? '') . ' ' . ($commentUser->last_name ?? '')) ?? 'Unknown';
+                    $commentAvatar = $commentUser->avatar_url ?? $commentUser->avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
+                    return [
+                        'id' => $c->id,
+                        'content' => $c->content,
+                        'created_at' => $c->created_at,
+                        'user' => [
+                            'id' => $commentUser->id ?? null,
+                            'name' => $commentName,
+                            'avatar' => $commentAvatar,
+                        ],
+                    ];
+                })->toArray(),
+                'reactions' => $p->reactions->take(3)->map(function ($r) {
+                    // very small representation for your current UI (emoji/type logic can be improved)
+                    return [
+                        'type' => $r->reaction_type,
+                        'user_id' => $r->user_id,
+                    ];
+                })->toArray(),
+            ];
+        })->toArray();
+
+        // pass both the transformed posts array and the original paginator (for links)
+        return view('user.news-feed', [
+            'posts' => $posts,
+            'pagination' => $postsPaginator,
+        ]);
     }
+
 
     /**
      * Get posts for the feed (paginated).
@@ -47,10 +113,10 @@ class FeedController extends Controller
             },
             'originalPost.user:id,first_name,last_name,slug,photo',
         ])
-        ->where('status', 'active')
-        ->whereNull('deleted_at')
-        ->orderBy('created_at', 'desc')
-        ->paginate($perPage);
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
 
         return response()->json([
             'success' => true,
@@ -87,10 +153,10 @@ class FeedController extends Controller
             'originalPost.user:id,first_name,last_name,slug,photo',
             'originalPost.media'
         ])
-        ->where('id', $id)
-        ->where('status', 'active')
-        ->whereNull('deleted_at')
-        ->firstOrFail();
+            ->where('id', $id)
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->firstOrFail();
 
         // Check if current user has reacted
         $userReaction = $post->reactions()->where('user_id', $userId)->first();
@@ -158,11 +224,10 @@ class FeedController extends Controller
                 'message' => 'Post created successfully!',
                 'data' => $post
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating post: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create post. Please try again.'
@@ -186,8 +251,8 @@ class FeedController extends Controller
             ->firstOrFail();
 
         $post->content = $request->content ?? $post->content;
-        $post->comments_enabled = $request->has('comments_enabled') 
-            ? $request->comments_enabled 
+        $post->comments_enabled = $request->has('comments_enabled')
+            ? $request->comments_enabled
             : $post->comments_enabled;
         $post->save();
 
@@ -482,11 +547,10 @@ class FeedController extends Controller
                 'message' => 'Post shared successfully!',
                 'data' => $share
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error sharing post: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to share post. Please try again.'
@@ -516,11 +580,11 @@ class FeedController extends Controller
                     ->limit(3);
             },
         ])
-        ->where('user_id', $targetUserId)
-        ->where('status', 'active')
-        ->whereNull('deleted_at')
-        ->orderBy('created_at', 'desc')
-        ->paginate($perPage);
+            ->where('user_id', $targetUserId)
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
 
         return response()->json([
             'success' => true,
@@ -528,4 +592,3 @@ class FeedController extends Controller
         ]);
     }
 }
-

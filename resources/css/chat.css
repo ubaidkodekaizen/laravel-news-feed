@@ -2,10 +2,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 10px;
-    background: #273572;
     cursor: pointer;
     border-radius: 5px 5px 0 0;
+    border-bottom: 2px solid #e9ebf0;
+    padding: 16px 24px;
+    background: #fff;
 }
 
 #chat-container {
@@ -19,13 +20,14 @@
 }
 
 #chat-container .chatBox {
-    border: 1px solid #ddd;
     background: #fff;
-    border-radius: 5px 5px 0 0;
     max-width: 300px;
     width: 100%;
     min-width: 300px;
-    box-shadow: 0px 4px 15px rgba(0 0 0 / 25%);
+    border: 2px solid #e9ebf0;
+    border-radius: 10.66px;
+    margin: 0px 0px 10px 0;
+    overflow: hidden;
 }
 
 .chatBox.chatBoxClose {
@@ -45,10 +47,10 @@
 }
 
 .chatBoxMinIcon {
-    height: 50px;
-    width: 50px;
-    background: #273572;
-    box-shadow: 0px 0px 5px #b8c034;
+    height: 70px;
+    width: 70px;
+    background: linear-gradient(180deg, #0e1948, #213bae);
+    box-shadow: 0 0 5px #ffffff47;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -65,7 +67,13 @@
 }
 
 .chatBoxHead span {
-    color: #fff;
+    color: #000929;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
 }
 
 .chatBoxHead .actionBtns {
@@ -80,7 +88,7 @@
     border-radius: 5px;
     width: 30px;
     height: 25px;
-    color: #fff;
+    color: #000929;
     transition: 0.3s;
 }
 
@@ -114,23 +122,27 @@
     height: 350px;
     overflow-y: scroll;
     position: relative;
-    padding-top: 45px;
+    background: #f8f9fa;
 }
 
 .conversationBox .conversationBoxInner {
-    border-bottom: 1px solid #ddd;
     display: flex;
     align-items: center;
     justify-content: start;
     gap: 10px;
     position: relative;
-    padding: 5px 5px;
+    padding: 10px 20px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.2s;
+    background: #fff;
+    border-radius: 10.66px;
+    width: 100%;
+    max-width: 95%;
+    margin: 3px auto;
 }
 
 .conversationBox .conversationBoxInner:hover {
-    background: #b8c034;
+    background: #27357212;
     transition: 0.3s;
 }
 
@@ -186,7 +198,7 @@
     font-weight: 400;
     font-size: 12px;
     line-height: 100%;
-    max-width: 200px;
+    max-width: 176px;
     width: 100%;
 }
 
@@ -201,20 +213,32 @@
     font-size: 14px;
     line-height: 150%;
 }
-
+.messageBoxListContent {
+    width: 100%;
+}
 .messageBox {
-    border: 1px solid #dddddd;
     border-bottom: none;
     background: #fff;
-    border-radius: 5px 5px 0 0;
     max-width: 450px;
     width: 100%;
     min-width: 450px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0px 4px 15px rgba(0 0 0 / 25%);
+    border: 2px solid #e9ebf0;
+    border-radius: 10.66px;
+    margin: 0 0 10px 0;
 }
 
+.noMessages {
+    padding: 20px 20px;
+    text-decoration: none;
+    transition: 0.3s;
+    color: #76767ccc;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+}
 .messageBoxInput .messageBoxInputInner {
     display: flex;
     align-items: stretch;
@@ -279,6 +303,7 @@
     justify-content: start;
     min-height: 400px;
     max-height: 400px;
+    background: #f6f7fd;
 }
 
 .messageBoxListItem {
@@ -319,6 +344,7 @@
     justify-content: start;
     gap: 5px;
     position: relative;
+    flex: 1;
 }
 
 .messageBoxListItemContentUsername {
@@ -362,9 +388,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    padding: 5px 10px;
-    background: #273572;
     cursor: pointer;
+    padding: 16px 24px;
+    background: #fff;
     min-height: 49.6px;
 }
 
@@ -375,7 +401,12 @@
 }
 
 .messageBoxHead .messageBoxHeadInner .closeMessageBoxBtn {
-    filter: invert(1) brightness(100);
+    filter: brightness(100);
+    --bs-btn-close-opacity: 1;
+    --bs-btn-close-hover-opacity: 1;
+    --bs-btn-close-focus-opacity: 1;
+    --bs-btn-close-disabled-opacity: 1;
+    opacity: 1;
 }
 
 .messageBoxHead .messageBoxHeadSenderPhoto {
@@ -399,12 +430,12 @@
     border: 1px solid #ffffff33;
 }
 .messageBoxHead .messageBoxHeadUsername {
-    font-size: 16px;
-    font-weight: 500;
-    color: #fff;
-    line-height: 1.3em;
+    color: #000929;
     text-decoration: none;
     transition: 0.3s;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    line-height: 150%;
 }
 
 .messageBoxHead .messageBoxHeadUsername:hover {
@@ -504,25 +535,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    color: #7f7f7f;
+    gap: 7px;
+    color: #000;
     text-transform: uppercase;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
     font-size: 14px;
-    font-weight: 500;
+    line-height: 150%;
 }
 
 .messageDateHeader::before {
     content: "";
-    background: #cfccc1;
-    height: 1px;
+    background: #2735721a;
+    height: 2px;
     flex: 1;
     display: block;
 }
 
 .messageDateHeader::after {
     content: "";
-    background: #cfccc1;
-    height: 1px;
+    background: #2735721a;
+    height: 2px;
     flex: 1;
     display: block;
 }
@@ -545,28 +578,41 @@
 }
 
 .conversationBoxSearch {
-    position: absolute;
-    top: 0;
+    position: sticky;
+    top: 0px;
     left: 0;
     width: 100%;
+    height: 61px;
     background: #fff;
     padding: 5px;
     border-bottom: 1px solid #dddddd;
+    z-index: 9999;
+    margin: 0 0 3px 0;
 }
 
 .conversationBoxSearch input {
-    padding: 5px 10px;
     width: 100%;
-    border: 1px solid #dddddd;
+    padding: 13px 10px 12px 35px;
+    border-radius: 10.66px;
     outline: none;
-    background: #eeeff4;
-    border-radius: 5px;
+    transition: all 0.3s;
+    background: #27357205;
+    border: 2px solid #e9ebf0;
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 14px;
     line-height: 100%;
+    height: 100%;
 }
-
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    width: 18px;
+    height: 18px;
+}
 /* reactions */
 .messageReactions {
     display: flex;
@@ -740,4 +786,22 @@
     margin-right: 5px;
     font-size: 0.75rem;
     color: #fff;
+}
+
+@media (max-width: 800px) {
+    .chatBoxHead,
+    .chatBoxContent,
+    .messageBox {
+        display: none !important;
+    }
+    .chatBox.chatBoxClose .chatBoxHead,
+    .chatBox.chatBoxOpen .chatBoxMinIcon {
+        display: flex;
+    }
+    #chat-container .chatBox {
+        background: transparent;
+        max-width: max-content;
+        min-width: max-content;
+        border: none;
+    }
 }

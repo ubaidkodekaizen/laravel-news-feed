@@ -393,6 +393,7 @@
     align-items: start;
     justify-content: start;
     gap: 5px;
+    flex: 1;
 }
 
 .messageBoxListItemContentUsername {

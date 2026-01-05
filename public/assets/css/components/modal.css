@@ -1,95 +1,408 @@
-.image-preview {
-  position: relative;
+/* ========================================
+   POST MODAL STYLES
+   ======================================== */
+
+#postModal .modal-content {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
-.image-preview img {
-  width: 100%;
-  border-radius: 6px;
+
+#postModal .modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 16px 20px;
 }
+
+#postModal .modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+#postModal .modal-body {
+    padding: 20px;
+}
+
+#postModal .modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px 20px;
+}
+
+/* Post Text Area */
+#postText {
+    border: none;
+    resize: none;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 0;
+    outline: none;
+    box-shadow: none;
+}
+
+#postText:focus {
+    border: none;
+    box-shadow: none;
+}
+
+#postText::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+/* Media Upload Buttons */
+#uploadMediaBtn,
+#emojiBtn {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+#uploadMediaBtn:hover,
+#emojiBtn:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Selected Images Preview */
+#selectedImagesPreview {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 16px;
+    margin-top: 16px;
+}
+
+#previewImagesWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#previewImagesWrapper .preview-image {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#previewImagesWrapper .preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#previewImagesWrapper .preview-image .remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+#previewImagesWrapper .preview-image .remove-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+#editImagesBtn,
+#clearImagesBtn {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ========================================
+   IMAGE UPLOAD MODAL
+   ======================================== */
+
+#imageUploadModal .modal-dialog {
+    max-width: 1200px;
+}
+
+#imageUploadModal .modal-content {
+    border-radius: 8px;
+}
+
+#imageUploadModal .modal-body {
+    min-height: 500px;
+    padding: 20px;
+}
+
+/* Main Image Preview */
+#mainImagePreview {
+    max-height: 500px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* Thumbnail Column */
+.thumbnail_col {
+    width: 400px;
+    max-height: 550px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 12px;
+    margin-left: 20px;
+}
+
+.thumbnail_col::-webkit-scrollbar {
+    width: 8px;
+}
+
+.thumbnail_col::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.thumbnail_col::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.thumbnail_col::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Image Thumbnails */
+#imageEditorThumbnails .image-box {
+    position: relative;
+    height: 180px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+#imageEditorThumbnails .image-box.active {
+    border-color: #0a66c2;
+    box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2);
+}
+
+#imageEditorThumbnails .image-box:hover {
+    border-color: rgba(10, 102, 194, 0.5);
+}
+
+#imageEditorThumbnails .img-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none;
+    border-radius: 6px;
+    padding: 0;
+}
+
+/* Image Tools Overlay */
 .image-tools {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: flex;
-  gap: 4px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
+
+.image-box:hover .image-tools {
+    opacity: 1;
+}
+
 .image-tools button {
-  background: rgba(0,0,0,0.6);
-  color: white;
-  border: none;
-  padding: 2px 6px;
-  font-size: 12px;
-  border-radius: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
+
+.image-tools button:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+/* Navigation Arrows */
+.btn-left,
+.btn-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
 .image-box:hover .btn-left,
 .image-box:hover .btn-right {
-  opacity: 1;
-  visibility: visible;
+    opacity: 1;
+    visibility: visible;
 }
-.btn-left, .btn-right {
-  opacity: 0.3;
-  visibility: hidden;
-  transition: all 0.2s;
-  position: absolute;
-  top: 40%;
-  padding: 0;
-  background: transparent;
-  margin: 0;
-  outline: none;
-  border: 0;
+
+.btn-left:hover,
+.btn-right:hover {
+    background: rgba(0, 0, 0, 0.8);
 }
-.btn-left:hover, .btn-right:hover,
-.btn-left:focus, .btn-right:focus {
-  outline: none;
-  border: 0;
-}
+
 .btn-left {
-  left: 5px;
+    left: 8px;
 }
+
 .btn-right {
-  right: 5px;
+    right: 8px;
 }
-.thumbnail_col {
-  width: 400px;
-  height: 550px;
-  overflow-y: auto;
-  overflow-x: hidden;
+
+/* Add Image Button */
+#addImageBtn {
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed rgba(0, 0, 0, 0.2);
+    background: #f9fafb;
+    transition: all 0.2s;
 }
-.image-box {
-  height: 200px;
+
+#addImageBtn:hover {
+    border-color: #0a66c2;
+    background: rgba(10, 102, 194, 0.05);
+    color: #0a66c2;
 }
-.image-box .img-thumbnail {
-  height: 150px;
-  object-fit: cover;
-  width: 100%;
+
+/* ========================================
+   IMAGE EDIT MODAL (Cropper)
+   ======================================== */
+
+#imageEditModal .modal-dialog {
+    max-width: 1200px;
 }
-.comment-section {
-  margin-top: 1rem;
+
+#imageEditModal .modal-body {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    min-height: 600px;
 }
-.comment-input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 0.5rem;
+
+/* Cropper Image */
+#cropImage {
+    max-height: 500px;
+    max-width: 100%;
+    display: block;
 }
-.comment-input input {
-  flex: 1;
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-  font-size: 0.85rem;
+
+/* Crop Controls */
+.ms-4 {
+    width: 280px;
+    flex-shrink: 0;
 }
-.comment {
-  display: flex;
-  gap: 10px;
-  margin-top: 0.75rem;
+
+.ms-4 h6 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    color: rgba(0, 0, 0, 0.9);
 }
-.comment .comment-body {
-  background: #f3f2ef;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  flex: 1;
+
+.ms-4 h6:first-child {
+    margin-top: 0;
 }
-.reply-input {
-  margin-left: 3rem;
+
+/* Aspect Ratio Buttons */
+.aspect-btn {
+    min-width: 60px;
+}
+
+.aspect-btn.active {
+    background: #0a66c2;
+    color: white;
+    border-color: #0a66c2;
+}
+
+/* Rotation Buttons */
+#rotateLeft,
+#rotateRight,
+#flipH {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+/* Range Sliders */
+#zoomSlider,
+#straightenSlider {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+/* ========================================
+   RESPONSIVE MODAL ADJUSTMENTS
+   ======================================== */
+
+@media (max-width: 1199px) {
+    #imageUploadModal .modal-dialog,
+    #imageEditModal .modal-dialog {
+        max-width: 95%;
+    }
+
+    .thumbnail_col {
+        width: 300px;
+    }
+}
+
+@media (max-width: 991px) {
+    #imageUploadModal .modal-body,
+    #imageEditModal .modal-body {
+        flex-direction: column;
+    }
+
+    .thumbnail_col {
+        width: 100%;
+        max-height: 300px;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    #imageEditModal .ms-4 {
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    #postModal .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    #postText {
+        font-size: 14px;
+    }
+
+    #previewImagesWrapper .preview-image {
+        width: 80px;
+        height: 80px;
+    }
 }

@@ -6,6 +6,7 @@ import {
     MinusSquare,
     Square,
     User,
+    Search,
 } from "lucide-react";
 import {
     ref,
@@ -334,8 +335,9 @@ const ChatBox = () => {
 
     const handleConversationClick = (conversation) => {
         setActiveConversation(conversation.id);
+        setHideMessageBox(false); // make sure it is visible
+        setIsMinimized(false); // optional: un-minimize
         fetchMessages(conversation.id);
-        setHideMessageBox(false);
     };
 
     const sendMessage = async (messageContent) => {
@@ -424,6 +426,11 @@ const ChatBox = () => {
     }, [activeConversation, userId]);
 
     const openChatWithUser = async (userId) => {
+        // Redirect to inbox on small screens
+        if (window.innerWidth < 800) {
+            window.location.href = "/inbox";
+            return; // stop further execution
+        }
         // First, check if a conversation with this user exists
         const existingConversation = conversations.find(
             (convo) => convo.user.id === userId
@@ -563,6 +570,14 @@ const ChatBox = () => {
         }
     };
 
+    const handleChatIconClick = () => {
+        if (window.innerWidth < 800) {
+            window.location.href = "/inbox";
+        } else {
+            setIsOpen(!isOpen);
+        }
+    };
+
     return (
         <div className="chatContainerInner" key={userId}>
             {activeConversation && activeUser && (
@@ -643,10 +658,7 @@ const ChatBox = () => {
             <div
                 className={`chatBox ${isOpen ? "chatBoxOpen" : "chatBoxClose"}`}
             >
-                <div
-                    className="chatBoxMinIcon"
-                    onClick={() => setIsOpen(!isOpen)}
-                >
+                <div className="chatBoxMinIcon" onClick={handleChatIconClick}>
                     <i className="fa-solid fa-comment-dots"></i>
                 </div>
 
@@ -673,6 +685,7 @@ const ChatBox = () => {
 
                             <div className="conversationBox">
                                 <div className="conversationBoxSearch">
+                                    <Search className="search-icon" />
                                     <input
                                         type="text"
                                         placeholder="Search Conversations"

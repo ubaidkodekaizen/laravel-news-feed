@@ -1,17 +1,745 @@
+/* ========================================
+   NEWS FEED MAIN STYLES
+   ======================================== */
+
+/* Main Container */
 .newFeedSec {
-    margin: 40px 0px;
+    background-color: #f3f2ef;
+    min-height: 100vh;
+    padding: 24px 0;
 }
+
+/* Card Base Styles */
+.card {
+    background: #fff;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 8px;
+}
+
+/* ========================================
+   PROFILE CARD STYLES
+   ======================================== */
+
+.profile-card {
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.card.sticky-profile {
+    position: sticky;
+    top: 90px;
+    z-index: 1;
+}
+
+.profile_cover_bg {
+    height: 54px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.profile_card_pic {
+    margin-top: -32px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.profile_card_pic img {
+    background: #fff;
+    border: 2px solid #fff !important;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.profile_card_details {
+    padding: 0 12px 16px;
+    text-align: center;
+}
+
+.profile_card_details h6 {
+    color: #000;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 21.33px;
+    line-height: 100%;
+    margin-bottom: 4.67px;
+}
+
+.profile_card_details small {
+    color: #aaaaaa;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 18.67px;
+    line-height: 100%;
+}
+
+.profile-stats {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px;
+}
+
+.profile-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.profile-stat-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.profile-stat-item .stat-number {
+    color: #0a66c2;
+    font-weight: 600;
+}
+
+.add-event-btn {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.9);
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.add-event-btn:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.add-event-btn i {
+    color: #0a66c2;
+    font-size: 20px;
+}
+
+/* ========================================
+   POST CREATE CARD
+   ======================================== */
+
+.post-create-card {
+    padding: 12px 16px;
+}
+
+.post-create-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.post-create-trigger img {
+    flex-shrink: 0;
+}
+
+.post-create-trigger button,
 button#openPostModal {
-    margin: .4rem 0;
-    font-size: 1.3rem;
-    flex-grow: 1;
-    max-width: none;
-    line-height: 1.5;
-    border: 1px solid rgb(210 210 210);
+    flex: 1;
+    text-align: left;
+    border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 35px;
-    padding-left: 1.6rem;
-    transition: .3s all ease;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+    background: #fff;
+    transition: all 0.2s;
 }
+
+.post-create-trigger button:hover,
 button#openPostModal:hover {
-    background: rgb(140 140 140 /.1);
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+.post-create-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+}
+
+.post-action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border: none;
+    background: none;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.post-action-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.post-action-btn svg {
+    flex-shrink: 0;
+}
+
+.post-action-btn.photo {
+    color: #378fe9;
+}
+.post-action-btn.video {
+    color: #5f9b41;
+}
+.post-action-btn.event {
+    color: #c37d16;
+}
+.post-action-btn.article {
+    color: #e16745;
+}
+
+/* ========================================
+   FILTER BAR
+   ======================================== */
+
+.filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+
+.filter-label {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.filter-select {
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    outline: none;
+}
+
+.filter-select:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================
+   POST CONTAINER
+   ======================================== */
+
+.post-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.08);
+    margin-bottom: 8px;
+}
+
+/* ========================================
+   POST HEADER
+   ======================================== */
+
+.post-header {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 16px;
+    gap: 8px;
+}
+
+.post-author-avatar {
+    flex-shrink: 0;
+}
+
+.post-author-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.post-author-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.9);
+    text-decoration: none;
+    display: block;
+}
+
+.post-author-name:hover {
+    text-decoration: underline;
+    color: #0a66c2;
+}
+
+.post-author-position {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 1.4;
+}
+
+.post-timestamp {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 2px;
+}
+
+.post-menu-btn,
+.cross_btn.post_btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.6);
+    transition: background 0.2s;
+}
+
+.post-menu-btn:hover,
+.cross_btn.post_btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* User Info Styles (Legacy Support) */
+.post-header .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-header .user-info .user-img {
+    width: 50px;
+    height: 50px;
+}
+
+.username {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+.user-position {
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* ========================================
+   POST CONTENT
+   ======================================== */
+
+.post-content {
+    padding: 0 16px 12px;
+}
+
+.post-text-wrapper {
+    margin-bottom: 12px;
+}
+
+.post-text {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.9);
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    position: relative;
+    max-height: 4rem;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.post-text.expanded {
+    max-height: none;
+}
+
+.post-hashtag {
+    color: #0a66c2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.post-hashtag:hover {
+    text-decoration: underline;
+}
+
+.see-more-btn,
+.post-text-toggle {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 4px;
+    display: inline-block;
+}
+
+.see-more-btn:hover,
+.post-text-toggle:hover {
+    color: #0a66c2;
+    text-decoration: underline;
+}
+
+/* Post Media */
+.post-media,
+.post-images {
+    margin-top: 12px;
+    display: grid;
+    gap: 2px;
+}
+
+.post-media img,
+.post-media video,
+.post-image {
+    width: 100%;
+    display: block;
+    border-radius: 0;
+    object-fit: cover;
+}
+
+/* ========================================
+   POST STATS
+   ======================================== */
+
+.post-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 14px;
+    color: #666;
+}
+
+.post-reactions,
+.post-stats .likes-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.reaction-icons,
+.reactions-preview {
+    display: flex;
+    align-items: center;
+}
+
+.reaction-emoji,
+.reaction-emoji-preview {
+    width: 18px;
+    height: 18px;
+    margin-left: -4px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    background: #fff;
+    box-shadow: 0 0 0 1px #fff;
+}
+
+.reaction-emoji:first-child {
+    margin-left: 0;
+}
+
+.reaction-count {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.post-comments-count,
+.comments-count {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+}
+
+.post-comments-count:hover,
+.comments-count:hover {
+    color: #0a66c2;
+    text-decoration: underline;
+}
+
+/* ========================================
+   POST ACTIONS
+   ======================================== */
+
+.post-actions {
+    display: flex;
+    padding: 4px 8px;
+    gap: 4px;
+}
+
+.post-action,
+.action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border: none;
+    background: none;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.post-action:hover,
+.action-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.post-action svg,
+.post-action i,
+.action-btn i {
+    font-size: 20px;
+}
+
+.post-action.active {
+    color: #0a66c2;
+}
+
+/* ========================================
+   SIDEBAR WIDGETS
+   ======================================== */
+
+.sidebar-widget {
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 16.09px;
+    border: 1px solid #e9ebf0;
+}
+
+.widget-header {
+    padding: 26.81px 21.45px 0 21.45px;
+    color: #17272f;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18.77px;
+    line-height: 100%;
+}
+
+.feed-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.feed-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.feed-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.feed-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feed-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.feed-name {
+    color: #17272f;
+    margin-bottom: 2.47px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18.77px;
+    line-height: 100%;
+}
+
+.feed-category {
+    color: #aaaaaa;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 16.09px;
+    line-height: 100%;
+}
+
+.feed-follow-btn {
+    width: 32.18px;
+    height: 32.18px;
+    border-radius: 5.36px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 18px;
+    color: #2d3b68;
+    border: 1.34px solid var(--2, #2d3b68);
+}
+
+.feed-follow-btn:hover {
+    border-color: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.see-all-btn {
+    display: block;
+    width: 100%;
+    margin: 48.04px 0 0 0;
+    padding: 22.59px 0 22.59px 0;
+    text-align: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18.77px;
+    line-height: 100%;
+    color: #0c1647;
+}
+
+.see-all-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* Advertisement Widget */
+.ad-widget {
+    position: relative;
+}
+
+.ad-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.ad-menu:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.ad-content {
+    padding: 12px 16px;
+    text-align: center;
+}
+
+.ad-logos {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.ad-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.ad-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ad-text {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 12px 0;
+}
+
+.ad-cta {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    margin-top: 12px;
+    border: 1px solid #0a66c2;
+    background: #fff;
+    color: #0a66c2;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ad-cta:hover {
+    background: rgba(10, 102, 194, 0.08);
+    border-width: 2px;
+}
+
+/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
+
+@media (max-width: 991px) {
+    .newFeedSec {
+        padding: 16px 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .post-create-actions {
+        flex-wrap: wrap;
+    }
+
+    .post-action-btn {
+        font-size: 12px;
+    }
+
+    .post-action {
+        font-size: 12px;
+        padding: 10px 6px;
+    }
 }
