@@ -383,36 +383,15 @@ class MigrateImagesToS3 extends Command
         $path = str_replace('storage/', '', $path);
         $path = str_replace('public/', '', $path);
 
-        // Handle different path formats
-        if (str_starts_with($path, 'profile_photos/')) {
-            return $path;
-        }
+        // Based on your database structure, paths are already in correct format:
+        // - profile_photos/xxx.jpg (for users and companies)
+        // - products/xxx.jpg
+        // - services/xxx.jpg
+        // - blogs/xxx.png
+        // - event_images/xxx.png
+        // - post_media/xxx.jpg (if exists)
 
-        if (str_starts_with($path, 'product_images/')) {
-            return $path;
-        }
-
-        if (str_starts_with($path, 'service_images/')) {
-            return $path;
-        }
-
-        if (str_starts_with($path, 'company_logos/')) {
-            return $path;
-        }
-
-        if (str_starts_with($path, 'blog_images/')) {
-            return $path;
-        }
-
-        if (str_starts_with($path, 'event_images/')) {
-            return $path;
-        }
-
-        if (str_starts_with($path, 'post_media/')) {
-            return $path;
-        }
-
-        // Assume it's a direct path
+        // Return path as-is since they're already relative to storage/app/public/
         return $path;
     }
 
