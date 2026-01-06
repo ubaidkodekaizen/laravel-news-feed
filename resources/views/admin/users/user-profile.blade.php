@@ -3,18 +3,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 </style>
 <style>
-    .user_company_profile .profile_heading {
-        font-family: "Inter", sans-serif;
-        font-weight: 600;
-        font-size: 28px;
-        line-height: 1;
+
+    .user_company_profile .custom_card_profile.colRight {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: self-end;
+        gap: 60px;
+        border-radius: 10.66px;
     }
 
-    .user_company_profile .profile_div {
-        border-bottom: 2px solid var(--primary) !important;
+    .col-lg-9.Right{
+        padding-left: 20px;
+        padding-right: 0px;
+    }
+
+        
+    .user_company_profile .profile_div .profile_data {
+        background: #FFFFFF;
+        border-radius: 9.77px;
+        border: 2px solid #E9EBF0;
+        padding: 19px 16px;
         font-family: Inter;
         font-weight: 400;
         font-size: 16px;
+        line-height: 100%;
+        color: #000;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 0;
+    }
+
+    .user_company_profile .profile_div {
+        border-bottom: none !important;
+        margin: 0px !important;
+        padding-bottom: 0px !important;
     }
 
     .user_company_profile .profile_div label {
@@ -25,14 +47,25 @@
 
     .user_company_profile .profile_heading {
         font-family: Inter;
-        font-weight: 600;
-        font-size: 24px;
+        font-weight: 700;
+        font-size: 28px !important;
         line-height: 100%;
         color: #273572;
-        padding-top: 41px;
+        margin-top: 0px !important;
+        margin-top: 20px !important;
     }
 
-    img:not(.logo img, .user_company_profile .company_logo img, .user_company_profile .profile_pic img) {
+    .user_company_profile .profile_pic img {
+        border-radius: 22px !important;
+        height: 330px !important;
+        width: 100% !important;
+    }
+    .profile_pic {
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    ul.list_check_flex.px-3 li a img {
         margin-top: 20px;
         width: 40px !important;
         height: 40px !important;
@@ -54,6 +87,67 @@
         text-align: center;
         margin: 0 0 0 0;
     }
+
+    .colLeft,
+    .right .colRight,
+    .custom_card_profile {
+        background: #27357205;
+        border: 2px solid #e9ebf0;
+        padding: 39px 27px 32px !important;
+        border-radius: 10.66px !important;
+        margin-top: 20px !important;
+    }
+
+    .col-lg-3.colLeft .custom_card_profile{
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+
+     @media (max-width: 1498px) {
+        .user_company_profile .profile_pic img {
+            height: 200px !important;
+        }
+        .custom_card_profile .col-lg-3 {
+            width: 42% !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .col-lg-3 {
+            width: 100% !important;
+        }
+        .custom_card_profile .col-lg-3 {
+            width: 100% !important;
+        }
+        .col-lg-9.Right {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+    }
+
+    
+
+     @media (max-width: 1089px) {
+
+        .row {
+            flex-direction: column;
+        }
+
+            .col-lg-3 {
+                width: 100% !important;
+            }
+        .custom_card_profile .col-lg-3 {
+            width: 42%;
+        }
+        .col-lg-9.Right {
+            padding-left: 0px;
+            padding-right: 0px;
+            width: 100% !important;
+        }
+    }
 </style>
 
 @section('content')
@@ -74,29 +168,31 @@
 
     <section class="user_company_profile">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
+            <div class="row justify-content-between">
+                <div class="col-lg-3 colLeft">
                     <div class="custom_card_profile card_profile_first">
-
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="profile_pic">
-                                    <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
-                                        alt="">
-                                </div>
-                                <h1 class="profile_heading text-center">
-                                    User Profile
-                                </h1>
+                        <div class="col-lg-12">
+                            <h1 class="profile_heading mb-3">
+                                User Profile
+                            </h1>
+                            <div class="profile_pic">
+                                <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                alt="">
                             </div>
-                            <div class="col-lg-12">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 Right">
+                    <div class="custom_card_profile colRight">
+                            <!-- <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="i_am">I am</label>
                                     <p class="profile_data">
                                         {{ $user->user_position ?? '' }}
                                     </p>
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
+                            </div> -->
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="first_name">First Name</label>
                                     <p class="profile_data">
@@ -104,7 +200,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="first_name">Last Name</label>
                                     <p class="profile_data">
@@ -114,7 +210,7 @@
                             </div>
 
                             @if ($user->phone_public == 'Yes')
-                                <div class="col-lg-6">
+                                <div class="col-lg-3">
                                     <div class="profile_div">
                                         <label for="mobile">Cell/Mobile</label>
                                         <p class="profile_data">
@@ -126,7 +222,7 @@
                             @endif
 
                             @if ($user->email_public == 'Yes')
-                                <div class="col-lg-6">
+                                <div class="col-lg-3">
 
                                     <div class="profile_div">
                                         <label for="email">Email</label>
@@ -138,7 +234,7 @@
                                 </div>
                             @endif
 
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="city">City</label>
                                     <p class="profile_data">
@@ -147,7 +243,7 @@
                                 </div>
                             </div>
                             @if ($user->county)
-                                <div class="col-lg-6">
+                                <div class="col-lg-3">
                                     <div class="profile_div">
                                         <label for="county">County</label>
                                         <p class="profile_data">
@@ -157,7 +253,7 @@
                                 </div>
                             @endif
                             @if ($user->state)
-                                <div class="col-lg-6">
+                                <div class="col-lg-3">
                                     <div class="profile_div">
                                         <label for="state">State</label>
                                         <p class="profile_data">
@@ -166,7 +262,7 @@
                                     </div>
                                 </div>
                             @endif
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="country">Country</label>
                                     <p class="profile_data">
@@ -174,7 +270,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="gender">Gender</label>
                                     <p class="profile_data">
@@ -182,7 +278,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="age_group">Age Group</label>
                                     <p class="profile_data">
@@ -190,7 +286,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="ethnicity">Ethnicity</label>
                                     <p class="profile_data">
@@ -198,7 +294,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="nationality">Nationality</label>
                                     <p class="profile_data">
@@ -206,7 +302,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="languages">Languages</label>
                                     <p class="profile_data">
@@ -214,7 +310,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="marital_status">Marital Status</label>
                                     <p class="profile_data">
@@ -223,7 +319,95 @@
                                 </div>
                             </div>
 
-                            <h1 class="profile_data profile_heading mt-4">
+                            
+
+
+
+                        </div>
+                        
+                        <div class="custom_card_profile colRight">
+                        <div class="company_logo profile_data mt-0 col-lg-12">
+                            <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
+                                alt="">
+                        </div>
+                        <div class="profile_div col-lg-3">
+                            <label for="company_name">Company Name</label>
+                            <p class="profile_data">
+                                {{ $user->company->company_name ?? '' }}
+                            </p>
+                        </div>
+                        <div class="col-lg-3 profile_div">
+                            <label for="title_designation">Title/Designation</label>
+                            <p class="profile_data">
+                                {{ $user->company->company_position ?? '' }}
+                            </p>
+                        </div>
+                        <div class="col-lg-3 profile_div">
+                            <label for="company_url">Company URL</label>
+                            <p class="profile_data">
+                                {{ $user->company->company_web_url ?? '' }}
+                            </p>
+                        </div>
+                        <div class="col-lg-3 profile_div">
+                            <label for="years_of_experience">Years of Experience</label>
+                            <p class="profile_data">
+                                {{ $user->company->company_experience ?? '' }}
+                            </p>
+                        </div>
+                        <div class="col-lg-3 profile_div">
+                            <label for="work_phone">Work Phone Number</label>
+                            <p class="profile_data">
+                                {{ $user->company->company_phone ?? '' }}
+                            </p>
+                        </div>
+                        <div class="col-lg-3 profile_div">
+                            <label for="company_linkedin">Company LinkedIn Page</label>
+                            <p class="profile_data">
+                                {{ $user->company->company_linkedin_url ?? '' }}
+                            </p>
+                        </div>
+                        {{-- <h1 class="profile_heading">
+                        Description
+                    </h1>
+                    <p class="profile_data mt-2 description_border">
+                        {{ $user->company->company_about ?? 'Not provided' }}
+                    </p> --}}
+                        {{-- <h1 class="profile_data profile_heading ">
+                        Location
+                    </h1>
+                    <div class="row location_data">
+                        <div class="col-lg-12">
+                            <p class="profile_data">
+                                {{ $user->company->company_address }}
+                            </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p class="profile_data">
+                                {{ $user->company->company_city }}
+                            </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p class="profile_data">
+                                {{ $user->company->company_state }}
+                            </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p class="profile_data">
+                                {{ $user->company->company_county }}
+                            </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p class="profile_data">
+                                {{ $user->company->company_country }}
+                            </p>
+                        </div>
+                        <div class="col-lg-6">
+                            <p class="profile_data">
+                                {{ $user->company->company_zip_code }}
+                            </p>
+                        </div>
+                    </div> --}}
+                    <h1 class="profile_data profile_heading mt-4">
                                 Social Links
                             </h1>
                             <ul class="list_check_flex px-3">
@@ -279,103 +463,15 @@
                                     </li>
                                 @endif
                             </ul>
-
-
-
-                        </div>
-                        <div class="btn-flex">
-                            <a href="javascript:void(0)" class="btn btn-secondary w-100" data-bs-toggle="modal"
-                                data-bs-target="#mainModal">
-                                Direct Message
-                            </a>
-                            {{-- <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
-                                class="btn btn-primary">Connect Via Linkedin</a> --}}
-                        </div>
+                            <div class="btn-flex col-lg-12">
+                                <a href="javascript:void(0)" class="btn btn-secondary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#mainModal">
+                                    Direct Message
+                                </a>
+                                {{-- <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
+                                    class="btn btn-primary">Connect Via Linkedin</a> --}}
+                            </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="custom_card_profile">
-                        <div class="company_logo profile_data mt-0">
-                            <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
-                                alt="">
-                        </div>
-                        <div class="profile_div">
-                            <label for="company_name">Company Name</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_name ?? '' }}
-                            </p>
-                        </div>
-                        <div class="col-lg-12 profile_div">
-                            <label for="title_designation">Title/Designation</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_position ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="company_url">Company URL</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_web_url ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="years_of_experience">Years of Experience</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_experience ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="work_phone">Work Phone Number</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_phone ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="company_linkedin">Company LinkedIn Page</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_linkedin_url ?? '' }}
-                            </p>
-                        </div>
-                        {{-- <h1 class="profile_heading">
-                        Description
-                    </h1>
-                    <p class="profile_data mt-2 description_border">
-                        {{ $user->company->company_about ?? 'Not provided' }}
-                    </p> --}}
-                        {{-- <h1 class="profile_data profile_heading ">
-                        Location
-                    </h1>
-                    <div class="row location_data">
-                        <div class="col-lg-12">
-                            <p class="profile_data">
-                                {{ $user->company->company_address }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_city }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_state }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_county }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_country }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_zip_code }}
-                            </p>
-                        </div>
-                    </div> --}}
                     </div>
 
                     <div class="custom_card_profile">
@@ -444,16 +540,13 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <p>No Product or Service to show.</p>
+                                    <p class="mt-4">No Product or Service to show.</p>
                                 @endforelse
                             </div>
                         @else
-                            <p>No Product or Service to show.</p>
+                            <p class="mt-4">No Product or Service to show.</p>
                         @endif
                     </div>
-                </div>
-                <div class="col-12">
-
                     <div class="custom_card_profile">
 
                         <h1 class="profile_data profile_heading mt-0">

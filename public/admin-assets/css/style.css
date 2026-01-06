@@ -140,7 +140,7 @@ a{
   }
   
   .main-content {
-    margin-left: 250px;
+    margin-left: 302px;
     padding: 2rem;
     transition: margin-left 0.3s ease-in-out;
     width: 100%;
@@ -170,6 +170,87 @@ a{
     }
     .header-flex{
         gap: 10px;
+    }
+
+    .container {
+      padding: 0;
+    }
+
+    .card-title {
+      font-size: 24px;
+      margin: 0;
+      align-content: center;
+    }
+
+    .card-header.card_header_flex a,
+    .card-header.d-flex.justify-content-between a {
+      font-size: 14px;
+      padding: 11px 28px;
+    } 
+
+    .dataTables_wrapper .row .col-sm-12.col-md-6{
+      display: flex;
+      justify-content: center;
+    }
+
+    div.dataTables_filter {
+      margin-top: 10px;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter label, div.dataTables_wrapper div.dataTables_length label {
+      font-size: 14px;
+    }
+
+    th.sorting, th.sorting_disabled {
+      font-size: 14.65px;
+    }
+
+    table.dataTable.table-striped>tbody>tr.odd>*, table.dataTable.table-striped>tbody>tr.even>* {
+      font-size: 14.65px;
+    }
+
+    a.btn.btn-primary.btn-sm, a.btn.btn-warning.btn-sm, table.dataTable td form button{
+      margin: 0 !important;
+      font-size: 12px;
+    }
+
+    div.dataTables_wrapper div.dataTables_info {
+      font-size: 14.33px;
+      margin-bottom: 14px;
+    }
+
+    .pagination .page-link {
+      font-size: 10.67px;
+      padding: 10.83px 8.83px;
+    }
+
+    .card-modern .card-numbers {
+      font-size: 24px !important;
+    }
+
+    .card-modern .card-title {
+      font-size: 16px !important;
+    }
+
+    h4.card-title {
+      font-size: 22px;
+    }
+
+    label.form-label {
+      font-size: 16px;
+    }
+
+    .form-control, .form-select {
+      font-size: 14px !important;
+    }
+
+    button.btn.btn-primary {
+      padding: 15px 40px;
+      font-size: 16px;
+    }
+
+    .profile_pic {
+      justify-self: center;
     }
   }
   /* Modern Card Design */
