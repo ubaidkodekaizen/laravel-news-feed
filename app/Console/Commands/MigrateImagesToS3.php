@@ -323,14 +323,32 @@ class MigrateImagesToS3 extends Command
         // Check if file exists locally
         $localPath = $this->getLocalFilePath($imagePath);
         
-        if (!$localPath || !Storage::disk('public')->exists($localPath)) {
+        if (!$localPath) {
             $this->stats['errors']++;
             $this->stats['skipped']++;
+            $this->error("  ❌ [ID:{$recordId}] Invalid path: {$imagePath}");
+            return;
+        }
+
+        // Check if file exists
+        if (!Storage::disk('public')->exists($localPath)) {
+            $this->stats['errors']++;
+            $this->stats['skipped']++;
+            $fullPath = Storage::disk('public')->path($localPath);
             $this->error("  ❌ [ID:{$recordId}] File not found: {$imagePath}");
+            $this->error("      Expected at: {$fullPath}");
             return;
         }
 
         $fullLocalPath = Storage::disk('public')->path($localPath);
+        
+        // Verify the full path actually exists
+        if (!file_exists($fullLocalPath)) {
+            $this->stats['errors']++;
+            $this->stats['skipped']++;
+            $this->error("  ❌ [ID:{$recordId}] File path exists in Storage but not on filesystem: {$fullLocalPath}");
+            return;
+        }
 
         try {
             $this->stats['processed']++;
