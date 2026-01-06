@@ -9,7 +9,7 @@
         font-family: Inter;
         font-weight: 700;
         font-size: 24px;
-        line-height: 122% !important; 
+        line-height: 122% !important;
         color: #273572;
         margin: 0px 0px 32px 0;
     }
@@ -179,9 +179,9 @@
                                     </div>
                                     <div class="sideContent">
 
-                                    
+
                                     <div class="row">
-                                        
+
                                         <div class="col-12">
                                             @if ($errors->any())
                                                 <div class="alert alert-danger">
@@ -798,7 +798,7 @@
                                         </div>
 
 
-                                
+
 
                                         <div class="col-12 mt-4 text-end">
                                             <button type="submit" class="btn btn-primary w-100">Save</button>
@@ -941,6 +941,7 @@
             $(".phone_number").each(function() {
                 const phoneInput = $(this);
                 const iti = phoneInput.intlTelInput({
+                    initialCountry: "us",
                     separateDialCode: true,
                     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js" // Ensure this is loaded for utils functionality
                 });
@@ -959,9 +960,9 @@
                             alert("Invalid phone number entered!");
                             return false; // Prevent form submission if the number is invalid
                         }
-                    }); 
-                
-                
+                    });
+
+
             });
         });
     </script>
@@ -1161,7 +1162,7 @@
             event.preventDefault();
 
             const userInput = document.getElementById('linkedin_user').value.trim();
-            // Check if the input field is empty 
+            // Check if the input field is empty
             if (userInput === "") {
                 return; // Skip this iteration
             }
