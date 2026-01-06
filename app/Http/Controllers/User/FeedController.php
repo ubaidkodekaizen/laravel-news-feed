@@ -8,6 +8,7 @@ use App\Models\Feed\PostMedia;
 use App\Models\Feed\PostComment;
 use App\Models\Feed\Reaction;
 use App\Models\Feed\PostShare;
+use App\Services\S3Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +35,8 @@ class FeedController extends Controller
             // derive user name & avatar with sensible fallbacks
             $user = $p->user;
             $name = $user->name ?? trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?? 'Unknown User';
-            $avatar = $user->avatar_url ?? $user->avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
+            // Use helper function for photo URL, fallback to avatar_url or default
+            $avatar = getImageUrl($user->photo) ?? $user->avatar_url ?? $user->avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
             $position = $user->position ?? ($user->job_title ?? '');
 
             return [
@@ -60,7 +62,8 @@ class FeedController extends Controller
                 'comments' => $p->comments->take(2)->map(function ($c) {
                     $commentUser = $c->user;
                     $commentName = $commentUser->name ?? trim(($commentUser->first_name ?? '') . ' ' . ($commentUser->last_name ?? '')) ?? 'Unknown';
-                    $commentAvatar = $commentUser->avatar_url ?? $commentUser->avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
+                    // Use helper function for photo URL
+                    $commentAvatar = getImageUrl($commentUser->photo) ?? $commentUser->avatar_url ?? $commentUser->avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
                     return [
                         'id' => $c->id,
                         'content' => $c->content,
@@ -192,11 +195,13 @@ class FeedController extends Controller
 
             // Handle media uploads
             if ($request->hasFile('media')) {
+                $s3Service = app(\App\Services\S3Service::class);
                 $order = 0;
                 foreach ($request->file('media') as $file) {
-                    $mediaType = str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'video';
-                    $mediaPath = $file->store('posts/media', 'public');
-                    $mediaUrl = Storage::url($mediaPath);
+                    $uploadResult = $s3Service->uploadMedia($file, 'posts');
+                    $mediaType = $uploadResult['type'];
+                    $mediaPath = $uploadResult['path'];
+                    $mediaUrl = $uploadResult['url'];
 
                     $postMedia = new PostMedia();
                     $postMedia->post_id = $post->id;

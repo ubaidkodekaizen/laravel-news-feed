@@ -6,6 +6,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 
 use App\Models\Business\Service;
+use App\Services\S3Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -42,10 +43,18 @@ class ServiceController extends Controller
 
 
         if ($request->hasFile('service_image')) {
-            if ($service->service_image && Storage::exists('public/' . $service->service_image)) {
-                Storage::delete('public/' . $service->service_image);
+            $s3Service = app(S3Service::class);
+            
+            // Delete old image from S3 if exists
+            if ($service->service_image) {
+                $oldPath = $s3Service->extractPathFromUrl($service->service_image);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
             }
-            $imagePath = $request->file('service_image')->store('services', 'public');
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('service_image'), 'service');
+            $imagePath = $uploadResult['url']; // Store full S3 URL
         } else {
             $imagePath = $service->service_image;
         }
@@ -68,8 +77,13 @@ class ServiceController extends Controller
     public function deleteService($id)
     {
         $service = Service::findOrFail($id);
-        if ($service->service_image && Storage::exists('public/' . $service->service_image)) {
-            Storage::delete('public/' . $service->service_image);
+        // Delete image from S3 if exists
+        if ($service->service_image) {
+            $s3Service = app(S3Service::class);
+            $oldPath = $s3Service->extractPathFromUrl($service->service_image);
+            if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                $s3Service->deleteMedia($oldPath);
+            }
         }
         $service->delete();
         return redirect()->route('user.services')->with('success', 'Service deleted successfully!');

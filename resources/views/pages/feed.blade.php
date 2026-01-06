@@ -341,11 +341,11 @@
                 @forelse ($products as $product)
                     <div class="slide product-trigger-wrapper" data-id="{{ $product->user->id }}"
                         data-title="{{ $product->title }}" data-description="{{ $product->short_description }}"
-                        data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'assets/images/MuslimLynkPlaceholder.png' }}"
+                        data-image="{{ $product->product_image ? getImageUrl($product->product_image) : 'assets/images/MuslimLynkPlaceholder.png' }}"
                         data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
                         data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
                         data-user-name="{{ $product->user->first_name }}"
-                        data-user-photo="{{ $product->user_has_photo ? asset('storage/' . $product->user->photo) : '' }}"
+                        data-user-photo="{{ $product->user_has_photo ? getImageUrl($product->user->photo) : '' }}"
                         data-user-initials="{{ $product->user_initials }}"
                         data-date="{{ $product->created_at->format('d-M-Y') }}">
                         <div class="container">
@@ -371,7 +371,7 @@
                                     <div class="author-info">
                                         <div class="author-avatar">
                                             @if ($product->user_has_photo)
-                                                <img src="{{ asset('storage/' . $product->user->photo) }}"
+                                                <img src="{{ getImageUrl($product->user->photo) }}"
                                                     alt="{{ $product->user->first_name }}">
                                             @else
                                                 <div class="avatar-initials">
@@ -393,7 +393,7 @@
 
                             </div>
                             <div class="productSliderSecInnerCol">
-                                <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'assets/images/MuslimLynkPlaceholder.png' }}"
+                                <img src="{{ $product->product_image ? getImageUrl($product->product_image) : 'assets/images/MuslimLynkPlaceholder.png' }}"
                                     alt="ProductImage">
                             </div>
                         </div>
@@ -553,7 +553,7 @@
                                     <div class="author-info">
                                         <div class="author-avatar">
                                             @if ($service->user_has_photo)
-                                                <img src="{{ asset('storage/' . $service->user->photo) }}"
+                                                <img src="{{ getImageUrl($service->user->photo) }}"
                                                     alt="{{ $service->user->first_name }}">
                                             @else
                                                 <div class="avatar-initials">
@@ -579,7 +579,7 @@
                         <!-- RIGHT SECTION: Service Image -->
                         <div class="serviceAccordionConInner">
                             <div class="servideAccordionImgCon">
-                                <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/servicePlaceholderImg.png') }}"
+                                <img src="{{ $service->service_image ? getImageUrl($service->service_image) : asset('assets/images/servicePlaceholderImg.png') }}"
                                     alt="{{ $service->title }}" class="img-fluid serviceImg">
                                 <span class="servicePricing">
                                     @if ($service->discounted_price && $service->discounted_price < $service->original_price)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Business\Company;
 use App\Models\User;
+use App\Services\S3Service;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -189,8 +190,18 @@ class UserController extends Controller
         $user->slug = $slug;
 
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('profile_photos', 'public');
-            $user->photo = $photoPath;
+            $s3Service = app(S3Service::class);
+            
+            // Delete old photo from S3 if exists
+            if ($user->photo) {
+                $oldPath = $s3Service->extractPathFromUrl($user->photo);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
+            }
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('photo'), 'profile');
+            $user->photo = $uploadResult['url']; // Store full S3 URL
         }
         $user->status = 'complete';
         $user->save();

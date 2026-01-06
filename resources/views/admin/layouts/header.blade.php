@@ -103,7 +103,7 @@
                     <div class="flex-shrink-0 dropdown">
                         <a href="#" class="d-block text-light text-decoration-none dropdown-toggle"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                            <img src="{{ Auth::user()->photo ? getImageUrl(Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                 alt="">
                             {{ Auth::user()->first_name }}
                             <img id="userProfileDropdown" src="http://127.0.0.1:8000/assets/images/whiteChevron.svg" alt="DropDown">

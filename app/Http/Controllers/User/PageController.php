@@ -206,8 +206,17 @@ class PageController extends Controller
                 $user = $product->user;
                 $photoPath = $user->photo ?? null;
 
-                // Check if photo exists
-                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                // Check if photo exists - handle both S3 URLs and local storage
+                $hasPhoto = false;
+                if ($photoPath) {
+                    if (str_starts_with($photoPath, 'http')) {
+                        // S3 URL - assume it exists
+                        $hasPhoto = true;
+                    } else {
+                        // Local storage - check file existence
+                        $hasPhoto = \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                    }
+                }
 
                 // Generate initials
                 $initials = strtoupper(
@@ -239,8 +248,17 @@ class PageController extends Controller
                 $user = $service->user;
                 $photoPath = $user->photo ?? null;
 
-                // Check if photo exists
-                $hasPhoto = $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                // Check if photo exists - handle both S3 URLs and local storage
+                $hasPhoto = false;
+                if ($photoPath) {
+                    if (str_starts_with($photoPath, 'http')) {
+                        // S3 URL - assume it exists
+                        $hasPhoto = true;
+                    } else {
+                        // Local storage - check file existence
+                        $hasPhoto = \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                    }
+                }
 
                 // Generate initials
                 $initials = strtoupper(

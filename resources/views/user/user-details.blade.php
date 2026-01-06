@@ -577,7 +577,7 @@
                                                 <div class="avatar-preview">
                                                     <div id="imagePreview">
                                                         @if ($user->user_has_photo)
-                                                            <img src="{{ asset('storage/' . $user->photo) }}"
+                                                            <img src="{{ getImageUrl($user->photo) }}"
                                                                 alt="">
                                                         @else
                                                             <div class="avatar-initials"
@@ -1020,25 +1020,10 @@
                                                 </div>
                                                 <div class="avatar-preview">
                                                     @php
-                                                        $companyLogoPreview = null;
-
-                                                        if (isset($company) && $company->company_logo) {
-                                                            // Check if the file exists in storage
-                                                            if (
-                                                                \Illuminate\Support\Facades\Storage::disk('public')->exists(
-                                                                    $company->company_logo,
-                                                                )
-                                                            ) {
-                                                                $companyLogoPreview = asset(
-                                                                    'storage/' . $company->company_logo,
-                                                                );
-                                                            }
-                                                        }
-
-                                                        // Fallback placeholder if logo doesn't exist
-                                                        $companyLogoPreview =
-                                                            $companyLogoPreview ??
-                                                            asset('assets/images/servicePlaceholderImg.png');
+                                                        // Use helper function that handles both S3 URLs and local storage
+                                                        $companyLogoPreview = isset($company) && $company->company_logo 
+                                                            ? getImageUrl($company->company_logo) 
+                                                            : asset('assets/images/servicePlaceholderImg.png');
                                                     @endphp
 
                                                     <div id="imagePreviewCompany">

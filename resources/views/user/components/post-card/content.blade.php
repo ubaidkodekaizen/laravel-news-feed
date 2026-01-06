@@ -7,10 +7,28 @@
     @endif
 </div>
 
-@if(!empty($post->images) && count($post->images) > 0)
+@php
+    // Extract image URLs from media array (media_url should already be full S3 URL)
+    $imageUrls = [];
+    if (isset($post['media']) && is_array($post['media'])) {
+        foreach ($post['media'] as $media) {
+            if (isset($media['media_type']) && $media['media_type'] === 'image' && isset($media['media_url'])) {
+                // Use helper to ensure URL is correct (handles both S3 and local)
+                $imageUrls[] = getImageUrl($media['media_url']) ?? $media['media_url'];
+            }
+        }
+    } elseif (isset($post->images) && is_array($post->images)) {
+        // Fallback for old structure
+        foreach ($post->images as $image) {
+            $imageUrls[] = getImageUrl($image) ?? $image;
+        }
+    }
+@endphp
+
+@if(!empty($imageUrls))
     <div class="post-images">
-        @foreach($post->images as $image)
-        <img src="{{ $image }}" alt="Post image" class="post-image">
+        @foreach($imageUrls as $imageUrl)
+        <img src="{{ $imageUrl }}" alt="Post image" class="post-image">
         @endforeach
     </div>
 @endif

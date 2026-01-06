@@ -101,7 +101,7 @@
                                                     </div>
                                                     <div class="avatar-preview">
                                                         <div id="imagePreview">
-                                                            <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                                            <img src="{{ $user->photo ? getImageUrl($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                                                 alt="">
                                                         </div>
                                                     </div>
@@ -574,7 +574,7 @@
                                                     </div>
                                                     <div class="avatar-preview">
                                                         <div id="imagePreviewCompany">
-                                                            <img src="{{ isset($company) && $company->company_logo ? asset('storage/' . $company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
+                                                            <img src="{{ isset($company) && $company->company_logo ? getImageUrl($company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
                                                                 alt="">
                                                         </div>
                                                     </div>

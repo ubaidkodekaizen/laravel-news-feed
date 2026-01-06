@@ -226,8 +226,17 @@
                         @php
                             $currentUser = Auth::user();
                             $photoPath = $currentUser->photo ?? null;
-                            $hasPhoto =
-                                $photoPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                            // Check if photo exists - handle both S3 URLs and local storage
+                            $hasPhoto = false;
+                            if ($photoPath) {
+                                if (str_starts_with($photoPath, 'http')) {
+                                    // S3 URL - assume it exists
+                                    $hasPhoto = true;
+                                } else {
+                                    // Local storage - check file existence
+                                    $hasPhoto = \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                                }
+                            }
                             $initials = strtoupper(
                                 substr($currentUser->first_name ?? '', 0, 1) .
                                     substr($currentUser->last_name ?? '', 0, 1),
@@ -235,7 +244,7 @@
                         @endphp
 
                         @if ($hasPhoto)
-                            <img src="{{ asset('storage/' . $currentUser->photo) }}"
+                            <img src="{{ getImageUrl($currentUser->photo) }}"
                                 alt="{{ $currentUser->first_name }}">
                         @else
                             <div class="avatar-initials-header">

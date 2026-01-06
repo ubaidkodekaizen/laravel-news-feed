@@ -42,7 +42,7 @@
 
                                 <div class="industryProfileMainImg text-center">
                                     @if ($user->user_has_photo)
-                                        <img src="{{ asset('storage/' . $user->photo) }}"
+                                        <img src="{{ getImageUrl($user->photo) }}"
                                             alt="{{ $user->first_name }}'s Profile Picture" class="industryProfileImg">
                                     @else
                                         <div class="avatar-initials industryProfileImg">

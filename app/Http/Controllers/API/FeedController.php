@@ -8,6 +8,7 @@ use App\Models\Feed\PostMedia;
 use App\Models\Feed\PostComment;
 use App\Models\Feed\Reaction;
 use App\Models\Feed\PostShare;
+use App\Services\S3Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -118,20 +119,19 @@ class FeedController extends Controller
 
             // Handle media uploads
             if ($request->hasFile('media')) {
+                $s3Service = app(S3Service::class);
                 $order = 0;
                 foreach ($request->file('media') as $file) {
-                    $mediaType = str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'video';
-                    $mediaPath = $file->store('posts/media', 'public');
-                    $mediaUrl = Storage::url($mediaPath);
-
+                    $uploadResult = $s3Service->uploadMedia($file, 'posts');
+                    
                     $postMedia = new PostMedia();
                     $postMedia->post_id = $post->id;
-                    $postMedia->media_type = $mediaType;
-                    $postMedia->media_path = $mediaPath;
-                    $postMedia->media_url = $mediaUrl;
-                    $postMedia->file_name = $file->getClientOriginalName();
-                    $postMedia->file_size = $file->getSize();
-                    $postMedia->mime_type = $file->getMimeType();
+                    $postMedia->media_type = $uploadResult['type'];
+                    $postMedia->media_path = $uploadResult['path'];
+                    $postMedia->media_url = $uploadResult['url']; // Full S3 URL
+                    $postMedia->file_name = $uploadResult['file_name'];
+                    $postMedia->file_size = $uploadResult['file_size'];
+                    $postMedia->mime_type = $uploadResult['mime_type'];
                     $postMedia->order = $order++;
                     $postMedia->save();
                 }

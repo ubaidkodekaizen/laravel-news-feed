@@ -81,7 +81,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="profile_pic">
-                                    <img src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                                    <img src="{{ $user->photo ? getImageUrl($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                         alt="">
                                 </div>
                                 <h1 class="profile_heading text-center">
@@ -296,7 +296,7 @@
                 <div class="col-lg-6">
                     <div class="custom_card_profile">
                         <div class="company_logo profile_data mt-0">
-                            <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
+                            <img src="{{ isset($user->company) && $user->company->company_logo ? getImageUrl($user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
                                 alt="">
                         </div>
                         <div class="profile_div">

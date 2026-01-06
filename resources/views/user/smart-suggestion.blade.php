@@ -80,7 +80,7 @@
                         <div class="industry-profile-card">
                             <div class="profile-pic text-center">
                                 @if ($user->user_has_photo)
-                                    <img id="UserProfileImg" src="{{ asset('storage/' . $user->photo) }}"
+                                    <img id="UserProfileImg" src="{{ getImageUrl($user->photo) }}"
                                         alt="{{ $user->first_name }} {{ $user->last_name }}'s Profile Picture">
                                 @else
                                     <div class="avatar-initials" id="UserProfileImg">

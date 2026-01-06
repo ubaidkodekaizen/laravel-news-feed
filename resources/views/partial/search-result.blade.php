@@ -5,7 +5,7 @@
                 <div class="profile_name">
                     <div class="profile">
                         @if ($user->user_has_photo)
-                            <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->first_name }}">
+                            <img src="{{ getImageUrl($user->photo) }}" alt="{{ $user->first_name }}">
                         @else
                             <div class="avatar-initials">
                                 {{ $user->user_initials }}
