@@ -27,7 +27,8 @@
     }
 
     .new_user_details .form-control,
-    .new_user_details .form-select {
+    .new_user_details .form-select,
+    .custom-select-dropdown .btn-light {
         border-radius: 9.77px;
         border: 2px solid #E9EBF0;
         padding: 19px 16px;
@@ -52,6 +53,18 @@
 
     .toggle__label {
         margin: 0 0 !important;
+    }
+
+    .flex{
+        display: flex;
+        gap: 50px;
+        padding: 0 0 20px;
+    }
+
+     @media (max-width: 1137px) {
+        .flex{
+            flex-direction: column;
+        }
     }
 
     @media (max-width: 768px) {
@@ -137,9 +150,11 @@
                                 <form action="{{ route('admin.user.update') }}" method="POST" enctype="multipart/form-data"
                                     id="user_details">
                                     @csrf
+                                    <div class="flex">
+
                                     <div class="row">
                                         <div class="col-12 mb-5">
-                                            <h1 class="profile_heading text-center">
+                                            <h1 class="profile_heading mt-0">
                                                 Personal Information
                                             </h1>
                                             <input type="hidden" name="id" value="{{ $user->id }}" />
@@ -161,6 +176,12 @@
                                             </div>
 
                                         </div>
+                                    </div>
+                                    <div class="sideContent">
+
+                                    
+                                    <div class="row">
+                                        
                                         <div class="col-12">
                                             @if ($errors->any())
                                                 <div class="alert alert-danger">
@@ -601,6 +622,8 @@
                                             <button type="submit" class="btn btn-primary w-100">Save</button>
                                         </div>
                                     </div>
+                                    </div>
+                                    </div>
                                 </form>
                             </div>
 
@@ -611,9 +634,10 @@
                                 <form action="{{ route('admin.company.update') }}" method="POST"
                                     enctype="multipart/form-data" id="user_company">
                                     @csrf
+                                    <div class="flex">
                                     <div class="row">
                                         <div class="col-12">
-                                            <h1 class="profile_heading text-center mt-0">
+                                            <h1 class="profile_heading mt-0">
                                                 Professional Information
                                             </h1>
                                             <div class="profile_pic">
@@ -647,6 +671,7 @@
                                             @endif
                                         </div>
                                     </div>
+                                    <div class="sideContent">
                                     <div class="row align-items-end">
                                         <!-- Company Name -->
                                         <div class="col-lg-6">
@@ -778,6 +803,8 @@
                                         <div class="col-12 mt-4 text-end">
                                             <button type="submit" class="btn btn-primary w-100">Save</button>
                                         </div>
+                                    </div>
+                                    </div>
                                     </div>
                                 </form>
                             </div>
