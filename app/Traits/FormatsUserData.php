@@ -14,19 +14,8 @@ trait FormatsUserData
      */
     protected function formatUserPhoto(?string $photoPath): ?string
     {
-        if (!$photoPath) {
-            return null;
-        }
-
-        $hasPhoto = Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
-
-        if (!$hasPhoto) {
-            return null;
-        }
-
-        return str_starts_with($photoPath, 'http')
-            ? $photoPath
-            : asset('storage/profile_photos/' . basename($photoPath));
+        // Use helper function that handles both S3 URLs and local storage
+        return getImageUrl($photoPath);
     }
 
     /**
@@ -41,7 +30,13 @@ trait FormatsUserData
             return false;
         }
 
-        return Storage::disk('public')->exists('profile_photos/' . basename($photoPath));
+        // If it's an S3 URL, assume it exists
+        if (str_starts_with($photoPath, 'http://') || str_starts_with($photoPath, 'https://')) {
+            return true;
+        }
+
+        // Check local storage (backward compatibility)
+        return Storage::disk('public')->exists($photoPath);
     }
 
     /**

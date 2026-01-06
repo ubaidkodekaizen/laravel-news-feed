@@ -409,7 +409,7 @@
                                 <tr>
                                     <td>{{ $service->id }}</td>
                                     <td>
-                                        <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('assets/images/logo_bg.png') }}"
+                                        <img src="{{ $service->service_image ? getImageUrl($service->service_image) : asset('assets/images/logo_bg.png') }}"
                                             alt="Service Image" class="table_image">
                                     </td>
                                     <td>{{ $service->title }}</td>

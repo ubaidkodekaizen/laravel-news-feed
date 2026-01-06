@@ -55,16 +55,8 @@
         @php
             $userPhoto = auth()->user()->photo;
             // Generate full URL for photo
-            if ($userPhoto) {
-                // Check if it's already a full URL
-    if (filter_var($userPhoto, FILTER_VALIDATE_URL)) {
-        $photoUrl = $userPhoto;
-    } else {
-        $photoUrl = asset('storage/' . $userPhoto);
-    }
-} else {
-    $photoUrl = '';
-            }
+            // Use helper function that handles both S3 URLs and local storage
+            $photoUrl = getImageUrl($userPhoto) ?? '';
         @endphp
 
         window.userPhoto = "{{ $photoUrl }}";

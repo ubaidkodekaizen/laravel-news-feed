@@ -2,13 +2,13 @@
     <div class="col-lg-4 mb-3">
         <div class="card service-trigger-wrapper" data-id="{{ $service->user->id }}" data-title="{{ $service->title }}"
             data-description="{{ $service->short_description }}"
-            data-image="{{ $service->service_image ? asset('storage/' . $service->service_image) : 'assets/images/servicePlaceholderImg.png' }}"
+            data-image="{{ $service->service_image ? getImageUrl($service->service_image) : 'assets/images/servicePlaceholderImg.png' }}"
             data-price="{{ $service->discounted_price && $service->discounted_price < $service->original_price ? '$' . $service->discounted_price . ' (was $' . $service->original_price . ')' : '$' . $service->original_price }}"
             data-quantity="{{ $service->duration }}" data-user-name="{{ $service->user->first_name }}"
-            data-user-photo="{{ $service->user_has_photo ? asset('storage/' . $service->user->photo) : '' }}"
+            data-user-photo="{{ $service->user_has_photo ? getImageUrl($service->user->photo) : '' }}"
             data-user-initials="{{ $service->user_initials }}" data-date="{{ $service->created_at->format('d M Y') }}">
             <div class="card-header p-0 border-0 service_slider_img_box">
-                <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : 'assets/images/servicePlaceholderImg.png' }}"
+                <img src="{{ $service->service_image ? getImageUrl($service->service_image) : 'assets/images/servicePlaceholderImg.png' }}"
                     alt="{{ $service->title }}" class="img-fluid rounded trigger-element">
                 <div class="service_price_duration my-0 event_price_label">
                     <p class="service_price">
@@ -39,7 +39,7 @@
                         <div class="service_posted_by">
                             <div class="person_profile">
                                 @if ($service->user_has_photo)
-                                    <img src="{{ asset('storage/' . $service->user->photo) }}"
+                                    <img src="{{ getImageUrl($service->user->photo) }}"
                                         alt="{{ $service->user->first_name }}">
                                 @else
                                     <div class="avatar-initials">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 
 use App\Models\Business\Product;
+use App\Services\S3Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -38,10 +39,18 @@ class ProductController extends Controller
         $product = $id ? Product::findOrFail($id) : new Product();
 
         if ($request->hasFile('product_image')) {
-            if ($product->product_image && Storage::exists('public/' . $product->product_image)) {
-                Storage::delete('public/' . $product->product_image);
+            $s3Service = app(S3Service::class);
+            
+            // Delete old image from S3 if exists
+            if ($product->product_image) {
+                $oldPath = $s3Service->extractPathFromUrl($product->product_image);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
             }
-            $imagePath = $request->file('product_image')->store('products', 'public');
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('product_image'), 'product');
+            $imagePath = $uploadResult['url']; // Store full S3 URL
         } else {
             $imagePath = $product->product_image;
         }
@@ -64,8 +73,13 @@ class ProductController extends Controller
     public function deleteProduct($id)
     {
         $product = Product::findOrFail($id);
-        if ($product->product_image && Storage::exists('public/' . $product->product_image)) {
-            Storage::delete('public/' . $product->product_image);
+        // Delete image from S3 if exists
+        if ($product->product_image) {
+            $s3Service = app(S3Service::class);
+            $oldPath = $s3Service->extractPathFromUrl($product->product_image);
+            if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                $s3Service->deleteMedia($oldPath);
+            }
         }
         $product->delete();
         return redirect()->route('user.products')->with('success', 'Product deleted successfully!');

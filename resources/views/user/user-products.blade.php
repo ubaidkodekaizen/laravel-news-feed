@@ -376,7 +376,7 @@
                             <tr>
                                 <td>{{ $product->id }}</td>
                                 <td>
-                                    <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : asset('assets/images/logo_bg.png') }}"
+                                    <img src="{{ $product->product_image ? getImageUrl($product->product_image) : asset('assets/images/logo_bg.png') }}"
                                         alt="" class="table_image">
                                 </td>
                                 <td>{{ $product->title }}</td>

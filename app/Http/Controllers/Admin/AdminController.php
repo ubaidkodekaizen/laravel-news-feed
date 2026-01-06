@@ -21,6 +21,7 @@ use App\Models\UserEducation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\S3Service;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -295,9 +296,18 @@ class AdminController extends Controller
         $user->slug = $slug;
 
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('profile_photos', 'public');
-            $user->photo = $photoPath;
-
+            $s3Service = app(S3Service::class);
+            
+            // Delete old photo from S3 if exists
+            if ($user->photo) {
+                $oldPath = $s3Service->extractPathFromUrl($user->photo);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
+            }
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('photo'), 'profile');
+            $user->photo = $uploadResult['url']; // Store full S3 URL
         }
         $user->status = 'complete';
         $user->save();
@@ -388,8 +398,18 @@ class AdminController extends Controller
 
 
         if ($request->hasFile('company_logo')) {
-            $photoPath = $request->file('company_logo')->store('profile_photos', 'public');
-            $company->company_logo = $photoPath;
+            $s3Service = app(S3Service::class);
+            
+            // Delete old logo from S3 if exists
+            if ($company->company_logo) {
+                $oldPath = $s3Service->extractPathFromUrl($company->company_logo);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
+            }
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('company_logo'), 'company');
+            $company->company_logo = $uploadResult['url']; // Store full S3 URL
             $company->status = "complete";
             $company->save();
         }
@@ -434,10 +454,18 @@ class AdminController extends Controller
             $blog = new Blog();
         }
         if ($request->hasFile('image')) {
-            if ($blog->image && Storage::exists('public/' . $blog->image)) {
-                Storage::delete('public/' . $blog->image);
+            $s3Service = app(S3Service::class);
+            
+            // Delete old image from S3 if exists
+            if ($blog->image) {
+                $oldPath = $s3Service->extractPathFromUrl($blog->image);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
             }
-            $imagePath = $request->file('image')->store('blogs', 'public');
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('image'), 'blog');
+            $imagePath = $uploadResult['url']; // Store full S3 URL
         } else {
             $imagePath = $blog->image;
         }
@@ -504,13 +532,18 @@ class AdminController extends Controller
 
 
         if ($request->hasFile('event_image')) {
-
-            if ($event->image && Storage::exists('public/' . $event->image)) {
-                Storage::delete('public/' . $event->image);
+            $s3Service = app(S3Service::class);
+            
+            // Delete old image from S3 if exists
+            if ($event->image) {
+                $oldPath = $s3Service->extractPathFromUrl($event->image);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
             }
-
-            $imagePath = $request->file('event_image')->store('event_images', 'public');
-            $event->image = $imagePath;
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('event_image'), 'event');
+            $event->image = $uploadResult['url']; // Store full S3 URL
         }
 
         $event->save();

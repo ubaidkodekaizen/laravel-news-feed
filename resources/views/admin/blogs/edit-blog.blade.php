@@ -152,7 +152,7 @@
                                     @if ($blog->image)
                                         <div class="col-12 mb-3">
                                             <label for="current_image" class="form-label">Current Image</label>
-                                            <img src="{{ asset('storage/' . $blog->image) }}" alt="Current Image"
+                                            <img src="{{ getImageUrl($blog->image) }}" alt="Current Image"
                                                 style="max-width: 100px; height: auto;">
                                         </div>
                                     @endif

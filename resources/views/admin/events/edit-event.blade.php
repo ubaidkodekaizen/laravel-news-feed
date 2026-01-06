@@ -176,7 +176,7 @@
                                     <div class="col-12 mb-3">
                                         <label for="event_image" class="form-label">Event Image</label>
                                         @if ($event->image)
-                                            <img src="{{ asset('storage/' . $event->image) }}" alt="Event Image"
+                                            <img src="{{ getImageUrl($event->image) }}" alt="Event Image"
                                                 class="img-thumbnail mb-2" width="150">
                                         @endif
                                         <input type="file" id="event_image" name="event_image" class="form-control"

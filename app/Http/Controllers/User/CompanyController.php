@@ -9,6 +9,7 @@ use App\Models\Reference\Designation;
 use App\Models\Reference\Industry;
 use App\Models\Reference\BusinessType;
 use App\Models\UserIcp;
+use App\Services\S3Service;
 use Auth;
 use Illuminate\Http\Request;
 use Str;
@@ -94,8 +95,18 @@ class CompanyController extends Controller
 
 
         if ($request->hasFile('company_logo')) {
-            $photoPath = $request->file('company_logo')->store('profile_photos', 'public');
-            $company->company_logo = $photoPath;
+            $s3Service = app(S3Service::class);
+            
+            // Delete old logo from S3 if exists
+            if ($company->company_logo) {
+                $oldPath = $s3Service->extractPathFromUrl($company->company_logo);
+                if ($oldPath && str_starts_with($oldPath, 'media/')) {
+                    $s3Service->deleteMedia($oldPath);
+                }
+            }
+            
+            $uploadResult = $s3Service->uploadMedia($request->file('company_logo'), 'company');
+            $company->company_logo = $uploadResult['url']; // Store full S3 URL
             $company->status = "complete";
             $company->save();
         }

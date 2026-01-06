@@ -720,14 +720,8 @@
                                         $companyLogo = null;
 
                                         if (isset($user->company) && $user->company->company_logo) {
-                                            // Check if file exists in storage
-                                            if (
-                                                \Illuminate\Support\Facades\Storage::disk('public')->exists(
-                                                    $user->company->company_logo,
-                                                )
-                                            ) {
-                                                $companyLogo = asset('storage/' . $user->company->company_logo);
-                                            }
+                                            // Use helper function that handles both S3 URLs and local storage
+                                            $companyLogo = getImageUrl($user->company->company_logo);
                                         }
 
                                         // Fallback image if logo doesn't exist
@@ -916,7 +910,7 @@ $companyLogo =
                                         <div class="mainProfileImage">
                                             <div class="profile-image">
                                                 @if ($user->user_has_photo)
-                                                    <img src="{{ asset('storage/' . $user->photo) }}"
+                                                    <img src="{{ getImageUrl($user->photo) }}"
                                                         alt="{{ $user->first_name }} {{ $user->last_name }}">
                                                 @else
                                                     <div class="avatar-initials">
@@ -1110,7 +1104,7 @@ $companyLogo =
                                                 @forelse($user->products as $product)
                                                     <div class="swiper-slide">
                                                         <div class="card">
-                                                            <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : asset('https://placehold.co/420x250') }}"
+                                                            <img src="{{ $product->product_image ? getImageUrl($product->product_image) : asset('https://placehold.co/420x250') }}"
                                                                 alt="{{ $product->title }}">
 
                                                             <div class="card-content">
@@ -1165,7 +1159,7 @@ $companyLogo =
                                                 @forelse($user->services as $service)
                                                     <div class="swiper-slide">
                                                         <div class="card">
-                                                            <img src="{{ $service->service_image ? asset('storage/' . $service->service_image) : asset('https://placehold.co/420x250') }}"
+                                                            <img src="{{ $service->service_image ? getImageUrl($service->service_image) : asset('https://placehold.co/420x250') }}"
                                                                 alt="{{ $service->title }}">
 
                                                             <div class="card-body">

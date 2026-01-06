@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="image-preview" id="image-preview">
                                     @if (isset($product->product_image) && $product->product_image)
-                                        <img id="preview-image" src="{{ asset('storage/' . $product->product_image) }}"
+                                        <img id="preview-image" src="{{ getImageUrl($product->product_image) }}"
                                             alt="Preview">
                                         <button type="button" id="remove-image"
                                             class="btn btn-danger btn-sm">Remove</button>

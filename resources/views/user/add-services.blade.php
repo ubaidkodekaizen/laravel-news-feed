@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="image-preview" id="image-preview">
                                     @if (!empty($service->service_image))
-                                        <img id="preview-image" src="{{ asset('storage/' . $service->service_image) }}"
+                                        <img id="preview-image" src="{{ getImageUrl($service->service_image) }}"
                                             alt="Preview">
                                         <button type="button" id="remove-image"
                                             class="btn btn-danger btn-sm">Remove</button>

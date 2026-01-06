@@ -57,12 +57,8 @@ class FirebaseService
         $photoUrl = null;
         if (!empty($message->sender->photo)) {
             // Check if photo already has full URL
-            if (filter_var($message->sender->photo, FILTER_VALIDATE_URL)) {
-                $photoUrl = $message->sender->photo;
-            } else {
-                // Build full URL for storage path
-                $photoUrl = url('storage/' . $message->sender->photo);
-            }
+            // Use helper function that handles both S3 URLs and local storage
+            $photoUrl = getImageUrl($message->sender->photo);
         }
 
         $messageData = [

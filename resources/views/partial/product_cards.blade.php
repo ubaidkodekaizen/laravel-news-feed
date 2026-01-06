@@ -2,15 +2,15 @@
     <div class="col-lg-4 mb-3">
         <div class="card product-trigger-wrapper" data-id="{{ $product->user->id }}" data-title="{{ $product->title }}"
             data-description="{{ $product->short_description }}"
-            data-image="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'assets/images/servicePlaceholderImg.png' }}"
+            data-image="{{ $product->product_image ? getImageUrl($product->product_image) : 'assets/images/servicePlaceholderImg.png' }}"
             data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
             data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
             data-user-name="{{ $product->user->first_name }}"
-            data-user-photo="{{ $product->user_has_photo ? asset('storage/' . $product->user->photo) : '' }}"
+            data-user-photo="{{ $product->user_has_photo ? getImageUrl($product->user->photo) : '' }}"
             data-user-initials="{{ $product->user_initials }}" data-date="{{ $product->created_at->format('d M Y') }}">
 
             <div class="event_slider_img_box">
-                <img src="{{ $product->product_image ? asset('storage/' . $product->product_image) : 'assets/images/servicePlaceholderImg.png' }}"
+                <img src="{{ $product->product_image ? getImageUrl($product->product_image) : 'assets/images/servicePlaceholderImg.png' }}"
                     alt="{{ $product->title }}" class="trigger-element">
                 <div class="service_price_duration my-0 event_price_label">
                     <p class="service_price">
@@ -38,7 +38,7 @@
                     <div class="service_posted_by mt-2">
                         <div class="person_profile">
                             @if ($product->user_has_photo)
-                                <img src="{{ asset('storage/' . $product->user->photo) }}"
+                                <img src="{{ getImageUrl($product->user->photo) }}"
                                     alt="{{ $product->user->first_name }}">
                             @else
                                 <div class="avatar-initials">

@@ -1377,16 +1377,8 @@
                                      $photo = $user->photo ?? null;
 
                                      // Resolve a usable photo URL if available (supports absolute URLs or files stored in public disk)
-                                     $photoUrl = null;
-                                     if ($photo) {
-                                         if (strpos($photo, 'http://') === 0 || strpos($photo, 'https://') === 0) {
-                                             $photoUrl = $photo;
-                                         } elseif (
-                                             \Illuminate\Support\Facades\Storage::disk('public')->exists($photo)
-                                         ) {
-                                             $photoUrl = asset('storage/' . $photo);
-                                         }
-                                     }
+                                     // Use helper function that handles both S3 URLs and local storage
+                                     $photoUrl = getImageUrl($photo);
 
                                      // Build initials (first letters of first + last name; fallback to first letter of email)
                                      $first = trim($user->first_name ?? '');
@@ -1456,7 +1448,7 @@
                  <ul class="mainNavbarListRight">
                      <li class="mainNavbarListItem">
                          @if (Auth::check())
-                             <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                             <img src="{{ Auth::user()->photo ? getImageUrl(Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                  width="50" class="img-fluid userProfilePic" alt="">
                              <div class="dropdown">
                                  <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"

@@ -11,6 +11,7 @@ use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\EducationController;
 use App\Http\Controllers\API\FeedController;
 use App\Services\GooglePlayService;
+use App\Services\S3Service;
 use Illuminate\Support\Facades\Log;
 
 /*
@@ -18,6 +19,41 @@ use Illuminate\Support\Facades\Log;
 | Test & Development Routes
 |--------------------------------------------------------------------------
 */
+
+// S3 Upload Test Route
+Route::post('/test/s3-upload', function (Request $request) {
+    try {
+        $request->validate([
+            'media' => 'required|file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,webm|max:51200', // 50MB max
+        ]);
+
+        $s3Service = app(S3Service::class);
+        $uploadResult = $s3Service->uploadMedia($request->file('media'));
+
+        return response()->json([
+            'status' => true,
+            'message' => 'File uploaded successfully to S3!',
+            'data' => [
+                'path' => $uploadResult['path'],
+                'url' => $uploadResult['url'],
+                'type' => $uploadResult['type'],
+                'folder' => $uploadResult['folder'],
+                'mime_type' => $uploadResult['mime_type'],
+                'file_name' => $uploadResult['file_name'],
+                'file_size' => $uploadResult['file_size'],
+            ],
+        ]);
+    } catch (\Throwable $exception) {
+        Log::error('S3 upload test failed: ' . $exception->getMessage(), [
+            'trace' => $exception->getTraceAsString(),
+        ]);
+
+        return response()->json([
+            'status' => false,
+            'message' => 'S3 upload failed: ' . $exception->getMessage(),
+        ], 500);
+    }
+})->name('test.s3.upload');
 
 Route::get('/subscribe/iap/google-ping', function () {
     try {
