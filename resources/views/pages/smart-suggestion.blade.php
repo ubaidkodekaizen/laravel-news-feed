@@ -59,9 +59,8 @@
             <div class="industry-heading text-center mb-5">
                 <span class="subHeading">MuslimLynk</span>
                 <h1>Smart <span>Suggestion</span></h1>
-                <p>Discover meaningful connections powered by AI. Our intelligent matching algorithm analyzes your profile,
-                    industry, location, goals, and preferences to recommend the most relevant members for networking,
-                    collaboration, and business opportunities.</p>
+                <p>Unlock meaningful connections with AI. Our advanced matching algorithm evaluates your profile, industry, location, goals, and preferences to recommend the most relevant members for networking, collaboration, and business opportunities.</p>
+                <p class="mt-3" style="font-weight: bold; color: #273572;"><strong>Note:</strong> After updating your profile, it may take up to 15 minutes for your updated recommendations to appear.</p>
             </div>
             <div class="row g-3">
 
@@ -294,3 +293,4 @@
         </script>
     @endpush
 @endsection
+
