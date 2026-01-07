@@ -1,9 +1,8 @@
 @extends('admin.layouts.main')
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 </style>
 <style>
-
     .user_company_profile .custom_card_profile.colRight {
         display: flex;
         flex-wrap: wrap;
@@ -12,7 +11,7 @@
         border-radius: 10.66px;
     }
 
-    .col-lg-9.Right{
+    .col-lg-9.Right {
         padding-left: 20px;
         padding-right: 0px;
     }
@@ -60,6 +59,7 @@
         height: 330px !important;
         width: 100% !important;
     }
+
     .profile_pic {
         height: 100% !important;
         width: 100% !important;
@@ -71,7 +71,7 @@
         height: 40px !important;
     }
 
-    .company_logo{
+    .company_logo {
         border-bottom: 2px solid var(--primary) !important;
     }
 
@@ -98,7 +98,7 @@
         margin-top: 20px !important;
     }
 
-    .col-lg-3.colLeft .custom_card_profile{
+    .col-lg-3.colLeft .custom_card_profile {
         background: transparent !important;
         border: none !important;
         padding: 0 !important;
@@ -106,10 +106,11 @@
         margin: 0 !important;
     }
 
-     @media (max-width: 1498px) {
+    @media (max-width: 1498px) {
         .user_company_profile .profile_pic img {
             height: 200px !important;
         }
+
         .custom_card_profile .col-lg-3 {
             width: 42% !important;
         }
@@ -119,9 +120,11 @@
         .col-lg-3 {
             width: 100% !important;
         }
+
         .custom_card_profile .col-lg-3 {
             width: 100% !important;
         }
+
         .col-lg-9.Right {
             padding-left: 0px;
             padding-right: 0px;
@@ -130,18 +133,20 @@
 
 
 
-     @media (max-width: 1089px) {
+    @media (max-width: 1089px) {
 
         .row {
             flex-direction: column;
         }
 
-            .col-lg-3 {
-                width: 100% !important;
-            }
+        .col-lg-3 {
+            width: 100% !important;
+        }
+
         .custom_card_profile .col-lg-3 {
             width: 42%;
         }
+
         .col-lg-9.Right {
             padding-left: 0px;
             padding-right: 0px;
@@ -151,28 +156,28 @@
 </style>
 
 @section('content')
-<main class="main-content">
+    <main class="main-content">
 
-    <style>
-        .user_company_profile .profile_pic img {
-            border-radius: 15px;
-            height: 300px;
-            width: 300px;
-            margin: 0 auto;
-            object-fit: cover;
-            max-width: 100%;
-            display: block;
-            border: 2px solid var(--primary);
-        }
-    </style>
+        <style>
+            .user_company_profile .profile_pic img {
+                border-radius: 15px;
+                height: 300px;
+                width: 300px;
+                margin: 0 auto;
+                object-fit: cover;
+                max-width: 100%;
+                display: block;
+                border: 2px solid var(--primary);
+            }
+        </style>
 
-    <section class="user_company_profile">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-lg-3 colLeft">
-                    <div class="custom_card_profile card_profile_first">
+        <section class="user_company_profile">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-lg-3 colLeft">
+                        <div class="custom_card_profile card_profile_first">
 
-                        <div class="row">
+
                             <div class="col-12">
                                 <div class="profile_pic">
                                     <img src="{{ $user->photo ? getImageUrl($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
@@ -182,14 +187,21 @@
                                     User Profile
                                 </h1>
                             </div>
-                            <div class="col-lg-12">
+
+                        </div>
+                    </div>
+
+                    {{-- <div class="col-lg-12">
                                 <div class="profile_div">
                                     <label for="i_am">I am</label>
                                     <p class="profile_data">
                                         {{ $user->user_position ?? '' }}
                                     </p>
                                 </div>
-                            </div> -->
+                            </div>  --}}
+                    <div class="col-lg-9 Right">
+
+                        <div class="custom_card_profile colRight">
                             <div class="col-lg-3">
                                 <div class="profile_div">
                                     <label for="first_name">First Name</label>
@@ -322,90 +334,89 @@
 
 
                         </div>
-
                         <div class="custom_card_profile colRight">
-                        <div class="company_logo profile_data mt-0 col-lg-12">
-                            <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
-                                alt="">
-                        </div>
-                        <div class="profile_div col-lg-3">
-                            <label for="company_name">Company Name</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_name ?? '' }}
-                            </p>
-                        </div>
-                        <div class="col-lg-3 profile_div">
-                            <label for="title_designation">Title/Designation</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_position ?? '' }}
-                            </p>
-                        </div>
-                        <div class="col-lg-3 profile_div">
-                            <label for="company_url">Company URL</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_web_url ?? '' }}
-                            </p>
-                        </div>
-                        <div class="col-lg-3 profile_div">
-                            <label for="years_of_experience">Years of Experience</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_experience ?? '' }}
-                            </p>
-                        </div>
-                        <div class="col-lg-3 profile_div">
-                            <label for="work_phone">Work Phone Number</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_phone ?? '' }}
-                            </p>
-                        </div>
-                        <div class="col-lg-3 profile_div">
-                            <label for="company_linkedin">Company LinkedIn Page</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_linkedin_url ?? '' }}
-                            </p>
-                        </div>
-                        {{-- <h1 class="profile_heading">
-                        Description
-                    </h1>
-                    <p class="profile_data mt-2 description_border">
-                        {{ $user->company->company_about ?? 'Not provided' }}
-                    </p> --}}
-                        {{-- <h1 class="profile_data profile_heading ">
-                        Location
-                    </h1>
-                    <div class="row location_data">
-                        <div class="col-lg-12">
-                            <p class="profile_data">
-                                {{ $user->company->company_address }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_city }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_state }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_county }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_country }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_zip_code }}
-                            </p>
-                        </div>
-                    </div> --}}
-                    <h1 class="profile_data profile_heading mt-4">
+                            <div class="company_logo profile_data mt-0 col-lg-12">
+                                <img src="{{ isset($user->company) && $user->company->company_logo ? asset('storage/' . $user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
+                                    alt="">
+                            </div>
+                            <div class="profile_div col-lg-3">
+                                <label for="company_name">Company Name</label>
+                                <p class="profile_data">
+                                    {{ $user->company->company_name ?? '' }}
+                                </p>
+                            </div>
+                            <div class="col-lg-3 profile_div">
+                                <label for="title_designation">Title/Designation</label>
+                                <p class="profile_data">
+                                    {{ $user->company->company_position ?? '' }}
+                                </p>
+                            </div>
+                            <div class="col-lg-3 profile_div">
+                                <label for="company_url">Company URL</label>
+                                <p class="profile_data">
+                                    {{ $user->company->company_web_url ?? '' }}
+                                </p>
+                            </div>
+                            <div class="col-lg-3 profile_div">
+                                <label for="years_of_experience">Years of Experience</label>
+                                <p class="profile_data">
+                                    {{ $user->company->company_experience ?? '' }}
+                                </p>
+                            </div>
+                            <div class="col-lg-3 profile_div">
+                                <label for="work_phone">Work Phone Number</label>
+                                <p class="profile_data">
+                                    {{ $user->company->company_phone ?? '' }}
+                                </p>
+                            </div>
+                            <div class="col-lg-3 profile_div">
+                                <label for="company_linkedin">Company LinkedIn Page</label>
+                                <p class="profile_data">
+                                    {{ $user->company->company_linkedin_url ?? '' }}
+                                </p>
+                            </div>
+                            {{-- <h1 class="profile_heading">
+                                            Description
+                                        </h1>
+                                        <p class="profile_data mt-2 description_border">
+                                            {{ $user->company->company_about ?? 'Not provided' }}
+                                        </p> --}}
+                            {{-- <h1 class="profile_data profile_heading ">
+                                            Location
+                                        </h1>
+                                        <div class="row location_data">
+                                            <div class="col-lg-12">
+                                                <p class="profile_data">
+                                                    {{ $user->company->company_address }}
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p class="profile_data">
+                                                    {{ $user->company->company_city }}
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p class="profile_data">
+                                                    {{ $user->company->company_state }}
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p class="profile_data">
+                                                    {{ $user->company->company_county }}
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p class="profile_data">
+                                                    {{ $user->company->company_country }}
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p class="profile_data">
+                                                    {{ $user->company->company_zip_code }}
+                                                </p>
+                                            </div>
+                                        </div> --}}
+                            <h1 class="profile_data profile_heading mt-4">
                                 Social Links
                             </h1>
                             <ul class="list_check_flex px-3">
@@ -447,7 +458,8 @@
                                 @if ($user->tiktok_url)
                                     <li>
                                         <a href="{{ $user->tiktok_url }}" target="_blank" title="TikTok">
-                                            <img src="{{ asset('assets/images/social-icons/tiktok.png') }}" alt="">
+                                            <img src="{{ asset('assets/images/social-icons/tiktok.png') }}"
+                                                alt="">
                                         </a>
                                     </li>
                                 @endif
@@ -469,92 +481,13 @@
                                 {{-- <a href="https://www.linkedin.com/in/{{ $user->linkedin_url }}" target="_blank"
                                     class="btn btn-primary">Connect Via Linkedin</a> --}}
                             </div>
+                        </div>
                     </div>
+
+
                 </div>
-                <div class="col-lg-6">
-                    <div class="custom_card_profile">
-                        <div class="company_logo profile_data mt-0">
-                            <img src="{{ isset($user->company) && $user->company->company_logo ? getImageUrl($user->company->company_logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcd5J_YDIyLfeZCHcsBpcuN8irwbIJ_VDl0Q&s' }}"
-                                alt="">
-                        </div>
-                        <div class="profile_div">
-                            <label for="company_name">Company Name</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_name ?? '' }}
-                            </p>
-                        </div>
-                        <div class="col-lg-12 profile_div">
-                            <label for="title_designation">Title/Designation</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_position ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="company_url">Company URL</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_web_url ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="years_of_experience">Years of Experience</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_experience ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="work_phone">Work Phone Number</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_phone ?? '' }}
-                            </p>
-                        </div>
-                        <div class="profile_div">
-                            <label for="company_linkedin">Company LinkedIn Page</label>
-                            <p class="profile_data">
-                                {{ $user->company->company_linkedin_url ?? '' }}
-                            </p>
-                        </div>
-                        {{-- <h1 class="profile_heading">
-                        Description
-                    </h1>
-                    <p class="profile_data mt-2 description_border">
-                        {{ $user->company->company_about ?? 'Not provided' }}
-                    </p> --}}
-                        {{-- <h1 class="profile_data profile_heading ">
-                        Location
-                    </h1>
-                    <div class="row location_data">
-                        <div class="col-lg-12">
-                            <p class="profile_data">
-                                {{ $user->company->company_address }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_city }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_state }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_county }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_country }}
-                            </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <p class="profile_data">
-                                {{ $user->company->company_zip_code }}
-                            </p>
-                        </div>
-                    </div> --}}
-                    </div>
+
+
 
                     <div class="custom_card_profile">
 
@@ -567,7 +500,7 @@
                                     Revenue
                                 </h2>
                                 <p class="profile_data">
-                                    {{ \App\Helpers\DropDownHelper::formatRevenueForDisplay($user->company->company_revenue ?? '') }}
+                                    {{ \App\Helpers\DropDownHelper::formatRevenueForDisplay($user->company->company_revenue ?? 'N/A') }}
                                 </p>
                             </div>
                             <div class="col-lg-6">
@@ -649,7 +582,8 @@
                                         class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
                                         data-bs-parent="#userEducation">
                                         <div class="accordion-body">
-                                            {{ $education->college_university ?? '' }} - {{ $education->year ?? '' }}
+                                            {{ $education->college_university ?? '' }} -
+                                            {{ $education->year ?? '' }}
                                         </div>
                                     </div>
                                 </div>
@@ -658,35 +592,35 @@
                             @endforelse
                         </div>
                     </div>
+
+
+
+            </div>
+        </section>
+
+        <!-- Main Modal -->
+        <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: var(--primary); color: #fff;">
+                        <h5 class="modal-title" id="mainModalLabel">Feature Coming Soon</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3 class="text-center">Direct Messaging is Coming Soon!</h3>
+                        <p class="text-center">
+                            Our team is working hard to bring you an exciting <strong>Direct Messaging</strong> feature.
+                            Soon, you'll be able to connect and communicate seamlessly with others on the platform.
+                            Stay tuned for updates!
+                        </p>
+
+                    </div>
+                    <div class="modal-footer" style="justify-content: center;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
-
         </div>
-    </section>
 
-    <!-- Main Modal -->
-    <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: var(--primary); color: #fff;">
-                    <h5 class="modal-title" id="mainModalLabel">Feature Coming Soon</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h3 class="text-center">Direct Messaging is Coming Soon!</h3>
-                    <p class="text-center">
-                        Our team is working hard to bring you an exciting <strong>Direct Messaging</strong> feature.
-                        Soon, you'll be able to connect and communicate seamlessly with others on the platform.
-                        Stay tuned for updates!
-                    </p>
-
-                </div>
-                <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</main>
+    </main>
 @endsection
