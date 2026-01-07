@@ -2552,6 +2552,7 @@ button.btn.btn-primary.viewAllBtn {
     padding: 10px 60px;
     margin-top: 20px;
     border: 1px solid #b8c034;
+    margin: auto;
 }
 
 /* .industries_sec .industry_box:hover {

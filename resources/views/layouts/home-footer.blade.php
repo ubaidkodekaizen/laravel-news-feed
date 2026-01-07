@@ -1,6 +1,6 @@
 <div id="footer">
     <div class="footerInner">
-        <p>© 2025 – Powered By AMCOB LLC. All Rights Reserved.</p>
+        <p>© {{ date('Y') }} – Powered By AMCOB LLC. All Rights Reserved.</p>
 
         <ul class="footerLinks">
             <li>

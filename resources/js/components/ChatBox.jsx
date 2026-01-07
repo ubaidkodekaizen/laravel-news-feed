@@ -20,6 +20,9 @@ import { database } from "../firebase.js";
 
 import MessageList from "./MessageList.jsx";
 import MessageInput from "./MessageInput.jsx";
+
+import { format } from "date-fns";
+
 const ChatBox = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
@@ -291,12 +294,23 @@ const ChatBox = () => {
         return () => clearTimeout(timer); // Cleanup the timeout
     }, [messages, activeConversation, conversations, activeUser]);
 
-    const filteredConversations = conversations.filter((conversation) => {
-        const fullName = `${conversation.user?.first_name ?? ""} ${
-            conversation.user?.last_name ?? ""
-        }`.toLowerCase();
-        return fullName.includes(search.toLowerCase());
-    });
+    const filteredConversations = conversations
+        .filter((conversation) => {
+            const fullName = `${conversation.user?.first_name ?? ""} ${
+                conversation.user?.last_name ?? ""
+            }`.toLowerCase();
+            return fullName.includes(search.toLowerCase());
+        })
+        .sort((a, b) => {
+            // Sort by last message timestamp (newest first)
+            const dateA = a.last_message?.created_at
+                ? new Date(a.last_message.created_at)
+                : new Date(0);
+            const dateB = b.last_message?.created_at
+                ? new Date(b.last_message.created_at)
+                : new Date(0);
+            return dateB - dateA; // Descending order (newest first)
+        });
 
     const fetchConversations = async () => {
         const token = localStorage.getItem("sanctum-token");
@@ -570,6 +584,36 @@ const ChatBox = () => {
         }
     };
 
+    const formatLastMessageTime = (date) => {
+        if (!date) return "";
+
+        try {
+            const messageDate = new Date(date);
+
+            // Check if date is valid
+            if (isNaN(messageDate.getTime())) {
+                return "";
+            }
+
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (messageDate.toDateString() === today.toDateString()) {
+                return format(messageDate, "h:mm a");
+            } else if (
+                messageDate.toDateString() === yesterday.toDateString()
+            ) {
+                return "Yesterday";
+            } else {
+                return format(messageDate, "MMM d");
+            }
+        } catch (error) {
+            console.error("Error formatting date:", error, date);
+            return "";
+        }
+    };
+
     const handleChatIconClick = () => {
         if (window.innerWidth < 800) {
             window.location.href = "/inbox";
@@ -741,13 +785,24 @@ const ChatBox = () => {
                                                     )}
                                                 </div>
                                                 <div className="conversationUserDetails">
-                                                    <div className="conversationUsername">
-                                                        {conversation.user
-                                                            ?.first_name ??
-                                                            ""}{" "}
-                                                        {conversation.user
-                                                            ?.last_name ?? ""}
+                                                    <div className="conversationHeader">
+                                                        <div className="conversationUsername">
+                                                            {conversation.user
+                                                                ?.first_name ??
+                                                                ""}{" "}
+                                                            {conversation.user
+                                                                ?.last_name ??
+                                                                ""}
+                                                        </div>
+                                                        <span className="conversationTime">
+                                                            {formatLastMessageTime(
+                                                                conversation
+                                                                    .last_message
+                                                                    ?.created_at
+                                                            )}
+                                                        </span>
                                                     </div>
+
                                                     <div className="conversationLastMessage">
                                                         {
                                                             conversation
