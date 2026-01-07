@@ -290,6 +290,7 @@ class ChatController extends Controller
                     $query->where('receiver_id', $userId)
                         ->whereNull('read_at');
                 }])
+                ->orderByRaw('COALESCE(last_message_at, updated_at) DESC')
                 ->get()
                 ->map(function ($conversation) use ($userId) {
                     $otherUser = $conversation->user_one_id === $userId
