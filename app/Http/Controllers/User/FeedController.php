@@ -86,7 +86,7 @@ class FeedController extends Controller
         })->toArray();
 
         // pass both the transformed posts array and the original paginator (for links)
-        return view('user.news-feed', [
+        return view('pages.news-feed', [
             'posts' => $posts,
             'pagination' => $postsPaginator,
         ]);

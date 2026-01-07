@@ -273,7 +273,7 @@ class PageController extends Controller
                 return $service;
             });
 
-        return view('pages.feed', compact('blogs', 'events', 'products', 'services', 'industries'));
+        return view('pages.our-community', compact('blogs', 'events', 'products', 'services', 'industries'));
     }
 
     public function products(Request $request)
@@ -510,6 +510,6 @@ class PageController extends Controller
             ]);
         }
 
-        return view('user.smart-suggestion', compact('suggestions'));
+        return view('pages.smart-suggestion', compact('suggestions'));
     }
 }

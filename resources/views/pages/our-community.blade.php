@@ -324,10 +324,7 @@
             <h1 class="main_heading">
                 Products Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span>
             </h1>
-            <p class="feedLpPara">MuslimLynk members offer a diverse range of products and services designed to support
-                businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance
-                solutions, the community provides reliable, professional offerings that empower growth and scalability.
-                Featured products include:</p>
+            <p class="feedLpPara">MuslimLynk members offer a diverse range of products designed to support businesses at every stage. From e-commerce goods to specialized manufacturing outputs, the community delivers reliable, high-quality products that empower growth, efficiency, and scalability.</p>
 
         </div>
 
@@ -515,10 +512,7 @@
             <h2 class="main_heading">
                 Services Offered by <span class="feedLpSec"><span class="feedLpPri">Muslim</span>Lynk Members</span>
             </h2>
-            <p class="articlesPara">MuslimLynk members offer a diverse range of products and services designed to support
-                businesses at every stage. From e-commerce fulfillment to specialized manufacturing and compliance
-                solutions, the community provides reliable, professional offerings that empower growth and scalability.
-                Featured products include:</p>
+            <p class="articlesPara">MuslimLynk members provide a wide spectrum of professional services to support businesses at every stage. From e-commerce fulfillment to compliance, consulting, and specialized operational solutions, the community offers trusted expertise that enables sustainable growth and scalability.</p>
 
             <div class="serviceAccordionCon">
                 @forelse($services as $index => $service)
@@ -913,7 +907,7 @@
                                 console.log(response.receiver);
                                 $('#receiver_id').val(receiverId);
                                 $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
-I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
+I came across your profile and was really impressed by your work. I'd love to connect and exchange ideas.
 Looking forward to connecting!
 Best Regards,
 {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
@@ -1075,3 +1069,4 @@ Best Regards,
         }
     </script>
 @endsection
+
