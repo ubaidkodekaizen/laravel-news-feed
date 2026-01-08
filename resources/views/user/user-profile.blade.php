@@ -68,8 +68,8 @@
             width: 100%;
             min-height: unset !important;
             box-shadow: none !important;
-            border-radius: 0px !important;
-            border: none !important;
+            border-radius: 10px;
+            border: 1px solid #E5E5E5;
         }
 
         .services_slider .card {
@@ -81,7 +81,8 @@
 
         .event_slider .swiper-slide,
         .services_profile_border .swiper-slide {
-            width: 414px !important;
+            /* width: 100% !important;
+            max-width: 435px; */
         }
 
         .company_card {
@@ -361,7 +362,6 @@
             padding: 9px;
             width: 44px;
             height: 44px;
-            /* border-radius: 50%; */
             background: #B8C034;
             fill: #273572 !important;
             color: #273572 !important;
@@ -462,8 +462,6 @@
             position: relative;
         }
 
-        /* .col-lg-3 {
-                                                                     flex: 0 0 20%;} */
 
         .profile-details .location {
             font-size: 20.92px;
