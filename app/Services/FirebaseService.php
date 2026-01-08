@@ -14,15 +14,15 @@ class FirebaseService
     public function __construct()
     {
         try {
-            $credentialsPath = config('services.firebase.credentials');
-            $databaseUrl = config('services.firebase.database_url');
+            $credentialsPath = config('firebase.credentials.file');
+            $databaseUrl = config('firebase.database.url');
 
             if (empty($credentialsPath)) {
                 throw new \Exception('Firebase credentials path is not configured. Please set FIREBASE_CREDENTIALS in .env');
             }
 
             // If path contains placeholder text or is empty, use default location
-            if (empty($credentialsPath) || str_contains($credentialsPath, '/full/absolute/path/to/')) {
+            if (str_contains($credentialsPath, '/full/absolute/path/to/')) {
                 $credentialsPath = storage_path('app/firebase-credentials.json');
             }
 
@@ -40,6 +40,8 @@ class FirebaseService
 
             $this->database = $factory->createDatabase();
             $this->auth = $factory->createAuth();
+
+            \Log::info('Firebase service initialized successfully');
         } catch (\Exception $e) {
             \Log::error('FirebaseService initialization failed: ' . $e->getMessage());
             throw $e;
@@ -56,8 +58,6 @@ class FirebaseService
         // ✅ Generate full photo URL
         $photoUrl = null;
         if (!empty($message->sender->photo)) {
-            // Check if photo already has full URL
-            // Use helper function that handles both S3 URLs and local storage
             $photoUrl = getImageUrl($message->sender->photo);
         }
 
@@ -69,12 +69,15 @@ class FirebaseService
             'content' => $message->content,
             'created_at' => $message->created_at->toIso8601String(),
             'read_at' => $message->read_at?->toIso8601String(),
+            'edited_at' => $message->edited_at?->toIso8601String(), // ✅ Add this
+            'deleted_at' => $message->deleted_at?->toIso8601String(), // ✅ Add this
+            'is_deleted' => !is_null($message->deleted_at), // ✅ Add this
             'sender' => [
                 'id' => $message->sender->id,
                 'first_name' => $message->sender->first_name,
                 'last_name' => $message->sender->last_name,
                 'email' => $message->sender->email,
-                'photo' => $photoUrl, // ✅ Full URL
+                'photo' => $photoUrl,
                 'slug' => $message->sender->slug,
                 'user_has_photo' => !empty($message->sender->photo),
                 'user_initials' => strtoupper(
@@ -84,6 +87,9 @@ class FirebaseService
             ],
             'reactions' => [],
         ];
+
+        // ✅ Increment unread count for receiver
+        $this->updateUnreadCount($message->receiver_id, $conversationId, true);
 
         return $reference->getChild((string)$message->id)->set($messageData);
     }
@@ -239,17 +245,99 @@ class FirebaseService
     public function isUserOnline($userId)
     {
         try {
-            $snapshot = $this->database->getReference('presence/users/' . $userId)->getSnapshot();
+            $userIdString = (string) $userId;
+            $snapshot = $this->database->getReference("presence/users/{$userIdString}")->getSnapshot();
 
             if (!$snapshot->exists()) {
                 return false;
             }
 
             $presence = $snapshot->getValue();
-            return $presence['online'] ?? false;
+            $isOnline = $presence['online'] ?? false;
+            $lastActive = $presence['last_active'] ?? 0;
+
+            // Consider user online if they were active in the last 5 minutes
+            $currentTime = time();
+            $timeDiff = $currentTime - $lastActive;
+            $isRecentlyActive = $timeDiff < 300; // 5 minutes
+
+            return $isOnline && $isRecentlyActive;
         } catch (\Exception $e) {
             \Log::error('Error checking online status: ' . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * ✅ NEW: Update unread count for a user's conversation
+     */
+    public function updateUnreadCount($userId, $conversationId, $increment = true)
+    {
+        try {
+            $userIdString = (string) $userId;
+            $conversationIdString = (string) $conversationId;
+            $unreadRef = $this->database->getReference("unread_counts/{$userIdString}/{$conversationIdString}");
+
+            if ($increment) {
+                $currentCount = $unreadRef->getValue() ?? 0;
+                $newCount = $currentCount + 1;
+                $unreadRef->set($newCount);
+            } else {
+                // Clear unread count
+                $unreadRef->set(0);
+            }
+
+            // Update total unread count
+            $this->updateTotalUnreadCount($userId);
+
+            \Log::info('Updated unread count', [
+                'user_id' => $userId,
+                'conversation_id' => $conversationId,
+                'increment' => $increment
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to update unread count: ' . $e->getMessage(), [
+                'user_id' => $userId,
+                'conversation_id' => $conversationId,
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
+
+    /**
+     * ✅ NEW: Update total unread count for a user
+     */
+    public function updateTotalUnreadCount($userId)
+    {
+        try {
+            $userIdString = (string) $userId;
+            $unreadRef = $this->database->getReference("unread_counts/{$userIdString}");
+            $allUnread = $unreadRef->getValue() ?? [];
+
+            $total = 0;
+            if (is_array($allUnread)) {
+                $total = array_sum(array_values($allUnread));
+            }
+
+            $totalRef = $this->database->getReference("unread_totals/{$userIdString}");
+            $totalRef->set($total);
+
+            \Log::info('Updated total unread count', [
+                'user_id' => $userId,
+                'total' => $total
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to update total unread count: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
+
+    /**
+     * ✅ NEW: Clear unread count for a conversation
+     */
+    public function clearUnreadCount($userId, $conversationId)
+    {
+        $this->updateUnreadCount($userId, $conversationId, false);
     }
 }

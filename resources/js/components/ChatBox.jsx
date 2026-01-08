@@ -9,7 +9,7 @@ import {
     Search,
 } from "lucide-react";
 import {
-    ref,
+    ref as dbRef,
     onChildAdded,
     onValue,
     set,
@@ -20,6 +20,7 @@ import { database } from "../firebase.js";
 
 import MessageList from "./MessageList.jsx";
 import MessageInput from "./MessageInput.jsx";
+import OnlineStatus from "./OnlineStatus.jsx";
 
 import { format } from "date-fns";
 
@@ -37,6 +38,10 @@ const ChatBox = () => {
     const [userId, setUserId] = useState(window.userId);
     const [typingUser, setTypingUser] = useState(null);
     const [search, setSearch] = useState("");
+    const [unreadCounts, setUnreadCounts] = useState({});
+    const [isBlocked, setIsBlocked] = useState(false);
+    const [isBlockedBy, setIsBlockedBy] = useState(false);
+    const [showBlockMenu, setShowBlockMenu] = useState(false);
     const token = localStorage.getItem("sanctum-token");
     // ✅ Add audio ref for notification sound
     const notificationSound = useRef(null);
@@ -51,6 +56,19 @@ const ChatBox = () => {
         );
         notificationSound.current.volume = 0.5; // Set volume (0.0 to 1.0)
     }, []);
+
+    useEffect(() => {
+        if (!window.userId) return;
+
+        const unreadRef = dbRef(database, `unread_counts/${window.userId}`);
+
+        const unsubscribe = onValue(unreadRef, (snapshot) => {
+            const counts = snapshot.val() || {};
+            setUnreadCounts(counts);
+        });
+
+        return () => unsubscribe();
+    }, [userId]);
 
     // ✅ Play notification sound
     const playNotificationSound = () => {
@@ -84,7 +102,7 @@ const ChatBox = () => {
     useEffect(() => {
         if (!activeConversation) return;
 
-        const messagesRef = ref(database, `messages/${activeConversation}`);
+        const messagesRef = dbRef(database, `messages/${activeConversation}`);
         const messagesQuery = query(messagesRef, orderByChild("created_at"));
 
         setMessages([]);
@@ -166,7 +184,7 @@ const ChatBox = () => {
     useEffect(() => {
         if (!activeConversation) return;
 
-        const typingRef = ref(database, `typing/${activeConversation}`);
+        const typingRef = dbRef(database, `typing/${activeConversation}`);
 
         const unsubscribe = onValue(typingRef, (snapshot) => {
             const typingData = snapshot.val();
@@ -208,7 +226,7 @@ const ChatBox = () => {
 
         // ✅ Check every second and clear stale typing indicators
         const interval = setInterval(() => {
-            const typingRef = ref(database, `typing/${activeConversation}`);
+            const typingRef = dbRef(database, `typing/${activeConversation}`);
             onValue(
                 typingRef,
                 (snapshot) => {
@@ -232,7 +250,7 @@ const ChatBox = () => {
                                 "Removing stale typing indicator for user:",
                                 uid
                             );
-                            const staleRef = ref(
+                            const staleRef = dbRef(
                                 database,
                                 `typing/${activeConversation}/${uid}`
                             );
@@ -263,7 +281,7 @@ const ChatBox = () => {
 
         const clearTyping = async () => {
             try {
-                const typingRef = ref(
+                const typingRef = dbRef(
                     database,
                     `typing/${activeConversation}/${window.userId}`
                 );
@@ -347,11 +365,18 @@ const ChatBox = () => {
         }
     };
 
-    const handleConversationClick = (conversation) => {
+    // Update handleConversationClick to clear unread count
+    const handleConversationClick = async (conversation) => {
         setActiveConversation(conversation.id);
-        setHideMessageBox(false); // make sure it is visible
-        setIsMinimized(false); // optional: un-minimize
-        fetchMessages(conversation.id);
+        setHideMessageBox(false);
+        setIsMinimized(false);
+        await fetchMessages(conversation.id);
+
+        // Clear unread count for this conversation
+        setUnreadCounts((prev) => ({
+            ...prev,
+            [conversation.id]: 0,
+        }));
     };
 
     const sendMessage = async (messageContent) => {
@@ -361,7 +386,7 @@ const ChatBox = () => {
 
         // ✅ Clear typing indicator immediately when sending message
         try {
-            const typingRef = ref(
+            const typingRef = dbRef(
                 database,
                 `typing/${activeConversation}/${window.userId}`
             );
@@ -491,9 +516,40 @@ const ChatBox = () => {
                 },
             });
             setActiveUser(response.data); // Assuming response.data contains user info
+            // ✅ Set block status
+            setIsBlocked(response.data.is_blocked || false);
+            setIsBlockedBy(response.data.is_blocked_by || false);
             console.log("active user", response.data);
         } catch (error) {
             console.error("Error fetching user details:", error);
+        }
+    };
+
+    // Add block/unblock handlers
+    const handleBlockUser = async () => {
+        if (!activeUser) return;
+
+        const confirmMessage = isBlocked
+            ? `Are you sure you want to unblock ${activeUser.first_name}?`
+            : `Are you sure you want to block ${activeUser.first_name}? You won't be able to send or receive messages.`;
+
+        if (!confirm(confirmMessage)) return;
+
+        try {
+            const url = isBlocked ? unblockUserRoute : blockUserRoute;
+            const response = await window.axios.post(
+                url,
+                { user_id: activeUser.id },
+                { headers: { Authorization: token } }
+            );
+
+            setIsBlocked(!isBlocked);
+            setShowBlockMenu(false);
+
+            alert(response.data.message);
+        } catch (error) {
+            console.error("Error blocking/unblocking user:", error);
+            alert("Failed to update block status");
         }
     };
     // Helper function to convert time to "X minutes ago" format
@@ -545,7 +601,7 @@ const ChatBox = () => {
         }
 
         try {
-            const typingRef = ref(
+            const typingRef = dbRef(
                 database,
                 `typing/${activeConversation}/${window.userId}`
             );
@@ -638,21 +694,29 @@ const ChatBox = () => {
                         onClick={() => setIsMinimized(!isMinimized)}
                     >
                         <div className="messageBoxHeadInner">
-                            {activeUser.user_has_photo ? (
-                                <img
-                                    src={activeUser.photo}
-                                    alt="Sender"
-                                    className="messageBoxHeadSenderPhoto"
+                            <div className="messageBoxHeadInnerAvatarBox">
+                                {activeUser.user_has_photo ? (
+                                    <img
+                                        src={activeUser.photo}
+                                        alt="Sender"
+                                        className="messageBoxHeadSenderPhoto"
+                                    />
+                                ) : (
+                                    <div className="avatar-initials messageBoxHeadSenderPhoto">
+                                        {activeUser.user_initials ||
+                                            getInitials(
+                                                activeUser.first_name,
+                                                activeUser.last_name
+                                            )}
+                                    </div>
+                                )}
+                                {/* ✅ Add online status indicator */}
+                                <OnlineStatus
+                                    userId={activeUser.id}
+                                    className="avatar-status-badge"
                                 />
-                            ) : (
-                                <div className="avatar-initials messageBoxHeadSenderPhoto">
-                                    {activeUser.user_initials ||
-                                        getInitials(
-                                            activeUser.first_name,
-                                            activeUser.last_name
-                                        )}
-                                </div>
-                            )}
+                            </div>
+
                             <div className={`messageBoxHeadContent`}>
                                 <a
                                     href={`/user/profile/${activeUser.slug}`}
@@ -661,6 +725,13 @@ const ChatBox = () => {
                                     {activeUser.first_name ?? "Unknown"}{" "}
                                     {activeUser.last_name ?? "User"}
                                 </a>
+
+                                {/* ✅ Add online status text */}
+                                <OnlineStatus
+                                    userId={activeUser.id}
+                                    showText={true}
+                                />
+
                                 {typingUser && (
                                     <div className="typing-indicator">
                                         {typingUser.first_name} is typing...
@@ -669,6 +740,45 @@ const ChatBox = () => {
                             </div>
                         </div>
                         <div className="messageBoxHeadInner">
+                            {/* ✅ Add block menu button */}
+                            <button
+                                type="button"
+                                className="btn messageBoxMenuBtn"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowBlockMenu(!showBlockMenu);
+                                }}
+                            >
+                                <i className="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+
+                            {/* ✅ Block menu dropdown */}
+                            {showBlockMenu && (
+                                <div className="messageBoxDropdown">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleBlockUser();
+                                        }}
+                                        className={
+                                            isBlocked
+                                                ? "unblock-btn"
+                                                : "block-btn"
+                                        }
+                                    >
+                                        <i
+                                            className={`fa-solid ${
+                                                isBlocked
+                                                    ? "fa-lock-open"
+                                                    : "fa-ban"
+                                            }`}
+                                        ></i>
+                                        {isBlocked
+                                            ? "Unblock User"
+                                            : "Block User"}
+                                    </button>
+                                </div>
+                            )}
                             <button
                                 type="button"
                                 className="btn-close closeMessageBoxBtn"
@@ -681,7 +791,7 @@ const ChatBox = () => {
                     <div className="messageBoxList">
                         {messages.length === 0 ? (
                             <div className="noMessages">
-                                No messages found yet
+                                You don’t have any messages yet—check back soon.
                             </div>
                         ) : (
                             <MessageList
@@ -693,10 +803,31 @@ const ChatBox = () => {
                     </div>
 
                     {/* Message Input */}
-                    <MessageInput
-                        onSendMessage={sendMessage}
-                        onTyping={handleTyping}
-                    />
+                    {isBlockedBy ? (
+                        <div className="messageBoxBlockedNotice">
+                            <i className="fa-solid fa-ban"></i>
+                            <p>You can't send messages to this user</p>
+                        </div>
+                    ) : isBlocked ? (
+                        <div className="messageBoxBlockedNotice">
+                            <i className="fa-solid fa-ban"></i>
+                            <p>
+                                You have blocked this user.{" "}
+                                <button
+                                    onClick={handleBlockUser}
+                                    className="unblock-inline-btn"
+                                >
+                                    Unblock
+                                </button>{" "}
+                                to send messages.
+                            </p>
+                        </div>
+                    ) : (
+                        <MessageInput
+                            onSendMessage={sendMessage}
+                            onTyping={handleTyping}
+                        />
+                    )}
                 </div>
             )}
             <div
@@ -745,6 +876,7 @@ const ChatBox = () => {
                                         No conversations found
                                     </div>
                                 ) : (
+                                    // Update the conversation rendering to show unread count
                                     filteredConversations.map(
                                         (conversation, index) => (
                                             <div
@@ -762,26 +894,49 @@ const ChatBox = () => {
                                                 <div className="conversationUserProfile">
                                                     {conversation.user
                                                         ?.user_has_photo ? (
-                                                        <img
-                                                            src={
-                                                                conversation
-                                                                    .user.photo
-                                                            }
-                                                            alt="User Profile"
-                                                        />
+                                                        <>
+                                                            <img
+                                                                src={
+                                                                    conversation
+                                                                        .user
+                                                                        .photo
+                                                                }
+                                                                alt="User Profile"
+                                                            />
+
+                                                            <OnlineStatus
+                                                                userId={
+                                                                    conversation
+                                                                        .user.id
+                                                                }
+                                                                className="avatar-status-badge"
+                                                            />
+                                                        </>
                                                     ) : (
-                                                        <div className="avatar-initials">
-                                                            {conversation.user
-                                                                ?.user_initials ||
-                                                                getInitials(
+                                                        <>
+                                                            <div className="avatar-initials">
+                                                                {conversation
+                                                                    .user
+                                                                    ?.user_initials ||
+                                                                    getInitials(
+                                                                        conversation
+                                                                            .user
+                                                                            ?.first_name,
+                                                                        conversation
+                                                                            .user
+                                                                            ?.last_name
+                                                                    )}
+                                                            </div>
+
+                                                            {/* ✅ Add online status */}
+                                                            <OnlineStatus
+                                                                userId={
                                                                     conversation
-                                                                        .user
-                                                                        ?.first_name,
-                                                                    conversation
-                                                                        .user
-                                                                        ?.last_name
-                                                                )}
-                                                        </div>
+                                                                        .user.id
+                                                                }
+                                                                className="avatar-status-badge"
+                                                            />
+                                                        </>
                                                     )}
                                                 </div>
                                                 <div className="conversationUserDetails">
@@ -811,12 +966,19 @@ const ChatBox = () => {
                                                         }
                                                     </div>
                                                 </div>
-                                                {(conversation.unread_count ||
-                                                    0) > 0 && (
+                                                {/* ✅ Show unread count from Firebase */}
+                                                {(unreadCounts[
+                                                    conversation.id
+                                                ] || 0) > 0 && (
                                                     <div className="conversationUnreadCount">
-                                                        {
-                                                            conversation.unread_count
-                                                        }
+                                                        {unreadCounts[
+                                                            conversation.id
+                                                        ] > 99
+                                                            ? "99+"
+                                                            : unreadCounts[
+                                                                  conversation
+                                                                      .id
+                                                              ]}
                                                     </div>
                                                 )}
                                             </div>

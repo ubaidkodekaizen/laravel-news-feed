@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\UserOnlineService;
 use App\Jobs\SendOfflineMessageNotification;
+use App\Models\Chat\BlockedUser;
 use App\Traits\FormatsUserData;
 use App\Services\FirebaseService;
 
@@ -65,7 +66,15 @@ class ChatController extends Controller
             : $conversation->userOne;
 
         if ($user) {
-            return response()->json($this->formatUserData($user));
+
+            $userData = $this->formatUserData($user);
+
+            // ✅ Add block status
+            $userData['is_blocked'] = BlockedUser::isBlocked(auth()->id(), $user->id);
+            $userData['is_blocked_by'] = BlockedUser::isBlocked($user->id, auth()->id());
+            $userData['can_message'] = !$userData['is_blocked'] && !$userData['is_blocked_by'];
+
+            return response()->json($userData);
         }
 
         return response()->json(['message' => 'User not found'], 404);
@@ -130,7 +139,9 @@ class ChatController extends Controller
                         'read_at' => $message->read_at ? $message->read_at->toIso8601String() : null,
                         'created_at' => $message->created_at ? $message->created_at->toIso8601String() : null,
                         'updated_at' => $message->updated_at ? $message->updated_at->toIso8601String() : null,
-                        'edited_at' => $message->edited_at ? $message->edited_at->toIso8601String() : null, // ✅ Add this
+                        'edited_at' => $message->edited_at ? $message->edited_at->toIso8601String() : null,
+                        'deleted_at' => $message->deleted_at ? $message->deleted_at->toIso8601String() : null, // ✅ Add this
+                        'is_deleted' => !is_null($message->deleted_at), // ✅ Add this
                         'sender' => $message->sender,
                         'reactions' => $message->relationLoaded('reactions') && $message->reactions
                             ? $message->reactions->map(function ($reaction) {
@@ -154,6 +165,9 @@ class ChatController extends Controller
                 ->where('receiver_id', auth()->id())
                 ->whereNull('read_at')
                 ->update(['read_at' => now()]);
+
+            // ✅ Clear unread count in Firebase
+            $this->firebaseService->clearUnreadCount(auth()->id(), $conversation->id);
 
             return response()->json($messages);
         } catch (\Exception $e) {
@@ -245,13 +259,23 @@ class ChatController extends Controller
             $conversationId = $message->conversation_id;
             $messageId = $message->id;
 
-            // Delete from Firebase first
-            $this->firebaseService->deleteMessage($conversationId, $messageId);
+            // ✅ Mark as deleted instead of actually deleting
+            $message->update([
+                'deleted_at' => now(),
+                'content' => 'This message was deleted', // Optional: keep original or replace
+            ]);
 
-            // Delete from database
-            $message->delete();
+            // ✅ Update in Firebase to show deleted message
+            $this->firebaseService->updateMessage(
+                $conversationId,
+                $messageId,
+                [
+                    'deleted_at' => $message->deleted_at->toIso8601String(),
+                    'is_deleted' => true,
+                ]
+            );
 
-            \Log::info('Message deleted successfully', [
+            \Log::info('Message marked as deleted', [
                 'message_id' => $messageId,
                 'conversation_id' => $conversationId,
                 'user_id' => auth()->id()
@@ -259,7 +283,8 @@ class ChatController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Message deleted successfully'
+                'message' => 'Message deleted successfully',
+                'deleted_at' => $message->deleted_at->toIso8601String()
             ]);
         } catch (\Exception $e) {
             \Log::error('Error deleting message: ' . $e->getMessage(), [
@@ -363,6 +388,13 @@ class ChatController extends Controller
 
         $senderId = auth()->id();
         $receiverId = $request->receiver_id;
+
+        // ✅ Check if there's a block between users
+        if (BlockedUser::isBlockedBetween($senderId, $receiverId)) {
+            return response()->json([
+                'error' => 'Cannot send message. There is a block between these users.'
+            ], 403);
+        }
 
         return \DB::transaction(function () use ($senderId, $receiverId, $request) {
             try {

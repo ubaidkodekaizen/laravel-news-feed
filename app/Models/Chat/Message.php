@@ -26,6 +26,7 @@ class Message extends Model
         'content',
         'read_at',
         'edited_at',
+        'deleted_at',
     ];
 
     // Define date casting
@@ -34,6 +35,7 @@ class Message extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'edited_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     // Define relationships

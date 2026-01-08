@@ -260,7 +260,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     // Dashboard & Navigation
     Route::get('/news-feed', [FeedController::class, 'index'])->name('news-feed');
-    
+
     // News Feed API Routes (for AJAX calls)
     Route::prefix('feed')->group(function () {
         Route::get('/posts', [FeedController::class, 'getFeed'])->name('feed.posts');
@@ -380,6 +380,58 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     Route::get('/admin/subscriptions', [AdminController::class, 'showSubscriptions'])->name('admin.subscriptions');
 });
 
+// In routes/web.php
+// Route::get('/debug-firebase-config', function() {
+//     return response()->json([
+//         'credentials_file' => config('firebase.credentials.file'),
+//         'database_url' => config('firebase.database.url'),
+//         'project_id' => config('firebase.project_id'),
+//         'file_exists' => file_exists(config('firebase.credentials.file')),
+//         'storage_path' => storage_path('app/firebase-credentials.json'),
+//         'env_credentials' => env('FIREBASE_CREDENTIALS'),
+//         'env_database' => env('FIREBASE_DATABASE_URL'),
+//     ]);
+// });
+
+// Route::get('/test-firebase-operations', function() {
+//     try {
+//         $firebaseService = app(\App\Services\FirebaseService::class);
+//         $userId = auth()->id();
+
+//         // Test 1: Update unread count
+//         $firebaseService->updateUnreadCount($userId, 123, true);
+//         \Log::info('Test: Updated unread count for conversation 123');
+
+//         // Test 2: Get the database instance to read back
+//         $reflection = new \ReflectionClass($firebaseService);
+//         $property = $reflection->getProperty('database');
+//         $property->setAccessible(true);
+//         $database = $property->getValue($firebaseService);
+
+//         $unreadCount = $database->getReference("unread_counts/{$userId}/123")->getValue();
+//         $totalUnread = $database->getReference("unread_totals/{$userId}")->getValue();
+
+//         return response()->json([
+//             'status' => 'success',
+//             'message' => 'Firebase operations completed',
+//             'data' => [
+//                 'conversation_123_unread' => $unreadCount,
+//                 'total_unread' => $totalUnread,
+//                 'user_id' => $userId
+//             ]
+//         ]);
+//     } catch (\Exception $e) {
+//         \Log::error('Firebase test failed: ' . $e->getMessage(), [
+//             'trace' => $e->getTraceAsString()
+//         ]);
+
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => $e->getMessage(),
+//             'trace' => $e->getTraceAsString()
+//         ], 500);
+//     }
+// })->middleware('auth:sanctum');
 /*
 |--------------------------------------------------------------------------
 | Logout Routes

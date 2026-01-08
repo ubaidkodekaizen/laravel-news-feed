@@ -214,10 +214,18 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('inbox') }}" class="btn btn-primary" data-toggle="tooltip"
-                                    data-placement="bottom" title="Inbox">
-
-                                    <img src="{{ asset('assets/images/inboxIcon.png') }}" alt="Inbox">
+                                <a href="{{ route('inbox') }}" class="btn btn-primary position-relative"
+                                    data-toggle="tooltip" data-placement="bottom" title="Inbox">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                        viewBox="0 0 24 24"
+                                        style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;">
+                                        <circle cx="9.5" cy="9.5" r="1.5"></circle>
+                                        <circle cx="14.5" cy="9.5" r="1.5"></circle>
+                                        <path
+                                            d="M12 2C6.486 2 2 5.589 2 10c0 2.908 1.897 5.515 5 6.934V22l5.34-4.004C17.697 17.852 22 14.32 22 10c0-4.411-4.486-8-10-8zm0 14h-.333L9 18v-2.417l-.641-.247C5.671 14.301 4 12.256 4 10c0-3.309 3.589-6 8-6s8 2.691 8 6-3.589 6-8 6z">
+                                        </path>
+                                    </svg>
+                                    <div id="inbox-unread-badge"></div>
                                 </a>
                             </li>
                         </ul>
@@ -244,8 +252,7 @@
                         @endphp
 
                         @if ($hasPhoto)
-                            <img src="{{ getImageUrl($currentUser->photo) }}"
-                                alt="{{ $currentUser->first_name }}">
+                            <img src="{{ getImageUrl($currentUser->photo) }}" alt="{{ $currentUser->first_name }}">
                         @else
                             <div class="avatar-initials-header">
                                 {{ $initials }}
@@ -294,11 +301,8 @@
 
                 <a href="{{ route('our.community') }}" class="btn btn-primary mt-4 w-100">Our Community</a>
                 <a href="{{ route('smart.suggestion') }}" class="btn btn-primary mt-2 w-100">Smart Suggestion</a>
-                <!-- Add more mobile links here -->
-                <!-- <ul class="drawer_links mt-3">
-                <li><a href="{{ route('our.community') }}">Our Community</a></li>
-                <li><a href="#">Link Two</a></li>
-            </ul> -->
+                <a href="{{ route('inbox') }}" class="btn btn-primary mt-2 w-100">Inbox</a>
+
             </div>
         </div>
     </div>
