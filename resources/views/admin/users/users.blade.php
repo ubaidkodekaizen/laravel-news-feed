@@ -8,6 +8,8 @@
         background: #fafbff !important;
     }
 
+    
+
     .card-header:first-child {
         background: #fafbff !important;
         border: none;
@@ -82,7 +84,7 @@
     div.dataTables_wrapper div.dataTables_filter input {
         margin-left: .5em;
         display: inline-block;
-        width: auto;
+        width: 64.8%;
         font-size: 16px;
         font-weight: 400;
         font-family: 'Inter';
@@ -106,6 +108,8 @@
         font-family: 'Poppins';
         font-size: 18px;
     }
+
+    
 
     .col-sm-12.col-md-6 {
         align-content: center;
