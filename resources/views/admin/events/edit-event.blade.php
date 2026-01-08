@@ -98,6 +98,13 @@
         text-align: center;
         margin: 0 0 0 0;
     }
+
+    .card .card-header .card-title a img {
+        width: 14px !important;
+        margin-top: -6px;
+        margin-right: 16px;
+        border: none !important;
+    }
 </style>
 @section('content')
     <main class="main-content">
@@ -106,7 +113,10 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Edit Event</h4>
+                            <h4 class="card-title">
+                                <a href="{{ url('/admin/events') }}"><img src=" {{ asset('assets/images/dashboard/dashboardBackChevron.svg') }}" alt=""></a>
+                                    Edit Event
+                            </h4>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('admin.store.event', $event->id) }}" method="POST"

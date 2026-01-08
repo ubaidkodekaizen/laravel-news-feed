@@ -76,7 +76,7 @@
     div.dataTables_wrapper div.dataTables_filter input {
         margin-left: .5em;
         display: inline-block;
-        width: auto;
+        width: 64.8%;
         font-size: 16px;
         font-weight: 400;
         font-family: 'Inter';

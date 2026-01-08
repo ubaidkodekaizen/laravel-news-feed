@@ -150,9 +150,72 @@ a{
   .main-content.shifted {
     margin-left: 0;
   }
+
+  div.dataTables_wrapper div.dataTables_filter label {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        justify-self: right;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+  .form-select-sm {
+    border: 1px solid #E9EBF0 !important;
+    border-radius: 10.66px !important;
+    padding: 6px 29px 6px 15px !important;
+  }
+
+  .list_check_flex {
+    margin: 5px 0px 0px !important;
+}
+.accordion-item{
+  font-family: "inter";
+}
+
+.company_logo.profile_data.mt-0.col-lg-12 {
+    border: 2px solid #273572;
+    border-radius: 20px;
+}
   
+
+  @media (max-width: 1241px) {
+    div#usersTable_wrapper .col-sm-12.col-md-6{
+      width: 100%;
+      justify-items: center;
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 879px) {
+
+    .card_header_flex{
+      justify-content: center !important;
+    }
+    div.dataTables_wrapper div.dataTables_filter input {
+      width: 100%;
+      justify-content: center;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter label{
+      margin-top: 14px;
+      justify-content: center;
+    }
+
+    div#usersTable_filter label::after {
+      top: 67%;
+    }
+  }
   /* Responsive Design */
   @media (max-width: 768px) {
+
+    div#usersTable_filter label::after {
+      top: 73%;
+    }
+
+    .card_header_flex{
+      justify-content: space-between !important;
+    }
     .hamburger {
       display: flex;
     }
@@ -253,6 +316,14 @@ a{
       justify-self: center;
     }
   }
+
+  @media (max-width: 411px) {
+    .card_header_flex{
+      justify-content: center !important;
+      gap: 10px;
+    }
+  }
+
   /* Modern Card Design */
 .card-modern {
     background: var(--primary);
@@ -301,4 +372,5 @@ img:not(.logo img, .user_company_profile .company_logo img, .user_company_profil
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }

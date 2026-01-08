@@ -6,7 +6,7 @@
     .user_company_profile .custom_card_profile.colRight {
         display: flex;
         flex-wrap: wrap;
-        align-items: self-end;
+        /* align-items: self-end; */
         gap: 60px;
         border-radius: 10.66px;
     }
@@ -15,6 +15,8 @@
         padding-left: 20px;
         padding-right: 0px;
     }
+
+    
 
 
     .user_company_profile .profile_div .profile_data {
@@ -30,6 +32,8 @@
         font-size: 1rem;
         font-weight: 500;
         margin-bottom: 0;
+        word-break: break-word;
+        min-height: 58px;
     }
 
     .user_company_profile .profile_div {
@@ -44,14 +48,22 @@
         font-size: 18px;
     }
 
-    .user_company_profile .profile_heading {
-        font-family: Inter;
-        font-weight: 700;
+    .profileHeadingSec .profile_heading {
         font-size: 28px !important;
         line-height: 100%;
-        color: #273572;
         margin-top: 0px !important;
         margin-top: 20px !important;
+        border-radius: 0;
+        color: #333;
+        font-family: "Inter";
+        font-weight: 500;
+    }
+
+    .profileHeadingSec a img {
+        width: 14px !important;
+        margin-top: -6px;
+        margin-right: 16px;
+        border: none !important;
     }
 
     .user_company_profile .profile_pic img {
@@ -104,6 +116,36 @@
         padding: 0 !important;
         border-radius: 0 !important;
         margin: 0 !important;
+    }
+
+    .user_company_profile .btn-flex .btn {
+        border-radius: 9.77px !important;
+        padding: 15px 56px !important;
+        font-family: "Poppins", sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 22px !important;
+        line-height: 100% !important;
+        letter-spacing: 0px !important;
+        text-align: center !important;
+        border: none !important;
+        outline: none !important;
+        margin: 0 0 0 0;
+        width: fit-content !important;
+    }
+
+    .user_company_profile .btn-flex {
+        justify-content: left !important;
+    }
+
+    .row {
+        margin-right: 0 !important;
+         margin-left: 0 !important;
+    }
+
+    .list_check_flex {
+        gap: 0px !important;
+        padding: 0 !important;
+        margin: -6px 0px 0px !important;
     }
 
     @media (max-width: 1498px) {
@@ -170,6 +212,14 @@
                 border: 2px solid var(--primary);
             }
         </style>
+        <section class="profileHeadingSec">
+            <div class="container">
+                <h1 class="profile_heading mb-3">
+                    <a href="{{ url('/admin/users') }}"><img src=" {{ asset('assets/images/dashboard/dashboardBackChevron.svg') }}" alt=""></a>
+                    User Profile
+                </h1>
+            </div>
+        </section>
 
         <section class="user_company_profile">
             <div class="container">
@@ -179,13 +229,12 @@
 
 
                             <div class="col-12">
+                                
                                 <div class="profile_pic">
                                     <img src="{{ $user->photo ? getImageUrl($user->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                         alt="">
                                 </div>
-                                <h1 class="profile_heading text-center">
-                                    User Profile
-                                </h1>
+                                
                             </div>
 
                         </div>
@@ -495,7 +544,7 @@
                             Business Details
                         </h1>
                         <div class="row location_data">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 p-0">
                                 <h2 class="profile_subheading">
                                     Revenue
                                 </h2>
@@ -503,28 +552,28 @@
                                     {{ \App\Helpers\DropDownHelper::formatRevenueForDisplay($user->company->company_revenue ?? 'N/A') }}
                                 </p>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 p-0">
                                 <h2 class="profile_subheading">
                                     No. of Employees
                                 </h2>
                                 <p class="profile_data">
-                                    {{ \App\Helpers\DropDownHelper::formatEmployeeSizeForDisplay($user->company->company_no_of_employee ?? '') }}
+                                    {{ \App\Helpers\DropDownHelper::formatEmployeeSizeForDisplay($user->company->company_no_of_employee ?? 'N/A') }}
                                 </p>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 p-0">
                                 <h2 class="profile_subheading">
                                     Business Type
                                 </h2>
                                 <p class="profile_data">
-                                    {{ $user->company->company_business_type ?? '' }}
+                                    {{ $user->company->company_business_type ?? 'N/A' }}
                                 </p>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 p-0">
                                 <h2 class="profile_subheading">
                                     Industry
                                 </h2>
                                 <p class="profile_data">
-                                    {{ $user->company->company_industry ?? '' }}
+                                    {{ $user->company->company_industry ?? 'N/A' }}
                                 </p>
                             </div>
                         </div>

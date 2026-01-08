@@ -5,21 +5,16 @@
         margin-top: 40px !important;
     }
 
-    .user_company_profile .new_user_details .profile_heading {
-        font-family: Inter;
-        font-weight: 700;
-        font-size: 24px;
-        line-height: 122% !important;
-        color: #273572;
-        margin: 0px 0px 32px 0;
-    }
-
-    .row {
+    .user_company_profile .row {
         background: #27357205;
         border: 2px solid #e9ebf0;
         padding: 32px 37px 32px 37px;
         border-radius: 10.66px;
-        margin-top: 30px !important;
+    }
+
+    .row {
+         margin-right: 0 !important;
+         margin-left: 0 !important;
     }
 
     .user_company_profile .new_user_details label:not(.form-check-label) {
@@ -55,13 +50,35 @@
         margin: 0 0 !important;
     }
 
+    .profileHeadingSec .profile_heading {
+        font-size: 28px !important;
+        line-height: 100%;
+        margin-top: 0px !important;
+        margin-top: 20px !important;
+        border-radius: 0;
+        color: #333;
+        font-family: "Inter";
+        font-weight: 500;
+    }
+
+    .profileHeadingSec a img { 
+        width: 14px !important;
+        margin-top: -6px;
+        margin-right: 16px;
+        border: none !important;
+    }
+
     .flex{
         display: flex;
-        gap: 50px;
+        gap: 20px;
         padding: 0 0 20px;
     }
 
-     @media (max-width: 1137px) {
+    .sideContent .row:nth-child(2){  
+        margin-top: 25px;
+    }
+
+    @media (max-width: 1137px) {
         .flex{
             flex-direction: column;
         }
@@ -119,6 +136,14 @@
 
 
     <main class="main-content">
+        <section class="profileHeadingSec">
+            <div class="container">
+                <h1 class="profile_heading mb-3">
+                    <a href="{{ url('/admin/users') }}"><img src=" {{ asset('assets/images/dashboard/dashboardBackChevron.svg') }}" alt=""></a>
+                    Edit Profile
+                </h1>
+            </div>
+        </section>
         <section class="user_company_profile">
             <div class="container">
                 <div class="custom_card_profile">
