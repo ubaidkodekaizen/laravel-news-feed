@@ -186,6 +186,7 @@ class UserController extends Controller
             'slug' => $slug,
             'role_id' => 4,
             'status' => 'pending',
+            'added_by' => 'amcob-api',
             'is_amcob' => 'Yes',
             'paid' => 'Yes',
             'email_verified_at' => now(), // Automatically verify email for AMCOB users
@@ -292,6 +293,8 @@ class UserController extends Controller
         // ✅ Update user
         $user->paid = 'Yes';
         $user->status = 'complete';
+        // Set added_by based on platform (google for Android, apple for iOS)
+        $user->added_by = $request->platform === 'google' ? 'google' : 'apple';
         $user->save();
 
         try {

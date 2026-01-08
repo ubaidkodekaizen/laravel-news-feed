@@ -38,6 +38,7 @@ class User extends Authenticatable
         'sub_category_to_connect',
         'community_interest',
         'status',
+        'added_by',
         'paid',
         'phone_public',
         'email_public',

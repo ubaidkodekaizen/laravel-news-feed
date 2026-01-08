@@ -245,7 +245,7 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/feed/posts', [FeedController::class, 'getFeed'])->name('api.feed.posts');
-    Route::get('/feed/posts/{id}', [FeedController::class, 'getPost'])->name('api.feed.post.show');
+    Route::get('/feed/posts/{slug}', [FeedController::class, 'getPost'])->name('api.feed.post.show');
     Route::post('/feed/posts', [FeedController::class, 'createPost'])->name('api.feed.post.create');
     Route::put('/feed/posts/{id}', [FeedController::class, 'updatePost'])->name('api.feed.post.update');
     Route::delete('/feed/posts/{id}', [FeedController::class, 'deletePost'])->name('api.feed.post.delete');

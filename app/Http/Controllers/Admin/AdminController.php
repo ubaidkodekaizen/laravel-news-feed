@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reference\Accreditation;
-use App\Models\Content\Blog;
 use App\Models\Reference\BusinessContribution;
 use App\Models\Reference\BusinessType;
 use App\Models\Business\Company;
-use App\Models\Content\Event;
 use App\Models\Reference\MuslimOrganization;
 use App\Models\Business\ProductService;
 use App\Models\Business\Subscription;
@@ -102,18 +100,6 @@ class AdminController extends Controller
         return view('admin.dashboard');
     }
 
-    public function showSubscriptions()
-    {
-        $subscriptions = Subscription::with('user')
-            ->where(function($query) {
-                $query->whereNotIn('platform', ['DB', 'Amcob'])
-                      ->orWhereNull('platform');
-            })
-            ->orderByDesc('id')
-            ->get();
-
-        return view('admin.subscriptions', compact('subscriptions'));
-    }
 
 
     public function showUsers()
@@ -145,6 +131,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(), // Automatically verify email
+            'added_by' => 'admin',
             'is_amcob' => $request->amcob_member ?? 'No',
             'duration' => $request->duration ?? '',
         ]);
@@ -216,6 +203,12 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $company = Company::where('user_id', $user->id)->first();
         return view('admin.users.edit-user', compact('user', 'company'));
+    }
+
+    public function editCompany($id)
+    {
+        // Redirect to edit user page which includes company editing
+        return $this->editUser($id);
     }
 
 
@@ -424,150 +417,6 @@ class AdminController extends Controller
         return redirect()->route('admin.users')->with('success', 'User deleted successfully!');
     }
 
-
-
-
-    // Blog Routes
-
-    public function adminBlogs()
-    {
-        $blogs = Blog::orderBy('id', 'desc')->get();
-        return view('admin.blogs.blogs', compact('blogs'));
-    }
-
-
-    public function addBlog(Request $request)
-    {
-        return view('admin.blogs.add-blog');
-    }
-
-    public function storeBlog(Request $request, $id = null)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
-        ]);
-        if ($id) {
-            $blog = Blog::findOrFail($id);
-        } else {
-            $blog = new Blog();
-        }
-        if ($request->hasFile('image')) {
-            $s3Service = app(S3Service::class);
-            
-            // Delete old image from S3 if exists
-            if ($blog->image) {
-                $oldPath = $s3Service->extractPathFromUrl($blog->image);
-                if ($oldPath && str_starts_with($oldPath, 'media/')) {
-                    $s3Service->deleteMedia($oldPath);
-                }
-            }
-            
-            $uploadResult = $s3Service->uploadMedia($request->file('image'), 'blog');
-            $imagePath = $uploadResult['url']; // Store full S3 URL
-        } else {
-            $imagePath = $blog->image;
-        }
-        $blog->title = $request->title;
-        $blog->slug = Str::slug($request->title);
-        $blog->content = $request->content;
-        $blog->image = $imagePath;
-
-        $blog->save();
-
-        $message = $id ? 'Blog updated successfully!' : 'Blog created successfully!';
-        return redirect()->route('admin.blogs')->with('success', $message);
-    }
-
-    public function editBlog($id)
-    {
-        $blog = Blog::findOrFail($id);
-        return view('admin.blogs.edit-blog', compact('blog'));
-    }
-
-
-    public function deleteBlog($id)
-    {
-        $blog = Blog::findOrFail($id);
-        $blog->delete();
-        return redirect()->route('admin.blogs')->with('success', 'Blog deleted successfully!');
-    }
-
-
-    // Event Routes
-
-    public function adminEvents()
-    {
-        $events = Event::orderBy('id', 'desc')->get();
-        return view('admin.events.events', compact('events'));
-    }
-
-    public function addEvent(Request $request)
-    {
-        return view('admin.events.add-event');
-    }
-
-    public function storeEvent(Request $request, $id = null)
-    {
-        $request->validate([
-            'event_title' => 'required|string|max:255',
-            'event_city' => 'required|string|max:100',
-            'event_time' => 'required',
-            'event_date' => 'required|date',
-            'event_venue' => 'required|string|max:255',
-            'event_url' => 'required|url',
-            'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
-        ]);
-
-        $event = $id ? Event::findOrFail($id) : new Event();
-
-
-        $event->title = $request->input('event_title');
-        $event->city = $request->input('event_city');
-        $event->time = $request->input('event_time');
-        $event->date = $request->input('event_date');
-        $event->venue = $request->input('event_venue');
-        $event->url = $request->input('event_url');
-
-
-        if ($request->hasFile('event_image')) {
-            $s3Service = app(S3Service::class);
-            
-            // Delete old image from S3 if exists
-            if ($event->image) {
-                $oldPath = $s3Service->extractPathFromUrl($event->image);
-                if ($oldPath && str_starts_with($oldPath, 'media/')) {
-                    $s3Service->deleteMedia($oldPath);
-                }
-            }
-            
-            $uploadResult = $s3Service->uploadMedia($request->file('event_image'), 'event');
-            $event->image = $uploadResult['url']; // Store full S3 URL
-        }
-
-        $event->save();
-
-        $message = $id ? 'Event updated successfully!' : 'Event added successfully!';
-        return redirect()->route('admin.events')->with('success', $message);
-    }
-
-
-    public function editEvent($id)
-    {
-        $event = Event::findOrFail($id);
-        return view('admin.events.edit-event', compact('event'));
-    }
-
-    public function deleteEvent($id)
-    {
-        $event = Event::findOrFail($id);
-        if ($event->image) {
-            Storage::delete('public/event_images/' . $event->image);
-        }
-        $event->delete();
-        return redirect()->route('admin.events')->with('success', 'Event deleted successfully!');
-    }
 
 
 }

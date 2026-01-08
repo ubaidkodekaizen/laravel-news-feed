@@ -109,6 +109,7 @@ class AuthorizeNetController extends Controller
                     'phone' => $request->phone,
                     'paid' => 'Yes',
                     'status' => 'pending',
+                    'added_by' => 'web',
                 ]);
 
                 $subscription = Subscription::create([
