@@ -125,6 +125,15 @@
     <div class="admin-panel">
         <aside class="sidebar">
             <ul class="sidebar-menu">
+                @php
+                    $user = auth()->user();
+                    if ($user) {
+                        $user->load(['userPermissions', 'role']);
+                    }
+                    $isAdmin = $user && $user->role_id == 1;
+                @endphp
+                
+                {{-- Dashboard - All admin users (Admin, Manager, Editor) can see - no permission check needed --}}
                 <li>
                     <a href="{{ route('admin.dashboard') }}"
                         class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
@@ -231,6 +240,9 @@
                         Dashboard
                     </a>
                 </li>
+                
+                {{-- Users - Check permission --}}
+                @if($isAdmin || ($user && $user->hasPermission('users.view')))
                 <li>
                     <a href="{{ route('admin.users') }}"
                         class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">
@@ -241,6 +253,10 @@
                         Users
                     </a>
                 </li>
+                @endif
+                
+                {{-- Subscriptions - Check permission --}}
+                @if($isAdmin || ($user && $user->hasPermission('subscriptions.view')))
                 <li>
                     <a href="{{ route('admin.subscriptions') }}"
                         class="{{ request()->routeIs('admin.subscriptions') ? 'active' : '' }}">
@@ -260,6 +276,25 @@
                         Subscriptions
                     </a>
                 </li>
+                @endif
+                
+                {{-- Products/Services - Check permission --}}
+                @if($isAdmin || ($user && $user->hasPermission('products-services.view')))
+                <li>
+                    <a href="{{ route('admin.products-services') }}"
+                        class="{{ request()->routeIs('admin.products-services*') ? 'active' : '' }}">
+                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <title>Products/Services</title>
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#333"/>
+                            <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="#333"/>
+                        </svg>
+                        Products/Services
+                    </a>
+                </li>
+                @endif
+                
+                {{-- Blogs - Check permission --}}
+                @if($isAdmin || ($user && $user->hasPermission('blogs.view')))
                 <li>
                     <a href="{{ route('admin.blogs') }}"
                         class="{{ request()->routeIs('admin.blogs') ? 'active' : '' }}">
@@ -274,6 +309,10 @@
                         Blogs
                     </a>
                 </li>
+                @endif
+                
+                {{-- Events - Check permission --}}
+                @if($isAdmin || ($user && $user->hasPermission('events.view')))
                 <li>
                     <a href="{{ route('admin.events') }}"
                         class="{{ request()->routeIs('admin.events') ? 'active' : '' }}">
@@ -299,6 +338,22 @@
                         Events
                     </a>
                 </li>
+                @endif
+                
+                {{-- Managers - Only Admin can see --}}
+                @if($isAdmin || ($user && $user->hasPermission('managers.view')))
+                <li>
+                    <a href="{{ route('admin.managers') }}"
+                        class="{{ request()->routeIs('admin.managers*') ? 'active' : '' }}">
+                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <title>Managers</title>
+                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#333"/>
+                            <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="#333"/>
+                        </svg>
+                        Managers
+                    </a>
+                </li>
+                @endif
 
             </ul>
 

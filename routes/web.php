@@ -11,8 +11,12 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\ManagersController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\User\PageController;
 use App\Http\Controllers\SitemapController;
@@ -203,42 +207,74 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
+// Admin routes accessible by Admin (1), Manager (2), and Editor (3)
+Route::middleware(['auth', RoleMiddleware::class . ':1|2|3'])->group(function () {
     // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'adminDashboard'])->name('admin.dashboard');
     Route::get('/admin/dashboard/chart-data', [AdminController::class, 'getChartData'])->name('admin.dashboard.chart-data');
 
     // Users Management
-    Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
-    Route::get('/admin/users/add', [AdminController::class, 'addUser'])->name('admin.add.user');
-    Route::post('/admin/users/create', [AdminController::class, 'createUser'])->name('admin.create.user');
-    Route::get('/admin/user/profile/{id}', [AdminController::class, 'showUserById'])->name('admin.user.profile');
-    Route::get('/admin/user/edit/{id}', [AdminController::class, 'editUser'])->name('admin.user.edit');
-    Route::post('/admin/user/update', [AdminController::class, 'updateUserDetails'])->name('admin.user.update');
-    Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
-    Route::post('/admin/restore-user/{id}', [AdminController::class, 'restoreUser'])->name('admin.restore.user');
-    Route::post('/admin/admin-reset-link', [AdminController::class, 'adminResetLink'])->name('admin.reset.link');
+    Route::get('/admin/users', [AdminUserController::class, 'showUsers'])->name('admin.users');
+    Route::get('/admin/users/add', [AdminUserController::class, 'addUser'])->name('admin.add.user');
+    Route::post('/admin/users/create', [AdminUserController::class, 'createUser'])->name('admin.create.user');
+    Route::get('/admin/user/profile/{id}', [AdminUserController::class, 'showUserById'])->name('admin.user.profile');
+    Route::get('/admin/user/edit/{id}', [AdminUserController::class, 'editUser'])->name('admin.user.edit');
+    Route::post('/admin/user/update', [AdminUserController::class, 'updateUserDetails'])->name('admin.user.update');
+    Route::delete('/admin/delete-user/{id}', [AdminUserController::class, 'deleteUser'])->name('admin.delete.user');
+    Route::post('/admin/restore-user/{id}', [AdminUserController::class, 'restoreUser'])->name('admin.restore.user');
+    Route::post('/admin/admin-reset-link', [AdminUserController::class, 'adminResetLink'])->name('admin.reset.link');
 
     // Company Management
-    Route::get('/admin/company/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.company.edit');
-    Route::post('/admin/company/update', [AdminController::class, 'updateCompanyDetails'])->name('admin.company.update');
+    Route::get('/admin/company/edit/{id}', [AdminUserController::class, 'editCompany'])->name('admin.company.edit');
+    Route::post('/admin/company/update', [AdminUserController::class, 'updateCompanyDetails'])->name('admin.company.update');
 
     // Blogs Management
     Route::get('/admin/blogs', [BlogController::class, 'index'])->name('admin.blogs');
-    Route::get('/admin/add-blog', [BlogController::class, 'create'])->name('admin.add.blog');
-    Route::post('/admin/store-blog/{id?}', [BlogController::class, 'store'])->name('admin.store.blog');
-    Route::get('/admin/edit-blog/{id}', [BlogController::class, 'edit'])->name('admin.edit.blog');
-    Route::delete('/admin/delete-blog/{id}', [BlogController::class, 'destroy'])->name('admin.delete.blog');
+    Route::get('/admin/blogs/add', [BlogController::class, 'create'])->name('admin.add.blog');
+    Route::post('/admin/blogs', [BlogController::class, 'store'])->name('admin.store.blog');
+    Route::get('/admin/blogs/{id}', [BlogController::class, 'show'])->name('admin.view.blog');
+    Route::get('/admin/blogs/{id}/edit', [BlogController::class, 'edit'])->name('admin.edit.blog');
+    Route::put('/admin/blogs/{id}', [BlogController::class, 'update'])->name('admin.update.blog');
+    Route::delete('/admin/blogs/{id}', [BlogController::class, 'destroy'])->name('admin.delete.blog');
+    Route::post('/admin/blogs/{id}/restore', [BlogController::class, 'restore'])->name('admin.restore.blog');
 
     // Events Management
     Route::get('/admin/events', [EventController::class, 'index'])->name('admin.events');
-    Route::get('/admin/add-event/', [EventController::class, 'create'])->name('admin.add.event');
-    Route::post('/admin/store-event/{id?}', [EventController::class, 'store'])->name('admin.store.event');
-    Route::get('/admin/edit-event/{id}', [EventController::class, 'edit'])->name('admin.edit.event');
-    Route::delete('/admin/delete-event/{id}', [EventController::class, 'destroy'])->name('admin.delete.event');
+    Route::get('/admin/events/add', [EventController::class, 'create'])->name('admin.add.event');
+    Route::post('/admin/events', [EventController::class, 'store'])->name('admin.store.event');
+    Route::get('/admin/events/{id}', [EventController::class, 'show'])->name('admin.view.event');
+    Route::get('/admin/events/{id}/edit', [EventController::class, 'edit'])->name('admin.edit.event');
+    Route::put('/admin/events/{id}', [EventController::class, 'update'])->name('admin.update.event');
+    Route::delete('/admin/events/{id}', [EventController::class, 'destroy'])->name('admin.delete.event');
+    Route::post('/admin/events/{id}/restore', [EventController::class, 'restore'])->name('admin.restore.event');
 
     // Subscriptions Management
     Route::get('/admin/subscriptions', [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions');
+
+    // Products/Services Management
+    Route::get('/admin/products-services', [AdminController::class, 'showProductsServices'])->name('admin.products-services');
+    Route::get('/admin/product/{id}', [AdminProductController::class, 'view'])->name('admin.view.product');
+    Route::get('/admin/service/{id}', [AdminServiceController::class, 'view'])->name('admin.view.service');
+    Route::get('/admin/product/edit/{id}', [AdminProductController::class, 'edit'])->name('admin.edit.product');
+    Route::get('/admin/service/edit/{id}', [AdminServiceController::class, 'edit'])->name('admin.edit.service');
+    Route::put('/admin/product/update/{id}', [AdminProductController::class, 'update'])->name('admin.update.product');
+    Route::put('/admin/service/update/{id}', [AdminServiceController::class, 'update'])->name('admin.update.service');
+    Route::delete('/admin/product/delete/{id}', [AdminProductController::class, 'delete'])->name('admin.delete.product');
+    Route::delete('/admin/service/delete/{id}', [AdminServiceController::class, 'delete'])->name('admin.delete.service');
+    Route::post('/admin/product/restore/{id}', [AdminProductController::class, 'restore'])->name('admin.restore.product');
+    Route::post('/admin/service/restore/{id}', [AdminServiceController::class, 'restore'])->name('admin.restore.service');
+});
+
+// Managers Management - Only accessible by Admin (role_id = 1)
+Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
+    Route::get('/admin/managers', [ManagersController::class, 'index'])->name('admin.managers');
+    Route::get('/admin/managers/add', [ManagersController::class, 'create'])->name('admin.add.manager');
+    Route::post('/admin/managers/create', [ManagersController::class, 'store'])->name('admin.create.manager');
+    Route::get('/admin/managers/edit/{id}', [ManagersController::class, 'edit'])->name('admin.edit.manager');
+    Route::put('/admin/managers/update/{id}', [ManagersController::class, 'update'])->name('admin.update.manager');
+    Route::post('/admin/managers/update-permissions/{id}', [ManagersController::class, 'updatePermissions'])->name('admin.update.manager.permissions');
+    Route::delete('/admin/managers/delete/{id}', [ManagersController::class, 'destroy'])->name('admin.delete.manager');
+    Route::post('/admin/managers/restore/{id}', [ManagersController::class, 'restore'])->name('admin.restore.manager');
 });
 
 // In routes/web.php
@@ -304,7 +340,10 @@ Route::get('/logout', function () {
     return redirect()->route('login.form');
 })->name('logout');
 
-Route::get('/admin/logout', function () {
-    Auth::logout();
-    return redirect()->route('admin.login');
-})->name('admin.logout');
+// Admin logout - accessible to all authenticated admin users (roles 1, 2, 3)
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/logout', function () {
+        Auth::logout();
+        return redirect()->route('admin.login');
+    })->name('admin.logout');
+});
