@@ -39,21 +39,33 @@
 </style>
 @section('content')
 <main class="main-content">
+    @php
+        $filter = $filter ?? 'all';
+        $counts = $counts ?? [];
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        $canView = $isAdmin || ($user && $user->hasPermission('managers.view'));
+        $canCreate = $isAdmin || ($user && $user->hasPermission('managers.create'));
+        $canEdit = $isAdmin || ($user && $user->hasPermission('managers.edit'));
+        $canDelete = $isAdmin || ($user && $user->hasPermission('managers.delete'));
+        $canRestore = $isAdmin || ($user && $user->hasPermission('managers.restore'));
+    @endphp
+    @if(!$canView)
+        @php
+            abort(403, 'Unauthorized action.');
+        @endphp
+    @endif
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="card" style="border: none;">
                     <div class="card-header card_header_flex">
                         <h4 class="card-title">Managers/Editor</h4>
-                        @if($filter !== 'deleted')
+                        @if($canCreate && $filter !== 'deleted')
                             <a href="{{ route('admin.add.manager') }}" class="btn btn-primary">Add Manager/Editor</a>
                         @endif
                     </div>
                     <div class="card-body">
-                        @php
-                            $filter = $filter ?? 'all';
-                            $counts = $counts ?? [];
-                        @endphp
                         <!-- Tabs Navigation -->
                         <ul class="nav nav-tabs mb-4" id="managersTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
                             <li class="nav-item" role="presentation">
@@ -137,19 +149,25 @@
                                     <td>{{ $manager->email }}</td>
                                     <td>
                                         @if($filter === 'deleted')
+                                            @if($canRestore)
                                             <form action="{{ route('admin.restore.manager', $manager->id) }}" method="POST"
                                                 style="display:inline-block;" class="restore-manager-form">
                                                 @csrf
                                                 <button type="submit" class="btn btn-success btn-sm">Restore</button>
                                             </form>
+                                            @endif
                                         @else
+                                            @if($canEdit)
                                             <a href="{{ route('admin.edit.manager', $manager->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            @endif
+                                            @if($canDelete)
                                             <form action="{{ route('admin.delete.manager', $manager->id) }}" method="POST"
                                                 style="display:inline-block;" class="delete-manager-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

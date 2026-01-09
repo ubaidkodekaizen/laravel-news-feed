@@ -238,14 +238,29 @@
     @php
         $filter = $filter ?? 'all';
         $counts = $counts ?? [];
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        $canCreate = $isAdmin || ($user && $user->hasPermission('users.create'));
+        $canView = $isAdmin || ($user && $user->hasPermission('users.view') || $user->hasPermission('users.profile'));
+        $canEdit = $isAdmin || ($user && $user->hasPermission('users.edit'));
+        $canDelete = $isAdmin || ($user && $user->hasPermission('users.delete'));
+        $canRestore = $isAdmin || ($user && $user->hasPermission('users.restore'));
+        $canSendReset = $isAdmin || ($user && $user->hasPermission('users.password.reset'));
     @endphp
+    @if(!$canView)
+        @php
+            abort(403, 'Unauthorized action.');
+        @endphp
+    @endif
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="card" style="border: none;">
                     <div class="card-header card_header_flex">
                         <h4 class="card-title">User Management</h4>
+                        @if($canCreate)
                         <a href="{{Route('admin.add.user')}}" class="btn btn-primary">Add User</a>
+                        @endif
                     </div>
                     <div class="card-body">
                         <!-- Tabs Navigation -->
@@ -335,27 +350,37 @@
                                     <td>{{$user->phone}}</td>
                                     
                                     <td>
+                                        @if($canView)
                                         <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a>
+                                        @endif
                                         @if($filter !== 'deleted')
+                                            @if($canEdit)
                                             <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            @endif
+                                            @if($canDelete)
                                             <form action="{{ route('admin.delete.user', $user->id) }}" method="POST"
                                                 style="display:inline-block;" class="delete-user-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                             </form>
+                                            @endif
                                         @else
+                                            @if($canRestore)
                                             <form action="{{ route('admin.restore.user', $user->id) }}" method="POST"
                                                 style="display:inline-block;" class="restore-user-form">
                                                 @csrf
                                                 <button type="submit" class="btn btn-success btn-sm">Restore</button>
                                             </form>
+                                            @endif
                                         @endif
+                                        @if($canSendReset)
                                         <form action="{{ route('admin.reset.link') }}" method="POST" style="display:inline-block;" class="reset-link-form">
                                             @csrf
                                             <input type="hidden" name="email" value="{{ $user->email }}">
                                             <button type="submit" class="btn btn-info btn-sm">Send Reset Link</button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

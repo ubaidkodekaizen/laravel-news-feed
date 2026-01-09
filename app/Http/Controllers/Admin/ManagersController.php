@@ -16,6 +16,14 @@ class ManagersController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        
+        // Check if user has view permission
+        if (!$isAdmin && (!$user || !$user->hasPermission('managers.view'))) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $filter = $request->get('filter', 'all'); // all, manager, editor, deleted
         
         $allQuery = User::whereIn('role_id', [2, 3])->with('role');

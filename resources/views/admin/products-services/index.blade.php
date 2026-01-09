@@ -223,7 +223,23 @@
         @php
             $filter = $filter ?? 'all';
             $counts = $counts ?? [];
+            $user = Auth::user();
+            $isAdmin = $user && $user->role_id == 1;
+            $canView = $isAdmin || ($user && $user->hasPermission('products-services.view'));
+            $canViewProduct = $isAdmin || ($user && $user->hasPermission('products.view'));
+            $canViewService = $isAdmin || ($user && $user->hasPermission('services.view'));
+            $canEditProduct = $isAdmin || ($user && $user->hasPermission('products.edit'));
+            $canEditService = $isAdmin || ($user && $user->hasPermission('services.edit'));
+            $canDeleteProduct = $isAdmin || ($user && $user->hasPermission('products.delete'));
+            $canDeleteService = $isAdmin || ($user && $user->hasPermission('services.delete'));
+            $canRestoreProduct = $isAdmin || ($user && $user->hasPermission('products.restore'));
+            $canRestoreService = $isAdmin || ($user && $user->hasPermission('services.restore'));
         @endphp
+        @if(!$canView)
+            @php
+                abort(403, 'Unauthorized action.');
+            @endphp
+        @endif
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -336,8 +352,13 @@
                                                 @php
                                                     // Determine type: if item_type is set use it, otherwise check if it has duration (service) or quantity (product)
                                                     $itemType = $item->item_type ?? (isset($item->duration) ? 'service' : 'product');
+                                                    $canView = ($itemType === 'service' && $canViewService) || ($itemType === 'product' && $canViewProduct);
+                                                    $canEdit = ($itemType === 'service' && $canEditService) || ($itemType === 'product' && $canEditProduct);
+                                                    $canDelete = ($itemType === 'service' && $canDeleteService) || ($itemType === 'product' && $canDeleteProduct);
+                                                    $canRestore = ($itemType === 'service' && $canRestoreService) || ($itemType === 'product' && $canRestoreProduct);
                                                 @endphp
                                                 @if($filter === 'deleted')
+                                                    @if($canRestore)
                                                     <form action="{{ $itemType === 'service' ? route('admin.restore.service', $item->id) : route('admin.restore.product', $item->id) }}" 
                                                           method="POST" 
                                                           style="display:inline-block;" 
@@ -345,11 +366,17 @@
                                                         @csrf
                                                         <button type="submit" class="btn btn-success btn-sm">Restore</button>
                                                     </form>
+                                                    @endif
                                                 @else
+                                                    @if($canView)
                                                     <a href="{{ $itemType === 'service' ? route('admin.view.service', $item->id) : route('admin.view.product', $item->id) }}" 
                                                        class="btn btn-primary btn-sm">View</a>
+                                                    @endif
+                                                    @if($canEdit)
                                                     <a href="{{ $itemType === 'service' ? route('admin.edit.service', $item->id) : route('admin.edit.product', $item->id) }}" 
                                                        class="btn btn-warning btn-sm">Edit</a>
+                                                    @endif
+                                                    @if($canDelete)
                                                     <form action="{{ $itemType === 'service' ? route('admin.delete.service', $item->id) : route('admin.delete.product', $item->id) }}" 
                                                           method="POST" 
                                                           style="display:inline-block;" 
@@ -358,6 +385,7 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                                     </form>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>

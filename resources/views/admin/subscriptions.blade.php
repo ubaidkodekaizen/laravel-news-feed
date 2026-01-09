@@ -237,7 +237,16 @@
         @php
             $filter = $filter ?? 'all';
             $counts = $counts ?? [];
+            $user = Auth::user();
+            $isAdmin = $user && $user->role_id == 1;
+            $canView = $isAdmin || ($user && $user->hasPermission('subscriptions.view'));
+            $canFilter = $isAdmin || ($user && $user->hasPermission('subscriptions.filter'));
         @endphp
+        @if(!$canView && !$canFilter)
+            @php
+                abort(403, 'Unauthorized action.');
+            @endphp
+        @endif
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -246,7 +255,8 @@
                             <h4 class="card-title">Subscriptions</h4>
                         </div>
                         <div class="card-body">
-                            <!-- Tabs Navigation -->
+                            <!-- Tabs Navigation - Only show if user has filter permission -->
+                            @if($canFilter)
                             <ul class="nav nav-tabs mb-4" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
@@ -319,6 +329,12 @@
                                     </a>
                                 </li>
                             </ul>
+                            @else
+                            {{-- Show message if user can view but not filter --}}
+                            <div class="alert alert-info mb-4">
+                                <i class="fas fa-info-circle"></i> You have view-only access. Filter tabs are not available.
+                            </div>
+                            @endif
                             <style>
                                 .nav-tabs .nav-link {
                                     border: none;
