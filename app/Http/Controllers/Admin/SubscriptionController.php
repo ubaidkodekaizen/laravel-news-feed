@@ -5,12 +5,29 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Business\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
     public function index(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        
+        // Check if user has view or filter permission
+        $canView = $isAdmin || ($user && $user->hasPermission('subscriptions.view'));
+        $canFilter = $isAdmin || ($user && $user->hasPermission('subscriptions.filter'));
+        
+        if (!$canView && !$canFilter) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $filter = $request->get('filter', 'all');
+        
+        // If user doesn't have filter permission, force filter to 'all'
+        if (!$canFilter && $filter !== 'all') {
+            $filter = 'all';
+        }
         
         $query = Subscription::with('user');
         

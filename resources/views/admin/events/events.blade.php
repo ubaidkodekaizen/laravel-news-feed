@@ -273,6 +273,11 @@
             $canDelete = $isAdmin || ($user && $user->hasPermission('events.delete'));
             $canRestore = $isAdmin || ($user && $user->hasPermission('events.restore'));
         @endphp
+        @if(!$canView)
+            @php
+                abort(403, 'Unauthorized action.');
+            @endphp
+        @endif
         <div class="container">
             <div class="row">
                 <div class="col-12">

@@ -248,14 +248,29 @@
     @php
         $filter = $filter ?? 'all';
         $counts = $counts ?? [];
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        $canCreate = $isAdmin || ($user && $user->hasPermission('users.create'));
+        $canView = $isAdmin || ($user && $user->hasPermission('users.view') || $user->hasPermission('users.profile'));
+        $canEdit = $isAdmin || ($user && $user->hasPermission('users.edit'));
+        $canDelete = $isAdmin || ($user && $user->hasPermission('users.delete'));
+        $canRestore = $isAdmin || ($user && $user->hasPermission('users.restore'));
+        $canSendReset = $isAdmin || ($user && $user->hasPermission('users.password.reset'));
     @endphp
+    @if(!$canView)
+        @php
+            abort(403, 'Unauthorized action.');
+        @endphp
+    @endif
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="card" style="border: none;">
                     <div class="card-header card_header_flex">
                         <h4 class="card-title">User Management</h4>
+                        @if($canCreate)
                         <a href="{{Route('admin.add.user')}}" class="btn btn-primary">Add User</a>
+                        @endif
                     </div>
                     <div class="card-body">
                         <!-- Tabs Navigation -->
@@ -344,7 +359,7 @@
                                     ul#userTabs {
                                         justify-content: center;
                                     }
-                                    
+
                                     .nav-tabs .nav-link {
                                         font-size: 12px;
                                         padding: 5px 12px !important;
@@ -376,23 +391,23 @@
                                     <td>{{$user->phone}}</td>
 
                                     <td>
-                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-warning btn-sm" title="View">
-                                                    <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <title>View</title>
-                                                    <path d="M20.188 10.9343C20.5762 11.4056 20.7703 11.6412 20.7703 12C20.7703 12.3588 20.5762 12.5944 20.188 13.0657C18.7679 14.7899 15.6357 18 12 18C8.36427 18 5.23206 14.7899 3.81197 13.0657C3.42381 12.5944 3.22973 12.3588 3.22973 12C3.22973 11.6412 3.42381 11.4056 3.81197 10.9343C5.23206 9.21014 8.36427 6 12 6C15.6357 6 18.7679 9.21014 20.188 10.9343Z" fill="#213bae" fill-opacity="0.14"/>
-                                                    <circle cx="12" cy="12" r="3" fill="#273572"/>
-                                                    </svg>
-                                                </a>
-                                        <!-- <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a> -->
+                                        @if($canView)
+                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a>
+                                        @endif
                                         @if($filter !== 'deleted')
-                                            <a id="edit" href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm" title="Edit"></a>
+                                            @if($canEdit)
+                                            <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            @endif
+                                            @if($canDelete)
                                             <form action="{{ route('admin.delete.user', $user->id) }}" method="POST"
                                                 style="display:inline-block;" class="delete-user-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button id="delete" type="submit" class="btn btn-danger btn-sm" title="Delete"></button>
                                             </form>
+                                            @endif
                                         @else
+                                            @if($canRestore)
                                             <form action="{{ route('admin.restore.user', $user->id) }}" method="POST"
                                                 style="display:inline-block;" class="restore-user-form">
                                                 @csrf
@@ -400,7 +415,9 @@
                                                     <svg width="30px" height="30px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M10 16.682l5.69 5.685 1.408-1.407-3.283-3.28h10.131c1.147 0 2.19.467 2.943 1.222a4.157 4.157 0 011.225 2.946 4.18 4.18 0 01-4.168 4.168h-5.628V28h5.522c3.387 0 6.16-2.77 6.16-6.157a6.117 6.117 0 00-1.81-4.343 6.143 6.143 0 00-4.35-1.805H13.815l3.283-3.285L15.69 11 10 16.682z" fill="#273572" fill-rule="nonzero"/></svg>
                                                 </button>
                                             </form>
+                                            @endif
                                         @endif
+                                        @if($canSendReset)
                                         <form action="{{ route('admin.reset.link') }}" method="POST" style="display:inline-block;" class="reset-link-form">
                                             @csrf
                                             <input type="hidden" name="email" value="{{ $user->email }}">
@@ -408,6 +425,7 @@
                                                 <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 8c-2.248 0-4 1.752-4 4s1.752 4 4 4h2a1 1 0 1 1 0 2H8c-3.352 0-6-2.648-6-6s2.648-6 6-6h2a1 1 0 1 1 0 2H8zm5-1a1 1 0 0 1 1-1h2c3.352 0 6 2.648 6 6s-2.648 6-6 6h-2a1 1 0 1 1 0-2h2c2.248 0 4-1.752 4-4s-1.752-4-4-4h-2a1 1 0 0 1-1-1zm-6 5a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1z" fill="#273572"/></svg>
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

@@ -253,6 +253,14 @@ class AdminController extends Controller
      */
     public function showProductsServices(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        
+        // Check if user has view permission
+        if (!$isAdmin && (!$user || !$user->hasPermission('products-services.view'))) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $filter = $request->get('filter', 'all'); // all, products, services, deleted
         
         $productsQuery = Product::with('user');
