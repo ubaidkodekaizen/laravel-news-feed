@@ -64,7 +64,7 @@
         border: none;
     }
 
-    .sidebar-menu li a:hover, 
+    .sidebar-menu li a:hover,
     .sidebar-menu li a.active {
         background-color: #273572;
         color: #fff;
@@ -85,7 +85,7 @@
     }
 
 @media (max-width: 768px) {
-    
+
 }
 </style>
 </head>
@@ -109,9 +109,6 @@
                             <img id="userProfileDropdown" src="http://127.0.0.1:8000/assets/images/whiteChevron.svg" alt="DropDown">
                         </a>
                         <ul class="dropdown-menu text-small shadow">
-                            {{-- <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li> --}}
-                            <!-- <hr class="dropdown-divider"> -->
                             </li>
                             <li><a class="dropdown-item" href="{{ route('admin.logout') }}">Logout</a></li>
                         </ul>
@@ -302,12 +299,7 @@
                         Events
                     </a>
                 </li>
-                {{-- <li>
-                    <a href="{{ route('admin.companies') }}" 
-                       class="{{ request()->routeIs('admin.companies') ? 'active' : '' }}">
-                       Companies
-                    </a>
-                </li> --}}
+
             </ul>
 
         </aside>

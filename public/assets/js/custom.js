@@ -1,5 +1,5 @@
 // $.noConflict();
-jQuery(document).ready(function ($) {  
+jQuery(document).ready(function ($) {
     // $("#user_company").validate({
     //     rules: {
     //         company_logo: {
@@ -186,7 +186,7 @@ jQuery(document).ready(function ($) {
     //     }
 
     // });
-    // $('#phone').inputmask('(999) 999-9999'); 
+    // $('#phone').inputmask('(999) 999-9999');
     $("#user_details").validate({
         rules: {
             first_name: {
@@ -287,11 +287,13 @@ jQuery(document).ready(function ($) {
             }
         }
     });
-    
+
 
     const swiper = new Swiper('.swiper', {
-        slidesPerView: 1,
+         slidesPerView: 'auto',
         spaceBetween: 20,
+        loop: true,
+        loopedSlides: 3,
         navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
@@ -302,18 +304,18 @@ jQuery(document).ready(function ($) {
         },
         breakpoints: {
             768: {
-                slidesPerView: 2,
+                slidesPerView: 1,
             },
             1024: {
                 slidesPerView: 3,
             },
             1300: {
-                slidesPerView: 4,
+                slidesPerView: 3,
             },
         },
     });
 
-   
+
     const article_slider = new Swiper('.article_slider', {
         slidesPerView: 1,
         spaceBetween: 20,
@@ -357,9 +359,11 @@ jQuery(document).ready(function ($) {
         },
     });
     const services_profile_slider = new Swiper('.services_profile_slider', {
-        slidesPerView: 1,
+        slidesPerView: 'auto',
         spaceBetween: 20,
         loop: true,
+        loopedSlides: 3,
+        // centeredSlides: true,
         navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
@@ -370,13 +374,13 @@ jQuery(document).ready(function ($) {
         },
         breakpoints: {
             768: {
-                slidesPerView: 2,
+                slidesPerView: 1,
             },
             1024: {
-                slidesPerView: 3,
+                slidesPerView: 2,
             },
             1300: {
-                slidesPerView: 4,
+                slidesPerView: 3,
             },
         },
     });

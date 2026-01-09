@@ -148,7 +148,9 @@ const InboxMessageList = ({ messages, conversationId }) => {
             const unsubChange = onChildChanged(messageRef, (snapshot) => {
                 if (
                     snapshot.key === "content" ||
-                    snapshot.key === "edited_at"
+                    snapshot.key === "edited_at" ||
+                    snapshot.key === "deleted_at" ||
+                    snapshot.key === "is_deleted"
                 ) {
                     const updatedValue = snapshot.val();
                     setMessageList((prevMessages) =>
@@ -319,15 +321,23 @@ const InboxMessageList = ({ messages, conversationId }) => {
 
         try {
             const url = deleteMessageRoute(messageId);
-            await window.axios.delete(url, {
+            const response = await window.axios.delete(url, {
                 headers: {
                     Authorization: localStorage.getItem("sanctum-token"),
                 },
             });
 
-            // Optimistically remove from UI
+            // ✅ Update message to show as deleted instead of removing
             setMessageList((prevMessages) =>
-                prevMessages.filter((msg) => msg.id !== messageId)
+                prevMessages.map((msg) =>
+                    msg.id === messageId
+                        ? {
+                              ...msg,
+                              is_deleted: true,
+                              deleted_at: response.data.deleted_at,
+                          }
+                        : msg
+                )
             );
 
             setShowMessageMenu({});
@@ -481,22 +491,34 @@ const InboxMessageList = ({ messages, conversationId }) => {
                                         ) : (
                                             <>
                                                 <div className="messageBoxListItemContentMsg">
-                                                    {msg.content}
-
-                                                    {/* ✅ Show sending indicator for optimistic messages */}
-                                                    {msg._optimistic && (
-                                                        <span
-                                                            className="messageSending"
-                                                            style={{
-                                                                fontSize:
-                                                                    "0.75rem",
-                                                                color: "#999",
-                                                                marginLeft:
-                                                                    "8px",
-                                                            }}
-                                                        >
-                                                            ⏳ Sending...
+                                                    {/* ✅ Show deleted message indicator */}
+                                                    {msg.is_deleted ||
+                                                    msg.deleted_at ? (
+                                                        <span className="deletedMessage">
+                                                            <i className="fa-solid fa-ban"></i>{" "}
+                                                            This message was
+                                                            deleted
                                                         </span>
+                                                    ) : (
+                                                        <>
+                                                            {msg.content}
+
+                                                            {msg._optimistic && (
+                                                                <span
+                                                                    className="messageSending"
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "0.75rem",
+                                                                        color: "#999",
+                                                                        marginLeft:
+                                                                            "8px",
+                                                                    }}
+                                                                >
+                                                                    ⏳
+                                                                    Sending...
+                                                                </span>
+                                                            )}
+                                                        </>
                                                     )}
 
                                                     <div className="messageBoxTime">
@@ -504,20 +526,14 @@ const InboxMessageList = ({ messages, conversationId }) => {
                                                             messageDate,
                                                             "h:mm a"
                                                         )}
-                                                        {msg.edited_at && (
-                                                            <span
-                                                                className="messageEdited"
-                                                                style={{
-                                                                    marginLeft:
-                                                                        "4px",
-                                                                    fontSize:
-                                                                        "0.75rem",
-                                                                    color: "#666",
-                                                                }}
-                                                            >
-                                                                (edited)
-                                                            </span>
-                                                        )}
+                                                        {msg.edited_at &&
+                                                            !msg.deleted_at && (
+                                                                <span
+                                                                    className="messageEdited"
+                                                                >
+                                                                    (edited)
+                                                                </span>
+                                                            )}
                                                     </div>
                                                 </div>
 
@@ -559,9 +575,9 @@ const InboxMessageList = ({ messages, conversationId }) => {
                                                         msg.id &&
                                                         !String(
                                                             msg.id
-                                                        ).startsWith(
-                                                            "temp-"
-                                                        ) && (
+                                                        ).startsWith("temp-") &&
+                                                        !msg.is_deleted &&
+                                                        !msg.deleted_at && (
                                                             <>
                                                                 <div
                                                                     className="messageReactIconBtn"

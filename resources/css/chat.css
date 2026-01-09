@@ -147,9 +147,8 @@
 }
 
 .conversationUserProfile img {
-    max-width: 100%;
-    width: 100%;
-    height: 100%;
+    width: 35px;
+    height: 35px;
     object-fit: cover;
     border-radius: 50%;
 }
@@ -158,10 +157,11 @@
     max-width: 35px;
     width: 100%;
     height: 35px;
+    position: relative;
 }
 .conversationUserProfile .avatar-initials {
-    width: 100%;
-    height: 100%;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     background: #394a93;
     display: flex;
@@ -175,19 +175,36 @@
 }
 .conversationUnreadCount {
     position: absolute;
-    top: 50%;
-    right: 5px;
+    bottom: -2px;
+    right: 16px;
     transform: translateY(-50%);
     background: #273572;
-    height: 25px;
-    width: 25px;
+    height: 18px;
+    width: 18px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
 }
-
+.unread-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.2;
+}
 .conversationUserDetails .conversationLastMessage {
     margin: 0;
     color: #76767ccc;
@@ -409,13 +426,14 @@
     cursor: pointer;
     padding: 16px 24px;
     background: #fff;
-    min-height: 49.6px;
+    min-height: 71.6px;
 }
 
 .messageBoxHead .messageBoxHeadInner {
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
 }
 
 .messageBoxHead .messageBoxHeadInner .closeMessageBoxBtn {
@@ -542,9 +560,10 @@
 .typing-indicator {
     padding: 0;
     line-height: 1.3em;
-    color: #ffffff;
+    color: #273572;
     font-size: 12px;
     font-weight: 300;
+    width: 100%;
 }
 
 .messageDateHeader {
@@ -804,6 +823,131 @@
     margin-right: 5px;
     font-size: 0.75rem;
     color: #fff;
+}
+
+.messageBoxDropdown {
+    position: absolute;
+    top: 35px;
+    z-index: 9999;
+    right: 45px;
+}
+.messageBoxDropdown .block-btn {
+    border: none;
+    background: #dc3545;
+    color: #fff;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    width: max-content;
+}
+
+.messageBoxDropdown .unblock-btn {
+    border: none;
+    background: #273572;
+    color: #fff;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    width: max-content;
+}
+
+.messageBoxBlockedNotice {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 10px;
+}
+.messageBoxBlockedNotice p {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+    color: #333;
+}
+
+.messageBoxBlockedNotice .unblock-inline-btn {
+    border: none;
+    background: #273572;
+    color: #fff;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 5px;
+}
+
+.messageBoxHeadContent {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    flex-wrap: wrap;
+    row-gap: 0px;
+}
+
+.online-status-text {
+    color: #000929;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+}
+.online-status-text.online {
+    color: #22c55e;
+}
+
+.online-status-text.offline {
+    color: #6b7280;
+    font-weight: 400;
+}
+.messageBoxHeadInnerAvatarBox {
+    position: relative;
+}
+/* Online status indicator (dot) */
+.online-status-indicator {
+    position: absolute;
+    bottom: -2px;
+    right: 0px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.online-status-indicator.online {
+    background-color: #22c55e; /* Green */
+    animation: pulse-green 2s infinite;
+}
+
+.online-status-indicator.offline {
+    background-color: #9ca3af; /* Gray */
+}
+
+/* Pulse animation for online status */
+@keyframes pulse-green {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
+    }
 }
 
 @media (max-width: 800px) {

@@ -41,11 +41,24 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'status' => 'pending',
+            'added_by' => 'web',
         ]);
 
         Auth::login($user);
 
         return redirect()->route('user.details.show');
+    }
+
+    public function dashboard()
+    {
+        $user = Auth::user();
+        if ($user->role_id === 1) {
+            return redirect()->route('admin.dashboard');
+        }
+        if ($user->role_id !== 4) {
+            abort(403, 'Unauthorized action.');
+        }
+        return view('user.dashboard');
     }
 
     public function showLoginForm()

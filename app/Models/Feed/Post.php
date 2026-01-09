@@ -22,6 +22,7 @@ class Post extends Model
         'user_id',
         'original_post_id',
         'content',
+        'slug',
         'comments_enabled',
         'status',
         'reactions_count',

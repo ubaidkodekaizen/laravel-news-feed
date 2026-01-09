@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, MoreVertical, ArrowLeft } from "lucide-react";
 import {
-    ref,
+    ref as dbRef,
     onChildAdded,
     onValue,
     set,
@@ -12,6 +12,7 @@ import {
 import { database } from "../firebase.js";
 import InboxMessageList from "./InboxMessageList.jsx";
 import InboxMessageInput from "./InboxMessageInput.jsx";
+import OnlineStatus from "./OnlineStatus.jsx";
 
 import { format } from "date-fns";
 
@@ -33,6 +34,11 @@ const InboxPage = () => {
     const firebaseUnsubscribers = useRef([]);
     const typingTimeoutRef = useRef(null);
     const notificationSound = useRef(null);
+    const [unreadCounts, setUnreadCounts] = useState({});
+    const [isBlocked, setIsBlocked] = useState(false);
+    const [isBlockedBy, setIsBlockedBy] = useState(false);
+    const [showBlockMenu, setShowBlockMenu] = useState(false);
+
     const DEFAULT_AVATAR =
         "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg";
 
@@ -71,6 +77,20 @@ const InboxPage = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, [activeConversation]);
 
+    // Listen to unread counts
+    useEffect(() => {
+        if (!window.userId) return;
+
+        const unreadRef = dbRef(database, `unread_counts/${window.userId}`);
+
+        const unsubscribe = onValue(unreadRef, (snapshot) => {
+            const counts = snapshot.val() || {};
+            setUnreadCounts(counts);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     // Update the ref whenever activeConversation changes
     useEffect(() => {
         activeConversationRef.current = activeConversation;
@@ -85,7 +105,7 @@ const InboxPage = () => {
     useEffect(() => {
         if (!activeConversation) return;
 
-        const messagesRef = ref(database, `messages/${activeConversation}`);
+        const messagesRef = dbRef(database, `messages/${activeConversation}`);
         const messagesQuery = query(messagesRef, orderByChild("created_at"));
 
         setMessages([]);
@@ -167,7 +187,7 @@ const InboxPage = () => {
     useEffect(() => {
         if (!activeConversation) return;
 
-        const typingRef = ref(database, `typing/${activeConversation}`);
+        const typingRef = dbRef(database, `typing/${activeConversation}`);
 
         const unsubscribe = onValue(typingRef, (snapshot) => {
             const typingData = snapshot.val();
@@ -207,7 +227,7 @@ const InboxPage = () => {
 
         // ✅ Cleanup stale typing indicators every second
         const interval = setInterval(() => {
-            const typingRef = ref(database, `typing/${activeConversation}`);
+            const typingRef = dbRef(database, `typing/${activeConversation}`);
             onValue(
                 typingRef,
                 (snapshot) => {
@@ -229,7 +249,7 @@ const InboxPage = () => {
                                 "Removing stale typing indicator for user:",
                                 uid
                             );
-                            const staleRef = ref(
+                            const staleRef = dbRef(
                                 database,
                                 `typing/${activeConversation}/${uid}`
                             );
@@ -260,7 +280,7 @@ const InboxPage = () => {
 
         const clearTyping = async () => {
             try {
-                const typingRef = ref(
+                const typingRef = dbRef(
                     database,
                     `typing/${activeConversation}/${window.userId}`
                 );
@@ -333,8 +353,39 @@ const InboxPage = () => {
             });
             console.log("Inbox - User details fetched:", response.data);
             setActiveUser(response.data);
+            // ✅ Set block status
+            setIsBlocked(response.data.is_blocked || false);
+            setIsBlockedBy(response.data.is_blocked_by || false);
         } catch (error) {
             console.error("Inbox - Error fetching user details:", error);
+        }
+    };
+
+    // Add block/unblock handlers
+    const handleBlockUser = async () => {
+        if (!activeUser) return;
+
+        const confirmMessage = isBlocked
+            ? `Are you sure you want to unblock ${activeUser.first_name}?`
+            : `Are you sure you want to block ${activeUser.first_name}? You won't be able to send or receive messages.`;
+
+        if (!confirm(confirmMessage)) return;
+
+        try {
+            const url = isBlocked ? unblockUserRoute : blockUserRoute;
+            const response = await window.axios.post(
+                url,
+                { user_id: activeUser.id },
+                { headers: { Authorization: token } }
+            );
+
+            setIsBlocked(!isBlocked);
+            setShowBlockMenu(false);
+
+            alert(response.data.message);
+        } catch (error) {
+            console.error("Error blocking/unblocking user:", error);
+            alert("Failed to update block status");
         }
     };
 
@@ -346,6 +397,12 @@ const InboxPage = () => {
         }
         await fetchMessages(conversation.id);
         await fetchUserDetails(conversation.id);
+
+        // Clear unread count
+        setUnreadCounts((prev) => ({
+            ...prev,
+            [conversation.id]: 0,
+        }));
     };
 
     const handleBackClick = () => {
@@ -361,7 +418,7 @@ const InboxPage = () => {
 
         // ✅ Clear typing indicator immediately when sending message
         try {
-            const typingRef = ref(
+            const typingRef = dbRef(
                 database,
                 `typing/${activeConversation}/${window.userId}`
             );
@@ -442,7 +499,7 @@ const InboxPage = () => {
         }
 
         try {
-            const typingRef = ref(
+            const typingRef = dbRef(
                 database,
                 `typing/${activeConversation}/${window.userId}`
             );
@@ -586,9 +643,18 @@ const InboxPage = () => {
                                                 "?"}
                                         </div>
                                     )}
-                                    {conversation.unread_count > 0 && (
+                                    {/* ✅ Add online status */}
+                                    <OnlineStatus
+                                        userId={conversation.user.id}
+                                        className="avatar-status-badge"
+                                    />
+                                    {/* ✅ Show unread count from Firebase */}
+                                    {(unreadCounts[conversation.id] || 0) >
+                                        0 && (
                                         <span className="inbox-unread-badge">
-                                            {conversation.unread_count}
+                                            {unreadCounts[conversation.id] > 99
+                                                ? "99+"
+                                                : unreadCounts[conversation.id]}
                                         </span>
                                     )}
                                 </div>
@@ -616,7 +682,8 @@ const InboxPage = () => {
                                             }
                                         >
                                             {conversation.last_message
-                                                ?.content ?? "No messages yet"}
+                                                ?.content ??
+                                                "You don’t have any messages yet—check back soon."}
                                         </p>
                                     </div>
                                 </div>
@@ -631,20 +698,29 @@ const InboxPage = () => {
                     <>
                         <div className="inbox-main-header">
                             <div className="inbox-main-header-user">
-                                {activeUser.user_has_photo ? (
-                                    <img
-                                        src={activeUser.photo}
-                                        alt="User"
-                                        className="inbox-main-header-avatar"
-                                        onError={(e) =>
-                                            (e.target.src = DEFAULT_AVATAR)
-                                        }
+                                <div className="inbox-main-header-user-avatar-box">
+                                    {activeUser.user_has_photo ? (
+                                        <img
+                                            src={activeUser.photo}
+                                            alt="User"
+                                            className="inbox-main-header-avatar"
+                                            onError={(e) =>
+                                                (e.target.src = DEFAULT_AVATAR)
+                                            }
+                                        />
+                                    ) : (
+                                        <div className="avatar-initials inbox-main-header-avatar">
+                                            {activeUser.user_initials || "?"}
+                                        </div>
+                                    )}
+
+                                    {/* ✅ Add online status */}
+                                    <OnlineStatus
+                                        userId={activeUser.id}
+                                        className="avatar-status-badge"
                                     />
-                                ) : (
-                                    <div className="avatar-initials inbox-main-header-avatar">
-                                        {activeUser.user_initials || "?"}
-                                    </div>
-                                )}
+                                </div>
+
                                 <div className="inbox-main-header-info">
                                     <a
                                         href={`/user/profile/${activeUser.slug}`}
@@ -653,6 +729,11 @@ const InboxPage = () => {
                                         {activeUser.first_name ?? "Unknown"}{" "}
                                         {activeUser.last_name ?? "User"}
                                     </a>
+                                    {/* ✅ Add online status text */}
+                                    <OnlineStatus
+                                        userId={activeUser.id}
+                                        showText={true}
+                                    />
                                     {typingUser && (
                                         <span className="inbox-typing-indicator">
                                             {typingUser.first_name} is typing...
@@ -662,6 +743,41 @@ const InboxPage = () => {
                             </div>
 
                             <div className="inbox-main-header-actions">
+                                {/* ✅ Add block menu */}
+                                <div className="inbox-block-menu-container">
+                                    <button
+                                        onClick={() =>
+                                            setShowBlockMenu(!showBlockMenu)
+                                        }
+                                        className="inbox-menu-btn"
+                                    >
+                                        <i className="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+
+                                    {showBlockMenu && (
+                                        <div className="inbox-dropdown-menu">
+                                            <button
+                                                onClick={handleBlockUser}
+                                                className={
+                                                    isBlocked
+                                                        ? "unblock-btn"
+                                                        : "block-btn"
+                                                }
+                                            >
+                                                <i
+                                                    className={`fa-solid ${
+                                                        isBlocked
+                                                            ? "fa-lock-open"
+                                                            : "fa-ban"
+                                                    }`}
+                                                ></i>
+                                                {isBlocked
+                                                    ? "Unblock User"
+                                                    : "Block User"}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                                 <button
                                     onClick={handleBackClick}
                                     className="back-button"
@@ -688,10 +804,31 @@ const InboxPage = () => {
                             <div ref={messagesEndRef}></div>
                         </div>
 
-                        <InboxMessageInput
-                            onSendMessage={sendMessage}
-                            onTyping={handleTyping}
-                        />
+                        {isBlockedBy ? (
+                            <div className="inbox-blocked-notice">
+                                <i className="fa-solid fa-ban"></i>
+                                <p>You can't send messages to this user</p>
+                            </div>
+                        ) : isBlocked ? (
+                            <div className="inbox-blocked-notice">
+                                <i className="fa-solid fa-ban"></i>
+                                <p>
+                                    You have blocked this user.{" "}
+                                    <button
+                                        onClick={handleBlockUser}
+                                        className="unblock-inline-btn"
+                                    >
+                                        Unblock
+                                    </button>{" "}
+                                    to send messages.
+                                </p>
+                            </div>
+                        ) : (
+                            <InboxMessageInput
+                                onSendMessage={sendMessage}
+                                onTyping={handleTyping}
+                            />
+                        )}
                     </>
                 ) : (
                     <div className="inbox-no-selection">

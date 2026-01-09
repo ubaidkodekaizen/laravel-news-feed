@@ -2,6 +2,10 @@
 <script>
     var userTokenRoute = "{{ route('user.token') }}";
     var getConversations = "{{ route('get.conversations') }}";
+    var blockUserRoute = "{{ route('block.user') }}";
+    var unblockUserRoute = "{{ route('unblock.user') }}";
+    var checkBlockStatusRoute = "{{ route('check.block.status') }}";
+    var getBlockedUsersRoute = "{{ route('blocked.users') }}";
 
     function getMessageRoute(conversationId) {
         return "{{ route('get.message', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);

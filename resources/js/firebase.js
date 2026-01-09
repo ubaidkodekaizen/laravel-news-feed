@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, onValue, onChildAdded, onChildChanged, onChildRemoved, set, remove, query, orderByChild, limitToLast } from 'firebase/database';
+import { getDatabase, ref, onValue, onChildAdded, onChildChanged, onChildRemoved, set, remove, query, orderByChild, limitToLast, onDisconnect } from 'firebase/database';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import axios from 'axios';
 
@@ -36,19 +36,115 @@ export const authenticateFirebase = async () => {
   }
 };
 
-// Setup presence system
+// ✅ Enhanced presence system with automatic reconnection
 export const setupPresence = async (userId) => {
-  const userStatusRef = ref(database, `presence/users/${userId}`);
+  if (!userId) {
+    console.warn("No userId provided for presence");
+    return;
+  }
+
+  const userIdString = String(userId);
+  const userStatusRef = ref(database, `presence/users/${userIdString}`);
 
   try {
+    // Set user as online
     await set(userStatusRef, {
       online: true,
       last_active: Date.now()
     });
 
-    console.log('✅ User presence set to online');
+    // ✅ Setup automatic offline on disconnect
+    await onDisconnect(userStatusRef).set({
+      online: false,
+      last_active: Date.now()
+    });
+
+    // ✅ Update last_active every 30 seconds while user is active
+    const updateInterval = setInterval(async () => {
+      try {
+        await set(userStatusRef, {
+          online: true,
+          last_active: Date.now()
+        });
+      } catch (error) {
+        console.error("Error updating presence:", error);
+      }
+    }, 30000); // Update every 30 seconds
+
+    // ✅ Cleanup on page unload
+    const cleanup = () => {
+      clearInterval(updateInterval);
+    };
+
+    window.addEventListener('beforeunload', cleanup);
+    window.addEventListener('unload', cleanup);
+
+    // Store cleanup function for later use
+    window.__presenceCleanup = cleanup;
+
+    console.log('✅ User presence set to online with auto-disconnect');
   } catch (error) {
     console.error('❌ Error setting user presence:', error);
+  }
+};
+
+// ✅ Listen to a user's online status
+export const listenToUserStatus = (userId, callback) => {
+  if (!userId) {
+    console.warn("No userId provided for status listener");
+    return null;
+  }
+
+  const userIdString = String(userId);
+  const userStatusRef = ref(database, `presence/users/${userIdString}`);
+
+  const unsubscribe = onValue(userStatusRef, (snapshot) => {
+    const data = snapshot.val();
+
+    if (!data) {
+      callback({ online: false, last_active: null });
+      return;
+    }
+
+    const lastActive = data.last_active || 0;
+    const isOnline = data.online || false;
+    const now = Date.now();
+    const timeDiff = now - lastActive;
+
+    // Consider user online if they were active in the last 60 seconds
+    const isRecentlyActive = timeDiff < 60000; // 60 seconds
+
+    callback({
+      online: isOnline && isRecentlyActive,
+      last_active: lastActive
+    });
+  });
+
+  return unsubscribe;
+};
+
+// ✅ Cleanup presence on logout
+export const cleanupPresence = async (userId) => {
+  if (!userId) return;
+
+  const userIdString = String(userId);
+  const userStatusRef = ref(database, `presence/users/${userIdString}`);
+
+  try {
+    await set(userStatusRef, {
+      online: false,
+      last_active: Date.now()
+    });
+
+    // Call stored cleanup function if it exists
+    if (window.__presenceCleanup) {
+      window.__presenceCleanup();
+      delete window.__presenceCleanup;
+    }
+
+    console.log('✅ User presence cleaned up');
+  } catch (error) {
+    console.error('❌ Error cleaning up presence:', error);
   }
 };
 
@@ -64,5 +160,6 @@ export {
   remove,
   query,
   orderByChild,
-  limitToLast
+  limitToLast,
+  onDisconnect
 };

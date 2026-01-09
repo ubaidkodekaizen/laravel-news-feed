@@ -38,6 +38,7 @@ class User extends Authenticatable
         'sub_category_to_connect',
         'community_interest',
         'status',
+        'added_by',
         'paid',
         'phone_public',
         'email_public',
@@ -132,6 +133,33 @@ class User extends Authenticatable
     }
 
 
+    public function blockedUsers()
+    {
+        return $this->belongsToMany(User::class, 'blocked_users', 'blocker_id', 'blocked_id')
+            ->withTimestamps();
+    }
+
+    public function blockedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'blocked_users', 'blocked_id', 'blocker_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Check if this user has blocked another user
+     */
+    public function hasBlocked($userId): bool
+    {
+        return $this->blockedUsers()->where('blocked_id', $userId)->exists();
+    }
+
+    /**
+     * Check if this user is blocked by another user
+     */
+    public function isBlockedBy($userId): bool
+    {
+        return $this->blockedByUsers()->where('blocker_id', $userId)->exists();
+    }
 
 
     protected $hidden = [
