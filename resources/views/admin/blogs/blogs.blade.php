@@ -16,8 +16,8 @@
         background: #fafbff !important;
     }
 
-    table#blogsTable {
-        margin: 0 !important;
+    table.dataTable {
+        margin: 0px !important;
     }
 
     div.dataTables_wrapper div.dt-row {
@@ -26,7 +26,13 @@
 
     .row.dt-row .col-sm-12{
         padding: 0 !important;
-        overflow-x: scroll !important;
+        overflow: scroll;
+        overflow-y: hidden;
+        border-radius: 15.99px 15.99px 0 0;
+        border-top: 2px solid #F2F2F2;
+        border-right: 2px solid #F2F2F2;
+        border-bottom: 1px solid #F2F2F2 !important;
+        border-left: 2px solid #F2F2F2;
     }
 
     .row.dt-row .col-sm-12::-webkit-scrollbar {
@@ -43,16 +49,9 @@
         border-radius: 10px;
     }
 
-
-    table.dataTable {
-        margin-top: 0px !important; 
-        margin-bottom: 0px !important;
-        border-radius: 15.99px 15.99px 0 0;
-        overflow: hidden;
-        border-top: 2px solid #F2F2F2;
-        border-right: 2px solid #F2F2F2;
-        border-bottom: 1px solid #F2F2F2 !important;
-        border-left: 2px solid #F2F2F2;
+    table#blogsTable {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
     }
 
     .card-title {
@@ -64,7 +63,13 @@
         font-weight: 500;
     }
 
-    .card-header.d-flex.justify-content-between a{
+    .card-header.card_header_flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-header.card_header_flex a{
         background: var(--primary);
         border-color: var(--primary);
         font-family: "poppins";
@@ -76,7 +81,7 @@
     div.dataTables_wrapper div.dataTables_filter input {
         margin-left: .5em;
         display: inline-block;
-        width: 64.8%;
+        width: auto;
         font-size: 16px;
         font-weight: 400;
         font-family: 'Inter';
@@ -107,7 +112,8 @@
 
     a.btn.btn-primary.btn-sm,
     a.btn.btn-warning.btn-sm,
-    table.dataTable td form button {
+    table.dataTable td form button,
+    table.dataTable td .btn {
         font-family: 'Poppins';
         font-size: 14px;
         padding: 8px 18px;
@@ -226,26 +232,75 @@
         background: #37488E14;
         color:  #37488E;
     }
+
+    .nav-tabs .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+    }
+    .nav-tabs .nav-link:hover {
+        border-bottom-color: #37488E;
+        color: #37488E !important;
+    }
+    .nav-tabs .nav-link.active {
+        border-bottom-color: #37488E;
+        color: #37488E !important;
+        background-color: transparent;
+    }
+    .nav-tabs .badge {
+        margin-left: 5px;
+        font-size: 12px;
+        padding: 4px 8px;
+    }
 </style>
 @section('content')
     <main class="main-content">
-
+        @php
+            $filter = $filter ?? 'all';
+            $counts = $counts ?? [];
+            $user = Auth::user();
+            $isAdmin = $user && $user->role_id == 1;
+            $canCreate = $isAdmin || ($user && $user->hasPermission('blogs.create'));
+            $canView = $isAdmin || ($user && $user->hasPermission('blogs.view'));
+            $canEdit = $isAdmin || ($user && $user->hasPermission('blogs.edit'));
+            $canDelete = $isAdmin || ($user && $user->hasPermission('blogs.delete'));
+            $canRestore = $isAdmin || ($user && $user->hasPermission('blogs.restore'));
+        @endphp
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between">
+                    <div class="card" style="border: none;">
+                        <div class="card-header card_header_flex">
                             <h4 class="card-title">Blogs</h4>
-                            <a href="{{ route('admin.add.blog') }}" class="btn btn-primary btn-md">Add Blog</a>
+                            @if($canCreate)
+                            <a href="{{ route('admin.add.blog') }}" class="btn btn-primary">Add Blog</a>
+                            @endif
                         </div>
                         <div class="card-body">
+                            <!-- Tabs Navigation -->
+                            <ul class="nav nav-tabs mb-4" id="blogTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
+                                       href="{{ route('admin.blogs', ['filter' => 'all']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        All <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'deleted' ? 'active' : '' }}" 
+                                       href="{{ route('admin.blogs', ['filter' => 'deleted']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        Deleted <span class="badge bg-danger">{{ $counts['deleted'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                            </ul>
                             <table id="blogsTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Title</th>
                                         <th>Content</th>
-                                        <th>Action</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -255,15 +310,31 @@
                                             <td>{{ $blog->title }}</td>
                                             <td>{{ Str::limit(strip_tags($blog->content), 50) }}</td>
                                             <td>
-                                                <a href="#" class="btn btn-warning btn-sm">View</a>
-                                                <a href="{{ route('admin.edit.blog', $blog->id) }}"
-                                                    class="btn btn-primary btn-sm">Edit</a>
-                                                <form action="{{ route('admin.delete.blog', $blog->id) }}" method="POST"
-                                                    style="display:inline-block;" class="delete-blog-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                                </form>
+                                                @if($canView)
+                                                <a href="{{ route('admin.view.blog', $blog->id) }}" class="btn btn-warning btn-sm">View</a>
+                                                @endif
+                                                @if($filter !== 'deleted')
+                                                    @if($canEdit)
+                                                    <a href="{{ route('admin.edit.blog', $blog->id) }}"
+                                                        class="btn btn-primary btn-sm">Edit</a>
+                                                    @endif
+                                                    @if($canDelete)
+                                                    <form action="{{ route('admin.delete.blog', $blog->id) }}" method="POST"
+                                                        style="display:inline-block;" class="delete-blog-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                    </form>
+                                                    @endif
+                                                @else
+                                                    @if($canRestore)
+                                                    <form action="{{ route('admin.restore.blog', $blog->id) }}" method="POST"
+                                                        style="display:inline-block;" class="restore-blog-form">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                                    </form>
+                                                    @endif
+                                                @endif
                                             </td>
                                         </tr>
                                     @empty
@@ -298,6 +369,26 @@
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.off('submit').submit();
+                    }
+                });
+            });
+
+            // Restore blog confirmation
+            $('.restore-blog-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This blog will be restored!",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, restore it!',
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {

@@ -120,9 +120,10 @@
                             </h4>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('admin.store.blog', $blog->id) }}" method="POST"
+                            <form action="{{ route('admin.update.blog', $blog->id) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
 
                                 <div class="row">
                                     @if ($errors->any())
