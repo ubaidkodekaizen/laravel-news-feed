@@ -235,7 +235,10 @@
 </style>
 @section('content')
 <main class="main-content">
-
+    @php
+        $filter = $filter ?? 'all';
+        $counts = $counts ?? [];
+    @endphp
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -245,6 +248,72 @@
                         <a href="{{Route('admin.add.user')}}" class="btn btn-primary">Add User</a>
                     </div>
                     <div class="card-body">
+                        <!-- Tabs Navigation -->
+                        <ul class="nav nav-tabs mb-4" id="userTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
+                                   href="{{ route('admin.users', ['filter' => 'all']) }}"
+                                   style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                    All <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $filter === 'web' ? 'active' : '' }}" 
+                                   href="{{ route('admin.users', ['filter' => 'web']) }}"
+                                   style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                    WEB <span class="badge bg-secondary">{{ $counts['web'] ?? 0 }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $filter === 'google' ? 'active' : '' }}" 
+                                   href="{{ route('admin.users', ['filter' => 'google']) }}"
+                                   style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                    GOOGLE <span class="badge bg-secondary">{{ $counts['google'] ?? 0 }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $filter === 'apple' ? 'active' : '' }}" 
+                                   href="{{ route('admin.users', ['filter' => 'apple']) }}"
+                                   style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                    APPLE <span class="badge bg-secondary">{{ $counts['apple'] ?? 0 }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $filter === 'amcob' ? 'active' : '' }}" 
+                                   href="{{ route('admin.users', ['filter' => 'amcob']) }}"
+                                   style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                    AMCOB <span class="badge bg-secondary">{{ $counts['amcob'] ?? 0 }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $filter === 'deleted' ? 'active' : '' }}" 
+                                   href="{{ route('admin.users', ['filter' => 'deleted']) }}"
+                                   style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                    Deleted <span class="badge bg-danger">{{ $counts['deleted'] ?? 0 }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <style>
+                            .nav-tabs .nav-link {
+                                border: none;
+                                border-bottom: 3px solid transparent;
+                                transition: all 0.3s ease;
+                            }
+                            .nav-tabs .nav-link:hover {
+                                border-bottom-color: #37488E;
+                                color: #37488E !important;
+                            }
+                            .nav-tabs .nav-link.active {
+                                border-bottom-color: #37488E;
+                                color: #37488E !important;
+                                background-color: transparent;
+                            }
+                            .nav-tabs .badge {
+                                margin-left: 5px;
+                                font-size: 12px;
+                                padding: 4px 8px;
+                            }
+                        </style>
                         <table id="usersTable" class="table table-striped table-hover">
                             <thead>
                                 <tr>
@@ -267,23 +336,26 @@
                                     
                                     <td>
                                         <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a>
-                                        <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('admin.delete.user', $user->id) }}" method="POST"
-                                            style="display:inline-block;" onsubmit="return confirmDelete();">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
-                                      
-                                        <form action="{{ route('admin.reset.link') }}" method="POST" style="display:inline-block;">
+                                        @if($filter !== 'deleted')
+                                            <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            <form action="{{ route('admin.delete.user', $user->id) }}" method="POST"
+                                                style="display:inline-block;" class="delete-user-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('admin.restore.user', $user->id) }}" method="POST"
+                                                style="display:inline-block;" class="restore-user-form">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                            </form>
+                                        @endif
+                                        <form action="{{ route('admin.reset.link') }}" method="POST" style="display:inline-block;" class="reset-link-form">
                                             @csrf
                                             <input type="hidden" name="email" value="{{ $user->email }}">
                                             <button type="submit" class="btn btn-info btn-sm">Send Reset Link</button>
-                                        </form> 
-                                        {{-- <a href="{{ route('admin.company.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit Company</a> --}}
-                                        {{-- <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Are you sure you want to delete this user?');">Delete</a> --}}
-
+                                        </form>
                                     </td>
                                 </tr>
                                 @empty
@@ -305,9 +377,87 @@
 @endsection
 @section('scripts')
     <script>
-        function confirmDelete() {
-            // Show confirmation alert
-            return confirm('Are you sure you want to delete this user?');
-        }
+        $(document).ready(function() {
+            // Delete user confirmation
+            $('.delete-user-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.off('submit').submit();
+                    }
+                });
+            });
+
+            // Restore user confirmation
+            $('.restore-user-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                Swal.fire({
+                    title: 'Restore User?',
+                    text: "This user will be restored and become active again.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, restore it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.off('submit').submit();
+                    }
+                });
+            });
+
+            // Reset link confirmation
+            $('.reset-link-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                Swal.fire({
+                    title: 'Send Reset Link?',
+                    text: "A password reset link will be sent to the user's email.",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#17a2b8',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, send it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.off('submit').submit();
+                    }
+                });
+            });
+
+            // Show success message if exists
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            @endif
+
+            // Show error message if exists
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '{{ session('error') }}',
+                    showConfirmButton: true
+                });
+            @endif
+        });
     </script>
 @endsection

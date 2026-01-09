@@ -234,7 +234,10 @@
 </style>
 @section('content')
     <main class="main-content">
-
+        @php
+            $filter = $filter ?? 'all';
+            $counts = $counts ?? [];
+        @endphp
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -243,6 +246,86 @@
                             <h4 class="card-title">Subscriptions</h4>
                         </div>
                         <div class="card-body">
+                            <!-- Tabs Navigation -->
+                            <ul class="nav nav-tabs mb-4" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        All <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'web' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'web']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        WEB <span class="badge bg-secondary">{{ $counts['web'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'google' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'google']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        GOOGLE <span class="badge bg-secondary">{{ $counts['google'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'apple' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'apple']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        APPLE <span class="badge bg-secondary">{{ $counts['apple'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'amcob' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'amcob']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        AMCOB <span class="badge bg-secondary">{{ $counts['amcob'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'monthly' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'monthly']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        Monthly <span class="badge bg-secondary">{{ $counts['monthly'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'annual' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'annual']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        Annual <span class="badge bg-secondary">{{ $counts['annual'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'free' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'free']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        Free <span class="badge bg-secondary">{{ $counts['free'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <style>
+                                .nav-tabs .nav-link {
+                                    border: none;
+                                    border-bottom: 3px solid transparent;
+                                    transition: all 0.3s ease;
+                                }
+                                .nav-tabs .nav-link:hover {
+                                    border-bottom-color: #37488E;
+                                    color: #37488E !important;
+                                }
+                                .nav-tabs .nav-link.active {
+                                    border-bottom-color: #37488E;
+                                    color: #37488E !important;
+                                    background-color: transparent;
+                                }
+                                .nav-tabs .badge {
+                                    margin-left: 5px;
+                                    font-size: 12px;
+                                    padding: 4px 8px;
+                                }
+                            </style>
                             <table id="usersTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -263,16 +346,43 @@
                                     @forelse($subscriptions as $subscription)
                                         <tr>
                                             <td>{{ $subscription->id }}</td>
-                                            <td>{{ $subscription->user?->first_name }} {{ $subscription->user?->last_name }}
+                                            <td>
+                                                @if($subscription->user)
+                                                    {{ trim($subscription->user->first_name . ' ' . $subscription->user->last_name) ?: 'N/A' }}
+                                                @else
+                                                    <span style="color: #999;">N/A</span>
+                                                @endif
                                             </td>
-                                            <td>{{ $subscription->user?->email }}</td>
-                                            <td>{{ $subscription->user?->phone }}</td>
-                                            <td>{{ $subscription->transaction_id }}</td>
+                                            <td>
+                                                @if($subscription->user && $subscription->user->email)
+                                                    {{ $subscription->user->email }}
+                                                @else
+                                                    <span style="color: #999;">N/A</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($subscription->user && $subscription->user->phone)
+                                                    {{ $subscription->user->phone }}
+                                                @else
+                                                    <span style="color: #999;">N/A</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $subscription->transaction_id ?: 'N/A' }}</td>
                                             <td>{{ $subscription->subscription_type }}</td>
-                                            <td>${{ $subscription->subscription_amount }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($subscription->start_date)->format('m/d/Y') }}
+                                            <td>${{ number_format($subscription->subscription_amount, 2) }}</td>
+                                            <td>
+                                                @if($subscription->start_date)
+                                                    {{ \Carbon\Carbon::parse($subscription->start_date)->format('m/d/Y') }}
+                                                @else
+                                                    N/A
+                                                @endif
                                             </td>
-                                            <td>{{ \Carbon\Carbon::parse($subscription->renewal_date)->format('m/d/Y') }}
+                                            <td>
+                                                @if($subscription->renewal_date)
+                                                    {{ \Carbon\Carbon::parse($subscription->renewal_date)->format('m/d/Y') }}
+                                                @else
+                                                    N/A
+                                                @endif
                                             </td>
                                             <td>{{ $subscription->status }}</td>
 

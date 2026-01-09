@@ -8,16 +8,115 @@ use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $subscriptions = Subscription::with('user')
-            ->where(function($query) {
-                $query->whereNotIn('platform', ['DB', 'Amcob'])
-                      ->orWhereNull('platform');
-            })
-            ->orderByDesc('id')
-            ->get();
+        $filter = $request->get('filter', 'all');
+        
+        $query = Subscription::with('user');
+        
+        // Apply filter
+        switch ($filter) {
+            case 'web':
+                // Web subscriptions: platform is null or not in DB/Amcob/Google/Apple
+                $query->where(function($q) {
+                    $q->whereNull('platform')
+                      ->orWhere(function($subQ) {
+                          $subQ->whereNotNull('platform')
+                               ->whereNotIn('platform', ['DB', 'Amcob', 'google', 'apple', 'Google', 'Apple']);
+                      });
+                });
+                break;
+            case 'google':
+                $query->where(function($q) {
+                    $q->where('platform', 'google')
+                      ->orWhere('platform', 'Google');
+                });
+                break;
+            case 'apple':
+                $query->where(function($q) {
+                    $q->where('platform', 'apple')
+                      ->orWhere('platform', 'Apple');
+                });
+                break;
+            case 'amcob':
+                $query->where(function($q) {
+                    $q->where('platform', 'Amcob')
+                      ->orWhere('platform', 'DB')
+                      ->orWhere('platform', 'Admin');
+                });
+                break;
+            case 'free':
+                $query->where('subscription_type', 'Free');
+                break;
+            case 'monthly':
+                $query->where('subscription_type', 'Monthly');
+                break;
+            case 'annual':
+                // Map Annual to Yearly (database uses Yearly)
+                $query->where('subscription_type', 'Yearly');
+                break;
+            case 'all':
+            default:
+                // Show all subscriptions (no filter)
+                break;
+        }
+        
+        $subscriptions = $query->orderByDesc('id')->get();
 
-        return view('admin.subscriptions', compact('subscriptions'));
+        // Get counts for tabs
+        $baseQuery = Subscription::with('user');
+        
+        // Count all active subscriptions
+        $allCount = (clone $baseQuery)->count();
+        
+        // Count web subscriptions
+        $webCount = (clone $baseQuery)->where(function($q) {
+            $q->whereNull('platform')
+              ->orWhere(function($subQ) {
+                  $subQ->whereNotNull('platform')
+                       ->whereNotIn('platform', ['DB', 'Amcob', 'google', 'apple', 'Google', 'Apple', 'Admin']);
+              });
+        })->count();
+        
+        // Count google subscriptions
+        $googleCount = (clone $baseQuery)->where(function($q) {
+            $q->where('platform', 'google')
+              ->orWhere('platform', 'Google');
+        })->count();
+        
+        // Count apple subscriptions
+        $appleCount = (clone $baseQuery)->where(function($q) {
+            $q->where('platform', 'apple')
+              ->orWhere('platform', 'Apple');
+        })->count();
+        
+        // Count AMCOB subscriptions
+        $amcobCount = (clone $baseQuery)->where(function($q) {
+            $q->where('platform', 'Amcob')
+              ->orWhere('platform', 'DB')
+              ->orWhere('platform', 'Admin');
+        })->count();
+        
+        // Count Free subscriptions
+        $freeCount = (clone $baseQuery)->where('subscription_type', 'Free')->count();
+        
+        // Count Monthly subscriptions
+        $monthlyCount = (clone $baseQuery)->where('subscription_type', 'Monthly')->count();
+        
+        // Count Annual/Yearly subscriptions
+        $annualCount = (clone $baseQuery)->where('subscription_type', 'Yearly')->count();
+        
+        $counts = [
+            'all' => $allCount,
+            'web' => $webCount,
+            'google' => $googleCount,
+            'apple' => $appleCount,
+            'amcob' => $amcobCount,
+            'free' => $freeCount,
+            'monthly' => $monthlyCount,
+            'annual' => $annualCount,
+        ];
+
+        return view('admin.subscriptions', compact('subscriptions', 'counts', 'filter'));
     }
 }

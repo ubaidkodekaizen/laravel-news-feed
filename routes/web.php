@@ -206,6 +206,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('/admin/dashboard/chart-data', [AdminController::class, 'getChartData'])->name('admin.dashboard.chart-data');
 
     // Users Management
     Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
@@ -215,6 +216,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
     Route::get('/admin/user/edit/{id}', [AdminController::class, 'editUser'])->name('admin.user.edit');
     Route::post('/admin/user/update', [AdminController::class, 'updateUserDetails'])->name('admin.user.update');
     Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete.user');
+    Route::post('/admin/restore-user/{id}', [AdminController::class, 'restoreUser'])->name('admin.restore.user');
     Route::post('/admin/admin-reset-link', [AdminController::class, 'adminResetLink'])->name('admin.reset.link');
 
     // Company Management
