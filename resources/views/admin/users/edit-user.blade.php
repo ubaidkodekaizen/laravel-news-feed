@@ -139,18 +139,18 @@
             font-size: 14px !important;
         }
         .toggle__label {
-            width: 70px !important;
+            width: 104px !important;
             height: 24px !important;
         }
 
         .toggle__input:checked + .toggle__label::after {
-            left: 32px !important;
+            left: 52px !important;
         }
 
         .toggle__label::after {
             top: 1.9px !important;
             left: 2px !important;
-            width: 36px !important;
+            width: 50px !important;
             height: 20px !important;
         }
     }

@@ -308,7 +308,12 @@ textarea:-webkit-autofill {
     font-size: 18px !important;
 }
 
-.iti--allow-dropdown input, .iti--allow-dropdown input[type=text], .iti--allow-dropdown input[type=tel], .iti--separate-dial-code input, .iti--separate-dial-code input[type=text], .iti--separate-dial-code input[type=tel] {
+.iti--allow-dropdown input, 
+.iti--allow-dropdown input[type=text], 
+.iti--allow-dropdown input[type=tel], 
+.iti--separate-dial-code input, 
+.iti--separate-dial-code input[type=text], 
+.iti--separate-dial-code input[type=tel] {
          padding-left: 80px !important;
     }
   
@@ -468,6 +473,11 @@ textarea:-webkit-autofill {
 
     .user_company_profile .btn-flex .btn {
         font-size: 18px !important;
+    }
+
+    .btn-flex.col-lg-12,
+    .btn-flex.col-lg-12 a.btn.btn-secondary.w-100 {
+      width: 100% !important;
     }
   }
 
