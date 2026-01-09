@@ -252,7 +252,21 @@
                                     <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
                                        href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        All <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
+                                        ALL <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'active' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'active']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        ACTIVE <span class="badge bg-secondary">{{ $counts['active'] ?? 0 }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link {{ $filter === 'inactive' ? 'active' : '' }}" 
+                                       href="{{ route('admin.subscriptions', ['filter' => 'inactive']) }}"
+                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
+                                        INACTIVE <span class="badge bg-secondary">{{ $counts['inactive'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
@@ -287,21 +301,21 @@
                                     <a class="nav-link {{ $filter === 'monthly' ? 'active' : '' }}" 
                                        href="{{ route('admin.subscriptions', ['filter' => 'monthly']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        Monthly <span class="badge bg-secondary">{{ $counts['monthly'] ?? 0 }}</span>
+                                        MONTHLY <span class="badge bg-secondary">{{ $counts['monthly'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $filter === 'annual' ? 'active' : '' }}" 
                                        href="{{ route('admin.subscriptions', ['filter' => 'annual']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        Annual <span class="badge bg-secondary">{{ $counts['annual'] ?? 0 }}</span>
+                                        ANNUAL <span class="badge bg-secondary">{{ $counts['annual'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $filter === 'free' ? 'active' : '' }}" 
                                        href="{{ route('admin.subscriptions', ['filter' => 'free']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        Free <span class="badge bg-secondary">{{ $counts['free'] ?? 0 }}</span>
+                                        FREE <span class="badge bg-secondary">{{ $counts['free'] ?? 0 }}</span>
                                     </a>
                                 </li>
                             </ul>

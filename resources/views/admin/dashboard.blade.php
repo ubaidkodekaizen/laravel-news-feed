@@ -207,8 +207,8 @@
                                 <button onclick="loadSignupsChart()" class="btn btn-primary btn-sm">Apply</button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="signupsChart" style="max-height: 300px;"></canvas>
+                        <div class="card-body" style="height: 400px;">
+                            <canvas id="signupsChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -226,8 +226,8 @@
                                 <button onclick="loadSubscribersChart()" class="btn btn-primary btn-sm">Apply</button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="subscribersChart" style="max-height: 300px;"></canvas>
+                        <div class="card-body" style="height: 400px;">
+                            <canvas id="subscribersChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -246,8 +246,15 @@
                                 <button onclick="resetPlatformsFilter()" class="btn btn-secondary btn-sm">Reset</button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="platformsChart" style="max-height: 300px;"></canvas>
+                        <div class="card-body" style="height: 400px; position: relative;">
+                            <div class="row h-100">
+                                <div class="col-8">
+                                    <canvas id="platformsChart"></canvas>
+                                </div>
+                                <div class="col-4 d-flex flex-column justify-content-center" id="platformsLegend">
+                                    <!-- Labels will be inserted here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -266,8 +273,15 @@
                                 <button onclick="resetAccountFilter()" class="btn btn-secondary btn-sm">Reset</button>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="accountCreationChart" style="max-height: 300px;"></canvas>
+                        <div class="card-body" style="height: 400px; position: relative;">
+                            <div class="row h-100">
+                                <div class="col-8">
+                                    <canvas id="accountCreationChart"></canvas>
+                                </div>
+                                <div class="col-4 d-flex flex-column justify-content-center" id="accountLegend">
+                                    <!-- Labels will be inserted here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -451,6 +465,28 @@
         fetch(`{{ route('admin.dashboard.chart-data') }}?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
+                // Update legend container with labels and counts
+                const legendContainer = document.getElementById('platformsLegend');
+                legendContainer.innerHTML = '';
+                // Ensure labels are in correct order: Android, iOS, Web
+                const orderedLabels = ['Android', 'iOS', 'Web'];
+                const colors = ['#28a745', '#007bff', '#ffc107'];
+                
+                // Find index in data for each ordered label
+                orderedLabels.forEach((orderedLabel, index) => {
+                    const dataIndex = data.labels.indexOf(orderedLabel);
+                    const value = dataIndex >= 0 ? (data.data[dataIndex] || 0) : 0;
+                    const colorIndex = dataIndex >= 0 ? dataIndex : index;
+                    
+                    const legendItem = document.createElement('div');
+                    legendItem.style.cssText = 'display: flex; align-items: center; margin-bottom: 15px; font-family: Inter;';
+                    legendItem.innerHTML = `
+                        <span style="width: 20px; height: 20px; background-color: ${colors[colorIndex]}; border-radius: 3px; margin-right: 10px; display: inline-block;"></span>
+                        <span style="font-size: 16px; font-weight: 500; color: #333;">${orderedLabel} ${value}</span>
+                    `;
+                    legendContainer.appendChild(legendItem);
+                });
+                
                 const ctx = document.getElementById('platformsChart').getContext('2d');
                 
                 if (platformsChart) {
@@ -471,18 +507,7 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                position: 'bottom',
-                                align: 'center',
-                                labels: {
-                                    boxWidth: 15,
-                                    padding: 15,
-                                    font: {
-                                        family: 'Inter',
-                                        size: 14
-                                    },
-                                    usePointStyle: true,
-                                    textAlign: 'left'
-                                }
+                                display: false
                             },
                             tooltip: {
                                 callbacks: {
@@ -533,60 +558,68 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Account Creation Chart Data:', data);
+                // Update legend container with labels and counts
+                const legendContainer = document.getElementById('accountLegend');
+                legendContainer.innerHTML = '';
+                // Ensure labels are in correct order: Web, iOS, Android, Amcob API, Admin
+                const orderedLabels = ['Web', 'iOS', 'Android', 'Amcob API', 'Admin'];
+                // Color mapping: Web=Yellow, iOS=Blue, Android=Green, Amcob API=Orange, Admin=Gray
+                const colorMap = {
+                    'Web': '#ffc107',      // Yellow
+                    'iOS': '#007bff',      // Blue
+                    'Apple': '#007bff',    // Blue (for backward compatibility)
+                    'Android': '#28a745',  // Green
+                    'Amcob API': '#fd7e14', // Orange
+                    'Admin': '#6c757d'     // Gray
+                };
+                
+                const labels = data.labels || [];
+                const dataValues = data.data || [];
+                
+                // Find index in data for each ordered label (check both iOS and Apple for compatibility)
+                orderedLabels.forEach((orderedLabel, index) => {
+                    let dataIndex = labels.indexOf(orderedLabel);
+                    // Fallback: if iOS not found, try Apple
+                    if (orderedLabel === 'iOS' && dataIndex === -1) {
+                        dataIndex = labels.indexOf('Apple');
+                    }
+                    const value = dataIndex >= 0 ? (dataValues[dataIndex] || 0) : 0;
+                    const color = colorMap[orderedLabel] || '#6c757d';
+                    
+                    const legendItem = document.createElement('div');
+                    legendItem.style.cssText = 'display: flex; align-items: center; margin-bottom: 15px; font-family: Inter;';
+                    // Always display "iOS" instead of "Apple"
+                    const displayLabel = orderedLabel === 'iOS' || orderedLabel === 'Apple' ? 'iOS' : orderedLabel;
+                    legendItem.innerHTML = `
+                        <span style="width: 20px; height: 20px; background-color: ${color}; border-radius: 3px; margin-right: 10px; display: inline-block;"></span>
+                        <span style="font-size: 16px; font-weight: 500; color: #333;">${displayLabel} ${value}</span>
+                    `;
+                    legendContainer.appendChild(legendItem);
+                });
+                
                 const ctx = document.getElementById('accountCreationChart').getContext('2d');
                 
                 if (accountCreationChart) {
                     accountCreationChart.destroy();
                 }
                 
-                // Check if data exists
-                if (!data.labels || !data.data || data.data.length === 0) {
-                    console.warn('No data available for account creation chart');
-                                    // Still create chart with empty data to show structure
-                    accountCreationChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: data.labels || ['Web', 'Apple', 'Android', 'Amcob API', 'Admin'],
-                            datasets: [{
-                                data: data.data || [0, 0, 0, 0, 0],
-                                backgroundColor: ['#007bff', '#17a2b8', '#28a745', '#ffc107', '#6c757d']
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'bottom'
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            let label = context.label || '';
-                                            if (label) {
-                                                label += ': ';
-                                            }
-                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                            const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
-                                            label += context.parsed + ' (' + percentage + '%)';
-                                            return label;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    return;
-                }
+                // Map colors based on label order: Web=Yellow, iOS/Apple=Blue, Android=Green, Amcob API=Orange, Admin=Gray
+                const chartColors = labels.map(label => {
+                    if (label === 'Web') return '#ffc107';      // Yellow
+                    if (label === 'iOS' || label === 'Apple') return '#007bff';    // Blue
+                    if (label === 'Android') return '#28a745';  // Green
+                    if (label === 'Amcob API') return '#fd7e14'; // Orange
+                    if (label === 'Admin') return '#6c757d';    // Gray
+                    return '#6c757d'; // Default gray
+                });
                 
                 accountCreationChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: data.labels,
+                        labels: labels,
                         datasets: [{
-                            data: data.data,
-                            backgroundColor: ['#007bff', '#17a2b8', '#28a745', '#ffc107', '#6c757d']
+                            data: dataValues,
+                            backgroundColor: chartColors
                         }]
                     },
                     options: {
@@ -594,17 +627,7 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                position: 'bottom',
-                                align: 'center',
-                                labels: {
-                                    boxWidth: 15,
-                                    padding: 15,
-                                    font: {
-                                        family: 'Inter',
-                                        size: 14
-                                    },
-                                    usePointStyle: true
-                                }
+                                display: false
                             },
                             tooltip: {
                                 callbacks: {

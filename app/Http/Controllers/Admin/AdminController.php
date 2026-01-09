@@ -276,9 +276,9 @@ class AdminController extends Controller
             }
         }
 
-        // Return in specific order: Web, Apple, Android, Amcob API, Admin
+        // Return in specific order: Web, iOS, Android, Amcob API, Admin
         return response()->json([
-            'labels' => ['Web', 'Apple', 'Android', 'Amcob API', 'Admin'],
+            'labels' => ['Web', 'iOS', 'Android', 'Amcob API', 'Admin'],
             'data' => [$webCount, $appleCount, $androidCount, $amcobCount, $adminCount]
         ]);
     }

@@ -16,13 +16,21 @@ class SubscriptionController extends Controller
         
         // Apply filter
         switch ($filter) {
+            case 'active':
+                $query->where('status', 'active');
+                break;
+            case 'inactive':
+                // Inactive includes: cancelled, cancel, inactive, etc.
+                $query->whereIn('status', ['cancelled', 'cancel', 'inactive', 'expired', 'suspended']);
+                break;
             case 'web':
-                // Web subscriptions: platform is null or not in DB/Amcob/Google/Apple
+                // Web subscriptions: platform is 'Web' or null or not in DB/Amcob/Google/Apple
                 $query->where(function($q) {
-                    $q->whereNull('platform')
+                    $q->where('platform', 'Web')
+                      ->orWhereNull('platform')
                       ->orWhere(function($subQ) {
                           $subQ->whereNotNull('platform')
-                               ->whereNotIn('platform', ['DB', 'Amcob', 'google', 'apple', 'Google', 'Apple']);
+                               ->whereNotIn('platform', ['DB', 'Amcob', 'google', 'apple', 'Google', 'Apple', 'Admin']);
                       });
                 });
                 break;
@@ -45,15 +53,15 @@ class SubscriptionController extends Controller
                       ->orWhere('platform', 'Admin');
                 });
                 break;
-            case 'free':
-                $query->where('subscription_type', 'Free');
-                break;
             case 'monthly':
                 $query->where('subscription_type', 'Monthly');
                 break;
             case 'annual':
                 // Map Annual to Yearly (database uses Yearly)
                 $query->where('subscription_type', 'Yearly');
+                break;
+            case 'free':
+                $query->where('subscription_type', 'Free');
                 break;
             case 'all':
             default:
@@ -66,12 +74,19 @@ class SubscriptionController extends Controller
         // Get counts for tabs
         $baseQuery = Subscription::with('user');
         
-        // Count all active subscriptions
+        // Count all subscriptions
         $allCount = (clone $baseQuery)->count();
+        
+        // Count active subscriptions
+        $activeCount = (clone $baseQuery)->where('status', 'active')->count();
+        
+        // Count inactive subscriptions
+        $inactiveCount = (clone $baseQuery)->whereIn('status', ['cancelled', 'cancel', 'inactive', 'expired', 'suspended'])->count();
         
         // Count web subscriptions
         $webCount = (clone $baseQuery)->where(function($q) {
-            $q->whereNull('platform')
+            $q->where('platform', 'Web')
+              ->orWhereNull('platform')
               ->orWhere(function($subQ) {
                   $subQ->whereNotNull('platform')
                        ->whereNotIn('platform', ['DB', 'Amcob', 'google', 'apple', 'Google', 'Apple', 'Admin']);
@@ -97,24 +112,26 @@ class SubscriptionController extends Controller
               ->orWhere('platform', 'Admin');
         })->count();
         
-        // Count Free subscriptions
-        $freeCount = (clone $baseQuery)->where('subscription_type', 'Free')->count();
-        
         // Count Monthly subscriptions
         $monthlyCount = (clone $baseQuery)->where('subscription_type', 'Monthly')->count();
         
         // Count Annual/Yearly subscriptions
         $annualCount = (clone $baseQuery)->where('subscription_type', 'Yearly')->count();
         
+        // Count Free subscriptions
+        $freeCount = (clone $baseQuery)->where('subscription_type', 'Free')->count();
+        
         $counts = [
             'all' => $allCount,
+            'active' => $activeCount,
+            'inactive' => $inactiveCount,
             'web' => $webCount,
             'google' => $googleCount,
             'apple' => $appleCount,
             'amcob' => $amcobCount,
-            'free' => $freeCount,
             'monthly' => $monthlyCount,
             'annual' => $annualCount,
+            'free' => $freeCount,
         ];
 
         return view('admin.subscriptions', compact('subscriptions', 'counts', 'filter'));
