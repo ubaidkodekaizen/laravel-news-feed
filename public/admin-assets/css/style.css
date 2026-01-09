@@ -167,7 +167,8 @@ a{
   }
 
   table.table tbody td a,
-  form #sendResetLinkBtn{
+  form #sendResetLinkBtn,
+  form #restoreBtn{
     height: 58px;
     width: 48px;
     align-content: center;

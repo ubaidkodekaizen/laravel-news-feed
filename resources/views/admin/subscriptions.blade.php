@@ -247,7 +247,7 @@
                         </div>
                         <div class="card-body">
                             <!-- Tabs Navigation -->
-                            <ul class="nav nav-tabs mb-4" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                            <ul class="nav nav-tabs mb-4 pb-3" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #F2F2F2;">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
                                        href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"
@@ -324,6 +324,7 @@
                                     border: none;
                                     border-bottom: 3px solid transparent;
                                     transition: all 0.3s ease;
+                                    text-transform: uppercase;
                                 }
                                 .nav-tabs .nav-link:hover {
                                     border-bottom-color: #37488E;
@@ -331,13 +332,36 @@
                                 }
                                 .nav-tabs .nav-link.active {
                                     border-bottom-color: #37488E;
-                                    color: #37488E !important;
-                                    background-color: transparent;
+                                    color: #ffffff !important;
+                                    border-radius: 12px;
+                                    background: #273572;
+                                }
+
+                                .nav-tabs .nav-link.active .badge {
+                                    color: #ffffff !important;
                                 }
                                 .nav-tabs .badge {
-                                    margin-left: 5px;
-                                    font-size: 12px;
-                                    padding: 4px 8px;
+                                    color: #000;
+                                    margin: 0px 0px 0px 0px;
+                                    font-size: 16px;
+                                    font-family: "Inter";
+                                    font-weight: 400;
+                                    background: transparent !important;
+                                }
+
+                                @media (max-width: 768px) {
+                                    ul#subscriptionTabs {
+                                        justify-content: center;
+                                    }
+
+                                    .nav-tabs .nav-link {
+                                        font-size: 12px;
+                                        padding: 5px 12px !important;
+                                    }
+
+                                    .nav-tabs .badge {
+                                        font-size: 12px;
+                                    }
                                 }
                             </style>
                             <table id="usersTable" class="table table-striped table-hover">
