@@ -24,9 +24,35 @@
         padding: 10px;
     }
 
-    .row.dt-row .col-sm-12{
+    /* .row.dt-row .col-sm-12{
         padding: 0 !important;
         overflow: hidden;
+    } */
+
+        
+    .row.dt-row .col-sm-12{
+        padding: 0 !important;
+        overflow: scroll;
+        overflow-y: hidden;
+        border-radius: 15.99px 15.99px 0 0;
+        border-top: 2px solid #F2F2F2;
+        border-right: 2px solid #F2F2F2;
+        border-bottom: 1px solid #F2F2F2 !important;
+        border-left: 2px solid #F2F2F2;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .row.dt-row .col-sm-12::-webkit-scrollbar-thumb {
+        background: #273572;
+        border-radius: 10px;
     }
 
 
@@ -38,6 +64,11 @@
         border-right: 2px solid #F2F2F2;
         border-bottom: 1px solid #F2F2F2 !important;
         border-left: 2px solid #F2F2F2;
+    }
+
+    table#blogsTable {
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
     }
 
     .card-title {
@@ -252,14 +283,26 @@
                                             <!-- Event URL -->
                                             <td>
                                                 <!-- View, Edit, and Delete Buttons -->
-                                                <a href="#" class="btn btn-warning btn-sm">View</a>
-                                                <a href="{{ route('admin.edit.event', $event->id) }}"
-                                                    class="btn btn-primary btn-sm">Edit</a>
+                                                 <!-- view -->
+                                                <a href="#" class="btn btn-warning btn-sm">
+                                                    
+                                                    <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>View</title>
+                                                    <path d="M20.188 10.9343C20.5762 11.4056 20.7703 11.6412 20.7703 12C20.7703 12.3588 20.5762 12.5944 20.188 13.0657C18.7679 14.7899 15.6357 18 12 18C8.36427 18 5.23206 14.7899 3.81197 13.0657C3.42381 12.5944 3.22973 12.3588 3.22973 12C3.22973 11.6412 3.42381 11.4056 3.81197 10.9343C5.23206 9.21014 8.36427 6 12 6C15.6357 6 18.7679 9.21014 20.188 10.9343Z" fill="#213bae" fill-opacity="0.14"/>
+                                                    <circle cx="12" cy="12" r="3" fill="#273572"/>
+                                                    </svg>
+                                                </a>
+                                                <!-- edit  -->
+                                                <a id="edit" href="{{ route('admin.edit.event', $event->id) }}" class="btn btn-primary" title="Edit"></a>
+                                                <!-- <a href="{{ route('admin.edit.event', $event->id) }}"
+                                                    class="btn btn-primary btn-sm">Edit</a> -->
+                                                    <!-- delete  -->
                                                 <form action="{{ route('admin.delete.event', $event->id) }}" method="POST"
                                                     style="display:inline-block;" onsubmit="return confirmDelete();">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+
+                                                    <button id="delete" type="submit" class="btn btn-danger btn-sm" title="Delete"></button>
                                                 </form>
                                             </td>
                                         </tr>

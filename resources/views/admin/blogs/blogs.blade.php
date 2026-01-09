@@ -255,14 +255,22 @@
                                             <td>{{ $blog->title }}</td>
                                             <td>{{ Str::limit(strip_tags($blog->content), 50) }}</td>
                                             <td>
-                                                <a href="#" class="btn btn-warning btn-sm">View</a>
-                                                <a href="{{ route('admin.edit.blog', $blog->id) }}"
-                                                    class="btn btn-primary btn-sm">Edit</a>
+                                                <a href="#" class="btn btn-warning btn-sm">
+                                                    <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>View</title>
+                                                    <path d="M20.188 10.9343C20.5762 11.4056 20.7703 11.6412 20.7703 12C20.7703 12.3588 20.5762 12.5944 20.188 13.0657C18.7679 14.7899 15.6357 18 12 18C8.36427 18 5.23206 14.7899 3.81197 13.0657C3.42381 12.5944 3.22973 12.3588 3.22973 12C3.22973 11.6412 3.42381 11.4056 3.81197 10.9343C5.23206 9.21014 8.36427 6 12 6C15.6357 6 18.7679 9.21014 20.188 10.9343Z" fill="#213bae" fill-opacity="0.14"/>
+                                                    <circle cx="12" cy="12" r="3" fill="#273572"/>
+                                                    </svg>
+                                                </a>
+                                                <!-- <a href="#" class="btn btn-warning btn-sm">View</a> -->
+                                                 <a id="edit" href="{{ route('admin.edit.blog', $blog->id) }}" class="btn btn-primary" title="Edit"></a>
+                                                <!-- <a href="{{ route('admin.edit.blog', $blog->id) }}"
+                                                    class="btn btn-primary btn-sm">Edit</a> -->
                                                 <form action="{{ route('admin.delete.blog', $blog->id) }}" method="POST"
                                                     style="display:inline-block;" onsubmit="return confirmDelete();">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                    <button id="delete" type="submit" class="btn btn-danger btn-sm" title="Delete">
                                                 </form>
                                             </td>
                                         </tr>
