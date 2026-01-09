@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class FeedController extends Controller
 {
@@ -130,7 +131,7 @@ class FeedController extends Controller
     /**
      * Get a single post with all details.
      */
-    public function getPost($id)
+    public function getPost($slug)
     {
         $userId = Auth::id();
 
@@ -156,7 +157,7 @@ class FeedController extends Controller
             'originalPost.user:id,first_name,last_name,slug,photo',
             'originalPost.media'
         ])
-            ->where('id', $id)
+            ->where('slug', $slug)
             ->where('status', 'active')
             ->whereNull('deleted_at')
             ->firstOrFail();
@@ -191,6 +192,33 @@ class FeedController extends Controller
             $post->content = $request->content;
             $post->comments_enabled = $request->get('comments_enabled', true);
             $post->status = 'active';
+            
+            // Generate slug from content (title) with date and time in d-m-Y format
+            $dateStr = now()->format('d-m-Y');
+            $timeStr = now()->format('His'); // Hours, minutes, seconds in 24-hour format (e.g., 143052)
+            $slugBase = 'post';
+            
+            if ($request->content) {
+                // Extract first 50 characters from content as title
+                $contentText = strip_tags($request->content);
+                $title = Str::limit($contentText, 50, '');
+                $slugBase = Str::slug($title);
+                
+                if (empty($slugBase)) {
+                    $slugBase = 'post';
+                }
+            }
+            
+            // Append date and time to slug for uniqueness
+            $slug = $slugBase . '-' . $dateStr . '-' . $timeStr;
+            
+            // If still exists (very unlikely with time), append microseconds
+            if (Post::where('slug', $slug)->exists()) {
+                $microseconds = now()->format('u');
+                $slug = $slugBase . '-' . $dateStr . '-' . $timeStr . '-' . $microseconds;
+            }
+            
+            $post->slug = $slug;
             $post->save();
 
             // Handle media uploads
@@ -528,6 +556,33 @@ class FeedController extends Controller
                 $sharedPost->content = $request->shared_content;
                 $sharedPost->comments_enabled = true;
                 $sharedPost->status = 'active';
+                
+                // Generate slug for shared post with date and time in d-m-Y format
+                $dateStr = now()->format('d-m-Y');
+                $timeStr = now()->format('His'); // Hours, minutes, seconds in 24-hour format
+                $slugBase = 'shared-post';
+                
+                if ($request->shared_content) {
+                    // Extract first 50 characters from shared content as title
+                    $contentText = strip_tags($request->shared_content);
+                    $title = Str::limit($contentText, 50, '');
+                    $slugBase = Str::slug($title);
+                    
+                    if (empty($slugBase)) {
+                        $slugBase = 'shared-post';
+                    }
+                }
+                
+                // Append date and time to slug for uniqueness
+                $slug = $slugBase . '-' . $dateStr . '-' . $timeStr;
+                
+                // If still exists (very unlikely with time), append microseconds
+                if (Post::where('slug', $slug)->exists()) {
+                    $microseconds = now()->format('u');
+                    $slug = $slugBase . '-' . $dateStr . '-' . $timeStr . '-' . $microseconds;
+                }
+                
+                $sharedPost->slug = $slug;
                 $sharedPost->save();
             }
 

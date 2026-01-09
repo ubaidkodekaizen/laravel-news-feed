@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reference\Accreditation;
-use App\Models\Content\Blog;
 use App\Models\Reference\BusinessContribution;
 use App\Models\Reference\BusinessType;
 use App\Models\Business\Company;
-use App\Models\Content\Event;
 use App\Models\Reference\MuslimOrganization;
 use App\Models\Business\ProductService;
 use App\Models\Business\Subscription;
@@ -27,6 +25,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use App\Mail\PasswordReset;
 use App\Mail\WelcomeNewUser;
 
@@ -102,25 +101,241 @@ class AdminController extends Controller
         return view('admin.dashboard');
     }
 
-    public function showSubscriptions()
+    public function getChartData(Request $request)
     {
-        $subscriptions = Subscription::with('user')
-            ->where(function($query) {
-                $query->whereNotIn('platform', ['DB', 'Amcob'])
-                      ->orWhereNull('platform');
-            })
-            ->orderByDesc('id')
+        // For line/bar charts, use default dates if not provided
+        // For pie charts (platforms, account_creation), allow null for all-time data
+        $chartType = $request->get('chart_type');
+        
+        if (in_array($chartType, ['platforms', 'account_creation'])) {
+            // Pie charts: allow empty dates for all-time data
+            $startDate = $request->get('start_date');
+            $endDate = $request->get('end_date');
+        } else {
+            // Line/bar charts: use default dates
+            $startDate = $request->get('start_date', now()->subDays(30)->format('Y-m-d'));
+            $endDate = $request->get('end_date', now()->format('Y-m-d'));
+        }
+
+        switch ($chartType) {
+            case 'signups':
+                return $this->getSignupsData($startDate, $endDate);
+            case 'subscribers':
+                return $this->getSubscribersData($startDate, $endDate);
+            case 'platforms':
+                return $this->getPlatformsData($startDate, $endDate);
+            case 'account_creation':
+                return $this->getAccountCreationData($startDate, $endDate);
+            default:
+                return response()->json(['error' => 'Invalid chart type'], 400);
+        }
+    }
+
+    private function getSignupsData($startDate, $endDate)
+    {
+        $signups = User::where('role_id', 4)
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
             ->get();
 
-        return view('admin.subscriptions', compact('subscriptions'));
+        $labels = [];
+        $data = [];
+
+        $currentDate = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        while ($currentDate <= $end) {
+            $dateStr = $currentDate->format('Y-m-d');
+            $labels[] = $currentDate->format('M d');
+            
+            $count = $signups->firstWhere('date', $dateStr);
+            $data[] = $count ? (int)$count->count : 0;
+            
+            $currentDate->addDay();
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'data' => $data
+        ]);
+    }
+
+    private function getSubscribersData($startDate, $endDate)
+    {
+        $paid = Subscription::where('status', 'active')
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $cancelled = Subscription::where('status', 'cancelled')
+            ->whereBetween('updated_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $labels = [];
+        $paidData = [];
+        $cancelledData = [];
+
+        $currentDate = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        while ($currentDate <= $end) {
+            $dateStr = $currentDate->format('Y-m-d');
+            $labels[] = $currentDate->format('M d');
+            
+            $paidCount = $paid->firstWhere('date', $dateStr);
+            $paidData[] = $paidCount ? (int)$paidCount->count : 0;
+            
+            $cancelledCount = $cancelled->firstWhere('date', $dateStr);
+            $cancelledData[] = $cancelledCount ? (int)$cancelledCount->count : 0;
+            
+            $currentDate->addDay();
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'paid' => $paidData,
+            'cancelled' => $cancelledData
+        ]);
+    }
+
+    private function getPlatformsData($startDate, $endDate)
+    {
+        // Get users by their added_by field and map to platforms
+        $query = User::where('role_id', 4);
+        
+        // Only apply date filter if both dates are provided and not empty
+        if (!empty($startDate) && !empty($endDate)) {
+            $query->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+        }
+        
+        $users = $query->selectRaw('added_by, COUNT(*) as count')
+            ->groupBy('added_by')
+            ->get();
+
+        $androidCount = 0;
+        $iosCount = 0;
+        $webCount = 0;
+
+        foreach ($users as $user) {
+            $addedBy = strtolower($user->added_by ?? '');
+            // Map: google → Android, apple → iOS, everything else → Web
+            if ($addedBy === 'google') {
+                $androidCount += (int)$user->count;
+            } elseif ($addedBy === 'apple') {
+                $iosCount += (int)$user->count;
+            } else {
+                // Web includes: web, admin, amcob-api, and any other values
+                $webCount += (int)$user->count;
+            }
+        }
+
+        return response()->json([
+            'labels' => ['Android', 'iOS', 'Web'],
+            'data' => [$androidCount, $iosCount, $webCount]
+        ]);
+    }
+
+    private function getAccountCreationData($startDate, $endDate)
+    {
+        $query = User::where('role_id', 4);
+        
+        // Only apply date filter if both dates are provided and not empty
+        if (!empty($startDate) && !empty($endDate)) {
+            $query->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+        }
+        
+        $accounts = $query->selectRaw('added_by, COUNT(*) as count')
+            ->groupBy('added_by')
+            ->get();
+
+        $webCount = 0;
+        $adminCount = 0;
+        $appleCount = 0;
+        $androidCount = 0;
+        $amcobCount = 0;
+
+        foreach ($accounts as $account) {
+            $addedBy = strtolower($account->added_by ?? '');
+            if ($addedBy === 'web') {
+                $webCount += (int)$account->count;
+            } elseif ($addedBy === 'admin') {
+                $adminCount += (int)$account->count;
+            } elseif ($addedBy === 'apple') {
+                $appleCount += (int)$account->count;
+            } elseif (in_array($addedBy, ['google', 'android'])) {
+                $androidCount += (int)$account->count;
+            } elseif (in_array($addedBy, ['amcob-api', 'amcob'])) {
+                $amcobCount += (int)$account->count;
+            }
+        }
+
+        // Return in specific order: Web, iOS, Android, Amcob API, Admin
+        return response()->json([
+            'labels' => ['Web', 'iOS', 'Android', 'Amcob API', 'Admin'],
+            'data' => [$webCount, $appleCount, $androidCount, $amcobCount, $adminCount]
+        ]);
     }
 
 
-    public function showUsers()
-    {
-        $users = User::where('role_id', 4)->with('company')->orderByDesc('id')->get();
-        return view('admin.users.users', compact('users'));
 
+    public function showUsers(Request $request)
+    {
+        $filter = $request->get('filter', 'all');
+        
+        $query = User::where('role_id', 4)->with('company');
+        
+        // Apply filter
+        switch ($filter) {
+            case 'web':
+                $query->where('added_by', 'web');
+                break;
+            case 'google':
+                $query->where('added_by', 'google');
+                break;
+            case 'apple':
+                $query->where('added_by', 'apple');
+                break;
+            case 'amcob':
+                $query->where(function($q) {
+                    $q->where('added_by', 'Admin')
+                      ->orWhere('added_by', 'amcob-api')
+                      ->orWhere('is_amcob', 'Yes');
+                });
+                break;
+            case 'deleted':
+                $query->onlyTrashed();
+                break;
+            case 'all':
+            default:
+                $query->whereNull('deleted_at'); // Active users only
+                break;
+        }
+        
+        $users = $query->orderByDesc('id')->get();
+        
+        // Get counts for tabs
+        $baseQuery = User::where('role_id', 4);
+        $counts = [
+            'all' => (clone $baseQuery)->whereNull('deleted_at')->count(),
+            'web' => (clone $baseQuery)->where('added_by', 'web')->whereNull('deleted_at')->count(),
+            'google' => (clone $baseQuery)->where('added_by', 'google')->whereNull('deleted_at')->count(),
+            'apple' => (clone $baseQuery)->where('added_by', 'apple')->whereNull('deleted_at')->count(),
+            'amcob' => (clone $baseQuery)->where(function($q) {
+                $q->where('added_by', 'Admin')
+                  ->orWhere('added_by', 'amcob-api')
+                  ->orWhere('is_amcob', 'Yes');
+            })->whereNull('deleted_at')->count(),
+            'deleted' => (clone $baseQuery)->onlyTrashed()->count(),
+        ];
+        
+        return view('admin.users.users', compact('users', 'counts', 'filter'));
     }
     public function addUser()
     {
@@ -145,6 +360,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(), // Automatically verify email
+            'added_by' => 'admin',
             'is_amcob' => $request->amcob_member ?? 'No',
             'duration' => $request->duration ?? '',
         ]);
@@ -216,6 +432,12 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $company = Company::where('user_id', $user->id)->first();
         return view('admin.users.edit-user', compact('user', 'company'));
+    }
+
+    public function editCompany($id)
+    {
+        // Redirect to edit user page which includes company editing
+        return $this->editUser($id);
     }
 
 
@@ -421,153 +643,16 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('admin.users')->with('success', 'User deleted successfully!');
+        return redirect()->back()->with('success', 'User deleted successfully!');
     }
 
-
-
-
-    // Blog Routes
-
-    public function adminBlogs()
+    public function restoreUser($id)
     {
-        $blogs = Blog::orderBy('id', 'desc')->get();
-        return view('admin.blogs.blogs', compact('blogs'));
+        $user = User::onlyTrashed()->findOrFail($id);
+        $user->restore();
+        return redirect()->back()->with('success', 'User restored successfully!');
     }
 
-
-    public function addBlog(Request $request)
-    {
-        return view('admin.blogs.add-blog');
-    }
-
-    public function storeBlog(Request $request, $id = null)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
-        ]);
-        if ($id) {
-            $blog = Blog::findOrFail($id);
-        } else {
-            $blog = new Blog();
-        }
-        if ($request->hasFile('image')) {
-            $s3Service = app(S3Service::class);
-            
-            // Delete old image from S3 if exists
-            if ($blog->image) {
-                $oldPath = $s3Service->extractPathFromUrl($blog->image);
-                if ($oldPath && str_starts_with($oldPath, 'media/')) {
-                    $s3Service->deleteMedia($oldPath);
-                }
-            }
-            
-            $uploadResult = $s3Service->uploadMedia($request->file('image'), 'blog');
-            $imagePath = $uploadResult['url']; // Store full S3 URL
-        } else {
-            $imagePath = $blog->image;
-        }
-        $blog->title = $request->title;
-        $blog->slug = Str::slug($request->title);
-        $blog->content = $request->content;
-        $blog->image = $imagePath;
-
-        $blog->save();
-
-        $message = $id ? 'Blog updated successfully!' : 'Blog created successfully!';
-        return redirect()->route('admin.blogs')->with('success', $message);
-    }
-
-    public function editBlog($id)
-    {
-        $blog = Blog::findOrFail($id);
-        return view('admin.blogs.edit-blog', compact('blog'));
-    }
-
-
-    public function deleteBlog($id)
-    {
-        $blog = Blog::findOrFail($id);
-        $blog->delete();
-        return redirect()->route('admin.blogs')->with('success', 'Blog deleted successfully!');
-    }
-
-
-    // Event Routes
-
-    public function adminEvents()
-    {
-        $events = Event::orderBy('id', 'desc')->get();
-        return view('admin.events.events', compact('events'));
-    }
-
-    public function addEvent(Request $request)
-    {
-        return view('admin.events.add-event');
-    }
-
-    public function storeEvent(Request $request, $id = null)
-    {
-        $request->validate([
-            'event_title' => 'required|string|max:255',
-            'event_city' => 'required|string|max:100',
-            'event_time' => 'required',
-            'event_date' => 'required|date',
-            'event_venue' => 'required|string|max:255',
-            'event_url' => 'required|url',
-            'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg'
-        ]);
-
-        $event = $id ? Event::findOrFail($id) : new Event();
-
-
-        $event->title = $request->input('event_title');
-        $event->city = $request->input('event_city');
-        $event->time = $request->input('event_time');
-        $event->date = $request->input('event_date');
-        $event->venue = $request->input('event_venue');
-        $event->url = $request->input('event_url');
-
-
-        if ($request->hasFile('event_image')) {
-            $s3Service = app(S3Service::class);
-            
-            // Delete old image from S3 if exists
-            if ($event->image) {
-                $oldPath = $s3Service->extractPathFromUrl($event->image);
-                if ($oldPath && str_starts_with($oldPath, 'media/')) {
-                    $s3Service->deleteMedia($oldPath);
-                }
-            }
-            
-            $uploadResult = $s3Service->uploadMedia($request->file('event_image'), 'event');
-            $event->image = $uploadResult['url']; // Store full S3 URL
-        }
-
-        $event->save();
-
-        $message = $id ? 'Event updated successfully!' : 'Event added successfully!';
-        return redirect()->route('admin.events')->with('success', $message);
-    }
-
-
-    public function editEvent($id)
-    {
-        $event = Event::findOrFail($id);
-        return view('admin.events.edit-event', compact('event'));
-    }
-
-    public function deleteEvent($id)
-    {
-        $event = Event::findOrFail($id);
-        if ($event->image) {
-            Storage::delete('public/event_images/' . $event->image);
-        }
-        $event->delete();
-        return redirect()->route('admin.events')->with('success', 'Event deleted successfully!');
-    }
 
 
 }

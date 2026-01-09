@@ -267,7 +267,7 @@
                                                 <!-- <a href="{{ route('admin.edit.blog', $blog->id) }}"
                                                     class="btn btn-primary btn-sm">Edit</a> -->
                                                 <form action="{{ route('admin.delete.blog', $blog->id) }}" method="POST"
-                                                    style="display:inline-block;" onsubmit="return confirmDelete();">
+                                                    style="display:inline-block;" class="delete-blog-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button id="delete" type="submit" class="btn btn-danger btn-sm" title="Delete">
@@ -293,9 +293,47 @@
 
 @section('scripts')
     <script>
-        function confirmDelete() {
-            // Show confirmation alert
-            return confirm('Are you sure you want to delete this blog?');
-        }
+        $(document).ready(function() {
+            // Delete blog confirmation
+            $('.delete-blog-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.off('submit').submit();
+                    }
+                });
+            });
+
+            // Show success message if exists
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            @endif
+
+            // Show error message if exists
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '{{ session('error') }}',
+                    showConfirmButton: true
+                });
+            @endif
+        });
     </script>
 @endsection
