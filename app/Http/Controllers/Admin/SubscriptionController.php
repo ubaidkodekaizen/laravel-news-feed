@@ -17,11 +17,14 @@ class SubscriptionController extends Controller
         // Apply filter
         switch ($filter) {
             case 'active':
-                $query->where('status', 'active');
+                // Active subscriptions excluding free
+                $query->where('status', 'active')
+                      ->where('subscription_type', '!=', 'Free');
                 break;
             case 'inactive':
-                // Inactive includes: cancelled, cancel, inactive, etc.
-                $query->whereIn('status', ['cancelled', 'cancel', 'inactive', 'expired', 'suspended']);
+                // Inactive subscriptions excluding free (cancelled, cancel, inactive, etc.)
+                $query->whereIn('status', ['cancelled', 'cancel', 'inactive', 'expired', 'suspended'])
+                      ->where('subscription_type', '!=', 'Free');
                 break;
             case 'web':
                 // Web subscriptions: platform is 'Web' or null or not in DB/Amcob/Google/Apple
@@ -77,11 +80,15 @@ class SubscriptionController extends Controller
         // Count all subscriptions
         $allCount = (clone $baseQuery)->count();
         
-        // Count active subscriptions
-        $activeCount = (clone $baseQuery)->where('status', 'active')->count();
+        // Count active subscriptions (excluding free)
+        $activeCount = (clone $baseQuery)->where('status', 'active')
+                                          ->where('subscription_type', '!=', 'Free')
+                                          ->count();
         
-        // Count inactive subscriptions
-        $inactiveCount = (clone $baseQuery)->whereIn('status', ['cancelled', 'cancel', 'inactive', 'expired', 'suspended'])->count();
+        // Count inactive subscriptions (excluding free)
+        $inactiveCount = (clone $baseQuery)->whereIn('status', ['cancelled', 'cancel', 'inactive', 'expired', 'suspended'])
+                                            ->where('subscription_type', '!=', 'Free')
+                                            ->count();
         
         // Count web subscriptions
         $webCount = (clone $baseQuery)->where(function($q) {
