@@ -166,6 +166,54 @@ a{
     padding: 6px 29px 6px 15px !important;
   }
 
+  table.table tbody td a,
+  form #sendResetLinkBtn{
+    height: 58px;
+    width: 48px;
+    align-content: center;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    position: relative;
+} 
+
+#user_details .avatar-edit label {
+    border: 3px solid #fafbff !important;
+}
+
+
+
+table.table tbody td form #delete {
+    padding: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    position: relative;
+} 
+
+table.table tbody td a#edit::after{
+    content: "";
+    position: absolute;
+    left: 35%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: url("/assets/images/dashboard/productTableEditIcon.svg") no-repeat center;
+    background-size: contain;
+}
+
+table.table tbody td form #delete::after{
+    content: "";
+    position: absolute;
+    left: 35%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: url("/assets/images/dashboard/productTableDeleteIcon.svg") no-repeat center;
+    background-size: contain;
+}
+
   .list_check_flex {
     margin: 5px 0px 0px !important;
 }
@@ -177,6 +225,92 @@ a{
     border: 2px solid #273572;
     border-radius: 20px;
 }
+
+.card {
+        border: none !important;
+        border-radius: 0 !important;
+        overflow: hidden;
+    }
+
+    .card-body{
+        background: #fafbff !important;
+        padding: 30px 0px !important;
+    }
+
+    .card-header:first-child {
+        border: 0;
+        background: #fafbff !important;
+        padding: 30px 0px !important;
+    }
+
+    .ck.ck-toolbar.ck-toolbar_grouping{
+      background: transparent !important;
+      padding: 14px 10px;
+      border: none;
+      border-bottom: 2px solid #E9EBF0 !important;
+    }
+
+    .ck-blurred.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline,
+    .ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
+        background: transparent !important;
+        padding: 8px 18px !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .ck.ck-reset.ck-editor.ck-rounded-corners {
+        font-family: "Inter";
+        background-color: #F6F7FC !important;
+        border: 2px solid #E9EBF0 !important;
+        border-radius: 9.77px !important;
+        overflow: hidden;
+    }
+
+    h4.card-title {
+        border-radius: 0;
+        color: #333;
+        margin: 0;
+        font-size: 28px;
+        font-family: "Inter";
+        font-weight: 500;
+    }
+
+    label.form-label,
+    .user_company_profile .profile_div label {
+        font-family: "inter" !important;
+        font-weight: 400 !important;
+        font-size: 18px !important;
+    }
+
+form .form-control,
+form .form-select {
+    font-family: "Inter";
+    font-weight: 400 !important;
+    font-size: 18px !important;
+    line-height: 60px !important;
+    padding: 0px .75rem !important;
+    background-color: #F6F7FC !important;
+    border: 2px solid #E9EBF0 !important;
+    border-radius: 9.77px !important;
+}
+
+/* Prefilled / Autofill fields */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+select:-webkit-autofill,
+textarea:-webkit-autofill {
+    -webkit-text-fill-color: #000 !important;
+    -webkit-box-shadow: 0 0 0px 1000px #F6F7FC inset !important;
+    border: 2px solid #E9EBF0 !important;
+    border-radius: 9.77px !important;
+    font-size: 18px !important;
+}
+
+.iti--allow-dropdown input, .iti--allow-dropdown input[type=text], .iti--allow-dropdown input[type=tel], .iti--separate-dial-code input, .iti--separate-dial-code input[type=text], .iti--separate-dial-code input[type=tel] {
+         padding-left: 80px !important;
+    }
   
 
   @media (max-width: 1241px) {
@@ -202,14 +336,16 @@ a{
       justify-content: center;
     }
 
-    div#usersTable_filter label::after {
+    div#usersTable_filter label::after,
+    div#blogsTable_filter label::after {
       top: 67%;
     }
   }
   /* Responsive Design */
   @media (max-width: 768px) {
 
-    div#usersTable_filter label::after {
+    div#usersTable_filter label::after,
+    div#blogsTable_filter label::after {
       top: 73%;
     }
 
@@ -312,8 +448,26 @@ a{
       font-size: 16px;
     }
 
+    
+
     .profile_pic {
       justify-self: center;
+    }
+
+    .user_company_profile .custom_card_profile.colRight {
+      gap: 22px;
+    }
+
+    label.form-label, .user_company_profile .profile_div label {
+      font-size: 16px !important;
+    }
+
+    .user_company_profile .profile_heading {
+      font-size: 1.7rem;
+    }
+
+    .user_company_profile .btn-flex .btn {
+        font-size: 18px !important;
     }
   }
 

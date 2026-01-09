@@ -4,8 +4,8 @@
     body{
         background: #fafbff !important;
     }
-
-    .card-modern {
+    
+    #modernCard {
         border: 2px solid #F2F2F2 !important;
         background: #FFFFFF !important;
         justify-content: space-between !important;
@@ -65,7 +65,7 @@
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-3">
-                    <div class="card card-modern">
+                    <div id="modernCard" class="card card-modern">
                         <div class="card-body">
                             <div class="cardCounting">
                                 <h2 class="card-numbers">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="card card-modern">
+                    <div id="modernCard" class="card card-modern">
                         <!-- <div class="card-body">
                             <h1 class="card-title">No. Of Subscribers</h1>
                             <h2 class="card-numbers">
@@ -124,7 +124,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="card card-modern">
+                    <div id="modernCard" class="card card-modern">
                         <!-- <div class="card-body">
                             <h1 class="card-title">No. Of Blogs</h1>
                             <h2 class="card-numbers">
@@ -155,7 +155,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="card card-modern">
+                    <div id="modernCard" class="card card-modern">
                         <!-- <div class="card-body">
                             <h1 class="card-title">No. Of Events</h1>
                             <h2 class="card-numbers">
