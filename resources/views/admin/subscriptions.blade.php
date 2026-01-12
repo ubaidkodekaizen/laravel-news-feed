@@ -87,7 +87,7 @@
         font-family: 'Inter';
         border: 1px solid #E9EBF0 !important;
         border-radius: 10.66px !important;
-        padding: 16px 15px !important; 
+        padding: 16px 15px !important;
         background-color: transparent;
         transition: background-color 0.2s ease;
     }
@@ -144,15 +144,15 @@
         padding-right: 44px !important;
     }
 
-    table.dataTable thead > tr > th.sorting:before, 
-    table.dataTable thead > tr > th.sorting_asc:before, 
-    table.dataTable thead > tr > th.sorting_desc:before, 
-    table.dataTable thead > tr > th.sorting_asc_disabled:before, 
-    table.dataTable thead > tr > th.sorting_desc_disabled:before, 
-    table.dataTable thead > tr > td.sorting:before, 
-    table.dataTable thead > tr > td.sorting_asc:before, 
-    table.dataTable thead > tr > td.sorting_desc:before, 
-    table.dataTable thead > tr > td.sorting_asc_disabled:before, 
+    table.dataTable thead > tr > th.sorting:before,
+    table.dataTable thead > tr > th.sorting_asc:before,
+    table.dataTable thead > tr > th.sorting_desc:before,
+    table.dataTable thead > tr > th.sorting_asc_disabled:before,
+    table.dataTable thead > tr > th.sorting_desc_disabled:before,
+    table.dataTable thead > tr > td.sorting:before,
+    table.dataTable thead > tr > td.sorting_asc:before,
+    table.dataTable thead > tr > td.sorting_desc:before,
+    table.dataTable thead > tr > td.sorting_asc_disabled:before,
     table.dataTable thead > tr > td.sorting_desc_disabled:before {
         content: "" !important;
         width: 16px;
@@ -161,15 +161,15 @@
         background-size: contain;
     }
 
-    table.dataTable thead > tr > th.sorting:after, 
-    table.dataTable thead > tr > th.sorting_asc:after, 
-    table.dataTable thead > tr > th.sorting_desc:after, 
-    table.dataTable thead > tr > th.sorting_asc_disabled:after, 
-    table.dataTable thead > tr > th.sorting_desc_disabled:after, 
-    table.dataTable thead > tr > td.sorting:after, 
-    table.dataTable thead > tr > td.sorting_asc:after, 
-    table.dataTable thead > tr > td.sorting_desc:after, 
-    table.dataTable thead > tr > td.sorting_asc_disabled:after, 
+    table.dataTable thead > tr > th.sorting:after,
+    table.dataTable thead > tr > th.sorting_asc:after,
+    table.dataTable thead > tr > th.sorting_desc:after,
+    table.dataTable thead > tr > th.sorting_asc_disabled:after,
+    table.dataTable thead > tr > th.sorting_desc_disabled:after,
+    table.dataTable thead > tr > td.sorting:after,
+    table.dataTable thead > tr > td.sorting_asc:after,
+    table.dataTable thead > tr > td.sorting_desc:after,
+    table.dataTable thead > tr > td.sorting_asc_disabled:after,
     table.dataTable thead > tr > td.sorting_desc_disabled:after {
         content: "" !important;
         width: 16px;
@@ -198,7 +198,7 @@
         font-weight: 300;
     }
 
-    .pagination .page-item:first-child .page-link, 
+    .pagination .page-item:first-child .page-link,
     .pagination .page-item:last-child .page-link {
         border: none;
         background: #FFFFFF;
@@ -258,70 +258,70 @@
                             <!-- Tabs Navigation -->
                             <ul class="nav nav-tabs mb-4 pb-3" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #F2F2F2;">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         ALL <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'active' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'active' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'active']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         ACTIVE <span class="badge bg-secondary">{{ $counts['active'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'inactive' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'inactive' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'inactive']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         INACTIVE <span class="badge bg-secondary">{{ $counts['inactive'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'web' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'web' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'web']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         WEB <span class="badge bg-secondary">{{ $counts['web'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'google' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'google' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'google']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         GOOGLE <span class="badge bg-secondary">{{ $counts['google'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'apple' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'apple' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'apple']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         APPLE <span class="badge bg-secondary">{{ $counts['apple'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'amcob' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'amcob' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'amcob']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         AMCOB <span class="badge bg-secondary">{{ $counts['amcob'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'monthly' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'monthly' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'monthly']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         MONTHLY <span class="badge bg-secondary">{{ $counts['monthly'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'annual' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'annual' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'annual']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         ANNUAL <span class="badge bg-secondary">{{ $counts['annual'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'free' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'free' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'free']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         FREE <span class="badge bg-secondary">{{ $counts['free'] ?? 0 }}</span>
@@ -440,7 +440,7 @@
                                             <td>{{ $subscription->status }}</td>
 
                                             {{-- <td>
-                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a> 
+                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a>
                                         <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <a href="{{ route('admin.company.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit Company</a>
                                         <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm"
