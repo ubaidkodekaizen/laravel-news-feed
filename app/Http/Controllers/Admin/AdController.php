@@ -225,4 +225,52 @@ class AdController extends Controller
         $ad->restore();
         return redirect()->route('admin.ads', ['filter' => 'deleted'])->with('success', 'Ad restored successfully!');
     }
+
+    /**
+     * Toggle the featured status of an ad.
+     */
+    public function toggleFeatured($id)
+    {
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        
+        // Check permission
+        if (!$isAdmin && (!$user || !$user->hasPermission('ads.edit'))) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+        
+        $ad = Ad::findOrFail($id);
+        $ad->featured = !$ad->featured;
+        $ad->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Featured status updated successfully!',
+            'featured' => $ad->featured
+        ]);
+    }
+
+    /**
+     * Toggle the status of an ad.
+     */
+    public function toggleStatus($id)
+    {
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        
+        // Check permission
+        if (!$isAdmin && (!$user || !$user->hasPermission('ads.edit'))) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+        
+        $ad = Ad::findOrFail($id);
+        $ad->status = $ad->status === 'Active' ? 'Inactive' : 'Active';
+        $ad->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully!',
+            'status' => $ad->status
+        ]);
+    }
 }
