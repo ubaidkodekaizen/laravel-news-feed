@@ -81,11 +81,6 @@
                                     <input type="number" step="0.01" min="0" class="form-control" id="original_price" name="original_price" 
                                         value="{{ old('original_price', $product->original_price) }}" required>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="discounted_price" class="form-label">Discounted Price</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="discounted_price" name="discounted_price" 
-                                        value="{{ old('discounted_price', $product->discounted_price) }}">
-                                </div>
                             </div>
 
                             <div class="row mb-3">

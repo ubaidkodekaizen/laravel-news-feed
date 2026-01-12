@@ -400,7 +400,6 @@
                                 <th>Title</th>
                                 <th>Category</th>
                                 <th>Price</th>
-                                <th>Discounted Price</th>
                                 <th>Subscription</th>
                                 <th>Action</th>
                             </tr>
@@ -418,8 +417,6 @@
                                     <td>
                                         ${{ number_format($service->original_price, 2) }}
                                     </td>
-                                    <td>{{ $service->discounted_price ? '$' . number_format($service->discounted_price, 2) : 'N/A' }}</td>
-
                                     <td>{{ $service->duration }}</td>
 
                                     <td class="btn_flex">

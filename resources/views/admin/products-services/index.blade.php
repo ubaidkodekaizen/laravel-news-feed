@@ -343,12 +343,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if(isset($item->discounted_price) && $item->discounted_price)
-                                                    <span style="text-decoration: line-through; color: #999;">${{ number_format($item->original_price, 2) }}</span>
-                                                    <span class="text-danger">${{ number_format($item->discounted_price, 2) }}</span>
-                                                @else
-                                                    ${{ number_format($item->original_price, 2) }}
-                                                @endif
+                                                ${{ number_format($item->original_price, 2) }}
                                             </td>
                                             <td>
                                                 @php

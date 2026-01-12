@@ -39,7 +39,6 @@ class ServiceController extends Controller
             'category' => 'nullable|string|max:255',
             'short_description' => 'nullable|string',
             'original_price' => 'required|numeric|min:0',
-            'discounted_price' => 'nullable|numeric|min:0',
             'duration' => 'nullable|string|max:255',
             'service_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -49,7 +48,6 @@ class ServiceController extends Controller
             'category',
             'short_description',
             'original_price',
-            'discounted_price',
             'duration',
         ]));
         

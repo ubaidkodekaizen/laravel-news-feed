@@ -63,9 +63,6 @@
                                 <div class="info-label">Original Price</div>
                                 <div class="info-value">${{ number_format($product->original_price, 2) }}</div>
 
-                                <div class="info-label">Discounted Price</div>
-                                <div class="info-value">{{ $product->discounted_price ? '$' . number_format($product->discounted_price, 2) : 'N/A' }}</div>
-
                                 <div class="info-label">Quantity</div>
                                 <div class="info-value">{{ $product->quantity }} {{ $product->unit_of_quantity }}</div>
                             </div>

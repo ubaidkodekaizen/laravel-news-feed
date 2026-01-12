@@ -52,6 +52,27 @@
         top: 110px;
         background-color: #F4F5FB;
         border-right: 1px solid #E9EBF0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: calc(100vh - 110px);
+        position: fixed;
+    }
+
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: #F4F5FB;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #273572;
+        border-radius: 3px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #1a2855;
     }
 
     .sidebar-menu li a{
@@ -340,17 +361,31 @@
                 </li>
                 @endif
                 
-                {{-- Managers - Only Admin can see --}}
+                {{-- Ads - Check permission --}}
+                @if($isAdmin || ($user && $user->hasPermission('ads.view')))
+                <li>
+                    <a href="{{ route('admin.ads') }}"
+                        class="{{ request()->routeIs('admin.ads*') ? 'active' : '' }}">
+                        <svg fill="#333" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <title>Ads</title>
+                            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                        </svg>
+                        Ads
+                    </a>
+                </li>
+                @endif
+                
+                {{-- Access Control - Only Admin can see --}}
                 @if($isAdmin || ($user && $user->hasPermission('managers.view')))
                 <li>
                     <a href="{{ route('admin.managers') }}"
                         class="{{ request()->routeIs('admin.managers*') ? 'active' : '' }}">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <title>Managers</title>
+                            <title>Access Control</title>
                             <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#333"/>
                             <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="#333"/>
                         </svg>
-                        Managers
+                        Access Control
                     </a>
                 </li>
                 @endif

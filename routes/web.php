@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\ManagersController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\AdController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
@@ -247,6 +248,17 @@ Route::middleware(['auth', RoleMiddleware::class . ':1|2|3'])->group(function ()
     Route::put('/admin/events/{id}', [EventController::class, 'update'])->name('admin.update.event');
     Route::delete('/admin/events/{id}', [EventController::class, 'destroy'])->name('admin.delete.event');
     Route::post('/admin/events/{id}/restore', [EventController::class, 'restore'])->name('admin.restore.event');
+
+    // Ads Management
+    Route::get('/admin/ads', [AdController::class, 'index'])->name('admin.ads');
+    Route::get('/admin/ads/add', [AdController::class, 'create'])->name('admin.add.ad');
+    Route::post('/admin/ads', [AdController::class, 'store'])->name('admin.store.ad');
+    Route::get('/admin/ads/{id}/edit', [AdController::class, 'edit'])->name('admin.edit.ad');
+    Route::put('/admin/ads/{id}', [AdController::class, 'update'])->name('admin.update.ad');
+    Route::delete('/admin/ads/{id}', [AdController::class, 'destroy'])->name('admin.delete.ad');
+    Route::post('/admin/ads/{id}/restore', [AdController::class, 'restore'])->name('admin.restore.ad');
+    Route::patch('/admin/ads/{id}/toggle-featured', [AdController::class, 'toggleFeatured'])->name('admin.toggle.featured');
+    Route::patch('/admin/ads/{id}/toggle-status', [AdController::class, 'toggleStatus'])->name('admin.toggle.status');
 
     // Subscriptions Management
     Route::get('/admin/subscriptions', [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions');

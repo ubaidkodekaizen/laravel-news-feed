@@ -482,7 +482,8 @@
             <h1 class="main_heading">
                 Products Offered by <span class="feedLpPri">Muslim<span class="feedLpSec">Lynk Members</span></span>
             </h1>
-            <div class="service_search_area">
+            <p class="feedLpPara">MuslimLynk members offer a diverse range of products designed to support businesses at every stage. From e-commerce goods to specialized manufacturing outputs, the community delivers reliable, high-quality products that empower growth, efficiency, and scalability.</p>
+            {{-- <div class="service_search_area">
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <form action="">
@@ -493,20 +494,160 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
     </section>
 
+    <!-- Categories Section -->
+    <section class="product-categories-section" style="padding: 40px 0;">
+        <div class="container">
+            <h2 class="text-center mb-4" style="font-weight: bold; font-family: 'Inter', sans-serif; color: #B8C034; font-size: 24px;">
+                Explore Products by Category
+            </h2>
+            <div id="categoriesContainer">
+                <!-- Categories will be loaded via JavaScript -->
+            </div>
+        </div>
+    </section>
+
     <section class="event_slider min_h_400">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-4" id="productsContainer">
                 @include('partial.product_cards', ['products' => $products])
             </div>
         </div>
     </section>
 
+    <style>
+        .category-card {
+            background: #273572;
+            border: 2px solid #273572;
+            border-radius: 12px;
+            padding: 12px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .category-card:hover {
+            background: #B8C034;
+            border-color: #B8C034;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(184, 192, 52, 0.3);
+            color: #fff;
+        }
+
+        .category-card.active {
+            background: #B8C034;
+            border-color: #B8C034;
+            color: #fff;
+        }
+
+        .category-card.active:hover {
+            background: #a0a92d;
+            border-color: #a0a92d;
+            color: #fff;
+        }
+
+        #productsContainer.loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+        }
+
+        #categoriesContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        #categoriesContainer .category-card {
+            flex: 0 0 auto;
+            min-width: 140px;
+            max-width: 180px;
+        }
+    </style>
+
     @include('layouts.home-footer')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display categories from server
+            const categories = @json($categories ?? []);
+            displayCategories(categories);
+
+            function displayCategories(categories) {
+                const container = document.getElementById('categoriesContainer');
+                container.innerHTML = '';
+
+                categories.forEach(category => {
+                    const card = document.createElement('div');
+                    card.className = 'category-card';
+                    card.textContent = category;
+                    card.dataset.category = category;
+
+                    card.addEventListener('click', function() {
+                        // Remove active class from all cards
+                        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+                        // Add active class to clicked card
+                        card.classList.add('active');
+                        // Load products for this category
+                        loadProductsByCategory(category);
+                    });
+
+                    container.appendChild(card);
+                });
+            }
+
+            function loadProductsByCategory(category) {
+                const productsContainer = document.getElementById('productsContainer');
+                productsContainer.classList.add('loading');
+                productsContainer.innerHTML = '<div class="col-12"><div class="loading-spinner"><p>Loading products...</p></div></div>';
+
+                // Use jQuery AJAX to match existing code style
+                jQuery.ajax({
+                    url: "{{ route('products') }}",
+                    method: "GET",
+                    data: {
+                        category: category
+                    },
+                    success: function(response) {
+                        productsContainer.classList.remove('loading');
+                        if (response.html) {
+                            productsContainer.innerHTML = response.html;
+                            // Re-attach event listeners for product modals
+                            attachEventListeners();
+                        } else {
+                            productsContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>No products found in this category.</p></div></div>';
+                        }
+                    },
+                    error: function() {
+                        productsContainer.classList.remove('loading');
+                        productsContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>Error loading products. Please try again.</p></div></div>';
+                    }
+                });
+            }
+
+            function attachEventListeners() {
+                // Event listeners are already attached via existing scripts
+                // This is a placeholder if we need to reattach any specific listeners
+            }
+        });
+    </script>
 
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">
@@ -602,14 +743,20 @@
             });
 
             function fetchProducts(searchTerm) {
+                // Get selected category
+                const activeCategory = document.querySelector('.category-card.active');
+                const category = activeCategory ? activeCategory.dataset.category : '';
+                
                 jQuery.ajax({
                     url: "{{ route('products') }}",
                     method: "GET",
                     data: {
-                        search: searchTerm
+                        search: searchTerm,
+                        category: category
                     },
                     success: function(response) {
                         resultsContainer.html(response.html);
+                        attachEventListeners();
                     },
                     error: function() {
                         resultsContainer.html(

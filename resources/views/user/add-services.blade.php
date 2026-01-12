@@ -146,16 +146,6 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-6 mb-3">
-                            <label for="discounted_price" class="form-label">Discounted Price:</label>
-                            <div class="input-group">
-                                <!-- <span class="input-group-text" id="discounted_price">$</span> -->
-                                <input type="number" name="discounted_price" class="form-control"
-                                    value="{{ old('discounted_price', $service->discounted_price ?? '') }}"
-                                    aria-label="Discounted Price" aria-describedby="discounted_price">
-                            </div>
-                        </div>
-
                         <div class="col-lg-12 mb-3">
                             <label for="duration" class="form-label">Duration</label>
                             <select name="duration" id="duration" class="form-select" required>

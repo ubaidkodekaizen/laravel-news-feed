@@ -82,19 +82,6 @@
                                         value="{{ old('original_price', $service->original_price) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="discounted_price" class="form-label">Discounted Price</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="discounted_price" name="discounted_price" 
-                                        value="{{ old('discounted_price', $service->discounted_price) }}">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="discounted_price" class="form-label">Discounted Price</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="discounted_price" name="discounted_price" 
-                                        value="{{ old('discounted_price', $service->discounted_price) }}">
-                                </div>
-                                <div class="col-md-6">
                                     <label for="duration" class="form-label">Duration</label>
                                     <input type="text" class="form-control" id="duration" name="duration" 
                                         value="{{ old('duration', $service->duration) }}" placeholder="e.g., 1 hour, 2 days">

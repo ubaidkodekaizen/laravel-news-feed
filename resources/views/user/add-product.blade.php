@@ -147,15 +147,6 @@
                         </div>
 
                         <div class="col-lg-6 mb-3">
-                            <label for="discounted_price" class="form-label">Discounted Price:</label>
-                            <div class="input-group">
-                                <!-- <span class="input-group-text">$</span> -->
-                                <input type="number" name="discounted_price" class="form-control"
-                                    value="{{ old('discounted_price', $product->discounted_price ?? '') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6 mb-3">
                             <label for="quantity" class="form-label">Quantity:</label>
                             <input type="number" name="quantity" id="quantity" class="form-control"
                                 value="{{ old('quantity', $product->quantity ?? '') }}" required>
