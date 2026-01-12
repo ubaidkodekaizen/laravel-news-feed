@@ -95,7 +95,6 @@ class AdController extends Controller
             'media' => 'required|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,webm|max:10240', // 10MB max
             'url' => 'nullable|url|max:255',
             'featured' => 'nullable|boolean',
-            'status' => 'required|in:Active,Inactive',
         ]);
         
         $ad = new Ad();
@@ -111,7 +110,7 @@ class AdController extends Controller
         $ad->media = $mediaPath;
         $ad->url = $request->url;
         $ad->featured = $request->has('featured') ? (bool)$request->featured : false;
-        $ad->status = $request->status;
+        $ad->status = 'Active'; // Default status
         $ad->save();
 
         return redirect()->route('admin.ads')->with('success', 'Ad created successfully!');
@@ -151,7 +150,6 @@ class AdController extends Controller
             'media' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,webm|max:10240', // 10MB max
             'url' => 'nullable|url|max:255',
             'featured' => 'nullable|boolean',
-            'status' => 'required|in:Active,Inactive',
         ]);
         
         $ad = Ad::findOrFail($id);
@@ -176,7 +174,7 @@ class AdController extends Controller
         $ad->media = $mediaPath;
         $ad->url = $request->url;
         $ad->featured = $request->has('featured') ? (bool)$request->featured : false;
-        $ad->status = $request->status;
+        // Status is managed via toggle, don't update here
         $ad->save();
 
         return redirect()->route('admin.ads')->with('success', 'Ad updated successfully!');
