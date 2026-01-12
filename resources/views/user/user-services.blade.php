@@ -398,6 +398,7 @@
                                 <th>ID</th>
                                 <th>Image</th>
                                 <th>Title</th>
+                                <th>Category</th>
                                 <th>Price</th>
                                 <th>Discounted Price</th>
                                 <th>Subscription</th>
@@ -413,6 +414,7 @@
                                             alt="Service Image" class="table_image">
                                     </td>
                                     <td>{{ $service->title }}</td>
+                                    <td>{{ $service->category ?? 'N/A' }}</td>
                                     <td>
                                         ${{ number_format($service->original_price, 2) }}
                                     </td>
@@ -437,7 +439,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">No services found.</td>
+                                    <td colspan="8" class="text-center">No services found.</td>
                                 </tr>
                             @endforelse
                         </tbody>

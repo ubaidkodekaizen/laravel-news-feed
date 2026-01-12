@@ -65,31 +65,43 @@
                                         value="{{ old('title', $product->title) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="original_price" class="form-label">Original Price <span class="text-danger">*</span></label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="original_price" name="original_price" 
-                                        value="{{ old('original_price', $product->original_price) }}" required>
+                                    <label for="category" class="form-label">Category</label>
+                                    {!! \App\Helpers\DropDownHelper::renderCategoryDropdown(
+                                        old('category', $product->category ?? null),
+                                        'category',
+                                        'category',
+                                        'Select Category'
+                                    ) !!}
                                 </div>
                             </div>
 
                             <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="original_price" class="form-label">Original Price <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" min="0" class="form-control" id="original_price" name="original_price" 
+                                        value="{{ old('original_price', $product->original_price) }}" required>
+                                </div>
                                 <div class="col-md-6">
                                     <label for="discounted_price" class="form-label">Discounted Price</label>
                                     <input type="number" step="0.01" min="0" class="form-control" id="discounted_price" name="discounted_price" 
                                         value="{{ old('discounted_price', $product->discounted_price) }}">
                                 </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="quantity" class="form-label">Quantity <span class="text-danger">*</span></label>
                                     <input type="number" min="0" class="form-control" id="quantity" name="quantity" 
                                         value="{{ old('quantity', $product->quantity) }}" required>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="unit_of_quantity" class="form-label">Unit of Quantity <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="unit_of_quantity" name="unit_of_quantity" 
                                         value="{{ old('unit_of_quantity', $product->unit_of_quantity) }}" required>
                                 </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="product_image" class="form-label">Product Image</label>
                                     <input type="file" class="form-control" id="product_image" name="product_image" accept="image/*">
@@ -98,6 +110,7 @@
                                     @endif
                                 </div>
                             </div>
+
 
                             <div class="row mb-3">
                                 <div class="col-md-12">

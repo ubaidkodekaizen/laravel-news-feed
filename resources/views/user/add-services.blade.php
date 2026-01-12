@@ -122,6 +122,16 @@
                         </div>
 
                         <div class="col-lg-12 mb-3">
+                            <label for="category" class="form-label">Category:</label>
+                            {!! \App\Helpers\DropDownHelper::renderCategoryDropdown(
+                                old('category', $service->category ?? null),
+                                'category',
+                                'category',
+                                'Select Category'
+                            ) !!}
+                        </div>
+
+                        <div class="col-lg-12 mb-3">
                             <label for="short_description">Short Description</label>
                             <textarea name="short_description" id="short_description" rows="4" class="form-control">{{ old('short_description', $service->short_description ?? '') }}</textarea>
                         </div>

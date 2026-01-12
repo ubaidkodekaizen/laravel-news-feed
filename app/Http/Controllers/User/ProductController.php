@@ -28,6 +28,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
             'short_description' => 'nullable|string',
             'original_price' => 'required|numeric|min:0',
             'discounted_price' => 'nullable|numeric|min:0',
@@ -57,6 +58,7 @@ class ProductController extends Controller
 
         $product->user_id = Auth::id();
         $product->title = $request->title;
+        $product->category = $request->category ?? null;
         $product->short_description = $request->short_description;
         $product->original_price = $request->original_price;
         $product->discounted_price = $request->discounted_price ?? null;

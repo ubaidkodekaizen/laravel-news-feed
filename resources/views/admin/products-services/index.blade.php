@@ -306,6 +306,7 @@
                                         <th>#</th>
                                         <th>Type</th>
                                         <th>Title</th>
+                                        <th>Category</th>
                                         <th>Owner</th>
                                         <th>Email</th>
                                         <th>Price</th>
@@ -326,6 +327,7 @@
                                                 </span>
                                             </td>
                                             <td>{{ $item->title }}</td>
+                                            <td>{{ $item->category ?? 'N/A' }}</td>
                                             <td>
                                                 @if($item->user)
                                                     {{ trim($item->user->first_name . ' ' . $item->user->last_name) ?: 'N/A' }}
@@ -391,7 +393,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center">No Products/Services found</td>
+                                            <td colspan="8" class="text-center">No Products/Services found</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

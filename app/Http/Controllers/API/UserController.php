@@ -976,6 +976,7 @@ class UserController extends Controller
         $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
         $technologies = \App\Helpers\DropDownHelper::getTechnologiesArray();
         $buying_process = \App\Helpers\DropDownHelper::getBuyingProcessArray();
+        $categories = \App\Helpers\DropDownHelper::getParentCategoriesArray();
 
         return response()->json([
             'status' => true,
@@ -996,6 +997,7 @@ class UserController extends Controller
                 'company_attributes' => $company_attributes,
                 'technologies' => $technologies,
                 'buying_process' => $buying_process,
+                'categories' => $categories,
             ],
         ]);
     }

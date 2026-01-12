@@ -54,6 +54,9 @@
                                 <div class="info-label">Product Title</div>
                                 <div class="info-value">{{ $product->title }}</div>
 
+                                <div class="info-label">Category</div>
+                                <div class="info-value">{{ $product->category ?? 'N/A' }}</div>
+
                                 <div class="info-label">Short Description</div>
                                 <div class="info-value">{{ $product->short_description ?? 'N/A' }}</div>
 
