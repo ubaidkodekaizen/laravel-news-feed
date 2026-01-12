@@ -237,7 +237,16 @@
         @php
             $filter = $filter ?? 'all';
             $counts = $counts ?? [];
+            $user = Auth::user();
+            $isAdmin = $user && $user->role_id == 1;
+            $canView = $isAdmin || ($user && $user->hasPermission('subscriptions.view'));
+            $canFilter = $isAdmin || ($user && $user->hasPermission('subscriptions.filter'));
         @endphp
+        @if(!$canView && !$canFilter)
+            @php
+                abort(403, 'Unauthorized action.');
+            @endphp
+        @endif
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -319,6 +328,12 @@
                                     </a>
                                 </li>
                             </ul>
+                            @else
+                            {{-- Show message if user can view but not filter --}}
+                            <div class="alert alert-info mb-4">
+                                <i class="fas fa-info-circle"></i> You have view-only access. Filter tabs are not available.
+                            </div>
+                            @endif
                             <style>
                                 .nav-tabs .nav-link {
                                     border: none;

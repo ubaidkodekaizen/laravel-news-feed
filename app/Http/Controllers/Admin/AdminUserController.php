@@ -24,6 +24,14 @@ class AdminUserController extends Controller
 {
     public function showUsers(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && $user->role_id == 1;
+        
+        // Check if user has view permission
+        if (!$isAdmin && (!$user || !$user->hasPermission('users.view'))) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $filter = $request->get('filter', 'all');
         
         $query = User::where('role_id', 4)->with('company');

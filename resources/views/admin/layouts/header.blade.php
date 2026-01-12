@@ -255,8 +255,8 @@
                 </li>
                 @endif
                 
-                {{-- Subscriptions - Check permission --}}
-                @if($isAdmin || ($user && $user->hasPermission('subscriptions.view')))
+                {{-- Subscriptions - Check both view and filter permissions --}}
+                @if($isAdmin || ($user && ($user->hasPermission('subscriptions.view') || $user->hasPermission('subscriptions.filter'))))
                 <li>
                     <a href="{{ route('admin.subscriptions') }}"
                         class="{{ request()->routeIs('admin.subscriptions') ? 'active' : '' }}">
