@@ -162,10 +162,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
        // Post CRUD
         Route::get('/posts', [FeedController::class, 'getFeed'])->name('feed.posts');
 
-        // IMPORTANT: Single post detail page (must be BEFORE the posts/{slug} API route)
-        Route::get('/posts/{slug}', [FeedController::class, 'showPostPage'])
-            ->where('slug', '[a-z0-9\-]+')
-            ->name('feed.post.page');
+
 
         Route::post('/posts', [FeedController::class, 'createPost'])->name('feed.post.create');
         Route::put('/posts/{id}', [FeedController::class, 'updatePost'])->name('feed.post.update');
@@ -190,6 +187,11 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
         // User posts
         Route::get('/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('feed.user.posts');
+
+        // IMPORTANT: Single post detail page (must be BEFORE the posts/{slug} API route)
+        Route::get('/posts/{slug}', [FeedController::class, 'showPostPage'])
+            ->where('slug', '[a-z0-9\-]+')
+            ->name('feed.post.page');
     });
 
     Route::get('/inbox', function () {

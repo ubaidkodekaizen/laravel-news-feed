@@ -1,6 +1,7 @@
 /**
  * Improved Reactions System
  * Handles all reaction interactions with proper state management
+ * Reaction types: like, love, haha, wow, sad, angry
  */
 
 let hideTimeout = null;
@@ -313,22 +314,29 @@ function displayReactionsList(reactions) {
         all: reactions,
         like: reactions.filter(r => r.type === 'like'),
         love: reactions.filter(r => r.type === 'love'),
-        celebrate: reactions.filter(r => r.type === 'celebrate'),
-        insightful: reactions.filter(r => r.type === 'insightful'),
-        funny: reactions.filter(r => r.type === 'funny' || r.type === 'haha'),
+        haha: reactions.filter(r => r.type === 'haha'),
+        wow: reactions.filter(r => r.type === 'wow'),
+        sad: reactions.filter(r => r.type === 'sad'),
+        angry: reactions.filter(r => r.type === 'angry'),
     };
 
     // Update counts
     document.getElementById('allCount').textContent = reactionsByType.all.length;
     document.getElementById('likeCount').textContent = reactionsByType.like.length;
     document.getElementById('loveCount').textContent = reactionsByType.love.length;
-    document.getElementById('celebrateCount').textContent = reactionsByType.celebrate.length;
+    document.getElementById('hahaCount').textContent = reactionsByType.haha.length;
+    document.getElementById('wowCount').textContent = reactionsByType.wow.length;
+    document.getElementById('sadCount').textContent = reactionsByType.sad.length;
+    document.getElementById('angryCount').textContent = reactionsByType.angry.length;
 
     // Render lists
     renderReactionsList('allReactionsList', reactionsByType.all);
     renderReactionsList('likeReactionsList', reactionsByType.like);
     renderReactionsList('loveReactionsList', reactionsByType.love);
-    renderReactionsList('celebrateReactionsList', reactionsByType.celebrate);
+    renderReactionsList('hahaReactionsList', reactionsByType.haha);
+    renderReactionsList('wowReactionsList', reactionsByType.wow);
+    renderReactionsList('sadReactionsList', reactionsByType.sad);
+    renderReactionsList('angryReactionsList', reactionsByType.angry);
 }
 
 function renderReactionsList(containerId, reactions) {
@@ -370,15 +378,50 @@ function createReactionItem(reaction) {
     return div;
 }
 
+export async function likeComment(commentId) {
+    if (!commentId) return;
+
+    const button = event.target;
+    const wasLiked = button.classList.contains('liked');
+
+    // Optimistic UI update
+    button.classList.toggle('liked');
+    button.textContent = button.classList.contains('liked') ? 'Liked' : 'Like';
+
+    try {
+        const response = await fetch('/feed/reactions', {
+            method: wasLiked ? 'DELETE' : 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                reactionable_type: 'App\\Models\\Feed\\PostComment',
+                reactionable_id: commentId,
+                reaction_type: 'like'
+            })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            // Revert on failure
+            button.classList.toggle('liked');
+            button.textContent = button.classList.contains('liked') ? 'Liked' : 'Like';
+            throw new Error(result.message || 'Failed to update reaction');
+        }
+    } catch (error) {
+        console.error('Error liking comment:', error);
+        showNotification('Failed to update reaction. Please try again.', 'error');
+    }
+}
+
 function getReactionEmoji(type) {
     const emojiMap = {
         'like': '👍',
-        'love': '💖',
-        'celebrate': '👏',
-        'insightful': '💡',
-        'funny': '😂',
+        'love': '❤️',
         'haha': '😂',
-        'wow': '😲',
+        'wow': '😮',
         'sad': '😢',
         'angry': '😠'
     };

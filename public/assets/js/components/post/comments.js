@@ -1,6 +1,7 @@
 /**
  * Improved Comments System
  * Handles comment posting, replies, loading, and deletion with proper validation
+ * FIXED: Comment likes now working properly
  */
 
 export function toggleComments(postId) {
@@ -305,9 +306,20 @@ export async function deleteComment(commentId, postId) {
 export async function likeComment(commentId) {
     if (!commentId) return;
 
+    const button = event.target.closest('.like-comment-btn');
+    if (!button) return;
+
+    const wasLiked = button.classList.contains('liked');
+
+    // Optimistic UI update
+    button.classList.toggle('liked');
+    button.innerHTML = button.classList.contains('liked')
+        ? '<i class="fa-solid fa-thumbs-up"></i> Liked'
+        : '<i class="fa-regular fa-thumbs-up"></i> Like';
+
     try {
         const response = await fetch('/feed/reactions', {
-            method: 'POST',
+            method: wasLiked ? 'DELETE' : 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
@@ -321,21 +333,17 @@ export async function likeComment(commentId) {
 
         const result = await response.json();
 
-        if (result.success) {
-            const button = event.target;
-
-            if (result.reaction) {
-                // Liked
-                button.classList.add('liked');
-                button.textContent = 'Liked';
-            } else {
-                // Unliked
-                button.classList.remove('liked');
-                button.textContent = 'Like';
-            }
+        if (!result.success) {
+            // Revert on failure
+            button.classList.toggle('liked');
+            button.innerHTML = button.classList.contains('liked')
+                ? '<i class="fa-solid fa-thumbs-up"></i> Liked'
+                : '<i class="fa-regular fa-thumbs-up"></i> Like';
+            throw new Error(result.message || 'Failed to update reaction');
         }
     } catch (error) {
         console.error('Error liking comment:', error);
+        showNotification('Failed to update reaction. Please try again.', 'error');
     }
 }
 
@@ -365,6 +373,7 @@ async function loadCommentsForPost(postId) {
 }
 
 function createCommentHTML(comment, postId) {
+    console.log("comment", comment);
     const userAvatar = comment.user.has_photo && comment.user.avatar
         ? `<img src="${comment.user.avatar}" class="user-img" alt="${comment.user.name}">`
         : `<div class="user-initials-avatar" style="width: 40px; height: 40px; font-size: 14px;">${comment.user.initials}</div>`;
@@ -373,6 +382,11 @@ function createCommentHTML(comment, postId) {
     const deleteButton = isOwner
         ? `<button class="delete-comment-btn" onclick="deleteComment('${comment.id}', '${postId}')">Delete</button>`
         : '';
+
+    const isLiked = comment.user_has_reacted || false;
+    const likeButtonClass = isLiked ? 'like-comment-btn liked' : 'like-comment-btn';
+    const likeButtonIcon = isLiked ? 'fa-solid' : 'fa-regular';
+    const likeButtonText = isLiked ? 'Liked' : 'Like';
 
     const repliesHTML = comment.replies && comment.replies.length > 0
         ? `<div class="replies-container">
@@ -390,7 +404,9 @@ function createCommentHTML(comment, postId) {
                 </div>
                 <div class="comment-content">${escapeHtml(comment.content)}</div>
                 <div class="comment-actions">
-                    <button class="like-comment-btn" onclick="likeComment('${comment.id}')">Like</button>
+                    <button class="${likeButtonClass}" onclick="likeComment('${comment.id}')">
+                        <i class="${likeButtonIcon} fa-thumbs-up"></i> ${likeButtonText}
+                    </button>
                     <button class="reply-comment-btn" onclick="toggleReplyInput('${comment.id}')">Reply</button>
                     ${deleteButton}
                 </div>

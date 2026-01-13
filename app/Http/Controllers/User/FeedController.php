@@ -33,11 +33,8 @@ class FeedController extends Controller
         }
 
         // For initial page load, return view with minimal data
-        // Posts will be loaded via AJAX for better performance
-
-        // Get profile stats
         $userId = Auth::id();
-        $profileViews = 0; // Implement tracking later
+        $profileViews = 0;
 
         $postImpressions = Post::where('user_id', $userId)
             ->where('status', 'active')
@@ -122,7 +119,7 @@ class FeedController extends Controller
         }
 
         return view('pages.news-feed', [
-            'posts' => [], // Will be loaded via AJAX
+            'posts' => [],
             'profileViews' => $profileViews,
             'postImpressions' => $postImpressions,
             'recentProducts' => $recentProducts,
@@ -150,8 +147,9 @@ class FeedController extends Controller
                     'replies' => fn($q) => $q->where('status', 'active')
                         ->with('user:id,first_name,last_name,slug,photo')
                         ->orderBy('created_at', 'asc'),
-                    'reactions.user:id,first_name,last_name,slug,photo'
+                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
                 ])
+                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
                 ->orderBy('created_at', 'asc'),
             'originalPost.user:id,first_name,last_name,slug,photo,user_position',
             'originalPost.media'
@@ -165,19 +163,16 @@ class FeedController extends Controller
             abort(404, 'Post not found');
         }
 
-        // Check visibility permissions
         if ($post->visibility === 'private' && $post->user_id !== $userId) {
             abort(403, 'You do not have permission to view this post');
         }
 
-        // Transform post data
         $transformedPost = $this->transformPost($post, $userId);
 
         return view('pages.post-detail', [
             'post' => $transformedPost
         ]);
     }
-
 
     /**
      * Get posts for the feed (paginated for infinite scroll).
@@ -199,7 +194,12 @@ class FeedController extends Controller
             'media',
             'reactions' => fn($q) => $q->where('user_id', $userId),
             'comments' => fn($q) => $q->where('status', 'active')
-                ->with(['user:id,first_name,last_name,slug,photo'])
+                ->whereNull('parent_id')
+                ->with([
+                    'user:id,first_name,last_name,slug,photo',
+                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
+                ])
+                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
                 ->orderBy('created_at', 'asc')
                 ->limit(2),
             'originalPost.user:id,first_name,last_name,slug,photo,user_position',
@@ -224,7 +224,6 @@ class FeedController extends Controller
 
         $posts = $query->paginate($perPage);
 
-        // Transform posts data
         $transformedPosts = $posts->getCollection()->map(function ($post) use ($userId) {
             return $this->transformPost($post, $userId);
         });
@@ -288,12 +287,13 @@ class FeedController extends Controller
                 'type' => $userReaction->reaction_type,
                 'created_at' => $userReaction->created_at,
             ] : null,
-            'comments' => $post->comments->take(2)->map(function ($c) {
-                $commentUserData = $this->formatUserData($c->user);
+            'comments' => $post->comments->map(function ($comment) use ($userId) {
+                $commentUserData = $this->formatUserData($comment->user);
                 return [
-                    'id' => $c->id,
-                    'content' => $c->content,
-                    'created_at' => $c->created_at,
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'created_at' => $comment->created_at,
+                    'user_has_reacted' => $comment->user_has_reacted > 0,
                     'user' => [
                         'id' => $commentUserData['id'],
                         'name' => trim($commentUserData['first_name'] . ' ' . $commentUserData['last_name']),
@@ -301,6 +301,7 @@ class FeedController extends Controller
                         'initials' => $commentUserData['user_initials'],
                         'has_photo' => $commentUserData['user_has_photo'],
                     ],
+                    'replies' => []
                 ];
             })->toArray(),
         ];
@@ -349,8 +350,9 @@ class FeedController extends Controller
                     'replies' => fn($q) => $q->where('status', 'active')
                         ->with('user:id,first_name,last_name,slug,photo')
                         ->orderBy('created_at', 'asc'),
-                    'reactions.user:id,first_name,last_name,slug,photo'
+                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
                 ])
+                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
                 ->orderBy('created_at', 'asc'),
             'originalPost.user:id,first_name,last_name,slug,photo',
             'originalPost.media'
@@ -377,12 +379,11 @@ class FeedController extends Controller
         $request->validate([
             'content' => 'nullable|string|max:10000',
             'media' => 'nullable|array|max:10',
-            'media.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv|max:4096', // 4MB max
+            'media.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv|max:4096',
             'comments_enabled' => 'nullable|boolean',
             'visibility' => 'nullable|string|in:public,private,connections',
         ]);
 
-        // Validate that at least content or media is provided
         if (!$request->content && !$request->hasFile('media')) {
             return response()->json([
                 'success' => false,
@@ -402,13 +403,11 @@ class FeedController extends Controller
             $post->slug = $this->generateUniqueSlug($request->content);
             $post->save();
 
-            // Handle media uploads
             if ($request->hasFile('media')) {
                 $s3Service = app(S3Service::class);
                 $order = 0;
 
                 foreach ($request->file('media') as $file) {
-                    // Validate file size (4MB = 4096KB)
                     if ($file->getSize() > 4096 * 1024) {
                         throw new \Exception('File ' . $file->getClientOriginalName() . ' exceeds 4MB limit.');
                     }
@@ -425,10 +424,8 @@ class FeedController extends Controller
                     $postMedia->mime_type = $file->getMimeType();
                     $postMedia->order = $order++;
 
-                    // For videos, you might want to generate a thumbnail
                     if ($uploadResult['type'] === 'video') {
-                        // Implement video thumbnail generation if needed
-                        $postMedia->duration = null; // Set video duration if you can extract it
+                        $postMedia->duration = null;
                     }
 
                     $postMedia->save();
@@ -542,7 +539,7 @@ class FeedController extends Controller
         $request->validate([
             'reactionable_type' => 'required|string|in:App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
-            'reaction_type' => 'required|string|in:like,love,celebrate,insightful,funny,haha,wow,sad,angry',
+            'reaction_type' => 'required|string|in:like,love,haha,wow,sad,angry',
         ]);
 
         $userId = Auth::id();
@@ -700,7 +697,6 @@ class FeedController extends Controller
             ], 403);
         }
 
-        // If parent_id provided, verify it belongs to this post
         if ($request->parent_id) {
             $parentComment = PostComment::where('id', $request->parent_id)
                 ->where('post_id', $postId)
@@ -728,6 +724,7 @@ class FeedController extends Controller
                 'content' => $comment->content,
                 'created_at' => $comment->created_at,
                 'parent_id' => $comment->parent_id,
+                'user_has_reacted' => false,
                 'user' => [
                     'id' => $userData['id'],
                     'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
@@ -789,6 +786,7 @@ class FeedController extends Controller
     public function getComments(Request $request, $postId)
     {
         $perPage = $request->get('per_page', 20);
+        $userId = Auth::id();
 
         $post = Post::where('id', $postId)
             ->where('status', 'active')
@@ -803,14 +801,57 @@ class FeedController extends Controller
                 'replies' => fn($q) => $q->where('status', 'active')
                     ->with('user:id,first_name,last_name,slug,photo')
                     ->orderBy('created_at', 'asc'),
-                'reactions.user:id,first_name,last_name,slug,photo'
+                'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
             ])
+            ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
             ->orderBy('created_at', 'asc')
             ->paginate($perPage);
 
+        // Transform comments data
+        $transformedComments = $comments->getCollection()->map(function ($comment) {
+            $commentUserData = $this->formatUserData($comment->user);
+
+            $repliesData = $comment->replies->map(function ($reply) {
+                $replyUserData = $this->formatUserData($reply->user);
+                return [
+                    'id' => $reply->id,
+                    'content' => $reply->content,
+                    'created_at' => $reply->created_at,
+                    'user' => [
+                        'id' => $replyUserData['id'],
+                        'name' => trim($replyUserData['first_name'] . ' ' . $replyUserData['last_name']),
+                        'avatar' => $replyUserData['photo'],
+                        'initials' => $replyUserData['user_initials'],
+                        'has_photo' => $replyUserData['user_has_photo'],
+                    ],
+                ];
+            });
+
+            return [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'user_has_reacted' => $comment->user_has_reacted > 0,
+                'user' => [
+                    'id' => $commentUserData['id'],
+                    'name' => trim($commentUserData['first_name'] . ' ' . $commentUserData['last_name']),
+                    'avatar' => $commentUserData['photo'],
+                    'initials' => $commentUserData['user_initials'],
+                    'has_photo' => $commentUserData['user_has_photo'],
+                ],
+                'replies' => $repliesData,
+            ];
+        });
+
         return response()->json([
             'success' => true,
-            'data' => $comments
+            'data' => [
+                'data' => $transformedComments,
+                'current_page' => $comments->currentPage(),
+                'last_page' => $comments->lastPage(),
+                'per_page' => $comments->perPage(),
+                'total' => $comments->total(),
+            ]
         ]);
     }
 
@@ -899,8 +940,7 @@ class FeedController extends Controller
             ->paginate($perPage);
 
         $transformedPosts = $posts->getCollection()->map(
-            fn($post) =>
-            $this->transformPost($post, Auth::id())
+            fn($post) => $this->transformPost($post, Auth::id())
         );
 
         return response()->json([

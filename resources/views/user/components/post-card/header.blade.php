@@ -15,11 +15,12 @@
         @endif
 
         <div class="user_post_name">
-            <p class="username">
-                <a href="{{ route('user.profile', $post['user']['slug'] ?? '#') }}">
+
+                {{-- FIXED: Use array access consistently --}}
+                <a href="{{ route('user.profile', ['slug' => $post['user']['slug'] ?? '#']) }}" class="username">
                     {{ $post['user']['name'] ?? 'Unknown User' }}
                 </a>
-            </p>
+
             @if(!empty($post['user']['position']))
                 <p class="user-position">{{ $post['user']['position'] }}</p>
             @endif
@@ -66,6 +67,28 @@
 </div>
 
 <style>
+.post-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e4e6eb;
+}
+
+.user-info {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+}
+
+.user-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
 .user-initials-avatar {
     width: 48px;
     height: 48px;
@@ -81,8 +104,41 @@
     flex-shrink: 0;
 }
 
+.user_post_name {
+    flex: 1;
+    min-width: 0;
+}
+
+.username {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.username a {
+    color: #050505;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.username a:hover {
+    text-decoration: underline;
+}
+
+.user-position {
+    margin: 2px 0 4px 0;
+    font-size: 13px;
+    color: #65676b;
+    line-height: 1.3;
+}
+
+.post-time {
+    font-size: 13px;
+    color: #65676b;
+}
+
 .visibility-badge {
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 12px;
     background-color: #f0f2f5;
     font-size: 12px;
@@ -90,19 +146,83 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    white-space: nowrap;
+    margin-right: 8px;
 }
 
 .visibility-badge i {
     font-size: 10px;
 }
 
-.username a {
-    color: inherit;
-    text-decoration: none;
-    font-weight: 600;
+.post-actions-menu {
+    margin-left: auto;
 }
 
-.username a:hover {
-    text-decoration: underline;
+.post-menu-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #65676b;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.post-menu-btn:hover {
+    background-color: #f0f2f5;
+}
+
+.post-menu-btn i {
+    font-size: 20px;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e4e6eb;
+}
+
+.dropdown-item {
+    padding: 10px 16px;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f2f5;
+}
+
+.dropdown-item i {
+    width: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .post-header {
+        padding: 12px 16px;
+    }
+
+    .user-img,
+    .user-initials-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .user-initials-avatar {
+        font-size: 16px;
+    }
+
+    .username {
+        font-size: 14px;
+    }
+
+    .user-position {
+        font-size: 12px;
+    }
 }
 </style>

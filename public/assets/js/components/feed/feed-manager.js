@@ -172,7 +172,7 @@ function createPostHeader(post, isOwner) {
             <div class="user-info">
                 ${userAvatar}
                 <div class="user_post_name">
-                    <p class="username"><a href="/profile/${post.user.slug}">${escapeHtml(post.user.name)}</a></p>
+                    <a href="/user/profile/${post.user.slug}" class="username">${escapeHtml(post.user.name)}</a>
                     ${post.user.position ? `<p class="user-position">${escapeHtml(post.user.position)}</p>` : ''}
                     <span class="post-time">${formatTimeAgo(post.created_at)}</span>
                 </div>
@@ -396,6 +396,8 @@ function createCommentSection(post) {
 function createCommentInput(postId) {
     const userAvatar = window.authUserAvatar || '';
     const userInitials = window.authUserInitials || 'U';
+    // console.log("userAvatar", userAvatar);
+    // console.log("userInitials", typeof userInitials);
 
     const avatarHTML = userAvatar
         ? `<img src="${userAvatar}" class="user-img" alt="You">`
