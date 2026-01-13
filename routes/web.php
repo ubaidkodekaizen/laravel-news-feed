@@ -42,6 +42,38 @@ Route::get('/send-test-email', [TestController::class, 'sendTestEmail'])->name('
 
 /*
 |--------------------------------------------------------------------------
+| API Documentation Routes (Password Protected)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/api-doc', function () {
+    // Check if user is authenticated
+    if (!session()->has('api_doc_authenticated')) {
+        return view('api-doc.password');
+    }
+    
+    return view('api-doc.index');
+})->name('api.doc');
+
+Route::post('/api-doc/authenticate', function (\Illuminate\Http\Request $request) {
+    $inputPassword = $request->input('password');
+    $storedPassword = env('API_PASSWORD', '884588rvkwd56zb640');
+    
+    if ($inputPassword === $storedPassword) {
+        session(['api_doc_authenticated' => true]);
+        return redirect()->route('api.doc');
+    }
+    
+    return back()->withErrors(['password' => 'Invalid password. Please try again.']);
+})->name('api.doc.authenticate');
+
+Route::get('/api-doc/logout', function () {
+    session()->forget('api_doc_authenticated');
+    return redirect()->route('api.doc');
+})->name('api.doc.logout');
+
+/*
+|--------------------------------------------------------------------------
 | Public Routes (Unauthenticated)
 |--------------------------------------------------------------------------
 */
