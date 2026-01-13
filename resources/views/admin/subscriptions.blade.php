@@ -255,9 +255,8 @@
                             <h4 class="card-title">Subscriptions</h4>
                         </div>
                         <div class="card-body">
-                            <!-- Tabs Navigation - Only show if user has filter permission -->
-                            @if($canFilter)
-                            <ul class="nav nav-tabs mb-4" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                            <!-- Tabs Navigation -->
+                            <ul class="nav nav-tabs mb-4 pb-3" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #F2F2F2;">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"

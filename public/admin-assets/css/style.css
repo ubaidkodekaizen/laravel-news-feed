@@ -317,7 +317,9 @@ textarea:-webkit-autofill {
 .iti--separate-dial-code input[type=tel] {
          padding-left: 80px !important;
     }
-  
+  div#eventsTable_filter label::after {
+    top: 52% !important;
+}
 
   @media (max-width: 1241px) {
     div#usersTable_wrapper .col-sm-12.col-md-6{
@@ -342,17 +344,27 @@ textarea:-webkit-autofill {
       justify-content: center;
     }
 
-    div#usersTable_filter label::after,
-    div#blogsTable_filter label::after {
-      top: 67%;
+    div.dataTables_filter label::after{
+      top: 67% !important;
+    }
+
+    div#eventsTable_filter label::after {
+        top: 51% !important;
     }
   }
   /* Responsive Design */
   @media (max-width: 768px) {
 
-    div#usersTable_filter label::after,
-    div#blogsTable_filter label::after {
-      top: 73%;
+    div.dataTables_filter label::after {
+      top: 73% !important;
+    }
+
+    div#eventsTable_filter label::after {
+        top: 60% !important;
+    }
+
+    aside.sidebar .dashboardMenuCollapseBtn {
+      display: none;
     }
 
     .card_header_flex{

@@ -33,6 +33,25 @@
         border-radius: 10px;
         padding: 12px 15px;
     }
+
+    .card .card-header .card-title a img {
+        width: 14px !important;
+        margin-top: -6px;
+        margin-right: 16px;
+        border: none !important;
+    }
+
+     .btn {
+        border-radius: 9.77px !important;
+        padding: 15px 56px !important;
+        font-family: "Poppins", sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 22px !important;
+        line-height: 100% !important;
+        letter-spacing: 0px !important;
+        text-align: center !important;
+        /* margin: 0 0 0 0; */
+    }
 </style>
 @section('content')
 <main class="main-content">
@@ -41,7 +60,10 @@
             <div class="col-12">
                 <div class="card" style="border: none;">
                     <div class="card-header">
-                        <h4 class="card-title">Edit Service</h4>
+                        <h4 class="card-title">
+                        <a href="{{ route('admin.products-services', ['filter' => 'services']) }}">
+                                    <img src="{{ asset('assets/images/dashboard/dashboardBackChevron.svg') }}" alt="back"></a>    
+                        Edit Service</h4>
                     </div>
                     <div class="card-body">
                         @if ($errors->any())
