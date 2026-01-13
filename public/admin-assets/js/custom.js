@@ -3,13 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const hamburger = document.getElementById('hamburger');
     const sidebar = document.querySelector('.sidebar');
     const mainContent = document.querySelector('.main-content');
-  
+
     hamburger.addEventListener('click', () => {
       sidebar.classList.toggle('open');
       mainContent.classList.toggle('shifted');
     });
 });
 document.addEventListener('DOMContentLoaded', function () {
+    $.fn.dataTable.ext.errMode = 'none';
+
     $('#usersTable').DataTable({
         responsive: true,
         pageLength: 10,
@@ -46,5 +48,5 @@ document.addEventListener('DOMContentLoaded', function () {
         order: [[0, 'desc']]
     });
 });
-  
+
 

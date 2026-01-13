@@ -3,9 +3,10 @@
 <style>
     body{
         background: #fafbff !important;
+        font-family: "Inter" !important;
     }
 
-    .card-modern {
+    /* div#\#modernCard {
         border: 2px solid #F2F2F2 !important;
         background: #FFFFFF !important;
         justify-content: space-between !important;
@@ -16,6 +17,11 @@
         cursor: pointer;
         text-decoration: none;
         color: inherit;
+    } */
+
+    .col-lg-6 .card-header:first-child,
+    .col-lg-6 .card-body {
+        background: #ffffff !important;
     }
 
     .card-modern:hover {
@@ -29,11 +35,34 @@
         color: #37488E !important;
     }
 
+    .col-lg-6 .card {
+         border: 2px solid #F2F2F2 !important;
+        background: #FFFFFF !important;
+        justify-content: space-between !important;
+        padding: 0 30px !important;
+        transition: 0.2s ease-in-out !important;
+        border-radius: 20px !important;
+    }
+
     .card-modern a {
         text-decoration: none;
         color: inherit;
         display: block;
         width: 100%;
+       
+    }
+
+    a.card.card-modern{
+        border: 2px solid #F2F2F2 !important;
+        background: #FFFFFF !important;
+        justify-content: space-between !important;
+        padding: 0 30px !important;
+        transition: 0.2s ease-in-out !important;
+        border-radius: 20px !important;
+        box-shadow: none !important;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
     }
 
     .card-modern .card-body {
@@ -42,8 +71,9 @@
         padding: 10px 0 !important;
         justify-content: space-between;
         align-items: center;
+        background: #ffffff !important;
     }
-    
+
     .cardCounting {
         text-align: left !important;
     }
@@ -72,12 +102,50 @@
         padding: 17px;
         background: linear-gradient(180deg, #0e1948, #213bae);
         border-radius: 50px;
-        
+
     }
 
     .cardSvgCon svg,
     .cardSvgCon svg path{
         fill: #fff;
+    }
+
+    span#account-filter-badge,
+    span#platforms-filter-badge {
+        background: #e4e7f1 !important;
+        font-size: 16px !important;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .d-flex.gap-2.mt-2.align-items-center {
+        flex-wrap: wrap;
+    }
+
+    button.btn.btn-primary.btn-sm,
+    button.btn.btn-secondary.btn-sm {
+        font-size: 14px !important;
+    }
+
+    @media (min-width: 768px) and (max-width: 1502px) {
+        .card-modern .card-body {
+           flex-direction: column-reverse;
+        }
+
+        .cardCounting {
+            text-align: center !important;
+        }
+
+        .cardSvg {
+            margin-top: 20px;
+        }
+    }
+
+    
+    @media (min-width: 558px) and (max-width: 1190px) {
+        .container .row.g-4 .col-lg-3 {
+            width: 50%;
+        }
     }
 </style>
 @section('content')
@@ -120,9 +188,21 @@
 
                             <div class="cardSvg">
                                 <div class="cardSvgCon">
-                                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <title>Subscribers</title>
                                         <path d="M20 4H4C2.89 4 2 4.89 2 6V18C2 19.11 2.89 20 4 20H20C21.11 20 22 19.11 22 18V6C22 4.89 21.11 4 20 4ZM20 18H4V6H20V18ZM5 10H7V8H5V10ZM5 16H7V14H5V16ZM9 10H11V8H9V10ZM9 16H11V14H9V16ZM13 10H15V8H13V10ZM13 16H15V14H13V16ZM17 10H19V8H17V10ZM17 16H19V14H17V16Z" fill="#ffffff"/>
+                                    </svg> -->
+                                    <svg width="30px" height="30px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <g id="Media" transform="translate(-720.000000, -48.000000)">
+                                                <g id="notification_fill" transform="translate(720.000000, 48.000000)">
+                                                    <path style="fill: transparent;" d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z" id="MingCute" fill-rule="nonzero">
+                                                    </path>
+                                                    <path d="M15,19 C15,20.0543909 14.18415,20.9181678 13.1492661,20.9945144 L13,21 L11,21 C9.94563773,21 9.08183483,20.18415 9.00548573,19.1492661 L9,19 L15,19 Z M12.0002,2 C15.7856583,2 18.869299,5.0047865 18.996141,8.75935044 L19.0002,9 L19.0002,12.7639 L20.8222,16.4081 C21.1704857,17.1046714 20.7047125,17.9183404 19.9532033,17.9942531 L19.8384,18 L4.16197,18 C3.38318905,18 2.86370061,17.2195011 3.13189688,16.5133571 L3.1781,16.4081 L5.00016,12.7639 L5.00016,9 C5.00016,5.13401 8.13417,2 12.0002,2 Z" fill="#333">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </g>
                                     </svg>
                                 </div>
                             </div>
@@ -204,7 +284,7 @@
                                 <input type="date" id="signups-start-date" class="form-control form-control-sm" style="max-width: 150px;">
                                 <label class="mb-0" style="font-size: 14px; color: #666;">To:</label>
                                 <input type="date" id="signups-end-date" class="form-control form-control-sm" style="max-width: 150px;">
-                                <button onclick="loadSignupsChart()" class="btn btn-primary btn-sm">Apply</button>
+                                <button onclick="loadSignupsChart()" style="padding: 4px 30px;" class="btn btn-primary btn-sm">Apply</button>
                             </div>
                         </div>
                         <div class="card-body" style="height: 400px;">
@@ -223,7 +303,7 @@
                                 <input type="date" id="subscribers-start-date" class="form-control form-control-sm" style="max-width: 150px;">
                                 <label class="mb-0" style="font-size: 14px; color: #666;">To:</label>
                                 <input type="date" id="subscribers-end-date" class="form-control form-control-sm" style="max-width: 150px;">
-                                <button onclick="loadSubscribersChart()" class="btn btn-primary btn-sm">Apply</button>
+                                <button onclick="loadSubscribersChart()" style="padding: 4px 30px;" class="btn btn-primary btn-sm">Apply</button>
                             </div>
                         </div>
                         <div class="card-body" style="height: 400px;">
@@ -242,8 +322,8 @@
                                 <input type="date" id="platforms-start-date" class="form-control form-control-sm" style="max-width: 150px;">
                                 <label class="mb-0" style="font-size: 14px; color: #666;">To:</label>
                                 <input type="date" id="platforms-end-date" class="form-control form-control-sm" style="max-width: 150px;">
-                                <button onclick="loadPlatformsChart()" class="btn btn-primary btn-sm">Apply</button>
-                                <button onclick="resetPlatformsFilter()" class="btn btn-secondary btn-sm">Reset</button>
+                                <button onclick="loadPlatformsChart()" style="padding: 4px 30px;" class="btn btn-primary btn-sm">Apply</button>
+                                <button onclick="resetPlatformsFilter()" style="padding: 4px 30px;" class="btn btn-secondary btn-sm">Reset</button>
                             </div>
                         </div>
                         <div class="card-body" style="height: 400px; position: relative;">
@@ -263,14 +343,14 @@
                 <div class="col-lg-6">
                     <div class="card" style="border: 2px solid #F2F2F2; border-radius: 20px; box-shadow: none;">
                         <div class="card-header" style="background: #fafbff; border: none;">
-                            <h4 class="card-title" style="font-family: 'Inter'; font-weight: 500; font-size: 20px; color: #333;">User Registration Sources <span class="badge bg-info" style="font-size: 12px;" id="account-filter-badge">All Time</span></h4>
+                            <h4 class="card-title" style="font-family: 'Inter'; font-weight: 500; font-size: 20px; color: #333;">User Registration Sources <span class="badge" style="font-size: 12px;" id="account-filter-badge">All Time</span></h4>
                             <div class="d-flex gap-2 mt-2 align-items-center">
                                 <label class="mb-0" style="font-size: 14px; color: #666;">From:</label>
                                 <input type="date" id="account-start-date" class="form-control form-control-sm" style="max-width: 150px;">
                                 <label class="mb-0" style="font-size: 14px; color: #666;">To:</label>
                                 <input type="date" id="account-end-date" class="form-control form-control-sm" style="max-width: 150px;">
-                                <button onclick="loadAccountCreationChart()" class="btn btn-primary btn-sm">Apply</button>
-                                <button onclick="resetAccountFilter()" class="btn btn-secondary btn-sm">Reset</button>
+                                <button onclick="loadAccountCreationChart()" style="padding: 4px 30px;" class="btn btn-primary btn-sm">Apply</button>
+                                <button onclick="resetAccountFilter()" style="padding: 4px 30px;" class="btn btn-secondary btn-sm">Reset</button>
                             </div>
                         </div>
                         <div class="card-body" style="height: 400px; position: relative;">
@@ -297,13 +377,13 @@
     // Initialize date inputs with default values (last 30 days for line/bar charts)
     const defaultEndDate = new Date().toISOString().split('T')[0];
     const defaultStartDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    
+
     // Set default dates for line/bar charts only
     document.getElementById('signups-start-date').value = defaultStartDate;
     document.getElementById('signups-end-date').value = defaultEndDate;
     document.getElementById('subscribers-start-date').value = defaultStartDate;
     document.getElementById('subscribers-end-date').value = defaultEndDate;
-    
+
     // Pie charts start empty (all-time data by default)
     document.getElementById('platforms-start-date').value = '';
     document.getElementById('platforms-end-date').value = '';
@@ -316,16 +396,16 @@
     function loadSignupsChart() {
         const startDate = document.getElementById('signups-start-date').value;
         const endDate = document.getElementById('signups-end-date').value;
-        
+
         fetch(`{{ route('admin.dashboard.chart-data') }}?chart_type=signups&start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('signupsChart').getContext('2d');
-                
+
                 if (signupsChart) {
                     signupsChart.destroy();
                 }
-                
+
                 signupsChart = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -381,16 +461,16 @@
     function loadSubscribersChart() {
         const startDate = document.getElementById('subscribers-start-date').value;
         const endDate = document.getElementById('subscribers-end-date').value;
-        
+
         fetch(`{{ route('admin.dashboard.chart-data') }}?chart_type=subscribers&start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
                 const ctx = document.getElementById('subscribersChart').getContext('2d');
-                
+
                 if (subscribersChart) {
                     subscribersChart.destroy();
                 }
-                
+
                 subscribersChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
@@ -446,7 +526,7 @@
         const startDate = document.getElementById('platforms-start-date').value;
         const endDate = document.getElementById('platforms-end-date').value;
         const filterBadge = document.getElementById('platforms-filter-badge');
-        
+
         // Update badge
         if (startDate && endDate) {
             filterBadge.textContent = 'Filtered';
@@ -455,13 +535,13 @@
             filterBadge.textContent = 'All Time';
             filterBadge.className = 'badge bg-info';
         }
-        
+
         const params = new URLSearchParams({
             chart_type: 'platforms'
         });
         if (startDate) params.append('start_date', startDate);
         if (endDate) params.append('end_date', endDate);
-        
+
         fetch(`{{ route('admin.dashboard.chart-data') }}?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
@@ -471,28 +551,28 @@
                 // Ensure labels are in correct order: Android, iOS, Web
                 const orderedLabels = ['Android', 'iOS', 'Web'];
                 const colors = ['#28a745', '#007bff', '#ffc107'];
-                
+
                 // Find index in data for each ordered label
                 orderedLabels.forEach((orderedLabel, index) => {
                     const dataIndex = data.labels.indexOf(orderedLabel);
                     const value = dataIndex >= 0 ? (data.data[dataIndex] || 0) : 0;
                     const colorIndex = dataIndex >= 0 ? dataIndex : index;
-                    
+
                     const legendItem = document.createElement('div');
-                    legendItem.style.cssText = 'display: flex; align-items: center; margin-bottom: 15px; font-family: Inter;';
+                    legendItem.style.cssText = 'display: flex; align-items: center; margin-bottom: 5px; font-family: Inter;';
                     legendItem.innerHTML = `
-                        <span style="width: 20px; height: 20px; background-color: ${colors[colorIndex]}; border-radius: 3px; margin-right: 10px; display: inline-block;"></span>
-                        <span style="font-size: 16px; font-weight: 500; color: #333;">${orderedLabel} ${value}</span>
+                        <span style="width: 12px; height: 12px; background-color: ${colors[colorIndex]}; border-radius: 30px; margin-right: 10px; display: inline-block;"></span>
+                        <span style="font-size: 14px; font-weight: 400; color: #333;">${orderedLabel} ${value}</span>
                     `;
                     legendContainer.appendChild(legendItem);
                 });
-                
+
                 const ctx = document.getElementById('platformsChart').getContext('2d');
-                
+
                 if (platformsChart) {
                     platformsChart.destroy();
                 }
-                
+
                 platformsChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
@@ -534,7 +614,7 @@
         const startDate = document.getElementById('account-start-date').value;
         const endDate = document.getElementById('account-end-date').value;
         const filterBadge = document.getElementById('account-filter-badge');
-        
+
         // Update badge
         if (startDate && endDate) {
             filterBadge.textContent = 'Filtered';
@@ -543,13 +623,13 @@
             filterBadge.textContent = 'All Time';
             filterBadge.className = 'badge bg-info';
         }
-        
+
         const params = new URLSearchParams({
             chart_type: 'account_creation'
         });
         if (startDate) params.append('start_date', startDate);
         if (endDate) params.append('end_date', endDate);
-        
+
         fetch(`{{ route('admin.dashboard.chart-data') }}?${params.toString()}`)
             .then(response => {
                 if (!response.ok) {
@@ -572,10 +652,10 @@
                     'Amcob API': '#fd7e14', // Orange
                     'Admin': '#6c757d'     // Gray
                 };
-                
+
                 const labels = data.labels || [];
                 const dataValues = data.data || [];
-                
+
                 // Find index in data for each ordered label (check both iOS and Apple for compatibility)
                 orderedLabels.forEach((orderedLabel, index) => {
                     let dataIndex = labels.indexOf(orderedLabel);
@@ -585,34 +665,34 @@
                     }
                     const value = dataIndex >= 0 ? (dataValues[dataIndex] || 0) : 0;
                     const color = colorMap[orderedLabel] || '#6c757d';
-                    
+
                     const legendItem = document.createElement('div');
-                    legendItem.style.cssText = 'display: flex; align-items: center; margin-bottom: 15px; font-family: Inter;';
+                    legendItem.style.cssText = 'display: flex; align-items: center; margin-bottom: 5px; font-family: Inter;';
                     // Always display "iOS" instead of "Apple"
                     const displayLabel = orderedLabel === 'iOS' || orderedLabel === 'Apple' ? 'iOS' : orderedLabel;
                     legendItem.innerHTML = `
-                        <span style="width: 20px; height: 20px; background-color: ${color}; border-radius: 3px; margin-right: 10px; display: inline-block;"></span>
-                        <span style="font-size: 16px; font-weight: 500; color: #333;">${displayLabel} ${value}</span>
+                        <span style="width: 12px; height: 12px; background-color: ${color};  border-radius: 30px; margin-right: 10px; display: inline-block;"></span>
+                        <span style="font-size: 14px; font-weight: 400; color: #333;">${displayLabel} ${value}</span>
                     `;
                     legendContainer.appendChild(legendItem);
                 });
-                
+
                 const ctx = document.getElementById('accountCreationChart').getContext('2d');
-                
+
                 if (accountCreationChart) {
                     accountCreationChart.destroy();
                 }
-                
+
                 // Map colors based on label order: Web=Yellow, iOS/Apple=Blue, Android=Green, Amcob API=Orange, Admin=Gray
                 const chartColors = labels.map(label => {
                     if (label === 'Web') return '#ffc107';      // Yellow
                     if (label === 'iOS' || label === 'Apple') return '#007bff';    // Blue
                     if (label === 'Android') return '#28a745';  // Green
                     if (label === 'Amcob API') return '#fd7e14'; // Orange
-                    if (label === 'Admin') return '#6c757d';    // Gray
+                    if (label === 'Admin') return '#6c757d';     // Gray
                     return '#6c757d'; // Default gray
                 });
-                
+
                 accountCreationChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {

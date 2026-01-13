@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{{ asset('admin-assets/css/style.css?v1') }}">
 
 <style>
+    body{
+        overflow: hidden;
+    }
     .header {
         background: linear-gradient(180deg, #0e1948, #213bae);
         color: #fff;
@@ -47,42 +50,49 @@
     }
 
     .sidebar {
-        padding: 20px 10px;
+        padding: 30px 20px 0px 10px;
         width: 300px;
         top: 110px;
         background-color: #F4F5FB;
         border-right: 1px solid #E9EBF0;
-        overflow-y: auto;
-        overflow-x: hidden;
+        /* overflow-y: auto; */
+        overflow: visible;
         max-height: calc(100vh - 110px);
         position: fixed;
     }
 
-    .sidebar::-webkit-scrollbar {
+    ul.sidebar-menu {
+        height: 100%;
+        overflow-y: scroll;
+    }
+
+    ul.sidebar-menu::-webkit-scrollbar {
         width: 6px;
     }
 
-    .sidebar::-webkit-scrollbar-track {
+    ul.sidebar-menu::-webkit-scrollbar-track {
         background: #F4F5FB;
     }
 
-    .sidebar::-webkit-scrollbar-thumb {
+    ul.sidebar-menu::-webkit-scrollbar-thumb {
         background: #273572;
         border-radius: 3px;
     }
 
-    .sidebar::-webkit-scrollbar-thumb:hover {
+    ul.sidebar-menu::-webkit-scrollbar-thumb:hover {
         background: #1a2855;
     }
 
     .sidebar-menu li a{
         padding: 1rem 0.8rem;
         font-size: 1.13rem;
+        margin: 0px 20px 16px;
         font-weight: 500;
         font-family: "Inter";
         text-transform: capitalize;
         color: #333;
         border: none;
+        transition: none;
     }
 
     .sidebar-menu li a:hover,
@@ -105,9 +115,65 @@
         color: #fff;
     }
 
-@media (max-width: 768px) {
 
+    aside.sidebar .dashboardMenuCollapseBtn {
+        position: absolute;
+        top: 52px;
+        right: -13px;
+        outline: none;
+        border: none;
+        background: #00000000;
+        rotate: 0deg;
+        padding: 0;
+        border-radius: 50%;
+    }
+
+    aside.sidebar.collapsed .dashboardMenuCollapseBtn {
+        rotate: 180deg;
+    }
+
+    aside.sidebar .dashboardMenuCollapseBtn img{
+        width: 24px !important;
+        height: 24px !important;
+        border: none !important;
+        margin: 0 !important;
+    }
+
+    #dashboardSidebar.collapsed {
+        max-width: 90px;
+        width: 100% !important;
+        padding: 30px 15px 0px 15px;
+
+    }
+
+    #dashboardSidebar.collapsed .menu-text {
+        display: none;
+    }
+
+    #dashboardSidebar.collapsed .sidebar-menu {
+    overflow: hidden;
 }
+
+    #dashboardSidebar.collapsed .sidebar-menu li a {
+        height: 50px;
+        width: 50px;
+        padding: 17px 15px 13px;
+        margin: 0px 0px 10px;
+        transition: none;
+        align-content: center;
+    }
+
+    #dashboardSidebar.collapsed~.main-content {
+        width: 100% !important;
+        margin: auto;
+    }
+
+    @media (max-width: 320px) {
+        .sidebar {
+            width: 100%;
+            top: 70px;
+        }
+    }
 </style>
 </head>
 
@@ -127,7 +193,7 @@
                             <img src="{{ Auth::user()->photo ? getImageUrl(Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                 alt="">
                             {{ Auth::user()->first_name }}
-                            <img id="userProfileDropdown" src="http://127.0.0.1:8000/assets/images/whiteChevron.svg" alt="DropDown">
+                            <img id="userProfileDropdown" src="{{ asset('assets/images/whiteChevron.svg')}}" alt="DropDown">
                         </a>
                         <ul class="dropdown-menu text-small shadow">
                             </li>
@@ -144,7 +210,8 @@
         </div>
     </div>
     <div class="admin-panel">
-        <aside class="sidebar">
+        <aside id="dashboardSidebar" class="sidebar">
+            <button class="dashboardMenuCollapseBtn"><img id="dashboardMenuCollapseBtnImg" src="https://muslimlynk.com/assets/images/dashboard/sidebarCollapseIcon.svg" alt=""></button>
             <ul class="sidebar-menu">
                 @php
                     $user = auth()->user();
@@ -153,7 +220,7 @@
                     }
                     $isAdmin = $user && $user->role_id == 1;
                 @endphp
-                
+
                 {{-- Dashboard - All admin users (Admin, Manager, Editor) can see - no permission check needed --}}
                 <li>
                     <a href="{{ route('admin.dashboard') }}"
@@ -258,10 +325,11 @@
                                 y="604.36224" />
                             </g>
                             </svg>
-                        Dashboard
+
+                        <span class="menu-text">Dashboard</span>
                     </a>
                 </li>
-                
+
                 {{-- Users - Check permission --}}
                 @if($isAdmin || ($user && $user->hasPermission('users.view')))
                 <li>
@@ -271,11 +339,12 @@
                             <title>Users</title>
                             <path id="primary" d="M21,20a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2,6,6,0,0,1,6-6h6A6,6,0,0,1,21,20Zm-9-8A5,5,0,1,0,7,7,5,5,0,0,0,12,12Z" ></path>
                         </svg>
-                        Users
+                        <span class="menu-text">Users</span>
+
                     </a>
                 </li>
                 @endif
-                
+
                 {{-- Subscriptions - Check both view and filter permissions --}}
                 @if($isAdmin || ($user && ($user->hasPermission('subscriptions.view') || $user->hasPermission('subscriptions.filter'))))
                 <li>
@@ -294,11 +363,12 @@
                                 </g>
                             </g>
                         </svg>
-                        Subscriptions
+                         <span class="menu-text">Subscriptions</span>
+
                     </a>
                 </li>
                 @endif
-                
+
                 {{-- Products/Services - Check permission --}}
                 @if($isAdmin || ($user && $user->hasPermission('products-services.view')))
                 <li>
@@ -309,11 +379,12 @@
                             <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#333"/>
                             <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="#333"/>
                         </svg>
-                        Products/Services
+
+                         <span class="menu-text"> Products/Services</span>
                     </a>
                 </li>
                 @endif
-                
+
                 {{-- Blogs - Check permission --}}
                 @if($isAdmin || ($user && $user->hasPermission('blogs.view')))
                 <li>
@@ -327,11 +398,12 @@
                         </g>
                         </g>
                         </svg>
-                        Blogs
+                        <span class="menu-text">Blogs</span>
+
                     </a>
                 </li>
                 @endif
-                
+
                 {{-- Events - Check permission --}}
                 @if($isAdmin || ($user && $user->hasPermission('events.view')))
                 <li>
@@ -356,11 +428,12 @@
                             </g>
                         </g>
                         </svg>
-                        Events
+
+                        <span class="menu-text">Events</span>
                     </a>
                 </li>
                 @endif
-                
+
                 {{-- Ads - Check permission --}}
                 @if($isAdmin || ($user && $user->hasPermission('ads.view')))
                 <li>
@@ -370,11 +443,12 @@
                             <title>Ads</title>
                             <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
                         </svg>
-                        Ads
+                        <span class="menu-text">Ads</span>
+
                     </a>
                 </li>
                 @endif
-                
+
                 {{-- Scheduler Logs - Admin only --}}
                 @if($isAdmin)
                 <li>
@@ -390,7 +464,7 @@
                     </a>
                 </li>
                 @endif
-                
+
                 {{-- User Access - Only Admin can see --}}
                 @if($isAdmin || ($user && $user->hasPermission('managers.view')))
                 <li>
@@ -409,3 +483,38 @@
             </ul>
 
         </aside>
+
+<script>
+    document.querySelector('.dashboardMenuCollapseBtn')
+        .addEventListener('click', function() {
+            document.getElementById('dashboardSidebar')
+                .classList.toggle('collapsed');
+        });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebarMenu = document.querySelector('.sidebar-menu');
+
+    function toggleScrollbar() {
+        if (sidebarMenu.scrollHeight > sidebarMenu.clientHeight) {
+            sidebarMenu.style.overflowY = 'auto';   // scrollbar show
+        } else {
+            sidebarMenu.style.overflowY = 'hidden'; // scrollbar hide
+        }
+    }
+
+    // Initial check
+    toggleScrollbar();
+
+    // Window resize pe bhi check
+    window.addEventListener('resize', toggleScrollbar);
+
+    // Agar sidebar ke andar content dynamically change hota ho
+    const observer = new MutationObserver(toggleScrollbar);
+    observer.observe(sidebarMenu, {
+        childList: true,
+        subtree: true
+    });
+});
+</script>

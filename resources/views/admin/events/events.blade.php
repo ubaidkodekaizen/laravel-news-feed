@@ -24,6 +24,12 @@
         padding: 10px;
     }
 
+    /* .row.dt-row .col-sm-12{
+        padding: 0 !important;
+        overflow: hidden;
+    } */
+
+
     .row.dt-row .col-sm-12{
         padding: 0 !important;
         overflow-x: scroll !important;
@@ -54,7 +60,7 @@
         margin-bottom: 0 !important;
     }
 
-
+    
 
     .card-title {
         border-radius: 0;
@@ -83,9 +89,18 @@
         font-family: 'Inter';
         border: 1px solid #E9EBF0 !important;
         border-radius: 10.66px !important;
-        padding: 16px 15px !important; 
+        padding: 16px 15px !important;
         background-color: transparent;
         transition: background-color 0.2s ease;
+    }
+
+    .card-header.card_header_flex a {
+        background: var(--primary);
+        border-color: var(--primary);
+        font-family: "poppins";
+        font-weight: 300;
+        padding: 16px 30px;
+        border-radius: 10.66px;
     }
 
     div.dataTables_wrapper div.dataTables_filter input::-webkit-search-cancel-button {
@@ -140,15 +155,15 @@
         padding-right: 44px !important;
     }
 
-    table.dataTable thead > tr > th.sorting:before, 
-    table.dataTable thead > tr > th.sorting_asc:before, 
-    table.dataTable thead > tr > th.sorting_desc:before, 
-    table.dataTable thead > tr > th.sorting_asc_disabled:before, 
-    table.dataTable thead > tr > th.sorting_desc_disabled:before, 
-    table.dataTable thead > tr > td.sorting:before, 
-    table.dataTable thead > tr > td.sorting_asc:before, 
-    table.dataTable thead > tr > td.sorting_desc:before, 
-    table.dataTable thead > tr > td.sorting_asc_disabled:before, 
+    table.dataTable thead > tr > th.sorting:before,
+    table.dataTable thead > tr > th.sorting_asc:before,
+    table.dataTable thead > tr > th.sorting_desc:before,
+    table.dataTable thead > tr > th.sorting_asc_disabled:before,
+    table.dataTable thead > tr > th.sorting_desc_disabled:before,
+    table.dataTable thead > tr > td.sorting:before,
+    table.dataTable thead > tr > td.sorting_asc:before,
+    table.dataTable thead > tr > td.sorting_desc:before,
+    table.dataTable thead > tr > td.sorting_asc_disabled:before,
     table.dataTable thead > tr > td.sorting_desc_disabled:before {
         content: "" !important;
         width: 16px;
@@ -157,15 +172,15 @@
         background-size: contain;
     }
 
-    table.dataTable thead > tr > th.sorting:after, 
-    table.dataTable thead > tr > th.sorting_asc:after, 
-    table.dataTable thead > tr > th.sorting_desc:after, 
-    table.dataTable thead > tr > th.sorting_asc_disabled:after, 
-    table.dataTable thead > tr > th.sorting_desc_disabled:after, 
-    table.dataTable thead > tr > td.sorting:after, 
-    table.dataTable thead > tr > td.sorting_asc:after, 
-    table.dataTable thead > tr > td.sorting_desc:after, 
-    table.dataTable thead > tr > td.sorting_asc_disabled:after, 
+    table.dataTable thead > tr > th.sorting:after,
+    table.dataTable thead > tr > th.sorting_asc:after,
+    table.dataTable thead > tr > th.sorting_desc:after,
+    table.dataTable thead > tr > th.sorting_asc_disabled:after,
+    table.dataTable thead > tr > th.sorting_desc_disabled:after,
+    table.dataTable thead > tr > td.sorting:after,
+    table.dataTable thead > tr > td.sorting_asc:after,
+    table.dataTable thead > tr > td.sorting_desc:after,
+    table.dataTable thead > tr > td.sorting_asc_disabled:after,
     table.dataTable thead > tr > td.sorting_desc_disabled:after {
         content: "" !important;
         width: 16px;
@@ -194,7 +209,7 @@
         font-weight: 300;
     }
 
-    .pagination .page-item:first-child .page-link, 
+    .pagination .page-item:first-child .page-link,
     .pagination .page-item:last-child .page-link {
         border: none;
         background: #FFFFFF;
@@ -233,26 +248,6 @@
         justify-content: space-between;
         align-items: center;
     }
-
-    .nav-tabs .nav-link {
-        border: none;
-        border-bottom: 3px solid transparent;
-        transition: all 0.3s ease;
-    }
-    .nav-tabs .nav-link:hover {
-        border-bottom-color: #37488E;
-        color: #37488E !important;
-    }
-    .nav-tabs .nav-link.active {
-        border-bottom-color: #37488E;
-        color: #37488E !important;
-        background-color: transparent;
-    }
-    .nav-tabs .badge {
-        margin-left: 5px;
-        font-size: 12px;
-        padding: 4px 8px;
-    }
 </style>
 @section('content')
     <main class="main-content">
@@ -284,22 +279,74 @@
                         </div>
                         <div class="card-body">
                             <!-- Tabs Navigation -->
-                            <ul class="nav nav-tabs mb-4" id="eventTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                            <ul class="nav nav-tabs mb-4 pb-3" id="eventTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}"
                                        href="{{ route('admin.events', ['filter' => 'all']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         All <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
                                     </a>
                                 </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'deleted' ? 'active' : '' }}" 
+                                <li class="nav-item delete" role="presentation">
+                                    <a class="nav-link {{ $filter === 'deleted' ? 'active' : '' }}"
                                        href="{{ route('admin.events', ['filter' => 'deleted']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         Deleted <span class="badge bg-danger">{{ $counts['deleted'] ?? 0 }}</span>
                                     </a>
                                 </li>
                             </ul>
+                            <style>
+                                .nav-tabs .nav-link {
+                                border: none;
+                                border-bottom: 3px solid transparent;
+                                transition: all 0.3s ease;
+                                text-transform: uppercase;
+                            }
+                            .nav-tabs .nav-link:hover {
+                                border-bottom-color: #37488E;
+                                color: #37488E !important;
+                            }
+                            .nav-tabs .nav-link.active {
+                                border-bottom-color: #37488E;
+                                color: #ffffff !important;
+                                border-radius: 12px;
+                                background: #273572;
+                            }
+
+                            .nav-tabs .nav-link.active .badge {
+                                color: #ffffff !important;
+                            }
+
+                            .nav-tabs .nav-item.delete .nav-link.active .badge {
+                                color: #ff0000ff !important;
+                            }
+                            .nav-tabs .badge {
+                                color: #000;
+                                margin: 0px 0px 0px 0px;
+                                font-size: 16px;
+                                font-family: "Inter";
+                                font-weight: 400;
+                                background: transparent !important;
+                            }
+
+                            .nav-tabs .nav-item.delete .badge{
+                                color: #ff0000ff !important;
+                            }
+                            @media (max-width: 768px) {
+                                    ul#eventTabs {
+                                        justify-content: center;
+                                    }
+
+                                    .nav-tabs .nav-link {
+                                        font-size: 12px;
+                                        padding: 5px 12px !important;
+                                    }
+
+                                    .nav-tabs .badge {
+                                        font-size: 12px;
+                                    }
+                                }
+                            </style>
                             <table id="eventsTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -328,19 +375,25 @@
                                             <!-- Event URL -->
                                             <td>
                                                 @if($canView)
-                                                <a href="{{ route('admin.view.event', $event->id) }}" class="btn btn-warning btn-sm">View</a>
+                                                <a href="{{ route('admin.view.event', $event->id) }}" class="btn btn-warning btn-sm">
+                                                    <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>View</title>
+                                                    <path d="M20.188 10.9343C20.5762 11.4056 20.7703 11.6412 20.7703 12C20.7703 12.3588 20.5762 12.5944 20.188 13.0657C18.7679 14.7899 15.6357 18 12 18C8.36427 18 5.23206 14.7899 3.81197 13.0657C3.42381 12.5944 3.22973 12.3588 3.22973 12C3.22973 11.6412 3.42381 11.4056 3.81197 10.9343C5.23206 9.21014 8.36427 6 12 6C15.6357 6 18.7679 9.21014 20.188 10.9343Z" fill="#213bae" fill-opacity="0.14"/>
+                                                    <circle cx="12" cy="12" r="3" fill="#273572"/>
+                                                    </svg>
+                                                </a>
                                                 @endif
                                                 @if($filter !== 'deleted')
                                                     @if($canEdit)
-                                                    <a href="{{ route('admin.edit.event', $event->id) }}"
-                                                        class="btn btn-primary btn-sm">Edit</a>
+                                                    <a id="edit" href="{{ route('admin.edit.event', $event->id) }}"
+                                                        class="btn btn-primary btn-sm"></a>
                                                     @endif
                                                     @if($canDelete)
                                                     <form action="{{ route('admin.delete.event', $event->id) }}" method="POST"
                                                         style="display:inline-block;" class="delete-event-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        <button id="delete" type="submit" class="btn btn-danger btn-sm"></button>
                                                     </form>
                                                     @endif
                                                 @else
@@ -348,7 +401,9 @@
                                                     <form action="{{ route('admin.restore.event', $event->id) }}" method="POST"
                                                         style="display:inline-block;" class="restore-event-form">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                                        <button id="restoreBtn" type="submit" class="btn btn-success btn-sm" title="Restore">
+                                                            <svg width="30px" height="30px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M10 16.682l5.69 5.685 1.408-1.407-3.283-3.28h10.131c1.147 0 2.19.467 2.943 1.222a4.157 4.157 0 011.225 2.946 4.18 4.18 0 01-4.168 4.168h-5.628V28h5.522c3.387 0 6.16-2.77 6.16-6.157a6.117 6.117 0 00-1.81-4.343 6.143 6.143 0 00-4.35-1.805H13.815l3.283-3.285L15.69 11 10 16.682z" fill="#273572" fill-rule="nonzero"></path></svg>
+                                                        </button>
                                                     </form>
                                                     @endif
                                                 @endif

@@ -1,0 +1,216 @@
+#sidebarWidgetWrapper {
+    position: sticky;
+    top: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.sidebar-widget {
+    background: #fff;
+    border-radius: 8px;
+    padding: 23px 19px 20px 19px;
+    border: 1px solid #e3e6eb;
+}
+.sidebar-widget .divider {
+    height: 1.34px;
+    background: #e9ebf0;
+    margin: 14px 0 16px 0;
+}
+.widget-header {
+    color: #333333;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sidebar-widget-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.feed-item {
+    display: flex;
+    align-items: start;
+    width: 100%;
+    gap: 13.3px;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #2735720d;
+    border: 1px solid #eaeaea;
+    padding: 6.05px 6.05px 8.3px 6.05px;
+    border-radius: 8.61px;
+}
+
+.feed-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.feed-icon {
+    width: 119px;
+    height: 119px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+.feed-icon small {
+    background: #b8c034;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 8px;
+    line-height: 100%;
+    position: absolute;
+    bottom: 4.7px;
+    padding: 4px 10px;
+    border-radius: 25px;
+}
+.feed-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feed-info {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 0 0 0;
+}
+
+.feed-name {
+    color: #333333;
+    margin-bottom: 2.47px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+}
+
+.feed-para {
+    color: #4f4f4f;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 140%;
+}
+
+.feed-follow-btn {
+    width: 32.18px;
+    height: 32.18px;
+    border-radius: 5.36px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 18px;
+    color: #2d3b68;
+    border: 1.34px solid var(--2, #2d3b68);
+}
+
+.feed-follow-btn:hover {
+    border-color: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.see-all-btn {
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    transition: background 0.2s;
+    color: #333;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+    background: transparent;
+    border-radius: 8px;
+}
+
+.see-all-btn:hover {
+    /* background: rgba(0, 0, 0, 0.08); */
+}
+
+/* Advertisement Widget */
+.ad-widget {
+    position: relative;
+}
+
+.ad-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.ad-menu:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.ad-content {
+    padding: 12px 16px;
+    text-align: center;
+}
+
+.ad-logos {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.ad-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.ad-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ad-text {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 12px 0;
+}
+
+.ad-cta {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    margin-top: 12px;
+    border: 1px solid #0a66c2;
+    background: #fff;
+    color: #0a66c2;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ad-cta:hover {
+    background: rgba(10, 102, 194, 0.08);
+    border-width: 2px;
+}

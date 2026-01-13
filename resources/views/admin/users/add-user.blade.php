@@ -4,47 +4,40 @@
 </style>
 <style>
 
-     body{
+    body{
         background: #fafbff !important;
     }
 
     .card {
-        border: 2px solid #e9ebf0 !important;
-        border-radius: 14.66px !important;
+        border: none !important;
+        border-radius: 0 !important;
         overflow: hidden;
     }
 
     .card-body{
-        background: #27357208;
-        padding: 30px 30px 30px !important;
+        background: #fafbff !important;
+        padding: 30px 0px !important;
     }
 
     .card-header:first-child {
         border: 0;
-        background: #2735721c;
-        padding: 30px 30px 30px !important;
+        background: #fafbff !important;
+        padding: 30px 0px !important;
     }
 
     h4.card-title {
-        font-family: "Inter";
-        font-weight: 600;
-        font-size: 24px;
-        line-height: 100%;
-        color: #273572;
+        border-radius: 0;
+        color: #333;
         margin: 0;
+        font-size: 28px;
+        font-family: "Inter";
+        font-weight: 500;
     }
 
     label.form-label {
-        margin: 0 0px 14px;
-        position: relative;
-        color: #333333;
-        display: flex;
-        align-items: center;
-        justify-content: start;
-        font-family: "Inter";
-        font-weight: 600;
+        font-family: "inter";
+        font-weight: 400;
         font-size: 18px;
-        line-height: 100%;
     }
 
     label.form-check-label {
@@ -54,19 +47,7 @@
         line-height: 160%;
     }
 
-    .form-control,
-    .form-select {
-        background: #FFFFFF;
-        border-radius: 9.77px !important;
-        border: 2px solid #E9EBF0 !important;
-        padding: 19px 16px !important;
-        font-family: Inter !important;
-        font-weight: 400 !important;
-        font-size: 16px !important;
-        line-height: 100% !important;
-        color: #000 !important;
-        caret-color: auto !important;
-    }
+    
 
     /* Chrome, Edge, Safari, Brave */
     input:-webkit-autofill,
@@ -105,6 +86,14 @@
         margin-top: -6px;
         margin-right: 16px;
         border: none !important;
+    }
+
+    @media (max-width: 768px) {
+         .col-lg-12.mt-4.btnMain{
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
     }
 </style>
 @section('content')
@@ -178,7 +167,7 @@
                                         </span>
                                     </div>
                                 </div> --}}
-                                    <div class="col-lg-12 mt-4">
+                                    <div class="col-lg-12 mt-4 btnMain">
                                         <button class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>

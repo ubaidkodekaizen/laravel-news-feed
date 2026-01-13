@@ -51,19 +51,19 @@ Route::get('/api-doc', function () {
     if (!session()->has('api_doc_authenticated')) {
         return view('api-doc.password');
     }
-    
+
     return view('api-doc.index');
 })->name('api.doc');
 
 Route::post('/api-doc/authenticate', function (\Illuminate\Http\Request $request) {
     $inputPassword = $request->input('password');
     $storedPassword = env('API_PASSWORD', '884588rvkwd56zb640');
-    
+
     if ($inputPassword === $storedPassword) {
         session(['api_doc_authenticated' => true]);
         return redirect()->route('api.doc');
     }
-    
+
     return back()->withErrors(['password' => 'Invalid password. Please try again.']);
 })->name('api.doc.authenticate');
 
@@ -159,19 +159,39 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     // News Feed API Routes (for AJAX calls)
     Route::prefix('feed')->group(function () {
+       // Post CRUD
         Route::get('/posts', [FeedController::class, 'getFeed'])->name('feed.posts');
-        Route::get('/posts/{slug}', [FeedController::class, 'getPost'])->name('feed.post.show');
+
+
+
         Route::post('/posts', [FeedController::class, 'createPost'])->name('feed.post.create');
         Route::put('/posts/{id}', [FeedController::class, 'updatePost'])->name('feed.post.update');
         Route::delete('/posts/{id}', [FeedController::class, 'deletePost'])->name('feed.post.delete');
+
+        // Reactions
         Route::post('/reactions', [FeedController::class, 'addReaction'])->name('feed.reaction.add');
         Route::delete('/reactions', [FeedController::class, 'removeReaction'])->name('feed.reaction.remove');
+        Route::get('/posts/{postId}/reactions-count', [FeedController::class, 'getReactionCount'])->name('feed.post.reactions.count');
+        Route::get('/posts/{postId}/reactions-list', [FeedController::class, 'getReactionsList'])->name('feed.post.reactions.list');
+
+        // Comments
         Route::post('/posts/{postId}/comments', [FeedController::class, 'addComment'])->name('feed.comment.add');
         Route::put('/comments/{commentId}', [FeedController::class, 'updateComment'])->name('feed.comment.update');
         Route::delete('/comments/{commentId}', [FeedController::class, 'deleteComment'])->name('feed.comment.delete');
         Route::get('/posts/{postId}/comments', [FeedController::class, 'getComments'])->name('feed.comments');
+        Route::get('/posts/{postId}/comments-count', [FeedController::class, 'getCommentCount'])->name('feed.post.comments.count');
+
+        // Sharing
         Route::post('/posts/{postId}/share', [FeedController::class, 'sharePost'])->name('feed.post.share');
+        Route::get('/posts/{postId}/shares-list', [FeedController::class, 'getSharesList'])->name('feed.post.shares.list');
+
+        // User posts
         Route::get('/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('feed.user.posts');
+
+        // IMPORTANT: Single post detail page (must be BEFORE the posts/{slug} API route)
+        Route::get('/posts/{slug}', [FeedController::class, 'showPostPage'])
+            ->where('slug', '[a-z0-9\-]+')
+            ->name('feed.post.page');
     });
 
     Route::get('/inbox', function () {

@@ -1,11 +1,10 @@
-
 let cropper;
 let currentEditIndex = null;
 
 $('#imageEditorThumbnails').on('click', '.btn-edit', function () {
   const i = $(this).closest('[data-index]').data('index');
   currentEditIndex = i;
-  const img = imageList[i];
+  const img = window.imageList[i];
 
   $('#cropImage').attr('src', img.src);
   $('#zoomSlider').val(1);
@@ -56,7 +55,7 @@ $('#applyImageEdit').click(function () {
   const canvas = cropper.getCroppedCanvas();
   const newSrc = canvas.toDataURL('image/jpeg');
 
-  imageList[currentEditIndex].src = newSrc;
+  window.imageList[currentEditIndex].src = newSrc;
   $('#imageEditModal').modal('hide');
   renderThumbnails();
 });

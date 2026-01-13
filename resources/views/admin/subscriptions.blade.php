@@ -87,7 +87,7 @@
         font-family: 'Inter';
         border: 1px solid #E9EBF0 !important;
         border-radius: 10.66px !important;
-        padding: 16px 15px !important; 
+        padding: 16px 15px !important;
         background-color: transparent;
         transition: background-color 0.2s ease;
     }
@@ -132,7 +132,9 @@
         pointer-events: none;
     }
 
-    th.sorting, th.sorting_disabled {
+    th,
+    th.sorting, 
+    th.sorting_disabled {
         color: #333333;
         font-family: "Inter";
         font-size: 18.65px;
@@ -144,15 +146,17 @@
         padding-right: 44px !important;
     }
 
-    table.dataTable thead > tr > th.sorting:before, 
-    table.dataTable thead > tr > th.sorting_asc:before, 
-    table.dataTable thead > tr > th.sorting_desc:before, 
-    table.dataTable thead > tr > th.sorting_asc_disabled:before, 
-    table.dataTable thead > tr > th.sorting_desc_disabled:before, 
-    table.dataTable thead > tr > td.sorting:before, 
-    table.dataTable thead > tr > td.sorting_asc:before, 
-    table.dataTable thead > tr > td.sorting_desc:before, 
-    table.dataTable thead > tr > td.sorting_asc_disabled:before, 
+    th:before,
+    td:before,
+    table.dataTable thead > tr > th.sorting:before,
+    table.dataTable thead > tr > th.sorting_asc:before,
+    table.dataTable thead > tr > th.sorting_desc:before,
+    table.dataTable thead > tr > th.sorting_asc_disabled:before,
+    table.dataTable thead > tr > th.sorting_desc_disabled:before,
+    table.dataTable thead > tr > td.sorting:before,
+    table.dataTable thead > tr > td.sorting_asc:before,
+    table.dataTable thead > tr > td.sorting_desc:before,
+    table.dataTable thead > tr > td.sorting_asc_disabled:before,
     table.dataTable thead > tr > td.sorting_desc_disabled:before {
         content: "" !important;
         width: 16px;
@@ -161,15 +165,17 @@
         background-size: contain;
     }
 
-    table.dataTable thead > tr > th.sorting:after, 
-    table.dataTable thead > tr > th.sorting_asc:after, 
-    table.dataTable thead > tr > th.sorting_desc:after, 
-    table.dataTable thead > tr > th.sorting_asc_disabled:after, 
-    table.dataTable thead > tr > th.sorting_desc_disabled:after, 
-    table.dataTable thead > tr > td.sorting:after, 
-    table.dataTable thead > tr > td.sorting_asc:after, 
-    table.dataTable thead > tr > td.sorting_desc:after, 
-    table.dataTable thead > tr > td.sorting_asc_disabled:after, 
+    th:after,
+    td:after,
+    table.dataTable thead > tr > th.sorting:after,
+    table.dataTable thead > tr > th.sorting_asc:after,
+    table.dataTable thead > tr > th.sorting_desc:after,
+    table.dataTable thead > tr > th.sorting_asc_disabled:after,
+    table.dataTable thead > tr > th.sorting_desc_disabled:after,
+    table.dataTable thead > tr > td.sorting:after,
+    table.dataTable thead > tr > td.sorting_asc:after,
+    table.dataTable thead > tr > td.sorting_desc:after,
+    table.dataTable thead > tr > td.sorting_asc_disabled:after,
     table.dataTable thead > tr > td.sorting_desc_disabled:after {
         content: "" !important;
         width: 16px;
@@ -178,6 +184,7 @@
         background-size: contain;
     }
 
+    td,
     table.dataTable.table-striped>tbody>tr.odd>*,
     table.dataTable.table-striped>tbody>tr.even>* {
         vertical-align: middle;
@@ -210,7 +217,7 @@
         font-weight: 300;
     }
 
-    .pagination .page-item:first-child .page-link, 
+    .pagination .page-item:first-child .page-link,
     .pagination .page-item:last-child .page-link {
         border: none;
         background: #FFFFFF;
@@ -330,72 +337,72 @@
                         <div class="card-body">
                             <!-- Tabs Navigation - Only show if user has filter permission -->
                             @if($canFilter)
-                            <ul class="nav nav-tabs mb-4" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                            <ul class="nav nav-tabs mb-4 pb-3" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         ALL <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'active' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'active' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'active']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         ACTIVE <span class="badge bg-secondary">{{ $counts['active'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'inactive' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'inactive' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'inactive']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         INACTIVE <span class="badge bg-secondary">{{ $counts['inactive'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'web' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'web' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'web']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         WEB <span class="badge bg-secondary">{{ $counts['web'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'google' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'google' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'google']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         GOOGLE <span class="badge bg-secondary">{{ $counts['google'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'apple' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'apple' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'apple']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         APPLE <span class="badge bg-secondary">{{ $counts['apple'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'amcob' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'amcob' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'amcob']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         AMCOB <span class="badge bg-secondary">{{ $counts['amcob'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'monthly' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'monthly' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'monthly']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         MONTHLY <span class="badge bg-secondary">{{ $counts['monthly'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'annual' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'annual' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'annual']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         ANNUAL <span class="badge bg-secondary">{{ $counts['annual'] ?? 0 }}</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'free' ? 'active' : '' }}" 
+                                    <a class="nav-link {{ $filter === 'free' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'free']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
                                         FREE <span class="badge bg-secondary">{{ $counts['free'] ?? 0 }}</span>
@@ -409,26 +416,49 @@
                             </div>
                             @endif
                             <style>
-                                .nav-tabs .nav-link {
-                                    border: none;
-                                    border-bottom: 3px solid transparent;
-                                    transition: all 0.3s ease;
+                            .nav-tabs .nav-link {
+                                border: none;
+                                border-bottom: 3px solid transparent;
+                                transition: all 0.3s ease;
+                                text-transform: uppercase;
+                            }
+                            .nav-tabs .nav-link:hover {
+                                border-bottom-color: #37488E;
+                                color: #37488E !important;
+                            }
+                            .nav-tabs .nav-link.active {
+                                border-bottom-color: #37488E;
+                                color: #ffffff !important;
+                                border-radius: 12px;
+                                background: #273572;
+                            }
+
+                            .nav-tabs .nav-link.active .badge {
+                                color: #ffffff !important;
+                            }
+                            .nav-tabs .badge {
+                                color: #000;
+                                margin: 0px 0px 0px 0px;
+                                font-size: 16px;
+                                font-family: "Inter";
+                                font-weight: 400;
+                                background: transparent !important;
+                            }
+                            @media (max-width: 768px) {
+                                    ul#subscriptionTabs {
+                                        justify-content: center;
+                                    }
+
+                                    .nav-tabs .nav-link {
+                                        font-size: 12px;
+                                        padding: 5px 12px !important;
+                                    }
+
+                                    .nav-tabs .badge {
+                                        font-size: 12px;
+                                    }
                                 }
-                                .nav-tabs .nav-link:hover {
-                                    border-bottom-color: #37488E;
-                                    color: #37488E !important;
-                                }
-                                .nav-tabs .nav-link.active {
-                                    border-bottom-color: #37488E;
-                                    color: #37488E !important;
-                                    background-color: transparent;
-                                }
-                                .nav-tabs .badge {
-                                    margin-left: 5px;
-                                    font-size: 12px;
-                                    padding: 4px 8px;
-                                }
-                            </style>
+                        </style>
                             <table id="usersTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -502,7 +532,7 @@
                                             <td>{{ $subscription->status }}</td>
 
                                             {{-- <td>
-                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a> 
+                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a>
                                         <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <a href="{{ route('admin.company.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit Company</a>
                                         <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm"

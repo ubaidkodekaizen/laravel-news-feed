@@ -530,13 +530,6 @@ const InboxMessageList = ({ messages, conversationId }) => {
                                                             !msg.deleted_at && (
                                                                 <span
                                                                     className="messageEdited"
-                                                                    style={{
-                                                                        marginLeft:
-                                                                            "4px",
-                                                                        fontSize:
-                                                                            "0.75rem",
-                                                                        color: "#666",
-                                                                    }}
                                                                 >
                                                                     (edited)
                                                                 </span>

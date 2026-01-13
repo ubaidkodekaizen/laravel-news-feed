@@ -105,6 +105,14 @@
         margin-right: 16px;
         border: none !important;
     }
+
+    @media (max-width: 768px) {
+         .row .col-12.btnMain{
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+    }
 </style>
 @section('content')
     <main class="main-content">
@@ -169,7 +177,7 @@
                                     @endif
 
                                     <!-- Submit Button -->
-                                    <div class="col-12">
+                                    <div class="col-12 btnMain">
                                         <button type="submit" class="btn btn-primary">Update Blog</button>
                                     </div>
                                 </div>

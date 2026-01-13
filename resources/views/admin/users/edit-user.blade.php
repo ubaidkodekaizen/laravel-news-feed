@@ -24,14 +24,14 @@
     .new_user_details .form-control,
     .new_user_details .form-select,
     .custom-select-dropdown .btn-light {
-        border-radius: 9.77px;
-        border: 2px solid #E9EBF0;
-        padding: 19px 16px;
-        font-family: Inter;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 120% !important;
-        color: #000;
+        font-family: "Inter";
+        font-weight: 400 !important;
+        font-size: 18px !important;
+        line-height: 60px !important;
+        padding: 0px .75rem !important;
+        background-color: #F6F7FC !important;
+        border: 2px solid #E9EBF0 !important;
+        border-radius: 9.77px !important;
     }
 
     .btn-primary {
@@ -78,6 +78,13 @@
         margin-top: 25px;
     }
 
+    .row .col-lg-6{
+        font-family: "inter" !important;
+        font-weight: 400 !important;
+        font-size: 18px !important;
+    }
+
+
     @media (max-width: 1137px) {
         .flex{
             flex-direction: column;
@@ -86,8 +93,12 @@
 
     @media (max-width: 768px) {
         .row {
-            padding: 20px 16px;
+            padding: 20px 16px !important;
             margin: 10px 0;
+        }
+
+        .new_user_details .form-control, .new_user_details .form-select, .custom-select-dropdown .btn-light {
+            font-size: 16px !important;
         }
         .custom_card_profile .nav-tabs .nav-link {
             padding: 10px 11px !important;
@@ -107,6 +118,19 @@
             margin: 8px 0 !important;
         }
 
+        .list_check_flex {
+            gap: 0px !important;
+        }
+
+        .user_company_profile .new_user_details .list_check_flex label {
+            font-size: 14px;
+        }
+
+        .user_company_profile .new_user_details .profile_heading {
+            font-size: 22px;
+            text-align: center;
+        }
+
         .btn-primary {
             font-size: 18px !important;
         }
@@ -115,18 +139,18 @@
             font-size: 14px !important;
         }
         .toggle__label {
-            width: 70px !important;
+            width: 104px !important;
             height: 24px !important;
         }
 
         .toggle__input:checked + .toggle__label::after {
-            left: 32px !important;
+            left: 52px !important;
         }
 
         .toggle__label::after {
             top: 1.9px !important;
             left: 2px !important;
-            width: 36px !important;
+            width: 50px !important;
             height: 20px !important;
         }
     }
@@ -347,7 +371,7 @@
                                         </div>
 
                                         <div class="col-lg-6">
-                                            <label for="phone" class="toggle_flex">Cell / Mobile<span
+                                            <!-- <label for="phone" class="toggle_flex">Cell / Mobile<span
                                                     class="text-danger">* </span>
                                                 <div class="cont">
                                                     (Private
@@ -359,14 +383,29 @@
                                                     </div>
                                                     Public)
                                                 </div>
-                                            </label>
+                                            </label> -->
+                                             <label for="phone" class="toggle_flex">Cell / Mobile<span
+                                                            class="text-danger">* </span>
+                                                        <div class="cont">
+                                                            <div class="toggle">
+                                                                <input type="checkbox" id="mobile_public"
+                                                                    class="toggle__input" name="phone_public"
+                                                                    value="Yes"
+                                                                    @if ($user->phone_public == 'Yes') checked @endif>
+                                                                <label for="mobile_public" class="toggle__label mt-0">
+                                                                    <span>Private</span>
+                                                                    <span>Public</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </label>
                                             <input type="tel" name="phone" id="phone"
                                                 class="form-control phone_number w-100"
                                                 value="{{ old('phone', $user->phone) }}">
                                         </div>
 
                                         <div class="col-lg-6">
-                                            <label for="email">Email<span class="text-danger">*</span>
+                                            <!-- <label for="email">Email<span class="text-danger">*</span>
                                                 <div class="cont">
                                                     (Private
                                                     <div class="toggle">
@@ -378,7 +417,21 @@
 
                                                     Public)
                                                 </div>
-                                            </label>
+                                            </label> -->
+                                             <label for="email">Email<span
+                                                            class="text-danger">* </span>
+                                                        <div class="cont">
+                                                            <div class="toggle">
+                                                                <input type="checkbox" id="email_public" class="toggle__input"
+                                                            name="email_public" value="Yes"
+                                                            @if ($user->email_public == 'Yes') checked @endif>
+                                                        <label for="email_public" class="toggle__label mt-0">
+                                                                    <span>Private</span>
+                                                                    <span>Public</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </label>
                                             <input type="email" name="email" id="email" class="form-control"
                                                 value="{{ old('email', $user->email) }}">
                                         </div>
