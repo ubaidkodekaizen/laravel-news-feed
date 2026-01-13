@@ -5,6 +5,7 @@
 <style>
     body{
         background: #fafbff !important;
+        font-family: "Inter" !important;
     }
     .card-header:first-child {
         background: #fafbff !important;
@@ -46,7 +47,7 @@
         color: #333;
         margin-bottom: 15px;
         padding-bottom: 10px;
-        border-bottom: 2px solid #E9EBF0;
+        /* border-bottom: 2px solid #E9EBF0; */
     }
     .permission-item {
         margin-bottom: 10px;
@@ -61,6 +62,46 @@
     .form-check-input {
         cursor: pointer;
     }
+ 
+    .btn {
+        border-radius: 9.77px !important;
+        padding: 15px 56px !important;
+        font-family: "Poppins", sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 22px !important;
+        line-height: 100% !important;
+        letter-spacing: 0px !important;
+        text-align: center !important;
+    }
+
+    .btn:hover{
+        color: #000;
+    }
+
+    .card .card-header .card-title a img {
+        width: 14px !important;
+        margin-top: -6px;
+        margin-right: 16px;
+        border: none !important;
+    }
+
+    .form-check-input:checked {
+        background-color: #273572 !important;
+        border-color: #273572 !important;
+    }
+
+    @media (max-width: 768px) {
+        .row.mt-4 .col-12 {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 16px !important;
+        }
+    }
 </style>
 @section('content')
 <main class="main-content">
@@ -69,7 +110,11 @@
             <div class="col-12">
                 <div class="card" style="border: none;">
                     <div class="card-header">
-                        <h4 class="card-title">{{ isset($manager) ? 'Edit Manager/Editor' : 'Add Manager/Editor' }}</h4>
+                        <!-- <h4 class="card-title">{{ isset($manager) ? 'Edit Manager/Editor' : 'Add Manager/Editor' }}</h4> -->
+                        <h4 class="card-title">
+                                <a href="{{ url('/admin/managers') }}"><img src=" {{ asset('assets/images/dashboard/dashboardBackChevron.svg') }}" alt=""></a>
+                                    {{ isset($manager) ? 'Edit Manager/Editor' : 'Add Manager/Editor' }}
+                            </h4>
                     </div>
                     <div class="card-body">
                         @if(session('success'))

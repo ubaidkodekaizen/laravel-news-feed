@@ -321,6 +321,11 @@ textarea:-webkit-autofill {
     top: 52% !important;
 }
 
+table#usersTable {
+      border-radius: 10.99px 10.99px 0 0 !important;
+    overflow: hidden;
+}
+
   @media (max-width: 1241px) {
     div#usersTable_wrapper .col-sm-12.col-md-6{
       width: 100%;

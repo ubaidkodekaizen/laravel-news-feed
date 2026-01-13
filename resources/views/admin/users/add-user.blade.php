@@ -87,6 +87,14 @@
         margin-right: 16px;
         border: none !important;
     }
+
+    @media (max-width: 768px) {
+         .col-lg-12.mt-4.btnMain{
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+    }
 </style>
 @section('content')
     <main class="main-content">
@@ -159,7 +167,7 @@
                                         </span>
                                     </div>
                                 </div> --}}
-                                    <div class="col-lg-12 mt-4">
+                                    <div class="col-lg-12 mt-4 btnMain">
                                         <button class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>

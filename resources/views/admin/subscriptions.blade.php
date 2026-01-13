@@ -132,7 +132,9 @@
         pointer-events: none;
     }
 
-    th.sorting, th.sorting_disabled {
+    th,
+    th.sorting, 
+    th.sorting_disabled {
         color: #333333;
         font-family: "Inter";
         font-size: 18.65px;
@@ -144,6 +146,8 @@
         padding-right: 44px !important;
     }
 
+    th:before,
+    td:before,
     table.dataTable thead > tr > th.sorting:before,
     table.dataTable thead > tr > th.sorting_asc:before,
     table.dataTable thead > tr > th.sorting_desc:before,
@@ -161,6 +165,8 @@
         background-size: contain;
     }
 
+    th:after,
+    td:after,
     table.dataTable thead > tr > th.sorting:after,
     table.dataTable thead > tr > th.sorting_asc:after,
     table.dataTable thead > tr > th.sorting_desc:after,
@@ -178,6 +184,7 @@
         background-size: contain;
     }
 
+    td,
     table.dataTable.table-striped>tbody>tr.odd>*,
     table.dataTable.table-striped>tbody>tr.even>* {
         vertical-align: middle;
@@ -257,7 +264,7 @@
                         <div class="card-body">
                             <!-- Tabs Navigation - Only show if user has filter permission -->
                             @if($canFilter)
-                            <ul class="nav nav-tabs mb-4" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                            <ul class="nav nav-tabs mb-4 pb-3" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}"
                                        href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"
@@ -336,26 +343,49 @@
                             </div>
                             @endif
                             <style>
-                                .nav-tabs .nav-link {
-                                    border: none;
-                                    border-bottom: 3px solid transparent;
-                                    transition: all 0.3s ease;
+                            .nav-tabs .nav-link {
+                                border: none;
+                                border-bottom: 3px solid transparent;
+                                transition: all 0.3s ease;
+                                text-transform: uppercase;
+                            }
+                            .nav-tabs .nav-link:hover {
+                                border-bottom-color: #37488E;
+                                color: #37488E !important;
+                            }
+                            .nav-tabs .nav-link.active {
+                                border-bottom-color: #37488E;
+                                color: #ffffff !important;
+                                border-radius: 12px;
+                                background: #273572;
+                            }
+
+                            .nav-tabs .nav-link.active .badge {
+                                color: #ffffff !important;
+                            }
+                            .nav-tabs .badge {
+                                color: #000;
+                                margin: 0px 0px 0px 0px;
+                                font-size: 16px;
+                                font-family: "Inter";
+                                font-weight: 400;
+                                background: transparent !important;
+                            }
+                            @media (max-width: 768px) {
+                                    ul#subscriptionTabs {
+                                        justify-content: center;
+                                    }
+
+                                    .nav-tabs .nav-link {
+                                        font-size: 12px;
+                                        padding: 5px 12px !important;
+                                    }
+
+                                    .nav-tabs .badge {
+                                        font-size: 12px;
+                                    }
                                 }
-                                .nav-tabs .nav-link:hover {
-                                    border-bottom-color: #37488E;
-                                    color: #37488E !important;
-                                }
-                                .nav-tabs .nav-link.active {
-                                    border-bottom-color: #37488E;
-                                    color: #37488E !important;
-                                    background-color: transparent;
-                                }
-                                .nav-tabs .badge {
-                                    margin-left: 5px;
-                                    font-size: 12px;
-                                    padding: 4px 8px;
-                                }
-                            </style>
+                        </style>
                             <table id="usersTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>

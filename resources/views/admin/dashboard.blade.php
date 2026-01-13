@@ -122,6 +122,11 @@
         flex-wrap: wrap;
     }
 
+    button.btn.btn-primary.btn-sm,
+    button.btn.btn-secondary.btn-sm {
+        font-size: 14px !important;
+    }
+
     @media (min-width: 768px) and (max-width: 1502px) {
         .card-modern .card-body {
            flex-direction: column-reverse;
@@ -133,6 +138,13 @@
 
         .cardSvg {
             margin-top: 20px;
+        }
+    }
+
+    
+    @media (min-width: 558px) and (max-width: 1190px) {
+        .container .row.g-4 .col-lg-3 {
+            width: 50%;
         }
     }
 </style>
