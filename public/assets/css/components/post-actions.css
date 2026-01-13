@@ -1,0 +1,134 @@
+/* Post Actions Menu (Edit/Delete) */
+.post-actions-menu {
+    margin-left: auto;
+}
+
+.post-menu-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.post-menu-btn:hover {
+    background: #f3f4f6;
+}
+
+.post-menu-btn i {
+    font-size: 18px;
+}
+
+.post-actions-menu .dropdown-menu {
+    min-width: 180px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    padding: 8px 0;
+}
+
+.post-actions-menu .dropdown-item {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #374151;
+    transition: background-color 0.2s;
+}
+
+.post-actions-menu .dropdown-item:hover {
+    background: #f3f4f6;
+}
+
+.post-actions-menu .dropdown-item.text-danger:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.post-actions-menu .dropdown-item i {
+    width: 16px;
+}
+
+/* Old delete button (keeping for compatibility) */
+.cross_btn.post_btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.cross_btn.post_btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.cross_btn.post_btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Empty State */
+#emptyStateCard {
+    border: 2px dashed #e5e7eb;
+    background: #f9fafb;
+}
+
+#emptyStateCard .card-body {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#emptyStateCard i {
+    color: #9ca3af;
+}
+
+#emptyStateCard h5 {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+#emptyStateCard p {
+    margin-bottom: 20px;
+}
+
+/* Edit Post Modal */
+#editPostModal .form-control {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 12px;
+    resize: vertical;
+}
+
+#editPostModal .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Post Deletion Animation */
+.post-container.deleting {
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .post-actions-menu .dropdown-menu {
+        min-width: 160px;
+    }
+}

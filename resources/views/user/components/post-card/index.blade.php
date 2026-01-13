@@ -6,7 +6,7 @@
     ])
 
     @include('user.components.post-card.content', [
-        'content' => $post['content'] ?? '',
+        'content' => trim($post['content'] ?? ''),
         'postId' => $post['id'] ?? ''
     ])
 

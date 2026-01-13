@@ -1,0 +1,27 @@
+/* Post Stats Layout Update */
+.post-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.stats-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.comments-count,
+.shares-count {
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.comments-count:hover,
+.shares-count:hover {
+    color: #374151;
+    text-decoration: underline;
+}

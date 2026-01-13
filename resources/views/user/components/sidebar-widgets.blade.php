@@ -1,69 +1,116 @@
 <div id="sidebarWidgetWrapper">
-    <!-- Add to Your Feeds Widget -->
+    <!-- Recent Products -->
+    @if(isset($recentProducts) && count($recentProducts) > 0)
     <div class="sidebar-widget">
-        <div class="widget-header">Add to Your Feeds</div>
-
-        <div class="feed-item">
-            <div class="feed-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <img src="https://via.placeholder.com/48/667eea/ffffff?text=TA" alt="Techin Asia">
-            </div>
-            <div class="feed-info">
-                <div class="feed-name">Techin Asia Indonesia</div>
-                <div class="feed-category">Corporate • Online Media</div>
-            </div>
-            <button class="feed-follow-btn">+</button>
+        <div class="widget-header">Recent Products
+            <a href="{{ route('products') }}" class="see-all-btn">View All</a>
         </div>
-
-        <div class="feed-item">
-            <div class="feed-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                <img src="https://via.placeholder.com/48/f093fb/ffffff?text=FI" alt="Figma">
-            </div>
-            <div class="feed-info">
-                <div class="feed-name">Figma Indonesia</div>
-                <div class="feed-category">Design Platform</div>
-            </div>
-            <button class="feed-follow-btn">+</button>
-        </div>
-
-        <div class="feed-item">
-            <div class="feed-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                <img src="https://via.placeholder.com/48/4facfe/ffffff?text=UP" alt="Uplabs">
-            </div>
-            <div class="feed-info">
-                <div class="feed-name">Uplabs</div>
-                <div class="feed-category">Design Marketplace</div>
-            </div>
-            <button class="feed-follow-btn">+</button>
-        </div>
-
-        <button class="see-all-btn">See All Recommendation</button>
-    </div>
-
-    <!-- Advertisement Widget -->
-    <div class="sidebar-widget ad-widget">
-        <button class="ad-menu">⋯</button>
-
-        <div class="ad-content">
-            <div class="widget-header" style="text-align: left; border-bottom: none; padding-bottom: 0;">Advertisement
-            </div>
-            <small class="d-block text-muted" style="font-size: 11px; margin-bottom: 8px;">Get the latest news and job
-                vacancies</small>
-
-            <div class="ad-logos">
-                <div class="ad-logo" style="background: #0a66c2;">
-                    <img src="https://via.placeholder.com/64/0a66c2/ffffff?text=ML" alt="MuslimLynk">
+        <div class="divider"></div>
+        <div class="sidebar-widget-inner">
+            @foreach($recentProducts as $product)
+            <div class="feed-item">
+                <div class="feed-icon">
+                    <img src="{{ $product->image_url   }}" alt="{{ $product->name }}">
+                    <small>${{ number_format($product->price ?? 0, 2) }}</small>
                 </div>
-                <div class="ad-logo" style="background: #f3f2ef;">
-                    <img src="https://via.placeholder.com/64/f3f2ef/333333?text=IDF" alt="IDF">
+                <div class="feed-info">
+                    <div class="feed-name">{{ $product->name ?? 'Product' }}</div>
+                    <div class="feed-para">{{ Str::limit($product->description ?? '', 100) }}</div>
                 </div>
             </div>
-
-            <div class="ad-text">
-                <strong>MuslimLynk, Get update from Interaction Design Foundations</strong>
-            </div>
-
-            <button class="ad-cta">Visit Now</button>
+            @endforeach
         </div>
     </div>
+    @endif
 
+    <!-- Recent Services -->
+    @if(isset($recentServices) && count($recentServices) > 0)
+    <div class="sidebar-widget services">
+        <div class="widget-header">Recent Services
+            <a href="{{ route('services') }}" class="see-all-btn">View All</a>
+        </div>
+        <div class="divider"></div>
+        <div class="sidebar-widget-inner">
+            @foreach($recentServices as $service)
+            <div class="feed-item">
+                <div class="feed-icon">
+                    <img src="{{ $service->image_url  }}" alt="{{ $service->name }}">
+                    <small>${{ number_format($service->price ?? 0, 2) }}</small>
+                </div>
+                <div class="feed-info">
+                    <div class="feed-name">{{ $service->name ?? 'Service' }}</div>
+                    <div class="feed-para">{{ Str::limit($service->description ?? '', 100) }}</div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    <!-- Recent Industry -->
+    @if(isset($recentIndustries) && count($recentIndustries) > 0)
+    <div class="sidebar-widget">
+        <div class="widget-header">Trending Industries
+            <a href="#" class="see-all-btn">See All</a>
+        </div>
+        <div class="divider"></div>
+        <div class="sidebar-widget-inner">
+            @foreach($recentIndustries as $industry)
+            <div class="feed-item">
+                <div class="feed-icon">
+                    <img src="{{ $industry->logo_url }}" alt="{{ $industry->name }}">
+                    <small>{{ $industry->members_count ?? 0 }} members</small>
+                </div>
+                <div class="feed-info">
+                    <div class="feed-name">{{ $industry->name ?? 'Industry' }}</div>
+                    <div class="feed-para">{{ Str::limit($industry->description ?? '', 100) }}</div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    <!-- Suggested Connections -->
+    @if(isset($suggestedConnections) && count($suggestedConnections) > 0)
+    <div class="sidebar-widget">
+        <div class="widget-header">People you may know
+            <a href="#" class="see-all-btn">See All</a>
+        </div>
+        <div class="divider"></div>
+        <div class="sidebar-widget-inner">
+            @foreach($suggestedConnections as $user)
+            <div class="feed-item">
+                <div class="feed-icon">
+                    <img src="{{ getImageUrl($user->photo) ?? $user->avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
+                         alt="{{ $user->name }}">
+                </div>
+                <div class="feed-info">
+                    <div class="feed-name">{{ $user->name ?? ($user->first_name ?? '') . ' ' . ($user->last_name ?? '') }}</div>
+                    <div class="feed-para">{{ $user->position ?? $user->job_title ?? 'Professional' }}</div>
+                    <button class="btn btn-sm btn-outline-primary mt-2" onclick="connectUser({{ $user->id }})">
+                        <i class="fa-solid fa-user-plus"></i> Connect
+                    </button>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    <!-- Fallback if no data -->
+    @if((!isset($recentProducts) || count($recentProducts) === 0) &&
+        (!isset($recentServices) || count($recentServices) === 0) &&
+        (!isset($recentIndustries) || count($recentIndustries) === 0) &&
+        (!isset($suggestedConnections) || count($suggestedConnections) === 0))
+    <div class="sidebar-widget">
+        <div class="widget-header">Stay Connected</div>
+        <div class="divider"></div>
+        <div class="sidebar-widget-inner">
+            <p class="text-muted text-center py-4">
+                Explore products, services, and connect with professionals in your industry.
+            </p>
+        </div>
+    </div>
+    @endif
 </div>

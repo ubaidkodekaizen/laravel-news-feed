@@ -1,10 +1,10 @@
-
-let imageList = [];
+// Make imageList globally accessible
+window.imageList = [];
 
 function renderThumbnails() {
     const wrapper = $('#imageEditorThumbnails');
     wrapper.html('');
-    imageList.forEach((img, index) => {
+    window.imageList.forEach((img, index) => {
         wrapper.append(`
             <div class="col-lg-6">
                 <div class="position-relative border p-1 image-box" data-index="${index}">
@@ -24,7 +24,7 @@ function renderThumbnails() {
         `);
     });
 
-    $('#mainImagePreview').attr('src', imageList.length ? imageList[0].src : '');
+    $('#mainImagePreview').attr('src', window.imageList.length ? window.imageList[0].src : '');
 }
 
 $('#uploadMediaBtn, #editImagesBtn').click(function () {
@@ -46,7 +46,7 @@ $('#multiImageInput').on('change', function (e) {
     const files = Array.from(e.target.files);
     files.forEach(file => {
         const url = URL.createObjectURL(file);
-        imageList.push({ src: url });
+        window.imageList.push({ src: url });
     });
     renderThumbnails();
     $('#imageUploadModal').modal('show');
@@ -61,29 +61,29 @@ $('#postText').on('input', function () {
 
 $('#imageEditorThumbnails').on('click', '.btn-del', function () {
     const i = $(this).closest('[data-index]').data('index');
-    imageList.splice(i, 1);
+    window.imageList.splice(i, 1);
     renderThumbnails();
 });
 
 $('#imageEditorThumbnails').on('click', '.btn-dup', function () {
     const i = $(this).closest('[data-index]').data('index');
-    const newImg = { ...imageList[i] };
-    imageList.splice(i + 1, 0, newImg);
+    const newImg = { ...window.imageList[i] };
+    window.imageList.splice(i + 1, 0, newImg);
     renderThumbnails();
 });
 
 $('#imageEditorThumbnails').on('click', '.btn-left', function () {
     const i = $(this).closest('[data-index]').data('index');
     if (i > 0) {
-        [imageList[i - 1], imageList[i]] = [imageList[i], imageList[i - 1]];
+        [window.imageList[i - 1], window.imageList[i]] = [window.imageList[i], window.imageList[i - 1]];
         renderThumbnails();
     }
 });
 
 $('#imageEditorThumbnails').on('click', '.btn-right', function () {
     const i = $(this).closest('[data-index]').data('index');
-    if (i < imageList.length - 1) {
-        [imageList[i], imageList[i + 1]] = [imageList[i + 1], imageList[i]];
+    if (i < window.imageList.length - 1) {
+        [window.imageList[i], window.imageList[i + 1]] = [window.imageList[i + 1], window.imageList[i]];
         renderThumbnails();
     }
 });
@@ -98,26 +98,32 @@ $('#imageEditorDone').click(function () {
     $('#selectedImagesPreview').show();
     const wrapper = $('#previewImagesWrapper');
     wrapper.html('');
-    imageList.forEach((img, i) => {
+    window.imageList.forEach((img, i) => {
         wrapper.append(`<img src="${img.src}" class="img-thumbnail" style="width:100px;height:100px;">`);
     });
 });
 
 $('#clearImagesBtn').click(function () {
-    imageList = [];
+    window.imageList = [];
     $('#selectedImagesPreview').hide();
     $('#previewImagesWrapper').html('');
 });
 
-new Sortable(document.getElementById('imageEditorThumbnails'), {
-    animation: 150,
-    onEnd: function (evt) {
-        const oldIndex = evt.oldIndex;
-        const newIndex = evt.newIndex;
-        if (oldIndex === newIndex) return;
+// Initialize Sortable only if the element exists
+$(document).ready(function() {
+    const thumbnailsElement = document.getElementById('imageEditorThumbnails');
+    if (thumbnailsElement) {
+        new Sortable(thumbnailsElement, {
+            animation: 150,
+            onEnd: function (evt) {
+                const oldIndex = evt.oldIndex;
+                const newIndex = evt.newIndex;
+                if (oldIndex === newIndex) return;
 
-        const movedItem = imageList.splice(oldIndex, 1)[0];
-        imageList.splice(newIndex, 0, movedItem);
-        renderThumbnails();
+                const movedItem = window.imageList.splice(oldIndex, 1)[0];
+                window.imageList.splice(newIndex, 0, movedItem);
+                renderThumbnails();
+            }
+        });
     }
 });

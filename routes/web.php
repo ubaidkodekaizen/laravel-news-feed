@@ -133,10 +133,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
         Route::delete('/posts/{id}', [FeedController::class, 'deletePost'])->name('feed.post.delete');
         Route::post('/reactions', [FeedController::class, 'addReaction'])->name('feed.reaction.add');
         Route::delete('/reactions', [FeedController::class, 'removeReaction'])->name('feed.reaction.remove');
+        Route::get('/posts/{postId}/reactions-count', [FeedController::class, 'getReactionCount'])->name('feed.post.reactions.count');
         Route::post('/posts/{postId}/comments', [FeedController::class, 'addComment'])->name('feed.comment.add');
         Route::put('/comments/{commentId}', [FeedController::class, 'updateComment'])->name('feed.comment.update');
         Route::delete('/comments/{commentId}', [FeedController::class, 'deleteComment'])->name('feed.comment.delete');
         Route::get('/posts/{postId}/comments', [FeedController::class, 'getComments'])->name('feed.comments');
+        Route::get('/posts/{postId}/comments-count', [FeedController::class, 'getCommentCount'])->name('feed.post.comments.count');
         Route::post('/posts/{postId}/share', [FeedController::class, 'sharePost'])->name('feed.post.share');
         Route::get('/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('feed.user.posts');
     });

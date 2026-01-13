@@ -1,26 +1,110 @@
-.card.sticky-profile {
-    position: sticky;
-    top: 90px;
-    z-index: 1;
+#feedProfileCard {
+    padding: 0;
+    border-radius: 8px;
+    border: 1px solid #e9ebf0;
+    background: #ffffff;
+}
+#feedAdCard {
+    background: #101a33;
+    position: relative;
+    padding: 28px 36px;
+}
+#feedAdCard .card-img {
+    padding: 0 0 126px 0;
+}
+.feedAdWatermarkImg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#feedAdCard h4 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.3em;
+    color: #ffffff;
+}
+#feedAdCard h4 span {
+    color: #f3681f;
+}
+#feedAdCard p {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.3em;
+    color: #ffffff;
+}
+#feedAdCard .feedAdCardCta {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 100%;
+    background: #f3681f;
+    color: #101a33;
+    padding: 17px 20px;
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    border: none;
+    text-decoration: none;
+}
+#feedAdCard .feedAdCardLinkedin {
+    padding: 8.31px;
+    background: #0a66c2;
+    border-radius: 14px;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 35px;
+    margin: 0 0 15px 0;
 }
 .profile_cover_bg {
-    height: 57.33px;
+    height: 111px;
     background: #b8c034;
-    border-radius: 5.33px;
+    border-radius: 0;
 }
 .profile_card_pic {
     position: relative;
     width: 100%;
-    max-width: 74.67px;
-    min-height: 74.67px;
-    margin: -30px auto 10.67px auto;
+    max-width: 95.33px;
+    min-height: 95.33px;
+    margin: -40px 0 0 19px;
+}
+
+.profile_card_pic img {
+    background: #fff;
+    border: 2px solid #fff !important;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 .profile_card_details {
-    padding: 0 8px 13px 8px;
+    padding: 10px 23px 18px 23px;
+    text-align: left;
 }
+.profile_card_details h6 {
+    color: #000;
+    margin-bottom: 4.67px;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 26.95px;
+    line-height: 100%;
+}
+.profile_card_details p {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.3em;
+    color: #333333;
+}
+
 .user-img {
-    width: 40px;
-    height: 40px;
+    width: 64.66px;
+    height: 64.66px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -34,4 +118,47 @@
     color: #555;
     margin-bottom: 0;
     line-height: 1.5;
+}
+.profile_card_details_inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+}
+
+.profile_card_details_inner .profile_card_details_inner_box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: #2735720d;
+    min-height: 43px;
+    padding: 0 19px 0 15px;
+    border-radius: 6px;
+}
+
+.profile_card_details_inner .profile_card_details_inner_box h4 {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 18.67px;
+    line-height: 100%;
+    color: #17272f;
+    margin: 0;
+}
+
+.profile_card_details_inner .profile_card_details_inner_box p {
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18.67px;
+    line-height: 100%;
+    color: #1c3395;
+    margin: 0;
+}
+
+.profile_card_details .divider {
+    background: #edf0f5;
+    height: 1.33px;
+    width: 100%;
+    margin: 19.67px 0 21.33px 0;
 }
