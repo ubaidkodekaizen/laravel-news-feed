@@ -1109,10 +1109,7 @@ $companyLogo =
                                                                 <div class="service_price_duration my-0 event_price_label">
                                                                     <p class="service_price">
                                                                         <span>
-                                                                            @if ($product->original_price)
-                                                                                <s>${{ number_format($product->original_price, 2) }}</s>
-                                                                            @endif
-                                                                            ${{ number_format($product->discounted_price ?? $product->original_price, 2) }}
+                                                                            ${{ number_format($product->original_price, 2) }}
                                                                             / {{ $product->unit_of_quantity ?? '' }}
                                                                         </span>
                                                                     </p>
@@ -1168,12 +1165,7 @@ $companyLogo =
                                                                     <div class="service_price">
                                                                         <p>
                                                                             <span>
-                                                                                @if ($service->discounted_price && $service->discounted_price < $service->original_price)
-                                                                                    <s>${{ $service->original_price }}</s>
-                                                                                    ${{ $service->discounted_price }}
-                                                                                @else
-                                                                                    ${{ $service->original_price }}
-                                                                                @endif
+                                                                                ${{ $service->original_price }}
                                                                                 / {{ $service->duration }}
                                                                             </span>
 

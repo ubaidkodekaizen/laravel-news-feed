@@ -93,14 +93,14 @@
                                 <div class="info-label">Service Title</div>
                                 <div class="info-value">{{ $service->title }}</div>
 
+                                <div class="info-label">Category</div>
+                                <div class="info-value">{{ $service->category ?? 'N/A' }}</div>
+
                                 <div class="info-label">Short Description</div>
                                 <div class="info-value">{{ $service->short_description ?? 'N/A' }}</div>
 
                                 <div class="info-label">Original Price</div>
                                 <div class="info-value">${{ number_format($service->original_price, 2) }}</div>
-
-                                <div class="info-label">Discounted Price</div>
-                                <div class="info-value">{{ $service->discounted_price ? '$' . number_format($service->discounted_price, 2) : 'N/A' }}</div>
 
                                 <div class="info-label">Duration</div>
                                 <div class="info-value">{{ $service->duration ?? 'N/A' }}</div>

@@ -339,7 +339,7 @@
                     <div class="slide product-trigger-wrapper" data-id="{{ $product->user->id }}"
                         data-title="{{ $product->title }}" data-description="{{ $product->short_description }}"
                         data-image="{{ $product->product_image ? getImageUrl($product->product_image) : 'assets/images/MuslimLynkPlaceholder.png' }}"
-                        data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
+                        data-price="${{ $product->original_price }}"
                         data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
                         data-user-name="{{ $product->user->first_name }}"
                         data-user-photo="{{ $product->user_has_photo ? getImageUrl($product->user->photo) : '' }}"
@@ -355,12 +355,7 @@
                                 <div class="sliderUserAndPricingInfo">
                                     <div class="sliderPricing">
                                         <span class="sliderPricingUnit">
-                                            @if ($product->discounted_price && $product->discounted_price < $product->original_price)
-                                                <s>${{ $product->original_price }}</s>
-                                                ${{ $product->discounted_price }}
-                                            @else
-                                                ${{ $product->original_price }}
-                                            @endif
+                                            ${{ $product->original_price }}
                                             / {{ $product->quantity }}-{{ $product->unit_of_quantity }}
                                         </span>
                                     </div>
@@ -576,11 +571,7 @@
                                 <img src="{{ $service->service_image ? getImageUrl($service->service_image) : asset('assets/images/servicePlaceholderImg.png') }}"
                                     alt="{{ $service->title }}" class="img-fluid serviceImg">
                                 <span class="servicePricing">
-                                    @if ($service->discounted_price && $service->discounted_price < $service->original_price)
-                                        ${{ $service->discounted_price }} / {{ $service->duration }}
-                                    @else
-                                        ${{ $service->original_price }} / {{ $service->duration }}
-                                    @endif
+                                    ${{ $service->original_price }} / {{ $service->duration }}
                                 </span>
                             </div>
                         </div>

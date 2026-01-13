@@ -287,6 +287,10 @@ class PageController extends Controller
             $query->where('title', 'like', "%$search%");
         }
 
+        if ($request->has('category') && $request->category !== null) {
+            $query->where('category', $request->category);
+        }
+
         $products = $query->orderByDesc('id')->get()->map(function ($product) {
             $user = $product->user;
             $photoPath = $user->photo ?? null;
@@ -307,24 +311,38 @@ class PageController extends Controller
             return $product;
         });
 
+        // Get categories that have products
+        $categories = Product::whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            })
+            ->whereNotNull('category')
+            ->distinct()
+            ->pluck('category')
+            ->sort()
+            ->values();
+
         if ($request->ajax()) {
             return response()->json([
                 'html' => view('partial.product_cards', compact('products'))->render()
             ]);
         }
-        return view('pages.products', compact('products'));
+        return view('pages.products', compact('products', 'categories'));
     }
 
 
     public function services(Request $request)
     {
-        $query = Service::whereHas('user', function ($query) {
+        $query = Service::with('user')->whereHas('user', function ($query) {
             $query->where('status', 'complete');
         });
 
         if ($request->has('search') && $request->search !== null) {
             $search = $request->search;
             $query->where('title', 'like', "%$search%");
+        }
+
+        if ($request->has('category') && $request->category !== null) {
+            $query->where('category', $request->category);
         }
 
         $services = $query->orderByDesc('id')->get()->map(function ($service) {
@@ -347,13 +365,23 @@ class PageController extends Controller
             return $service;
         });
 
+        // Get categories that have services
+        $categories = Service::whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            })
+            ->whereNotNull('category')
+            ->distinct()
+            ->pluck('category')
+            ->sort()
+            ->values();
+
         if ($request->ajax()) {
             return response()->json([
                 'html' => view('partial.service_cards', compact('services'))->render()
             ]);
         }
 
-        return view('pages.services', compact('services'));
+        return view('pages.services', compact('services', 'categories'));
     }
     public function industryExperts($industry)
     {

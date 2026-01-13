@@ -3,7 +3,7 @@
         <div class="card product-trigger-wrapper" data-id="{{ $product->user->id }}" data-title="{{ $product->title }}"
             data-description="{{ $product->short_description }}"
             data-image="{{ $product->product_image ? getImageUrl($product->product_image) : 'assets/images/servicePlaceholderImg.png' }}"
-            data-price="{{ $product->discounted_price && $product->discounted_price < $product->original_price ? '$' . $product->discounted_price . ' (was $' . $product->original_price . ')' : '$' . $product->original_price }}"
+            data-price="${{ $product->original_price }}"
             data-quantity="{{ $product->quantity }}-{{ $product->unit_of_quantity }}"
             data-user-name="{{ $product->user->first_name }}"
             data-user-photo="{{ $product->user_has_photo ? getImageUrl($product->user->photo) : '' }}"
@@ -15,12 +15,7 @@
                 <div class="service_price_duration my-0 event_price_label">
                     <p class="service_price">
                         <span>
-                            @if ($product->discounted_price && $product->discounted_price < $product->original_price)
-                                <s>${{ $product->original_price }}</s>
-                                ${{ $product->discounted_price }}
-                            @else
-                                ${{ $product->original_price }}
-                            @endif
+                            ${{ $product->original_price }}
                             / {{ $product->quantity }}-{{ $product->unit_of_quantity }}
                         </span>
                     </p>

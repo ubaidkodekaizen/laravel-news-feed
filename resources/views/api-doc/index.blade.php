@@ -1,0 +1,3006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - MuslimLynk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: #273572;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 24px;
+        }
+        .container-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .api-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .api-section h2 {
+            color: #273572;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #B8C034;
+        }
+        .api-endpoint {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #273572;
+        }
+        .api-endpoint h3 {
+            color: #273572;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .method-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .method-get { background: #28a745; color: white; }
+        .method-post { background: #007bff; color: white; }
+        .method-put { background: #ffc107; color: #000; }
+        .method-delete { background: #dc3545; color: white; }
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            background: #273572;
+            color: #B8C034;
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .auth-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .auth-required { background: #dc3545; color: white; }
+        .auth-public { background: #28a745; color: white; }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .code-block pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .param-table {
+            width: 100%;
+            margin: 15px 0;
+            border-collapse: collapse;
+        }
+        .param-table th,
+        .param-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .param-table th {
+            background: #273572;
+            color: white;
+            font-weight: 600;
+        }
+        .param-table tr:hover {
+            background: #f5f5f5;
+        }
+        .required {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+            color: white;
+        }
+        .base-url {
+            background: #273572;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+        }
+        .base-url strong {
+            color: #B8C034;
+        }
+        .main-wrapper {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .sidebar h3 {
+            color: #273572;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #B8C034;
+        }
+        .nav-group {
+            margin-bottom: 25px;
+        }
+        .nav-group-title {
+            color: #273572;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 10px;
+            color: #555;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin-bottom: 3px;
+        }
+        .nav-link:hover {
+            background: #f0f0f0;
+            color: #273572;
+            padding-left: 15px;
+        }
+        .nav-link.active {
+            background: #273572;
+            color: white;
+            font-weight: 600;
+        }
+        .content-area {
+            flex: 1;
+            min-width: 0;
+        }
+        .api-section {
+            scroll-margin-top: 20px;
+        }
+        @media (max-width: 992px) {
+            .main-wrapper {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container-main">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="navbar-brand">📚 API Documentation</span>
+                <a href="{{ route('api.doc.logout') }}" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <div class="base-url">
+            <strong>Base URL:</strong> {{ url('/api') }}
+        </div>
+
+        <div class="main-wrapper">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar">
+                <h3>📑 Navigation</h3>
+                
+                <div class="nav-group">
+                    <div class="nav-group-title">Getting Started</div>
+                    <a href="#authentication" class="nav-link">🔐 Authentication</a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">Public APIs</div>
+                    <a href="#public-routes" class="nav-link">🌐 Public Routes</a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">Communication</div>
+                    <a href="#chat-messaging" class="nav-link">💬 Chat & Messaging</a>
+                    <a href="#news-feed" class="nav-link">📰 News Feed</a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">User Management</div>
+                    <a href="#user-profile" class="nav-link">👤 User Profile</a>
+                    <a href="#products" class="nav-link">📦 Products</a>
+                    <a href="#services" class="nav-link">🛠️ Services</a>
+                    <a href="#qualifications" class="nav-link">🎓 Qualifications</a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">Discovery</div>
+                    <a href="#discovery-search" class="nav-link">🔍 Discovery & Search</a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">System</div>
+                    <a href="#firebase" class="nav-link">🔥 Firebase</a>
+                    <a href="#subscriptions" class="nav-link">💳 Subscriptions</a>
+                    <a href="#api-key-routes" class="nav-link">🔑 API Key Routes</a>
+                </div>
+            </nav>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="base-url">
+                    <strong>Base URL:</strong> {{ url('/api') }}
+                </div>
+
+                <!-- Authentication Section -->
+                <div id="authentication" class="api-section">
+            <h2>🔐 Authentication</h2>
+            <p>Most API endpoints require authentication using Laravel Sanctum. Include the token in the Authorization header:</p>
+            <div class="code-block">
+                <pre>Authorization: Bearer {your_token}</pre>
+            </div>
+        </div>
+
+        <!-- Public API Routes -->
+        <div id="public-routes" class="api-section">
+            <h2>🌐 Public API Routes (No Authentication Required)</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User Dropdowns
+                    <span class="auth-badge auth-public">PUBLIC</span>
+                </h3>
+                <div class="endpoint-url">/user/dropdowns</div>
+                <p>Get all dropdown options for user registration (designations, industries, business types, etc.)</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "designations": [...],
+  "industries": [...],
+  "business_types": [...],
+  "nationalities": [...],
+  "employee_sizes": {...},
+  "revenue_ranges": {...},
+  "company_experiences": [...],
+  "genders": [...]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Register User
+                    <span class="auth-badge auth-public">PUBLIC</span>
+                </h3>
+                <div class="endpoint-url">/register</div>
+                <p>Register a new user account</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>first_name</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's first name</td>
+                        </tr>
+                        <tr>
+                            <td>last_name</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's last name</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>email</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's email address (must be unique)</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's phone number</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Password (min 8 characters)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john@example.com",
+  "phone": "+1234567890",
+  "password": "password123"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "User registered successfully. Please check your email to verify your account.",
+  "token": "1|xxxxxxxxxxxxx",
+  "user": {
+    "id": 1,
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Login
+                    <span class="auth-badge auth-public">PUBLIC</span>
+                </h3>
+                <div class="endpoint-url">/login</div>
+                <p>Authenticate user and get access token</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>email</td>
+                            <td>email</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's email address</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's password</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "email": "user@example.com",
+  "password": "password123"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Login successful",
+  "token": "1|xxxxxxxxxxxxx",
+  "user": { ... }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Forget Password
+                    <span class="auth-badge auth-public">PUBLIC</span>
+                </h3>
+                <div class="endpoint-url">/forget-password</div>
+                <p>Send password reset link to user's email</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>email</td>
+                            <td>email</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's email address</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "email": "user@example.com"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Password reset link sent to your email"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Register AMCOB User
+                    <span class="auth-badge auth-public">PUBLIC</span>
+                </h3>
+                <div class="endpoint-url">/register-amcob</div>
+                <p>Register a new user account via AMCOB API</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>first_name</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's first name</td>
+                        </tr>
+                        <tr>
+                            <td>last_name</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's last name</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>email</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's email address (must be unique)</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's phone number</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Password (min 8 characters)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john@example.com",
+  "phone": "+1234567890",
+  "password": "password123"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "User registered successfully.",
+  "user": {
+    "id": 1,
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat & Messaging Routes -->
+        <div id="chat-messaging" class="api-section">
+            <h2>💬 Chat & Messaging</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Conversations
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/conversations</div>
+                <p>Get all conversations for the authenticated user</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>[
+  {
+    "id": 1,
+    "user_one_id": 1,
+    "user_two_id": 2,
+    "last_message_at": "2024-01-15T10:30:00Z",
+    "unread_count": 3,
+    "other_user": {
+      "id": 2,
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "photo": "https://...",
+      ...
+    },
+    "last_message": {
+      "content": "Hello!",
+      "created_at": "2024-01-15T10:30:00Z"
+    }
+  }
+]</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Create Conversation
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/conversations/create</div>
+                <p>Create a new conversation with another user</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>user_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the user to start conversation with</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "user_id": 2
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "id": 1,
+  "user_one_id": 1,
+  "user_two_id": 2,
+  "last_message_at": "2024-01-15T10:30:00Z",
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Messages
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/conversations/{conversation}/messages</div>
+                <p>Get all messages in a conversation. Messages are automatically marked as read.</p>
+                <p><strong>URL Parameters:</strong> Replace {conversation} with the conversation ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>[
+  {
+    "id": 1,
+    "conversation_id": 1,
+    "sender_id": 1,
+    "receiver_id": 2,
+    "content": "Hello!",
+    "read_at": null,
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z",
+    "edited_at": null,
+    "deleted_at": null,
+    "is_deleted": false,
+    "sender": {
+      "id": 1,
+      "first_name": "John",
+      "last_name": "Doe",
+      "photo": "https://...",
+      ...
+    },
+    "reactions": []
+  }
+]</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User for Conversation
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/conversations/{conversation}/user</div>
+                <p>Get the other user's information in a conversation</p>
+                <p><strong>URL Parameters:</strong> Replace {conversation} with the conversation ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "id": 2,
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "email": "jane@example.com",
+  "photo": "https://...",
+  "is_blocked": false,
+  "is_blocked_by": false,
+  "can_message": true,
+  ...
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Send Message
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/messages/send</div>
+                <p>Send a message to another user. Creates a conversation if it doesn't exist.</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>content</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Message content (max 1000 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>receiver_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the user to send message to</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "content": "Hello! How are you?",
+  "receiver_id": 2
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "id": 1,
+  "conversation_id": 1,
+  "sender_id": 1,
+  "receiver_id": 2,
+  "content": "Hello! How are you?",
+  "created_at": "2024-01-15T10:30:00Z",
+  "sender": {
+    "id": 1,
+    "first_name": "John",
+    "last_name": "Doe",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-put">PUT</span>
+                    Update Message
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/messages/{message}</div>
+                <p>Update an existing message. Only the sender can update their own message.</p>
+                <p><strong>URL Parameters:</strong> Replace {message} with the message ID</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>content</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Updated message content (max 1000 characters)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "content": "Hello! How are you doing?"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Message updated successfully",
+  "data": {
+    "id": 1,
+    "content": "Hello! How are you doing?",
+    "edited_at": "2024-01-15T10:35:00Z",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Message
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/messages/{message}</div>
+                <p>Delete a message (soft delete). Only the sender can delete their own message.</p>
+                <p><strong>URL Parameters:</strong> Replace {message} with the message ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Message deleted successfully",
+  "deleted_at": "2024-01-15T10:40:00Z"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Add Reaction to Message
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/messages/{message}/react</div>
+                <p>Add an emoji reaction to a message</p>
+                <p><strong>URL Parameters:</strong> Replace {message} with the message ID</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>emoji</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Emoji character (e.g., "👍", "❤️", "😂")</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "emoji": "👍"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Remove Reaction from Message
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/messages/{message}/react</div>
+                <p>Remove your reaction from a message</p>
+                <p><strong>URL Parameters:</strong> Replace {message} with the message ID</p>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Check Conversation
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/check-conversation?user_id={user_id}</div>
+                <p>Check if a conversation exists with a specific user</p>
+                <p><strong>Query Parameters:</strong> user_id - ID of the user to check</p>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    User Typing
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/typing</div>
+                <p>Notify that user is typing in a conversation</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>conversation_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the conversation</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "conversation_id": 1
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Block User
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/block-user</div>
+                <p>Block a user from messaging you</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>user_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the user to block</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "user_id": 2
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "User blocked successfully"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Unblock User
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/unblock-user</div>
+                <p>Unblock a previously blocked user</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>user_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the user to unblock</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "user_id": 2
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "User unblocked successfully"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Check Block Status
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/check-block-status</div>
+                <p>Check if a user is blocked or has blocked you</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>user_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the user to check block status with</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "user_id": 2
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "is_blocked": false,
+  "is_blocked_by": false,
+  "can_message": true
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Blocked Users
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/blocked-users</div>
+                <p>Get list of all users you have blocked</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>[
+  {
+    "id": 2,
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane@example.com",
+    "photo": "https://...",
+    "slug": "jane-doe",
+    "user_has_photo": true,
+    "user_initials": "JD"
+  }
+]</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Feed Routes -->
+        <div id="news-feed" class="api-section">
+            <h2>📰 News Feed</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Feed Posts
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts?per_page=15</div>
+                <p>Get paginated feed posts</p>
+                <p><strong>Query Parameters:</strong> per_page - Number of posts per page (default: 15)</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 1,
+        "slug": "post-title-15-01-2024-143052",
+        "content": "Post content...",
+        "user": {
+          "id": 1,
+          "first_name": "John",
+          "last_name": "Doe",
+          "photo": "https://...",
+          ...
+        },
+        "media": [...],
+        "reactions": [...],
+        "comments": [...],
+        ...
+      }
+    ],
+    "per_page": 15,
+    "total": 100
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Post by Slug
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{slug}</div>
+                <p>Get a single post with all details including comments and reactions</p>
+                <p><strong>URL Parameters:</strong> Replace {slug} with the post slug</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": {
+    "id": 1,
+    "slug": "post-title-15-01-2024-143052",
+    "content": "Post content...",
+    "user": {...},
+    "media": [...],
+    "reactions": [...],
+    "comments": [...],
+    "user_reaction": {...}
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User Posts
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/user/{userId?}/posts?per_page=15</div>
+                <p>Get posts by a specific user. If userId is omitted, returns current user's posts.</p>
+                <p><strong>URL Parameters:</strong> {userId} - Optional user ID</p>
+                <p><strong>Query Parameters:</strong> per_page - Number of posts per page (default: 15)</p>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Create Post
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts</div>
+                <p>Create a new post with optional media</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>content</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Post content (max 10000 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>media</td>
+                            <td>array</td>
+                            <td>No</td>
+                            <td>Array of media files (max 10 files, 10MB each). Supported: jpeg, jpg, png, gif, mp4, mov, avi</td>
+                        </tr>
+                        <tr>
+                            <td>comments_enabled</td>
+                            <td>boolean</td>
+                            <td>No</td>
+                            <td>Enable/disable comments (default: true)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "content": "This is my post content!",
+  "comments_enabled": true
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Post created successfully!",
+  "data": {
+    "id": 1,
+    "slug": "post-title-15-01-2024-143052",
+    "content": "This is my post content!",
+    "user": {...},
+    "media": [...],
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-put">PUT</span>
+                    Update Post
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{id}</div>
+                <p>Update an existing post. Only the post owner can update.</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the post ID</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>content</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Updated post content (max 10000 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>comments_enabled</td>
+                            <td>boolean</td>
+                            <td>No</td>
+                            <td>Enable/disable comments</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "content": "Updated post content!",
+  "comments_enabled": true
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Post updated successfully!",
+  "data": {
+    "id": 1,
+    "content": "Updated post content!",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Post
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{id}</div>
+                <p>Delete a post (soft delete). Only the post owner can delete.</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the post ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Post deleted successfully!"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Add Reaction
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/reactions</div>
+                <p>Add or update a reaction to a post or comment. Sending the same reaction type removes it.</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>reactionable_type</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Type: "App\Models\Feed\Post" or "App\Models\Feed\PostComment"</td>
+                        </tr>
+                        <tr>
+                            <td>reactionable_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the post or comment</td>
+                        </tr>
+                        <tr>
+                            <td>reaction_type</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Reaction type: "like", "love", "haha", "wow", "sad", or "angry"</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "reactionable_type": "App\\Models\\Feed\\Post",
+  "reactionable_id": 1,
+  "reaction_type": "like"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Reaction added",
+  "reaction": {
+    "id": 1,
+    "reaction_type": "like",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Remove Reaction
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/reactions</div>
+                <p>Remove a reaction from a post or comment</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>reactionable_type</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Type: "App\Models\Feed\Post" or "App\Models\Feed\PostComment"</td>
+                        </tr>
+                        <tr>
+                            <td>reactionable_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the post or comment</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "reactionable_type": "App\\Models\\Feed\\Post",
+  "reactionable_id": 1
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Reaction removed"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Add Comment
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{postId}/comments</div>
+                <p>Add a comment to a post. Can also add a reply by including parent_id.</p>
+                <p><strong>URL Parameters:</strong> Replace {postId} with the post ID</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>content</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Comment content (max 5000 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>parent_id</td>
+                            <td>integer</td>
+                            <td>No</td>
+                            <td>Parent comment ID for replies</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "content": "Great post!",
+  "parent_id": null
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Comment added successfully!",
+  "data": {
+    "id": 1,
+    "content": "Great post!",
+    "user": {...},
+    "replies": [],
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-put">PUT</span>
+                    Update Comment
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/comments/{commentId}</div>
+                <p>Update a comment. Only the comment owner can update.</p>
+                <p><strong>URL Parameters:</strong> Replace {commentId} with the comment ID</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>content</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Updated comment content (max 5000 characters)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "content": "Updated comment text"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Comment updated successfully!",
+  "data": {
+    "id": 1,
+    "content": "Updated comment text",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Comment
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/comments/{commentId}</div>
+                <p>Delete a comment (soft delete). Only the comment owner can delete.</p>
+                <p><strong>URL Parameters:</strong> Replace {commentId} with the comment ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Comment deleted successfully!"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Comments
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{postId}/comments?per_page=20</div>
+                <p>Get all comments for a post (paginated)</p>
+                <p><strong>URL Parameters:</strong> Replace {postId} with the post ID</p>
+                <p><strong>Query Parameters:</strong> per_page - Number of comments per page (default: 20)</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 1,
+        "content": "Comment text",
+        "user": {...},
+        "replies": [...],
+        "reactions": [...],
+        ...
+      }
+    ],
+    "per_page": 20
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Share Post
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{postId}/share</div>
+                <p>Share or repost a post</p>
+                <p><strong>URL Parameters:</strong> Replace {postId} with the post ID</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>shared_content</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Additional content when sharing (max 10000 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>share_type</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Type: "share" or "repost" (default: "share")</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "shared_content": "Check this out!",
+  "share_type": "repost"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Post shared successfully!",
+  "data": {
+    "id": 1,
+    "share_type": "repost",
+    "user": {...},
+    "post": {...},
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Profile Routes -->
+        <div id="user-profile" class="api-section">
+            <h2>👤 User Profile</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Update Personal Details
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/update/personal</div>
+                <p>Update user's personal information</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>first_name</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's first name</td>
+                        </tr>
+                        <tr>
+                            <td>last_name</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's last name</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>email</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>User's email (must be unique)</td>
+                        </tr>
+                        <tr>
+                            <td>phone</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>User's phone number</td>
+                        </tr>
+                        <tr>
+                            <td>linkedin_url</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>LinkedIn profile URL</td>
+                        </tr>
+                        <tr>
+                            <td>country</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Country</td>
+                        </tr>
+                        <tr>
+                            <td>city</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>City</td>
+                        </tr>
+                        <tr>
+                            <td>zip_code</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>ZIP/Postal code</td>
+                        </tr>
+                        <tr>
+                            <td>photo</td>
+                            <td>file</td>
+                            <td>No</td>
+                            <td>Profile photo (image, max 2MB)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john@example.com",
+  "phone": "+1234567890",
+  "linkedin_url": "https://linkedin.com/in/johndoe",
+  "country": "United States",
+  "city": "New York",
+  "zip_code": "10001"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "User personal details updated successfully!",
+  "user": {
+    "id": 1,
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Update Professional Details
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/update/professional</div>
+                <p>Update user's professional and company information</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>company_name</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Company name</td>
+                        </tr>
+                        <tr>
+                            <td>company_position</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Position in company</td>
+                        </tr>
+                        <tr>
+                            <td>company_industry</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Company industry</td>
+                        </tr>
+                        <tr>
+                            <td>company_business_type</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Business type</td>
+                        </tr>
+                        <tr>
+                            <td>company_website</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Company website URL</td>
+                        </tr>
+                        <tr>
+                            <td>company_logo</td>
+                            <td>file</td>
+                            <td>No</td>
+                            <td>Company logo (image, max 2MB)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "company_name": "Tech Corp",
+  "company_position": "Software Engineer",
+  "company_industry": "Technology",
+  "company_business_type": "B2B",
+  "company_website": "https://techcorp.com"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Professional details updated successfully!",
+  "user": { ... },
+  "company": { ... }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User Profile by Slug
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/profile/{slug}</div>
+                <p>Get user profile information by slug</p>
+                <p><strong>URL Parameters:</strong> Replace {slug} with the user's slug (e.g., "john-doe")</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "user": {
+    "id": 1,
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    "photo": "https://...",
+    "slug": "john-doe",
+    "company": {
+      "company_name": "Tech Corp",
+      "company_logo": "https://...",
+      ...
+    },
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete User
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/delete</div>
+                <p>Delete the authenticated user's account</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "User account deleted successfully"
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Routes -->
+        <div id="products" class="api-section">
+            <h2>📦 Products</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User Products
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/products</div>
+                <p>Get all products for the authenticated user</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Product Name",
+      "category": "Category",
+      "short_description": "Description",
+      "original_price": 99.99,
+      "quantity": 10,
+      "unit_of_quantity": "pieces",
+      "product_image": "https://...",
+      ...
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Product by ID
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/products/{id}</div>
+                <p>Get a specific product by ID</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the product ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": {
+    "id": 1,
+    "title": "Product Name",
+    "category": "Category",
+    "short_description": "Description",
+    "original_price": 99.99,
+    "quantity": 10,
+    "unit_of_quantity": "pieces",
+    "product_image": "https://...",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Create/Update Product
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/products/store</div>
+                <p>Create a new product. To update, include {id} in URL: /user/products/store/{id}</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>title</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Product title (max 255 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>category</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Product category</td>
+                        </tr>
+                        <tr>
+                            <td>short_description</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Product description</td>
+                        </tr>
+                        <tr>
+                            <td>original_price</td>
+                            <td>numeric</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Product price (min 0)</td>
+                        </tr>
+                        <tr>
+                            <td>quantity</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Available quantity (min 1)</td>
+                        </tr>
+                        <tr>
+                            <td>unit_of_quantity</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Unit of quantity (max 50 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>product_image</td>
+                            <td>file</td>
+                            <td>No</td>
+                            <td>Product image (jpg, jpeg, png, gif, webp)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "title": "Premium Widget",
+  "category": "Electronics",
+  "short_description": "High-quality widget for all your needs",
+  "original_price": 99.99,
+  "quantity": 50,
+  "unit_of_quantity": "pieces"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Product created successfully",
+  "data": {
+    "id": 1,
+    "title": "Premium Widget",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Product
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/products/delete/{id}</div>
+                <p>Delete a product</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the product ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Product deleted successfully"
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Routes -->
+        <div id="services" class="api-section">
+            <h2>🛠️ Services</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User Services
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/services</div>
+                <p>Get all services for the authenticated user</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Service Name",
+      "category": "Category",
+      "short_description": "Description",
+      "original_price": 199.99,
+      "duration": "Monthly",
+      "service_image": "https://...",
+      ...
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Service by ID
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/services/{id}</div>
+                <p>Get a specific service by ID</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the service ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": {
+    "id": 1,
+    "title": "Service Name",
+    "category": "Category",
+    "short_description": "Description",
+    "original_price": 199.99,
+    "duration": "Monthly",
+    "service_image": "https://...",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Create/Update Service
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/services/store</div>
+                <p>Create a new service. To update, include {id} in URL: /user/services/store/{id}</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>title</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Service title (max 255 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>category</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Service category</td>
+                        </tr>
+                        <tr>
+                            <td>short_description</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Service description</td>
+                        </tr>
+                        <tr>
+                            <td>original_price</td>
+                            <td>numeric</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Service price (min 0)</td>
+                        </tr>
+                        <tr>
+                            <td>duration</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Service duration: "Starting", "One time", "Monthly", "Yearly", or "Quarterly"</td>
+                        </tr>
+                        <tr>
+                            <td>service_image</td>
+                            <td>file</td>
+                            <td>No</td>
+                            <td>Service image (jpg, jpeg, png, gif, webp)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "title": "Consulting Service",
+  "category": "Business",
+  "short_description": "Professional consulting services",
+  "original_price": 199.99,
+  "duration": "Monthly"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Service created successfully",
+  "data": {
+    "id": 1,
+    "title": "Consulting Service",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Service
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/services/delete/{id}</div>
+                <p>Delete a service</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the service ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Service deleted successfully"
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Qualifications/Education Routes -->
+        <div id="qualifications" class="api-section">
+            <h2>🎓 Qualifications/Education</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User Qualifications
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/qualifications</div>
+                <p>Get all qualifications/education for the authenticated user</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "college_university": "University Name",
+      "degree_diploma": "Bachelor's Degree",
+      "year": 2020,
+      ...
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Qualification by ID
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/qualifications/{id}</div>
+                <p>Get a specific qualification by ID</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the qualification ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": {
+    "id": 1,
+    "college_university": "University Name",
+    "degree_diploma": "Bachelor's Degree",
+    "year": 2020,
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Create/Update Qualification
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/qualifications/store</div>
+                <p>Create a new qualification. To update, include {id} in URL: /user/qualifications/store/{id}</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>college_name</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>College/University name (max 255 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>degree</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Degree/Diploma name (max 255 characters)</td>
+                        </tr>
+                        <tr>
+                            <td>year_graduated</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Year of graduation (1900 to current year)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "college_name": "Harvard University",
+  "degree": "Bachelor of Science",
+  "year_graduated": 2020
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Education added successfully.",
+  "data": {
+    "id": 1,
+    "college_university": "Harvard University",
+    "degree_diploma": "Bachelor of Science",
+    "year": 2020,
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Qualification
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/qualifications/delete/{id}</div>
+                <p>Delete a qualification</p>
+                <p><strong>URL Parameters:</strong> Replace {id} with the qualification ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Education deleted successfully"
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discovery & Search Routes -->
+        <div id="discovery-search" class="api-section">
+            <h2>🔍 Discovery & Search</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Our Community
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/our-community</div>
+                <p>Get community overview including industries, products, and services. Returns one product per user and top 3 services.</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "industries": [
+    {
+      "icon": "fas fa-laptop-code",
+      "name": "Technology"
+    },
+    {
+      "icon": "fas fa-heartbeat",
+      "name": "Healthcare"
+    },
+    ...
+  ],
+  "products": [
+    {
+      "id": 1,
+      "title": "Product Name",
+      "category": "Category",
+      "original_price": 99.99,
+      "product_image": "https://...",
+      "user": {
+        "id": 1,
+        "first_name": "John",
+        "last_name": "Doe",
+        "photo": "https://...",
+        ...
+      },
+      "user_has_photo": true,
+      "user_initials": "JD",
+      ...
+    }
+  ],
+  "services": [
+    {
+      "id": 1,
+      "title": "Service Name",
+      "category": "Category",
+      "original_price": 199.99,
+      "duration": "Monthly",
+      "service_image": "https://...",
+      "user": {
+        "id": 1,
+        "first_name": "John",
+        "last_name": "Doe",
+        "photo": "https://...",
+        ...
+      },
+      "user_has_photo": true,
+      "user_initials": "JD",
+      ...
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Services
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/services?page=1</div>
+                <p>Get all services from the community (paginated). Only returns services from users with complete profiles.</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li>page - Page number (default: 1)</li>
+                </ul>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "services": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 1,
+        "title": "Consulting Service",
+        "category": "Business",
+        "short_description": "Professional consulting",
+        "original_price": 199.99,
+        "duration": "Monthly",
+        "service_image": "https://...",
+        "user": {
+          "id": 1,
+          "first_name": "John",
+          "last_name": "Doe",
+          "slug": "john-doe",
+          ...
+        },
+        ...
+      }
+    ],
+    "per_page": 10,
+    "total": 75,
+    "last_page": 8
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Products
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/products?page=1</div>
+                <p>Get all products from the community (paginated). Only returns products from users with complete profiles.</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li>page - Page number (default: 1)</li>
+                </ul>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "products": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 1,
+        "title": "Premium Widget",
+        "category": "Electronics",
+        "short_description": "High-quality widget",
+        "original_price": 99.99,
+        "quantity": 50,
+        "unit_of_quantity": "pieces",
+        "product_image": "https://...",
+        "user": {
+          "id": 1,
+          "first_name": "John",
+          "last_name": "Doe",
+          "slug": "john-doe",
+          ...
+        },
+        ...
+      }
+    ],
+    "per_page": 10,
+    "total": 100,
+    "last_page": 10
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Industries
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/industries</div>
+                <p>Get all available industries with icons</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": [
+    {
+      "name": "Technology",
+      "icon": "fas fa-laptop-code",
+      "count": 150
+    },
+    {
+      "name": "Healthcare",
+      "icon": "fas fa-heartbeat",
+      "count": 80
+    },
+    ...
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Industry Experts
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/industry-experts/{industry}</div>
+                <p>Get experts/users in a specific industry</p>
+                <p><strong>URL Parameters:</strong> Replace {industry} with the industry name</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "first_name": "John",
+      "last_name": "Doe",
+      "company": {
+        "company_name": "Tech Corp",
+        ...
+      },
+      ...
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Search Filters
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/search-filters</div>
+                <p>Get available search filter options (industries, designations, etc.)</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": {
+    "industries": [...],
+    "designations": [...],
+    "business_types": [...],
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Search Users/Companies
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/search?q={query}&industry={industry}&type={type}</div>
+                <p>Search for users and companies with filters</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li>q - Search query string</li>
+                    <li>industry - Filter by industry (optional)</li>
+                    <li>type - Filter by type: "user" or "company" (optional)</li>
+                </ul>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "users": [...],
+  "companies": [...]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Smart Suggestions
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/smart-suggestions?per_page=10&page=1</div>
+                <p>Get smart suggestions based on user profile and connections. Uses AI to recommend users you should connect with.</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li>per_page - Number of suggestions per page (default: 10)</li>
+                    <li>page - Page number (default: 1)</li>
+                </ul>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "users": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 2,
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "email": "jane@example.com",
+        "slug": "jane-doe",
+        "photo": "https://...",
+        "score": 85,
+        "match_reasons": [
+          "Same industry",
+          "Similar location",
+          "Common connections"
+        ],
+        "company": {
+          "company_name": "Tech Corp",
+          "company_industry": "Technology",
+          ...
+        },
+        "userEducations": [...],
+        ...
+      }
+    ],
+    "per_page": 10,
+    "total": 50,
+    "last_page": 5
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Suggestions
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/get-suggestions?q={query}</div>
+                <p>Get search suggestions/autocomplete results</p>
+                <p><strong>Query Parameters:</strong> q - Search query string</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "suggestions": [
+    "John Doe",
+    "Jane Smith",
+    "Tech Corp",
+    ...
+  ]
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Firebase Routes -->
+        <div id="firebase" class="api-section">
+            <h2>🔥 Firebase</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    User Ping (Online Status)
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/ping</div>
+                <p>Update user's online status to online in Firebase</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": "success"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    User Offline
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/user/offline</div>
+                <p>Update user's online status to offline in Firebase</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": "success"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Firebase Token
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/firebase-token</div>
+                <p>Get Firebase custom token for authentication. Use this token to authenticate with Firebase Realtime Database.</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "firebase_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription Routes -->
+        <div id="subscriptions" class="api-section">
+            <h2>💳 Subscriptions</h2>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Handle IAP Subscription
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/subscribe/iap</div>
+                <p>Handle in-app purchase subscription from Google Play or Apple App Store</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>startDate</td>
+                            <td>date</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Subscription start date (YYYY-MM-DD)</td>
+                        </tr>
+                        <tr>
+                            <td>type</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Subscription type: "Premium_Monthly" or "Premium_Yearly"</td>
+                        </tr>
+                        <tr>
+                            <td>transactionId</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Transaction ID from the platform</td>
+                        </tr>
+                        <tr>
+                            <td>recieptData</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Receipt data for verification</td>
+                        </tr>
+                        <tr>
+                            <td>platform</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Platform: "google" or "apple"</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "startDate": "2024-01-01",
+  "type": "Premium_Monthly",
+  "transactionId": "GPA.1234-5678-9012-34567",
+  "recieptData": "base64_encoded_receipt_data",
+  "platform": "google"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Subscription activated successfully",
+  "subscription": {
+    "id": 1,
+    "plan_id": 1,
+    "subscription_type": "Monthly",
+    "status": "active",
+    "start_date": "2024-01-01",
+    "renewal_date": "2024-02-01",
+    ...
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Key Protected Routes -->
+        <div id="api-key-routes" class="api-section">
+            <h2>🔑 API Key Protected Routes</h2>
+            <p>These routes require an X-API-KEY header instead of Bearer token authentication.</p>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get All Users with Relations
+                    <span class="auth-badge auth-required">API KEY REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/muslimlynk-users</div>
+                <p>Get all users with their related data (company, products, services, qualifications, etc.)</p>
+                <p><strong>Header:</strong> X-API-KEY: {your_api_key}</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john@example.com",
+      "company": {
+        "company_name": "Tech Corp",
+        "company_industry": "Technology",
+        ...
+      },
+      "products": [...],
+      "services": [...],
+      "qualifications": [...],
+      ...
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Update active nav link on scroll
+        const sections = document.querySelectorAll('.api-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav(); // Initial call
+    </script>
+</body>
+</html>

@@ -123,6 +123,16 @@
                         </div>
 
                         <div class="col-lg-12 mb-3">
+                            <label for="category" class="form-label">Category:</label>
+                            {!! \App\Helpers\DropDownHelper::renderCategoryDropdown(
+                                old('category', $product->category ?? null),
+                                'category',
+                                'category',
+                                'Select Category'
+                            ) !!}
+                        </div>
+
+                        <div class="col-lg-12 mb-3">
                             <label for="short_description">Short Description</label>
                             <textarea name="short_description" id="short_description" rows="4" class="form-control">{{ old('short_description', $product->short_description ?? '') }}</textarea>
                         </div>
@@ -133,15 +143,6 @@
                                 <!-- <span class="input-group-text">$</span> -->
                                 <input type="number" name="original_price" class="form-control"
                                     value="{{ old('original_price', $product->original_price ?? '') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6 mb-3">
-                            <label for="discounted_price" class="form-label">Discounted Price:</label>
-                            <div class="input-group">
-                                <!-- <span class="input-group-text">$</span> -->
-                                <input type="number" name="discounted_price" class="form-control"
-                                    value="{{ old('discounted_price', $product->discounted_price ?? '') }}">
                             </div>
                         </div>
 
