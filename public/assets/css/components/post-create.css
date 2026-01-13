@@ -1,0 +1,127 @@
+#postCreateSec {
+    border: 1px solid #cad9ff;
+    background: #bae1ff1a;
+    border-radius: 8.36px;
+}
+
+#postCreateSec .card-body {
+    padding: 18px 20px 20px 22.67px;
+}
+#postCreateSec .postCreateBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.post-create-card {
+    padding: 12px 16px;
+}
+
+.post-create-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.post-create-trigger img {
+    flex-shrink: 0;
+}
+
+.post-create-trigger button,
+button#openPostModal {
+    flex: 1;
+    text-align: left;
+    border-radius: 35px;
+    padding: 14px 20px;
+    color: #273572;
+    background: #fff;
+    transition: all 0.2s;
+    border: 1px solid #cad9ff;
+    min-height: 56px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 100%;
+}
+
+.post-create-trigger button:hover,
+button#openPostModal:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+.post-create-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+}
+
+.post-action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border: none;
+    background: none;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.post-action-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.post-action-btn svg {
+    flex-shrink: 0;
+}
+
+.post-action-btn.photo {
+    color: #378fe9;
+}
+.post-action-btn.video {
+    color: #5f9b41;
+}
+.post-action-btn.event {
+    color: #c37d16;
+}
+.post-action-btn.article {
+    color: #e16745;
+}
+
+#postCreateSec .userProfilePic {
+    height: 67.33px;
+    width: 67.33px;
+    border-radius: 50%;
+}
+
+.postCreateActions {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 30px;
+}
+#postCreateSec .divider {
+    min-height: 1.39px;
+    background: #cad9ff82;
+    margin: 13px 0 14px 0 ;
+}
+.postCreateActions button {
+    background: transparent;
+    border: none;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 100%;
+    color: #273572;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+}

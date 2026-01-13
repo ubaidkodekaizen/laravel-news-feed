@@ -976,6 +976,31 @@ class UserController extends Controller
         $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
         $technologies = \App\Helpers\DropDownHelper::getTechnologiesArray();
         $buying_process = \App\Helpers\DropDownHelper::getBuyingProcessArray();
+        $categories = \App\Helpers\DropDownHelper::getParentCategoriesArray();
+
+        // Get active users (status = 'complete') - user data only, no relations
+        $users = User::where('status', 'complete')
+            ->whereNull('deleted_at')
+            ->select([
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'phone',
+                'slug',
+                'status',
+                'user_position',
+                'gender',
+                'age_group',
+                'nationality',
+                'country',
+                'state',
+                'city',
+                'photo',
+                'created_at',
+                'updated_at'
+            ])
+            ->get();
 
         return response()->json([
             'status' => true,
@@ -996,6 +1021,8 @@ class UserController extends Controller
                 'company_attributes' => $company_attributes,
                 'technologies' => $technologies,
                 'buying_process' => $buying_process,
+                'categories' => $categories,
+                'users' => $users,
             ],
         ]);
     }

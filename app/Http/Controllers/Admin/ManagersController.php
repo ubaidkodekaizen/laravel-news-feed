@@ -63,8 +63,8 @@ class ManagersController extends Controller
     public function create()
     {
         // Exclude dashboard and managers permissions - dashboard is accessible by default to all admin roles
-        // Order by sidebar order: Users, Subscriptions, Products/Services, Blogs, Events
-        $groupOrder = ['users' => 1, 'subscriptions' => 2, 'products-services' => 3, 'blogs' => 4, 'events' => 5];
+        // Order by sidebar order: Users, Subscriptions, Products/Services, Blogs, Events, Ads
+        $groupOrder = ['users' => 1, 'subscriptions' => 2, 'products-services' => 3, 'blogs' => 4, 'events' => 5, 'ads' => 6];
         
         // Get all permissions grouped by group
         $allPermissions = Permission::where('group', '!=', 'dashboard')
@@ -171,8 +171,8 @@ class ManagersController extends Controller
     {
         $manager = User::whereIn('role_id', [2, 3])->with(['role', 'userPermissions'])->findOrFail($id);
         // Exclude dashboard and managers permissions - dashboard is accessible by default to all admin roles
-        // Order by sidebar order: Users, Subscriptions, Products/Services, Blogs, Events
-        $groupOrder = ['users' => 1, 'subscriptions' => 2, 'products-services' => 3, 'blogs' => 4, 'events' => 5];
+        // Order by sidebar order: Users, Subscriptions, Products/Services, Blogs, Events, Ads
+        $groupOrder = ['users' => 1, 'subscriptions' => 2, 'products-services' => 3, 'blogs' => 4, 'events' => 5, 'ads' => 6];
         
         // Get all permissions grouped by group
         $allPermissions = Permission::where('group', '!=', 'dashboard')

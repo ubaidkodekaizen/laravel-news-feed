@@ -122,6 +122,16 @@
                         </div>
 
                         <div class="col-lg-12 mb-3">
+                            <label for="category" class="form-label">Category:</label>
+                            {!! \App\Helpers\DropDownHelper::renderCategoryDropdown(
+                                old('category', $service->category ?? null),
+                                'category',
+                                'category',
+                                'Select Category'
+                            ) !!}
+                        </div>
+
+                        <div class="col-lg-12 mb-3">
                             <label for="short_description">Short Description</label>
                             <textarea name="short_description" id="short_description" rows="4" class="form-control">{{ old('short_description', $service->short_description ?? '') }}</textarea>
                         </div>
@@ -133,16 +143,6 @@
                                 <input type="number" name="original_price" class="form-control"
                                     value="{{ old('original_price', $service->original_price ?? '') }}"
                                     aria-label="Original Price" aria-describedby="original_price" required>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6 mb-3">
-                            <label for="discounted_price" class="form-label">Discounted Price:</label>
-                            <div class="input-group">
-                                <!-- <span class="input-group-text" id="discounted_price">$</span> -->
-                                <input type="number" name="discounted_price" class="form-control"
-                                    value="{{ old('discounted_price', $service->discounted_price ?? '') }}"
-                                    aria-label="Discounted Price" aria-describedby="discounted_price">
                             </div>
                         </div>
 

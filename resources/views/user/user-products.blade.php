@@ -365,8 +365,8 @@
                             <th>ID</th>
                             <th>Image</th>
                             <th>Title</th>
+                            <th>Category</th>
                             <th>Price</th>
-                            <th>Discounted Price</th>
                             <th>Quantity/Unit</th>
                             <th>Action</th>
                         </tr>
@@ -380,9 +380,8 @@
                                         alt="" class="table_image">
                                 </td>
                                 <td>{{ $product->title }}</td>
+                                <td>{{ $product->category ?? 'N/A' }}</td>
                                 <td>${{ number_format($product->original_price, 2) }}</td>
-                                <td>{{ $product->discounted_price ? '$' . number_format($product->discounted_price, 2) : 'N/A' }}
-                                </td>
                                 <td>{{ $product->quantity }}/{{ $product->unit_of_quantity }}</td>
                                 <td class="btn_flex">
 
@@ -399,7 +398,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">No products available.</td>
+                                <td colspan="8" class="text-center">No products available.</td>
                             </tr>
                         @endforelse
 

@@ -52,6 +52,13 @@ class PermissionsSeeder extends Seeder
             ['name' => 'Delete Events', 'slug' => 'events.delete', 'group' => 'events', 'description' => 'Delete events'],
             ['name' => 'Restore Events', 'slug' => 'events.restore', 'group' => 'events', 'description' => 'Restore deleted events'],
             
+            // Ads Management
+            ['name' => 'View Ads', 'slug' => 'ads.view', 'group' => 'ads', 'description' => 'View ads list'],
+            ['name' => 'Add Ads', 'slug' => 'ads.create', 'group' => 'ads', 'description' => 'Add new ads'],
+            ['name' => 'Edit Ads', 'slug' => 'ads.edit', 'group' => 'ads', 'description' => 'Edit existing ads'],
+            ['name' => 'Delete Ads', 'slug' => 'ads.delete', 'group' => 'ads', 'description' => 'Delete ads'],
+            ['name' => 'Restore Ads', 'slug' => 'ads.restore', 'group' => 'ads', 'description' => 'Restore deleted ads'],
+            
             // Managers Management (Only for Admin)
             ['name' => 'View Managers', 'slug' => 'managers.view', 'group' => 'managers', 'description' => 'View managers and editors list'],
             ['name' => 'Add Managers', 'slug' => 'managers.create', 'group' => 'managers', 'description' => 'Add new managers/editors'],

@@ -345,6 +345,7 @@
                                         <th>#</th>
                                         <th>Type</th>
                                         <th>Title</th>
+                                        <th>Category</th>
                                         <th>Owner</th>
                                         <th>Email</th>
                                         <th>Price</th>
@@ -365,6 +366,7 @@
                                                 </span>
                                             </td>
                                             <td>{{ $item->title }}</td>
+                                            <td>{{ $item->category ?? 'N/A' }}</td>
                                             <td>
                                                 @if($item->user)
                                                     {{ trim($item->user->first_name . ' ' . $item->user->last_name) ?: 'N/A' }}
@@ -380,12 +382,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if(isset($item->discounted_price) && $item->discounted_price)
-                                                    <span style="text-decoration: line-through; color: #999;">${{ number_format($item->original_price, 2) }}</span>
-                                                    <span class="text-danger">${{ number_format($item->discounted_price, 2) }}</span>
-                                                @else
-                                                    ${{ number_format($item->original_price, 2) }}
-                                                @endif
+                                                ${{ number_format($item->original_price, 2) }}
                                             </td>
                                             <td>
                                                 @php
@@ -436,7 +433,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center">No Products/Services found</td>
+                                            <td colspan="8" class="text-center">No Products/Services found</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

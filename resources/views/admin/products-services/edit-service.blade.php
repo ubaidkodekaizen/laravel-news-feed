@@ -87,17 +87,21 @@
                                         value="{{ old('title', $service->title) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="original_price" class="form-label">Original Price <span class="text-danger">*</span></label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="original_price" name="original_price" 
-                                        value="{{ old('original_price', $service->original_price) }}" required>
+                                    <label for="category" class="form-label">Category</label>
+                                    {!! \App\Helpers\DropDownHelper::renderCategoryDropdown(
+                                        old('category', $service->category ?? null),
+                                        'category',
+                                        'category',
+                                        'Select Category'
+                                    ) !!}
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="discounted_price" class="form-label">Discounted Price</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="discounted_price" name="discounted_price" 
-                                        value="{{ old('discounted_price', $service->discounted_price) }}">
+                                    <label for="original_price" class="form-label">Original Price <span class="text-danger">*</span></label>
+                                    <input type="number" step="0.01" min="0" class="form-control" id="original_price" name="original_price" 
+                                        value="{{ old('original_price', $service->original_price) }}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="duration" class="form-label">Duration</label>

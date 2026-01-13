@@ -1156,4 +1156,282 @@ class DropDownHelper
 
         return $options;
     }
+
+    /**
+     * Get parent categories array for products and services
+     * Categories are sorted alphabetically with "Other" at the end
+     * 
+     * @return array
+     */
+    public static function getParentCategoriesArray()
+    {
+        $categories = [
+            'Agriculture & Food',
+            'Art & Design',
+            'Automotive',
+            'Beauty & Personal Care',
+            'Business & Professional',
+            'E-Commerce & Retail',
+            'Education & Training',
+            'Energy & Utilities',
+            'Entertainment & Recreation',
+            'Environmental Services',
+            'Events & Catering',
+            'Fashion & Apparel',
+            'Finance & Payments',
+            'Food & Beverage',
+            'Government & Public Sector',
+            'Health & Wellness',
+            'Home & Garden',
+            'Hospitality & Tourism',
+            'Legal Services',
+            'Lifestyle & Personal',
+            'Logistics & Operations',
+            'Manufacturing & Industrial',
+            'Marketing & Media',
+            'Music & Audio',
+            'Non-Profit & Social Services',
+            'Photography & Videography',
+            'Professional Services',
+            'Real Estate & Property',
+            'Research & Development',
+            'Security & Safety',
+            'Sports & Fitness',
+            'Technology & IT',
+            'Telecommunications',
+            'Transportation & Shipping',
+        ];
+        
+        // Sort alphabetically
+        sort($categories);
+        
+        // Add "Other" at the end
+        $categories[] = 'Other';
+        
+        return $categories;
+    }
+
+    /**
+     * Get categories array for products and services
+     * 
+     * @return array
+     */
+    public static function getCategoriesArray()
+    {
+        return [
+            // Business & Professional
+            'Consulting',
+            'Legal Services',
+            'Accounting & Tax',
+            'HR & Recruitment',
+            'Business Registration',
+            'Compliance & Certification',
+            'Business Consulting',
+            'Financial Planning',
+            'Bookkeeping',
+            'Audit Services',
+
+            // Technology & IT
+            'Software',
+            'Web Development',
+            'Mobile Apps',
+            'SaaS Platforms',
+            'IT Support',
+            'Cybersecurity',
+            'Cloud Services',
+            'AI & Automation',
+            'Data Analytics',
+            'System Integration',
+            'Network Services',
+            'Database Management',
+            'DevOps Services',
+            'Blockchain Solutions',
+
+            // E-Commerce & Retail
+            'Physical Products',
+            'Digital Products',
+            'Wholesale',
+            'Dropshipping',
+            'Online Stores',
+            'POS Systems',
+            'E-Commerce Solutions',
+            'Marketplace Products',
+            'Consumer Goods',
+            'Electronics',
+
+            // Marketing & Media
+            'Digital Marketing',
+            'SEO Services',
+            'Social Media Marketing',
+            'Branding',
+            'Graphic Design',
+            'Content Writing',
+            'Video Production',
+            'Advertising',
+            'Public Relations',
+            'Email Marketing',
+            'Content Marketing',
+            'Influencer Marketing',
+            'Web Design',
+            'UI/UX Design',
+            'Photography',
+            'Animation',
+
+            // Manufacturing & Industrial
+            'Manufacturing',
+            'Custom Production',
+            'Packaging',
+            'Machinery',
+            'Raw Materials',
+            'Industrial Supplies',
+            '3D Printing',
+            'Prototyping',
+            'Quality Control',
+            'Assembly Services',
+
+            // Logistics & Operations
+            'Warehousing',
+            'Fulfillment Services',
+            'Shipping & Courier',
+            'Supply Chain',
+            'Inventory Management',
+            'Freight Services',
+            'Last Mile Delivery',
+            'Reverse Logistics',
+            'Customs & Brokerage',
+
+            // Finance & Payments
+            'Payment Processing',
+            'Banking Services',
+            'Loans & Financing',
+            'Insurance',
+            'Invoicing & Billing',
+            'Investment Services',
+            'Currency Exchange',
+            'Credit Services',
+            'Financial Technology',
+
+            // Education & Training
+            'Online Courses',
+            'Coaching',
+            'Skill Training',
+            'Certifications',
+            'Workshops',
+            'Tutoring',
+            'E-Learning Platforms',
+            'Professional Development',
+            'Language Training',
+            'Technical Training',
+
+            // Health & Wellness
+            'Medical Services',
+            'Wellness Products',
+            'Fitness & Training',
+            'Mental Health',
+            'Nutrition',
+            'Healthcare Technology',
+            'Telemedicine',
+            'Health Consulting',
+            'Therapeutic Services',
+            'Medical Equipment',
+
+            // Real Estate & Property
+            'Property Sales',
+            'Property Rentals',
+            'Property Management',
+            'Construction',
+            'Interior Design',
+            'Architecture',
+            'Real Estate Consulting',
+            'Property Investment',
+            'Facilities Management',
+            'Renovation Services',
+
+            // Lifestyle & Personal
+            'Fashion & Apparel',
+            'Beauty & Cosmetics',
+            'Home Services',
+            'Event Management',
+            'Travel & Tourism',
+            'Personal Styling',
+            'Food & Beverage',
+            'Catering Services',
+            'Wedding Services',
+            'Pet Services',
+            'Cleaning Services',
+            'Landscaping',
+            'Personal Care',
+
+            // Agriculture & Food
+            'Agricultural Products',
+            'Organic Products',
+            'Farm Supplies',
+            'Food Processing',
+            'Restaurant Services',
+            'Food Delivery',
+
+            // Energy & Utilities
+            'Renewable Energy',
+            'Solar Services',
+            'Energy Consulting',
+            'Utility Services',
+
+            // Automotive
+            'Auto Sales',
+            'Auto Services',
+            'Auto Parts',
+            'Vehicle Maintenance',
+            'Car Rental',
+
+            // Entertainment & Recreation
+            'Entertainment Services',
+            'Gaming',
+            'Sports & Recreation',
+            'Music Services',
+            'Event Entertainment',
+
+            // Professional Services
+            'Project Management',
+            'Translation Services',
+            'Research Services',
+            'Market Research',
+            'Consulting Services',
+
+            // Misc
+            'Subscription Services',
+            'On-Demand Services',
+            'Custom Solutions',
+            'Other',
+        ];
+    }
+
+    /**
+     * Render category dropdown for products and services
+     * Value and option text are the same (category name)
+     * Uses parent categories only
+     * 
+     * @param string|null $selected Selected category value
+     * @param string $name Form field name (default: 'category')
+     * @param string $id Form field ID (default: 'category')
+     * @param string $placeholder Placeholder text (default: 'Select Category')
+     * @param string $cssClass Additional CSS classes
+     * @return string HTML select dropdown
+     */
+    public static function renderCategoryDropdown($selected = null, $name = 'category', $id = 'category', $placeholder = 'Select Category', $cssClass = 'form-select')
+    {
+        $selected = old($name, $selected);
+        $categories = self::getParentCategoriesArray();
+
+        $html = '<select name="' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '" id="' . htmlspecialchars($id, ENT_QUOTES, 'UTF-8') . '" class="' . htmlspecialchars($cssClass, ENT_QUOTES, 'UTF-8') . '">';
+        $html .= '<option value="">' . htmlspecialchars($placeholder, ENT_QUOTES, 'UTF-8') . '</option>';
+
+        foreach ($categories as $category) {
+            $isSelected = $selected == $category ? 'selected' : '';
+            $html .= '<option value="' . htmlspecialchars($category, ENT_QUOTES, 'UTF-8') . '" ' . $isSelected . '>' . htmlspecialchars($category, ENT_QUOTES, 'UTF-8') . '</option>';
+        }
+
+        $html .= '</select>';
+
+        return $html;
+    }
 }

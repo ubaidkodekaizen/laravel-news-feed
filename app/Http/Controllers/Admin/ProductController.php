@@ -36,9 +36,9 @@ class ProductController extends Controller
         
         $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
             'short_description' => 'nullable|string',
             'original_price' => 'required|numeric|min:0',
-            'discounted_price' => 'nullable|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'unit_of_quantity' => 'required|string|max:255',
             'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -46,9 +46,9 @@ class ProductController extends Controller
         
         $product->update($request->only([
             'title',
+            'category',
             'short_description',
             'original_price',
-            'discounted_price',
             'quantity',
             'unit_of_quantity',
         ]));

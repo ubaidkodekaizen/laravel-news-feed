@@ -32,9 +32,9 @@ class ServiceController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
             'short_description' => 'nullable|string',
             'original_price' => 'required|numeric|min:0',
-            'discounted_price' => 'nullable|numeric|min:0',
             'duration' => 'required|string|in:Starting,One time,Monthly,Yearly,Quarterly',
             'service_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
         ]);
@@ -61,9 +61,9 @@ class ServiceController extends Controller
 
         $service->user_id = Auth::id();
         $service->title = $request->title;
+        $service->category = $request->category ?? null;
         $service->short_description = $request->short_description;
         $service->original_price = $request->original_price;
-        $service->discounted_price = $request->discounted_price ?? null;
         $service->duration = $request->duration;
         $service->service_image = $imagePath;
 
