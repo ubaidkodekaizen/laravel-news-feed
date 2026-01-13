@@ -156,8 +156,11 @@
         margin: auto;
     }
 
-@media (max-width: 768px) {
-
+@media (max-width: 320px) {
+    .sidebar {
+        width: 100%;
+        top: 70px;
+    }
 }
 </style>
 </head>
@@ -178,7 +181,7 @@
                             <img src="{{ Auth::user()->photo ? getImageUrl(Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                 alt="">
                             {{ Auth::user()->first_name }}
-                            <img id="userProfileDropdown" src="http://127.0.0.1:8000/assets/images/whiteChevron.svg" alt="DropDown">
+                            <img id="userProfileDropdown" src="{{ asset('assets/images/whiteChevron.svg')}}" alt="DropDown">
                         </a>
                         <ul class="dropdown-menu text-small shadow">
                             </li>
