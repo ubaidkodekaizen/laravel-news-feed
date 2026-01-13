@@ -41,7 +41,7 @@ class ProductController extends Controller
             'original_price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'unit_of_quantity' => 'required|string|max:255',
-            'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
         ]);
         
         $product->update($request->only([

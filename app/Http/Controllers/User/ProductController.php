@@ -20,7 +20,7 @@ class ProductController extends Controller
 
     public function addEditProduct($id = null)
     {
-        $product = $id ? Product::findOrFail($id) : new Product();
+        $product = $id ? Product::where('user_id', Auth::id())->findOrFail($id) : new Product();
         return view('user.add-product', compact('product'));
     }
 
@@ -33,10 +33,10 @@ class ProductController extends Controller
             'original_price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'unit_of_quantity' => 'required|string|max:50',
-            'product_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
+            'product_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
         ]);
 
-        $product = $id ? Product::findOrFail($id) : new Product();
+        $product = $id ? Product::where('user_id', Auth::id())->findOrFail($id) : new Product();
 
         if ($request->hasFile('product_image')) {
             $s3Service = app(S3Service::class);
@@ -72,7 +72,7 @@ class ProductController extends Controller
 
     public function deleteProduct($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::where('user_id', Auth::id())->findOrFail($id);
         // Delete image from S3 if exists
         if ($product->product_image) {
             $s3Service = app(S3Service::class);

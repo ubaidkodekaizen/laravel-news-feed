@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Log;
 Route::post('/test/s3-upload', function (Request $request) {
     try {
         $request->validate([
-            'media' => 'required|file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,webm|max:51200', // 50MB max
+            'media' => 'required|file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,webm|max:10240', // 10MB max
         ]);
 
         $s3Service = app(S3Service::class);
@@ -130,10 +130,10 @@ Route::get('/subscribe/iap/google-test', function (Request $request) {
 */
 
 Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
-Route::post('/register', [UserController::class, 'register']);
-Route::post('/register-amcob', [UserController::class, 'registerAmcob']);
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/forget-password', [UserController::class, 'sendResetLink']);
+Route::post('/register', [UserController::class, 'register'])->middleware('throttle:3,1'); // 3 attempts per minute
+Route::post('/register-amcob', [UserController::class, 'registerAmcob'])->middleware('throttle:3,1'); // 3 attempts per minute
+Route::post('/login', [UserController::class, 'login'])->middleware('throttle:5,1'); // 5 attempts per minute
+Route::post('/forget-password', [UserController::class, 'sendResetLink'])->middleware('throttle:3,1'); // 3 attempts per minute
 
 /*
 |--------------------------------------------------------------------------

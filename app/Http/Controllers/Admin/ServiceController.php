@@ -40,7 +40,7 @@ class ServiceController extends Controller
             'short_description' => 'nullable|string',
             'original_price' => 'required|numeric|min:0',
             'duration' => 'nullable|string|max:255',
-            'service_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'service_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
         ]);
         
         $service->update($request->only([

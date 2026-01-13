@@ -48,7 +48,7 @@ class ProductController extends Controller
             'original_price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'unit_of_quantity' => 'required|string|max:50',
-            'product_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
+            'product_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
         ]);
 
         $product = $id ? Product::where('user_id', Auth::id())->findOrFail($id) : new Product();

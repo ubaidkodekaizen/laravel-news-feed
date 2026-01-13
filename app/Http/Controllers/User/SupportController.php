@@ -19,12 +19,9 @@ class SupportController extends Controller
 
     public function store(Request $request)
     {
-
-        dd($request->all());
-
-
+        // TODO: Implement support message storage and email sending
         // For now just flash a success message and redirect back
-        return redirect()->route('user.create')
+        return redirect()->route('support.create')
                          ->with('success', 'Your message has been sent. We will get back to you soon.');
     }
 }

@@ -43,7 +43,7 @@ class ServiceController extends Controller
             'short_description' => 'nullable|string',
             'original_price' => 'required|numeric|min:0',
             'duration' => 'required|string|in:Starting,One time,Monthly,Yearly,Quarterly',
-            'service_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
+            'service_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
         ]);
 
         $service = $id ? Service::where('user_id', Auth::id())->find($id) : new Service();

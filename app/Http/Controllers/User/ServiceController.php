@@ -23,7 +23,7 @@ class ServiceController extends Controller
     }
     public function addEditService($id = null)
     {
-        $service = $id ? Service::findOrFail($id) : new Service();
+        $service = $id ? Service::where('user_id', Auth::id())->findOrFail($id) : new Service();
         return view('user.add-services', compact('service'));
     }
 
@@ -36,10 +36,10 @@ class ServiceController extends Controller
             'short_description' => 'nullable|string',
             'original_price' => 'required|numeric|min:0',
             'duration' => 'required|string|in:Starting,One time,Monthly,Yearly,Quarterly',
-            'service_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp',
+            'service_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:10240', // 10MB max
         ]);
 
-        $service = $id ? Service::findOrFail($id) : new Service();
+        $service = $id ? Service::where('user_id', Auth::id())->findOrFail($id) : new Service();
 
 
         if ($request->hasFile('service_image')) {
@@ -76,7 +76,7 @@ class ServiceController extends Controller
 
     public function deleteService($id)
     {
-        $service = Service::findOrFail($id);
+        $service = Service::where('user_id', Auth::id())->findOrFail($id);
         // Delete image from S3 if exists
         if ($service->service_image) {
             $s3Service = app(S3Service::class);
