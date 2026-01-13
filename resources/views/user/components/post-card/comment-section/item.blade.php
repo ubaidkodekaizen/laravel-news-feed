@@ -1,7 +1,28 @@
 <div class="comment" data-comment-id="{{ $comment['id'] ?? '' }}">
-    <img src="{{ getImageUrl($comment['user']['photo'] ?? null) ?? $comment['user']['avatar'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
-         class="user-img"
-         alt="{{ $comment['user']['name'] ?? 'User' }}">
+    @php
+        $userHasPhoto = $comment['user']['has_photo'] ?? !empty($comment['user']['avatar']);
+        $userAvatar = $comment['user']['avatar'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
+        $userInitials = $comment['user']['initials'] ??
+            strtoupper(
+                (isset($comment['user']['first_name']) ? substr($comment['user']['first_name'], 0, 1) : '') .
+                (isset($comment['user']['last_name']) ? substr($comment['user']['last_name'], 0, 1) : 'U')
+            );
+    @endphp
+
+    @if($userHasPhoto && $userAvatar)
+        <img src="{{ $userAvatar }}"
+             class="user-img"
+             alt="{{ $comment['user']['name'] ?? 'User' }}"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="user-initials-avatar comment-avatar" style="display: none;">
+            {{ $userInitials }}
+        </div>
+    @else
+        <div class="user-initials-avatar comment-avatar">
+            {{ $userInitials }}
+        </div>
+    @endif
+
     <div class="comment-body">
         <div class="comment-header">
             <strong>{{ $comment['user']['name'] ?? ($comment['user']['first_name'] ?? '') . ' ' . ($comment['user']['last_name'] ?? '') }}</strong>
@@ -37,3 +58,17 @@
         @endif
     </div>
 </div>
+
+<style>
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+}
+
+.reply .user-initials-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+}
+</style>

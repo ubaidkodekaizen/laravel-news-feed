@@ -39,7 +39,18 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
+.user-initials-avatar {
+    width: 50.13px;
+    height: 50.13px;
+    border-radius: 50%;
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
 .post-author-info {
     flex: 1;
     min-width: 0;
