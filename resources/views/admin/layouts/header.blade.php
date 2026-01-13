@@ -375,17 +375,33 @@
                 </li>
                 @endif
                 
-                {{-- Access Control - Only Admin can see --}}
+                {{-- Scheduler Logs - Admin only --}}
+                @if($isAdmin)
+                <li>
+                    <a href="{{ route('admin.scheduler-logs') }}"
+                        class="{{ request()->routeIs('admin.scheduler-logs*') ? 'active' : '' }}">
+                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <title>Scheduler</title>
+                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 13H11V7H13V13ZM13 17H11V15H13V17Z" fill="#333"/>
+                            <circle cx="12" cy="12" r="10" stroke="#333" stroke-width="2" fill="none"/>
+                            <path d="M12 6V12L16 14" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Scheduler
+                    </a>
+                </li>
+                @endif
+                
+                {{-- User Access - Only Admin can see --}}
                 @if($isAdmin || ($user && $user->hasPermission('managers.view')))
                 <li>
                     <a href="{{ route('admin.managers') }}"
                         class="{{ request()->routeIs('admin.managers*') ? 'active' : '' }}">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <title>Access Control</title>
+                            <title>User Access</title>
                             <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#333"/>
                             <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="#333"/>
                         </svg>
-                        Access Control
+                        User Access
                     </a>
                 </li>
                 @endif
