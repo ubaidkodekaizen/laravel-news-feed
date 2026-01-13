@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{{ asset('admin-assets/css/style.css?v1') }}">
 
 <style>
+    body{
+        overflow: hidden;
+    }
     .header {
         background: linear-gradient(180deg, #0e1948, #213bae);
         color: #fff;
@@ -52,26 +55,31 @@
         top: 110px;
         background-color: #F4F5FB;
         border-right: 1px solid #E9EBF0;
-        overflow-y: auto;
-        overflow-x: hidden;
+        /* overflow-y: auto; */
+        overflow: visible;
         max-height: calc(100vh - 110px);
         position: fixed;
     }
 
-    .sidebar::-webkit-scrollbar {
+    ul.sidebar-menu {
+        height: 100%;
+        overflow-y: scroll;
+    }
+
+    ul.sidebar-menu::-webkit-scrollbar {
         width: 6px;
     }
 
-    .sidebar::-webkit-scrollbar-track {
+    ul.sidebar-menu::-webkit-scrollbar-track {
         background: #F4F5FB;
     }
 
-    .sidebar::-webkit-scrollbar-thumb {
+    ul.sidebar-menu::-webkit-scrollbar-thumb {
         background: #273572;
         border-radius: 3px;
     }
 
-    .sidebar::-webkit-scrollbar-thumb:hover {
+    ul.sidebar-menu::-webkit-scrollbar-thumb:hover {
         background: #1a2855;
     }
 
@@ -147,9 +155,9 @@
 }
 
     #dashboardSidebar.collapsed .sidebar-menu li a {
-       height: 50px;
+        height: 50px;
         width: 50px;
-        padding: 13px 15px;
+        padding: 17px 15px 13px;
         margin: 0px 0px 10px;
         transition: none;
         align-content: center;
@@ -160,9 +168,12 @@
         margin: auto;
     }
 
-@media (max-width: 768px) {
-
-}
+    @media (max-width: 320px) {
+        .sidebar {
+            width: 100%;
+            top: 70px;
+        }
+    }
 </style>
 </head>
 
@@ -182,7 +193,7 @@
                             <img src="{{ Auth::user()->photo ? getImageUrl(Auth::user()->photo) : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png' }}"
                                 alt="">
                             {{ Auth::user()->first_name }}
-                            <img id="userProfileDropdown" src="http://127.0.0.1:8000/assets/images/whiteChevron.svg" alt="DropDown">
+                            <img id="userProfileDropdown" src="{{ asset('assets/images/whiteChevron.svg')}}" alt="DropDown">
                         </a>
                         <ul class="dropdown-menu text-small shadow">
                             </li>
@@ -417,7 +428,8 @@
                             </g>
                         </g>
                         </svg>
-                        Events
+                        
+                        <span class="menu-text">Events</span>
                     </a>
                 </li>
                 @endif
@@ -431,7 +443,8 @@
                             <title>Ads</title>
                             <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
                         </svg>
-                        Ads
+                        <span class="menu-text">Ads</span>
+                        
                     </a>
                 </li>
                 @endif
@@ -446,7 +459,8 @@
                             <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#333"/>
                             <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="#333"/>
                         </svg>
-                        Access Control
+                        
+                        <span class="menu-text">Access Control</span>
                     </a>
                 </li>
                 @endif

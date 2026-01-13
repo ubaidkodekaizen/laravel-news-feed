@@ -52,6 +52,18 @@
         text-align: center !important;
         /* margin: 0 0 0 0; */
     }
+
+    @media (max-width: 768px) {
+         .row .col-12.btnMain{
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+        .btn {
+            padding: 15px 40px;
+            font-size: 16px !important;
+        }
+    }
 </style>
 @section('content')
 <main class="main-content">
@@ -128,7 +140,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-12 btnMain">
                                     <button type="submit" class="btn btn-primary">Update Service</button>
                                     <a href="{{ route('admin.products-services', ['filter' => 'services']) }}" class="btn btn-secondary">Cancel</a>
                                 </div>

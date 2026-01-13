@@ -84,6 +84,34 @@
         border-radius: 9.77px;
         margin-top: 10px;
     }
+
+    .btn {
+        border-radius: 9.77px !important;
+        padding: 15px 56px !important;
+        font-family: "Poppins", sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 22px !important;
+        line-height: 100% !important;
+        letter-spacing: 0px !important;
+        text-align: center !important;
+    }
+
+    .btn:hover{
+        color: #000;
+    }
+
+    @media (max-width: 768px) {
+        .row .col-12.mt-4 {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 16px !important;
+        }
+    }
 </style>
 @section('content')
     <main class="main-content">
