@@ -189,6 +189,18 @@
         box-shadow: none !important;
     }
 
+    /* Override DataTables striped rows for status-based highlighting */
+    table.dataTable.table-striped>tbody>tr.subscription-active.odd>*,
+    table.dataTable.table-striped>tbody>tr.subscription-active.even>* {
+        background-color: transparent !important;
+    }
+    table.dataTable.table-striped>tbody>tr.subscription-cancelled.odd>*,
+    table.dataTable.table-striped>tbody>tr.subscription-cancelled.even>*,
+    table.dataTable.table-striped>tbody>tr.subscription-inactive.odd>*,
+    table.dataTable.table-striped>tbody>tr.subscription-inactive.even>* {
+        background-color: transparent !important;
+    }
+
     div.dataTables_wrapper div.dataTables_info {
         font-size: 17.33px;
         color: #696969;
@@ -230,6 +242,67 @@
         border: 1.33px solid #37488E;
         background: #37488E14;
         color:  #37488E;
+    }
+
+    /* Row highlighting based on subscription status */
+    table#usersTable tbody tr.subscription-active,
+    table#usersTable.table-striped tbody tr.subscription-active.odd,
+    table#usersTable.table-striped tbody tr.subscription-active.even {
+        background-color: #d4edda !important;
+    }
+    table#usersTable tbody tr.subscription-active:hover {
+        background-color: #c3e6cb !important;
+    }
+    table#usersTable tbody tr.subscription-active td,
+    table.dataTable.table-striped>tbody>tr.subscription-active.odd>td,
+    table.dataTable.table-striped>tbody>tr.subscription-active.even>td {
+        background-color: #d4edda !important;
+    }
+    table#usersTable tbody tr.subscription-active:hover td {
+        background-color: #c3e6cb !important;
+    }
+
+    table#usersTable tbody tr.subscription-cancelled,
+    table#usersTable tbody tr.subscription-inactive,
+    table#usersTable.table-striped tbody tr.subscription-cancelled.odd,
+    table#usersTable.table-striped tbody tr.subscription-cancelled.even,
+    table#usersTable.table-striped tbody tr.subscription-inactive.odd,
+    table#usersTable.table-striped tbody tr.subscription-inactive.even {
+        background-color: #f8d7da !important;
+    }
+    table#usersTable tbody tr.subscription-cancelled:hover,
+    table#usersTable tbody tr.subscription-inactive:hover {
+        background-color: #f5c6cb !important;
+    }
+    table#usersTable tbody tr.subscription-cancelled td,
+    table#usersTable tbody tr.subscription-inactive td,
+    table.dataTable.table-striped>tbody>tr.subscription-cancelled.odd>td,
+    table.dataTable.table-striped>tbody>tr.subscription-cancelled.even>td,
+    table.dataTable.table-striped>tbody>tr.subscription-inactive.odd>td,
+    table.dataTable.table-striped>tbody>tr.subscription-inactive.even>td {
+        background-color: #f8d7da !important;
+    }
+    table#usersTable tbody tr.subscription-cancelled:hover td,
+    table#usersTable tbody tr.subscription-inactive:hover td {
+        background-color: #f5c6cb !important;
+    }
+
+    /* Free subscriptions - Yellow highlighting */
+    table#usersTable tbody tr.subscription-free,
+    table#usersTable.table-striped tbody tr.subscription-free.odd,
+    table#usersTable.table-striped tbody tr.subscription-free.even {
+        background-color: #fff3cd !important;
+    }
+    table#usersTable tbody tr.subscription-free:hover {
+        background-color: #ffeaa7 !important;
+    }
+    table#usersTable tbody tr.subscription-free td,
+    table.dataTable.table-striped>tbody>tr.subscription-free.odd>td,
+    table.dataTable.table-striped>tbody>tr.subscription-free.even>td {
+        background-color: #fff3cd !important;
+    }
+    table#usersTable tbody tr.subscription-free:hover td {
+        background-color: #ffeaa7 !important;
     }
 </style>
 @section('content')
@@ -374,7 +447,19 @@
                                 </thead>
                                 <tbody>
                                     @forelse($subscriptions as $subscription)
-                                        <tr>
+                                        @php
+                                            $statusClass = '';
+                                            // Check if it's a free subscription
+                                            if (strtolower($subscription->subscription_type ?? '') === 'free' || 
+                                                ($subscription->subscription_amount ?? 0) == 0) {
+                                                $statusClass = 'subscription-free';
+                                            } elseif (strtolower($subscription->status) === 'active') {
+                                                $statusClass = 'subscription-active';
+                                            } elseif (strtolower($subscription->status) === 'cancelled' || strtolower($subscription->status) === 'inactive') {
+                                                $statusClass = 'subscription-cancelled subscription-inactive';
+                                            }
+                                        @endphp
+                                        <tr class="{{ $statusClass }}">
                                             <td>{{ $subscription->id }}</td>
                                             <td>
                                                 @if($subscription->user)

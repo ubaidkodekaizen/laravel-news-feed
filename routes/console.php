@@ -13,3 +13,9 @@ Schedule::command('subscriptions:sync-all')
     ->daily()
     ->at('02:00')
     ->timezone('America/New_York'); // Adjust timezone as needed
+
+// Renewal reminder scheduler - Currently disabled
+// Schedule::command('subscriptions:send-renewal-reminders')
+//     ->daily()
+//     ->at('02:03')
+//     ->timezone('America/New_York');

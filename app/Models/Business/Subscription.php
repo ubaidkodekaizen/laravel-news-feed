@@ -30,6 +30,7 @@ class Subscription extends Model
         'payment_state',
         'last_checked_at',
         'grace_period_ends_at',
+        'renewal_reminder_sent_at',
     ];
 
     public function user()
