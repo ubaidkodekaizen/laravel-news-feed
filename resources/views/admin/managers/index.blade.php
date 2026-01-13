@@ -299,7 +299,7 @@
             <div class="col-12">
                 <div class="card" style="border: none;">
                     <div class="card-header card_header_flex">
-                        <h4 class="card-title">Access Control</h4>
+                        <h4 class="card-title">User Access</h4>
                         @if($canCreate && $filter !== 'deleted')
                             <a href="{{ route('admin.add.manager') }}" class="btn btn-primary">Add Manager/Editor</a>
                         @endif

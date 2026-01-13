@@ -313,6 +313,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':1|2|3'])->group(function ()
     // Subscriptions Management
     Route::get('/admin/subscriptions', [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions');
 
+    // Scheduler Logs Management (Admin only)
+    Route::get('/admin/scheduler-logs', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'index'])->name('admin.scheduler-logs');
+    Route::get('/admin/scheduler-logs/{id}', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'show'])->name('admin.scheduler-logs.show');
+    Route::delete('/admin/scheduler-logs/{id}', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'destroy'])->name('admin.scheduler-logs.destroy');
+    Route::post('/admin/scheduler-logs/{id}/restore', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'restore'])->name('admin.scheduler-logs.restore');
+
     // Products/Services Management
     Route::get('/admin/products-services', [AdminController::class, 'showProductsServices'])->name('admin.products-services');
     Route::get('/admin/product/{id}', [AdminProductController::class, 'view'])->name('admin.view.product');

@@ -22,6 +22,15 @@ class Subscription extends Model
         'transaction_id',
         'receipt_data',
         'platform',
+        'cancelled_at',
+        'last_renewed_at',
+        'renewal_count',
+        'expires_at',
+        'auto_renewing',
+        'payment_state',
+        'last_checked_at',
+        'grace_period_ends_at',
+        'renewal_reminder_sent_at',
     ];
 
     public function user()
