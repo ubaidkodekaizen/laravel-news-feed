@@ -47,21 +47,40 @@
     }
 
     .sidebar {
-        padding: 20px 10px;
+        padding: 30px 20px 0px 10px;
         width: 300px;
         top: 110px;
         background-color: #F4F5FB;
         border-right: 1px solid #E9EBF0;
+        height: -webkit-fill-available !important;
+        overflow: visible;
+    }
+
+    .sidebar-menu {
+        overflow-y: scroll;
+        margin: 0 !important;
+        height: 100%;
+    }
+
+    .sidebar-menu::-webkit-scrollbar-thumb {
+        background-color: #273572 !important;
+        border-radius: 10px;
+    }
+    .sidebar-menu::-webkit-scrollbar-track {
+        background-color: #273572 !important;
+        border-radius: 10px;
     }
 
     .sidebar-menu li a{
         padding: 1rem 0.8rem;
         font-size: 1.13rem;
+        margin: 0px 20px 16px;
         font-weight: 500;
         font-family: "Inter";
         text-transform: capitalize;
         color: #333;
         border: none;
+        transition: none;
     }
 
     .sidebar-menu li a:hover,
@@ -82,6 +101,59 @@
     .sidebar-menu li a.active svg path {
         fill: #fff;
         color: #fff;
+    }
+
+    
+    aside.sidebar .dashboardMenuCollapseBtn {
+        position: absolute;
+        top: 52px;
+        right: -13px;
+        outline: none;
+        border: none;
+        background: #00000000;
+        rotate: 0deg;
+        padding: 0;
+        border-radius: 50%;
+    }
+
+    aside.sidebar.collapsed .dashboardMenuCollapseBtn {
+        rotate: 180deg;
+    }
+
+    aside.sidebar .dashboardMenuCollapseBtn img{
+        width: 24px !important;
+        height: 24px !important;
+        border: none !important;
+        margin: 0 !important;
+    }
+
+    #dashboardSidebar.collapsed {
+        max-width: 90px;
+        width: 100% !important;
+        padding: 30px 15px 0px 15px;
+       
+    }
+
+    #dashboardSidebar.collapsed .menu-text {
+        display: none;
+    }
+
+    #dashboardSidebar.collapsed .sidebar-menu {
+    overflow: hidden;
+}
+
+    #dashboardSidebar.collapsed .sidebar-menu li a {
+       height: 50px;
+        width: 50px;
+        padding: 13px 15px;
+        margin: 0px 0px 10px;
+        transition: none;
+        align-content: center;
+    }
+
+    #dashboardSidebar.collapsed~.main-content {
+        width: 100% !important;
+        margin: auto;
     }
 
 @media (max-width: 768px) {
@@ -123,7 +195,8 @@
         </div>
     </div>
     <div class="admin-panel">
-        <aside class="sidebar">
+        <aside id="dashboardSidebar" class="sidebar">
+            <button class="dashboardMenuCollapseBtn"><img id="dashboardMenuCollapseBtnImg" src="https://muslimlynk.com/assets/images/dashboard/sidebarCollapseIcon.svg" alt=""></button>
             <ul class="sidebar-menu">
                 @php
                     $user = auth()->user();
@@ -237,7 +310,8 @@
                                 y="604.36224" />
                             </g>
                             </svg>
-                        Dashboard
+                        
+                        <span class="menu-text">Dashboard</span>
                     </a>
                 </li>
                 
@@ -250,7 +324,8 @@
                             <title>Users</title>
                             <path id="primary" d="M21,20a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2,6,6,0,0,1,6-6h6A6,6,0,0,1,21,20Zm-9-8A5,5,0,1,0,7,7,5,5,0,0,0,12,12Z" ></path>
                         </svg>
-                        Users
+                        <span class="menu-text">Users</span>
+                        
                     </a>
                 </li>
                 @endif
@@ -273,7 +348,8 @@
                                 </g>
                             </g>
                         </svg>
-                        Subscriptions
+                         <span class="menu-text">Subscriptions</span>
+                        
                     </a>
                 </li>
                 @endif
@@ -288,7 +364,8 @@
                             <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#333"/>
                             <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="#333"/>
                         </svg>
-                        Products/Services
+                       
+                         <span class="menu-text"> Products/Services</span>
                     </a>
                 </li>
                 @endif
@@ -306,7 +383,8 @@
                         </g>
                         </g>
                         </svg>
-                        Blogs
+                        <span class="menu-text">Blogs</span>
+                        
                     </a>
                 </li>
                 @endif
@@ -335,7 +413,8 @@
                             </g>
                         </g>
                         </svg>
-                        Events
+                        <span class="menu-text"> Events</span>
+                       
                     </a>
                 </li>
                 @endif
@@ -350,7 +429,8 @@
                             <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#333"/>
                             <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="#333"/>
                         </svg>
-                        Managers
+                        <span class="menu-text">Managers</span>
+                        
                     </a>
                 </li>
                 @endif
@@ -358,3 +438,38 @@
             </ul>
 
         </aside>
+
+<script>
+    document.querySelector('.dashboardMenuCollapseBtn')
+        .addEventListener('click', function() {
+            document.getElementById('dashboardSidebar')
+                .classList.toggle('collapsed');
+        });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebarMenu = document.querySelector('.sidebar-menu');
+
+    function toggleScrollbar() {
+        if (sidebarMenu.scrollHeight > sidebarMenu.clientHeight) {
+            sidebarMenu.style.overflowY = 'auto';   // scrollbar show
+        } else {
+            sidebarMenu.style.overflowY = 'hidden'; // scrollbar hide
+        }
+    }
+
+    // Initial check
+    toggleScrollbar();
+
+    // Window resize pe bhi check
+    window.addEventListener('resize', toggleScrollbar);
+
+    // Agar sidebar ke andar content dynamically change hota ho
+    const observer = new MutationObserver(toggleScrollbar);
+    observer.observe(sidebarMenu, {
+        childList: true,
+        subtree: true
+    });
+});
+</script>

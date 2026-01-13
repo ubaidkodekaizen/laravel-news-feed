@@ -147,7 +147,9 @@
         pointer-events: none;
     }
 
-    th.sorting, th.sorting_disabled {
+    th,
+    th.sorting, 
+    th.sorting_disabled {
         color: #333333;
         font-family: "Inter";
         font-size: 18.65px;
@@ -159,6 +161,8 @@
         padding-right: 44px !important;
     }
 
+    th:before,
+    td:before,
     table.dataTable thead > tr > th.sorting:before,
     table.dataTable thead > tr > th.sorting_asc:before,
     table.dataTable thead > tr > th.sorting_desc:before,
@@ -176,6 +180,8 @@
         background-size: contain;
     }
 
+    th:after,
+    td:after,
     table.dataTable thead > tr > th.sorting:after,
     table.dataTable thead > tr > th.sorting_asc:after,
     table.dataTable thead > tr > th.sorting_desc:after,
@@ -193,6 +199,7 @@
         background-size: contain;
     }
 
+    td,
     table.dataTable.table-striped>tbody>tr.odd>*,
     table.dataTable.table-striped>tbody>tr.even>* {
         vertical-align: middle;
@@ -392,11 +399,17 @@
 
                                     <td>
                                         @if($canView)
-                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">View</a>
+                                        <a href="{{ route('admin.user.profile', ['id' => $user->id]) }}" class="btn btn-primary btn-sm">
+                                            <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <title>View</title>
+                                                    <path d="M20.188 10.9343C20.5762 11.4056 20.7703 11.6412 20.7703 12C20.7703 12.3588 20.5762 12.5944 20.188 13.0657C18.7679 14.7899 15.6357 18 12 18C8.36427 18 5.23206 14.7899 3.81197 13.0657C3.42381 12.5944 3.22973 12.3588 3.22973 12C3.22973 11.6412 3.42381 11.4056 3.81197 10.9343C5.23206 9.21014 8.36427 6 12 6C15.6357 6 18.7679 9.21014 20.188 10.9343Z" fill="#213bae" fill-opacity="0.14"/>
+                                                    <circle cx="12" cy="12" r="3" fill="#273572"/>
+                                                    </svg>
+                                        </a>
                                         @endif
                                         @if($filter !== 'deleted')
                                             @if($canEdit)
-                                            <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            <a id="edit" href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning btn-sm" title="Edit"></a>
                                             @endif
                                             @if($canDelete)
                                             <form action="{{ route('admin.delete.user', $user->id) }}" method="POST"

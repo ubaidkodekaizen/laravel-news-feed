@@ -22,15 +22,55 @@
         font-weight: 500;
     }
     .info-label {
-        font-family: "Inter";
-        font-weight: 600;
+        font-family: "inter" !important;
+        font-weight: 400 !important;
+        font-size: 18px !important;
         color: #333;
         margin-bottom: 5px;
     }
     .info-value {
-        font-family: "Inter";
-        color: #666;
-        margin-bottom: 15px;
+        background: #FFFFFF;
+        border-radius: 9.77px !important;
+        border: 2px solid #E9EBF0 !important;
+        font-family: Inter !important;
+        font-weight: 400 !important;
+        font-size: 16px !important;
+        padding: 12px 15px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .info-value-image {
+        padding: 12px 0px;
+        margin-bottom: 20px;
+    }
+
+    .card .card-header .card-title a img {
+        width: 14px !important;
+        margin-top: -6px;
+        margin-right: 16px;
+        border: none !important;
+    }
+
+    .info-value-image {
+        padding: 12px 0px;
+        margin-bottom: 20px;
+    }
+
+    a.btn {
+        background: var(--primary);
+        border-color: var(--primary);
+        font-family: "poppins";
+        font-weight: 300;
+        padding: 16px 30px;
+        border-radius: 10.66px;
+        color: #fff;
+    }
+
+    a.btn:hover{
+        background: var(--secondary);
+        border-color: var(--secondary);
+        color: #000;
     }
 </style>
 @section('content')
@@ -41,10 +81,13 @@
                 <div class="card" style="border: none;">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="card-title">Product Details</h4>
+                            <h4 class="card-title">
+                            <a href="{{ route('admin.products-services', ['filter' => 'products']) }}">
+                                    <img src="{{ asset('assets/images/dashboard/dashboardBackChevron.svg') }}" alt="back"></a>    
+                            Product Details</h4>
                             <div>
                                 <a href="{{ route('admin.edit.product', $product->id) }}" class="btn btn-warning">Edit</a>
-                                <a href="{{ route('admin.products-services', ['filter' => 'products']) }}" class="btn btn-secondary">Back</a>
+                                <!-- <a href="{{ route('admin.products-services', ['filter' => 'products']) }}" class="btn btn-secondary">Back</a> -->
                             </div>
                         </div>
                     </div>
@@ -86,9 +129,9 @@
                                 </div>
 
                                 <div class="info-label">Product Image</div>
-                                <div class="info-value">
+                                <div class="info-value-image">
                                     @if($product->product_image)
-                                        <img src="{{ $product->product_image }}" alt="Product Image" style="max-width: 300px; max-height: 300px; border-radius: 10px;">
+                                        <img src="{{ $product->product_image }}" alt="Product Image" style="max-width: 300px; max-height: 300px; border-radius: 30px;">
                                     @else
                                         No image
                                     @endif
