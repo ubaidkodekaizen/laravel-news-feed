@@ -29,12 +29,45 @@ class SyncAllSubscriptions extends Command
     protected $description = 'Sync subscription status and renewal dates for all platforms (Web/Authorize.Net, Google Play, Apple)';
 
     /**
+     * Get list of excluded email addresses from environment
+     * These emails will be checked but never marked as cancelled/inactive
+     */
+    private function getExcludedEmails(): array
+    {
+        $excluded = env('SCHEDULER_EXCLUDED_EMAILS', '');
+        if (empty($excluded)) {
+            return [];
+        }
+        
+        // Split by comma and trim each email
+        return array_map('trim', explode(',', $excluded));
+    }
+
+    /**
+     * Check if email should be excluded from cancellation/inactive status updates
+     */
+    private function shouldSkipStatusUpdate($userEmail, array $excludedEmails): bool
+    {
+        if (empty($excludedEmails) || !$userEmail) {
+            return false;
+        }
+        
+        return in_array(trim($userEmail), $excludedEmails);
+    }
+
+    /**
      * Execute the console command.
      */
     public function handle()
     {
         $startTime = microtime(true);
         $ranAt = now();
+        
+        $excludedEmails = $this->getExcludedEmails();
+        if (!empty($excludedEmails)) {
+            $this->info('Protected emails (will check but never mark cancelled/inactive): ' . implode(', ', $excludedEmails));
+            $this->newLine();
+        }
         
         $this->info('Starting subscription sync for all platforms...');
         $this->newLine();
@@ -52,7 +85,7 @@ class SyncAllSubscriptions extends Command
         try {
             // Sync Web/Authorize.Net subscriptions
             $this->info('=== Syncing Web/Authorize.Net Subscriptions ===');
-            $webResult = $this->syncAuthorizeNetSubscriptions();
+            $webResult = $this->syncAuthorizeNetSubscriptions($excludedEmails);
             $totalUpdated += $webResult['updated'];
             $totalCancelled += $webResult['cancelled'];
             $totalErrors += $webResult['errors'];
@@ -60,7 +93,7 @@ class SyncAllSubscriptions extends Command
 
             // Sync Google Play subscriptions
             $this->info('=== Syncing Google Play Subscriptions ===');
-            $googleResult = $this->syncGooglePlaySubscriptions();
+            $googleResult = $this->syncGooglePlaySubscriptions($excludedEmails);
             $totalUpdated += $googleResult['updated'];
             $totalCancelled += $googleResult['cancelled'];
             $totalErrors += $googleResult['errors'];
@@ -68,7 +101,7 @@ class SyncAllSubscriptions extends Command
 
             // Sync Apple subscriptions
             $this->info('=== Syncing Apple Subscriptions ===');
-            $appleResult = $this->syncAppleSubscriptions();
+            $appleResult = $this->syncAppleSubscriptions($excludedEmails);
             $totalUpdated += $appleResult['updated'];
             $totalCancelled += $appleResult['cancelled'];
             $totalErrors += $appleResult['errors'];
@@ -176,7 +209,7 @@ class SyncAllSubscriptions extends Command
     /**
      * Sync Authorize.Net (Web platform) subscriptions
      */
-    private function syncAuthorizeNetSubscriptions(): array
+    private function syncAuthorizeNetSubscriptions(array $excludedEmails = []): array
     {
         $subscriptions = Subscription::with('user')
             ->where('platform', 'Web')
@@ -186,7 +219,7 @@ class SyncAllSubscriptions extends Command
 
         if ($subscriptions->isEmpty()) {
             $this->info('No Web platform subscriptions found.');
-            return ['updated' => 0, 'cancelled' => 0, 'errors' => 0];
+            return ['updated' => 0, 'cancelled' => 0, 'errors' => 0, 'users' => ['updated' => [], 'cancelled' => [], 'renewed' => []]];
         }
 
         $this->info("Found {$subscriptions->count()} Web subscription(s) to check.");
@@ -198,6 +231,7 @@ class SyncAllSubscriptions extends Command
         $updatedCount = 0;
         $cancelledCount = 0;
         $errorCount = 0;
+        $webResult = ['updated' => 0, 'cancelled' => 0, 'errors' => 0, 'users' => ['updated' => [], 'cancelled' => [], 'renewed' => []]];
 
         foreach ($subscriptions as $subscription) {
             try {
@@ -326,6 +360,20 @@ class SyncAllSubscriptions extends Command
                         }
                     } else {
                         // Handle cancelled/expired/suspended statuses
+                        $user = $subscription->user;
+                        $userEmail = $user->email ?? null;
+                        
+                        // Skip marking as cancelled if email is protected - keep it active
+                        if ($this->shouldSkipStatusUpdate($userEmail, $excludedEmails)) {
+                            // Keep subscription active, just update last_checked_at
+                            $subscription->status = 'active';
+                            $subscription->auto_renewing = true;
+                            $subscription->last_checked_at = now();
+                            $subscription->save();
+                            $this->info("Subscription ID {$subscription->id} - Status: {$anetStatus} (Protected - keeping active)");
+                            continue;
+                        }
+                        
                         $subscription->status = 'cancelled';
                         $subscription->cancelled_at = now();
                         $subscription->auto_renewing = false;
@@ -335,10 +383,9 @@ class SyncAllSubscriptions extends Command
                         
                         $this->updateUserPaidStatus($subscription->user_id);
                         $cancelledCount++;
-                        $user = $subscription->user;
                         $webResult['users']['cancelled'][] = [
                             'user_id' => $user->id ?? null,
-                            'email' => $user->email ?? 'N/A',
+                            'email' => $userEmail ?? 'N/A',
                             'name' => trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: 'N/A',
                             'subscription_id' => $subscription->id,
                             'platform' => 'Web',
@@ -351,16 +398,29 @@ class SyncAllSubscriptions extends Command
                     $errorMessage = isset($errorMessages[0]) ? $errorMessages[0]->getText() : 'Unknown error';
                     
                     if (stripos($errorMessage, 'invalid') !== false || stripos($errorMessage, 'not found') !== false) {
+                        $user = $subscription->user;
+                        $userEmail = $user->email ?? null;
+                        
+                        // Skip marking as cancelled if email is protected - keep it active
+                        if ($this->shouldSkipStatusUpdate($userEmail, $excludedEmails)) {
+                            // Keep subscription active, just update last_checked_at
+                            $subscription->status = 'active';
+                            $subscription->auto_renewing = true;
+                            $subscription->last_checked_at = now();
+                            $subscription->save();
+                            $this->info("Subscription ID {$subscription->id} - Invalid ID (Protected - keeping active)");
+                            continue;
+                        }
+                        
                         $subscription->status = 'cancelled';
                         $subscription->cancelled_at = now();
                         $subscription->last_checked_at = now();
                         $subscription->save();
                         $this->updateUserPaidStatus($subscription->user_id);
                         $cancelledCount++;
-                        $user = $subscription->user;
                         $webResult['users']['cancelled'][] = [
                             'user_id' => $user->id ?? null,
-                            'email' => $user->email ?? 'N/A',
+                            'email' => $userEmail ?? 'N/A',
                             'name' => trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: 'N/A',
                             'subscription_id' => $subscription->id,
                             'platform' => 'Web',
@@ -380,14 +440,15 @@ class SyncAllSubscriptions extends Command
         }
 
         $this->info("Web: Updated: {$updatedCount}, Cancelled: {$cancelledCount}, Errors: {$errorCount}");
-        return ['updated' => $updatedCount, 'cancelled' => $cancelledCount, 'errors' => $errorCount];
+        return ['updated' => $updatedCount, 'cancelled' => $cancelledCount, 'errors' => $errorCount, 'users' => $webResult['users']];
     }
 
     /**
      * Sync Google Play subscriptions
      */
-    private function syncGooglePlaySubscriptions(): array
+    private function syncGooglePlaySubscriptions(array $excludedEmails = []): array
     {
+        // Check all subscriptions (including protected emails)
         $subscriptions = Subscription::with('user')
             ->where('platform', 'google')
             ->where('status', 'active')
@@ -509,6 +570,23 @@ class SyncAllSubscriptions extends Command
                     }
                 } else {
                     // Cancelled or expired
+                    $user = $subscription->user;
+                    $userEmail = $user->email ?? null;
+                    
+                    // Skip marking as cancelled if email is protected - keep it active
+                    if ($this->shouldSkipStatusUpdate($userEmail, $excludedEmails)) {
+                        // Keep subscription active, just update last_checked_at
+                        $subscription->status = 'active';
+                        $subscription->auto_renewing = true;
+                        $subscription->last_checked_at = now();
+                        if ($expiryDate) {
+                            $subscription->expires_at = $expiryDate;
+                        }
+                        $subscription->save();
+                        $this->info("Subscription ID {$subscription->id} - Status: Cancelled/Expired (Protected - keeping active)");
+                        continue;
+                    }
+                    
                     $subscription->status = 'cancelled';
                     $subscription->cancelled_at = now();
                     $subscription->auto_renewing = false;
@@ -519,11 +597,10 @@ class SyncAllSubscriptions extends Command
                     
                     $this->updateUserPaidStatus($subscription->user_id);
                     $cancelledCount++;
-                    $user = $subscription->user;
                     $cancelReasonText = $cancelReason ? ucfirst($cancelReason) : ($paymentState !== 1 ? 'Payment Issue' : 'Expired');
                     $googleResult['users']['cancelled'][] = [
                         'user_id' => $user->id ?? null,
-                        'email' => $user->email ?? 'N/A',
+                        'email' => $userEmail ?? 'N/A',
                         'name' => trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: 'N/A',
                         'subscription_id' => $subscription->id,
                         'platform' => 'Google Play',
@@ -548,8 +625,9 @@ class SyncAllSubscriptions extends Command
     /**
      * Sync Apple subscriptions
      */
-    private function syncAppleSubscriptions(): array
+    private function syncAppleSubscriptions(array $excludedEmails = []): array
     {
+        // Check all subscriptions (including protected emails)
         $subscriptions = Subscription::with('user')
             ->where('platform', 'apple')
             ->where('status', 'active')
@@ -652,6 +730,23 @@ class SyncAllSubscriptions extends Command
                     }
                 } else {
                     // Cancelled or expired
+                    $user = $subscription->user;
+                    $userEmail = $user->email ?? null;
+                    
+                    // Skip marking as cancelled if email is protected - keep it active
+                    if ($this->shouldSkipStatusUpdate($userEmail, $excludedEmails)) {
+                        // Keep subscription active, just update last_checked_at
+                        $subscription->status = 'active';
+                        $subscription->auto_renewing = true;
+                        $subscription->last_checked_at = now();
+                        if ($expiresDate) {
+                            $subscription->expires_at = Carbon::parse($expiresDate);
+                        }
+                        $subscription->save();
+                        $this->info("Subscription ID {$subscription->id} - Status: Cancelled/Expired (Protected - keeping active)");
+                        continue;
+                    }
+                    
                     $subscription->status = 'cancelled';
                     $subscription->cancelled_at = now();
                     $subscription->auto_renewing = false;
@@ -664,11 +759,10 @@ class SyncAllSubscriptions extends Command
                     
                     $this->updateUserPaidStatus($subscription->user_id);
                     $cancelledCount++;
-                    $user = $subscription->user;
                     $cancelReasonText = $this->mapAppleStatus($statusCode);
                     $appleResult['users']['cancelled'][] = [
                         'user_id' => $user->id ?? null,
-                        'email' => $user->email ?? 'N/A',
+                        'email' => $userEmail ?? 'N/A',
                         'name' => trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')) ?: 'N/A',
                         'subscription_id' => $subscription->id,
                         'platform' => 'Apple',
