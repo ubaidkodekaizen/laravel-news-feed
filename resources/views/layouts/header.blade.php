@@ -155,7 +155,7 @@
 <body>
 
     <div class="header position-relative">
-        <div class="container-fluid">
+
             <div class="header_flex">
                 <!-- Mobile Toggle Button -->
                 <div class="mobile_toggle">
@@ -273,7 +273,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
 
         <!-- Mobile Side Drawer -->
         <div class="side_drawer" id="sideDrawer">

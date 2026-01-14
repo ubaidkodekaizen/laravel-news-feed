@@ -188,3 +188,16 @@
 .load-more-btn:hover {
     background-color: #e6e6e6;
 }
+
+@media (max-width: 1080px) {
+    .comment-input,
+    .reply-input {
+        padding: 15px 32px;
+        min-height: 40px;
+    }
+
+    .comment-initials-avatar {
+        width: 50.13px;
+        height: 50.13px;
+    }
+}

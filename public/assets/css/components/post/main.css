@@ -10,95 +10,100 @@
     --trans: all 0.4s ease 0s;
 }
 
-.newFeedSecInnerColFirst::-webkit-scrollbar {
-    width: 5px; /* width works here */
-}
-
-.newFeedSecInnerColFirst::-webkit-scrollbar-track {
-    background: red !important; /* track color */
-}
-
-.newFeedSecInnerColFirst::-webkit-scrollbar-thumb {
-    background-color: var(--secondary); /* scrollbar thumb color */
-    border-radius: 10px; /* optional for rounded */
-}
- /* container */
+/* container */
 .video-container {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #000;
-  margin: 12px 0;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+    margin: 12px 0;
 }
 
 /* video element */
 .post-video {
-  display: block;
-  width: 100%;
-  max-height: 500px;
-  height: auto;
-  object-fit: cover;
-  background: #000;
-  outline: none;
-  -webkit-font-smoothing: antialiased;
+    display: block;
+    width: 100%;
+    max-height: 500px;
+    height: auto;
+    object-fit: cover;
+    background: #000;
+    outline: none;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* focus for keyboard users */
 .post-video:focus {
-  outline: 3px solid #0d6efd;
-  outline-offset: 2px;
+    outline: 3px solid #0d6efd;
+    outline-offset: 2px;
 }
 
 /* central overlay (clickable) */
 .video-play-overlay {
-  position: absolute;
-  inset: 0; /* top:0; right:0; bottom:0; left:0; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto; /* make it clickable */
-  background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
-  transition: opacity 200ms ease;
-  z-index: 5;
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto; /* make it clickable */
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.35)
+    );
+    transition: opacity 200ms ease;
+    z-index: 5;
 }
 
 /* play button (big, accessible) */
 .video-play-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 84px;
-  height: 84px;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.45);
-  border: 2px solid rgba(255,255,255,0.18);
-  color: rgba(255,255,255,0.95);
-  font-size: 36px;
-  cursor: pointer;
-  transition: transform 160ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 36px;
+    cursor: pointer;
+    transition: transform 160ms ease;
 }
 
-.video-play-button:active { transform: scale(0.96); }
-.video-play-button:focus { outline: 3px solid rgba(13,110,253,0.6); }
+.video-play-button:active {
+    transform: scale(0.96);
+}
+.video-play-button:focus {
+    outline: 3px solid rgba(13, 110, 253, 0.6);
+}
 
 /* hide overlay while playing */
-.video-overlay-hidden { opacity: 0; pointer-events: none; }
+.video-overlay-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 
 /* poster (cover) */
-.post-video[poster] { object-fit: cover; }
+.post-video[poster] {
+    object-fit: cover;
+}
 
 /* optional small spinner state */
 .video-spinner {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 3px solid rgba(255,255,255,0.12);
-  border-top-color: rgba(255,255,255,0.9);
-  animation: spin 800ms linear infinite;
-  z-index: 6;
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.12);
+    border-top-color: rgba(255, 255, 255, 0.9);
+    animation: spin 800ms linear infinite;
+    z-index: 6;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 /* ========================================
    POST CONTAINER - MAIN STYLES
@@ -404,7 +409,15 @@
 /* ========================================
    RESPONSIVE ADJUSTMENTS
    ======================================== */
-
+@media (max-width: 1080px) {
+    .username {
+        font-size: 16px;
+    }
+    .post-text {
+        font-size: 14px;
+        line-height: 20px;
+    }
+}
 @media (max-width: 767px) {
     .post-header {
         padding: 10px 12px;
@@ -445,6 +458,16 @@
     .post-author-position,
     .post-timestamp {
         font-size: 11px;
+    }
+
+    .newFeedSecInner {
+        flex-direction: column;
+    }
+
+    .newFeedSecInnerCol:first-child {
+        position: unset;
+        height: unset;
+        max-width: 100%;
     }
 }
 

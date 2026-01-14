@@ -142,6 +142,13 @@
     font-weight: 700;
     font-size: 12px;
     line-height: 100%;
+
+    display: -webkit-box;        /* required for line clamp */
+    -webkit-box-orient: vertical; /* required for line clamp */
+    -webkit-line-clamp: 1;       /* limits to 3 lines */
+    overflow: hidden;            /* hides the rest */
+    text-overflow: ellipsis;     /* shows "..." at the end */
+        white-space: nowrap;
 }
 
 .feed-para {
@@ -150,6 +157,49 @@
     font-weight: 400;
     font-size: 11px;
     line-height: 140%;
+
+    display: -webkit-box;        /* required for line clamp */
+    -webkit-box-orient: vertical; /* required for line clamp */
+    -webkit-line-clamp: 3;       /* limits to 3 lines */
+    overflow: hidden;            /* hides the rest */
+    text-overflow: ellipsis;     /* shows "..." at the end */
+}
+.sidebar-widget.services .feed-name {
+
+    display: -webkit-box;        /* required for line clamp */
+    -webkit-box-orient: vertical; /* required for line clamp */
+    -webkit-line-clamp: 1;       /* limits to 3 lines */
+    overflow: hidden;            /* hides the rest */
+    text-overflow: ellipsis;     /* shows "..." at the end */
+        white-space: nowrap;
+}
+.sidebar-widget.services .feed-para {
+
+    display: -webkit-box;        /* required for line clamp */
+    -webkit-box-orient: vertical; /* required for line clamp */
+    -webkit-line-clamp: 1;       /* limits to 3 lines */
+    overflow: hidden;            /* hides the rest */
+    text-overflow: ellipsis;     /* shows "..." at the end */
+        white-space: nowrap;
+}
+
+.sidebar-widget.industry .feed-name {
+
+    display: -webkit-box;        /* required for line clamp */
+    -webkit-box-orient: vertical; /* required for line clamp */
+    -webkit-line-clamp: 1;       /* limits to 3 lines */
+    overflow: hidden;            /* hides the rest */
+    text-overflow: ellipsis;     /* shows "..." at the end */
+        white-space: nowrap;
+}
+.sidebar-widget.industry .feed-para {
+
+    display: -webkit-box;        /* required for line clamp */
+    -webkit-box-orient: vertical; /* required for line clamp */
+    -webkit-line-clamp: 1;       /* limits to 3 lines */
+    overflow: hidden;            /* hides the rest */
+    text-overflow: ellipsis;     /* shows "..." at the end */
+        white-space: nowrap;
 }
 
 .feed-follow-btn {
@@ -264,4 +314,11 @@
 .ad-cta:hover {
     background: rgba(10, 102, 194, 0.08);
     border-width: 2px;
+}
+
+
+@media (max-width: 1080px) {
+    .newFeedSecInnerCol:last-child {
+        display: none;
+    }
 }
