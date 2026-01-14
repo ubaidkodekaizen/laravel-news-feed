@@ -77,8 +77,12 @@ class AdminController extends Controller
             $startDate = $request->get('start_date');
             $endDate = $request->get('end_date');
         } else {
-            // Line/bar charts: use default dates
-            $startDate = $request->get('start_date', now()->subDays(30)->format('Y-m-d'));
+            // Line/bar charts: use default dates (7 days for signups and subscribers)
+            if (in_array($chartType, ['signups', 'subscribers'])) {
+                $startDate = $request->get('start_date', now()->subDays(7)->format('Y-m-d'));
+            } else {
+                $startDate = $request->get('start_date', now()->subDays(30)->format('Y-m-d'));
+            }
             $endDate = $request->get('end_date', now()->format('Y-m-d'));
         }
 
@@ -129,13 +133,24 @@ class AdminController extends Controller
 
     private function getSubscribersData($startDate, $endDate)
     {
-        $paid = Subscription::where('status', 'active')
+        // Active subscriptions created on that day
+        $active = Subscription::where('status', 'active')
             ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
+        // Renewed subscriptions (where last_renewed_at is within the date range)
+        $renewed = Subscription::where('status', 'active')
+            ->whereNotNull('last_renewed_at')
+            ->whereBetween('last_renewed_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->selectRaw('DATE(last_renewed_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Cancelled subscriptions
         $cancelled = Subscription::where('status', 'cancelled')
             ->whereBetween('updated_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
@@ -144,7 +159,8 @@ class AdminController extends Controller
             ->get();
 
         $labels = [];
-        $paidData = [];
+        $activeData = [];
+        $renewedData = [];
         $cancelledData = [];
 
         $currentDate = Carbon::parse($startDate);
@@ -154,8 +170,11 @@ class AdminController extends Controller
             $dateStr = $currentDate->format('Y-m-d');
             $labels[] = $currentDate->format('M d');
             
-            $paidCount = $paid->firstWhere('date', $dateStr);
-            $paidData[] = $paidCount ? (int)$paidCount->count : 0;
+            $activeCount = $active->firstWhere('date', $dateStr);
+            $activeData[] = $activeCount ? (int)$activeCount->count : 0;
+            
+            $renewedCount = $renewed->firstWhere('date', $dateStr);
+            $renewedData[] = $renewedCount ? (int)$renewedCount->count : 0;
             
             $cancelledCount = $cancelled->firstWhere('date', $dateStr);
             $cancelledData[] = $cancelledCount ? (int)$cancelledCount->count : 0;
@@ -165,7 +184,8 @@ class AdminController extends Controller
 
         return response()->json([
             'labels' => $labels,
-            'paid' => $paidData,
+            'active' => $activeData,
+            'renewed' => $renewedData,
             'cancelled' => $cancelledData
         ]);
     }
