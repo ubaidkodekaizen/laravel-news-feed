@@ -17,10 +17,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Traits\FormatsUserData;
+use App\Models\Reference\Industry as IndustryModel;
+use App\Models\User;
+use App\Traits\HasUserPhotoData;
+use Illuminate\Support\Arr;
 
 class FeedController extends Controller
 {
     use FormatsUserData;
+    use HasUserPhotoData;
 
     /**
      * Display the news feed page.
@@ -36,13 +41,16 @@ class FeedController extends Controller
         $userId = Auth::id();
         $profileViews = 0;
 
+        $authUser = Auth::user();
+        $authUserData = $this->formatUserData($authUser);
+
         // Optimize: Use single query with withCount instead of two separate sum queries
         $posts = Post::where('user_id', $userId)
             ->where('status', 'active')
             ->whereNull('deleted_at')
             ->withCount(['reactions', 'comments'])
             ->get();
-        
+
         $postImpressions = $posts->sum(function ($post) {
             return ($post->reactions_count ?? 0) + ($post->comments_count ?? 0);
         });
@@ -53,7 +61,7 @@ class FeedController extends Controller
             ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
             ->whereNull('deleted_at')
             ->latest()
-            ->limit(3)
+            ->limit(2)
             ->get()
             ->map(fn($product) => (object) [
                 'id' => $product->id,
@@ -79,20 +87,54 @@ class FeedController extends Controller
                 'image_url' => getImageUrl($service->service_image) ?? asset('assets/images/servicePlaceholderImg.png'),
             ]);
 
-        $recentIndustries = \App\Models\Reference\Industry::withCount([
-            'users' => fn($q) => $q->whereNull('deleted_at')
-        ])
-            ->having('users_count', '>', 0)
-            ->orderBy('users_count', 'desc')
-            ->limit(3)
-            ->get()
-            ->map(fn($industry) => (object) [
-                'id' => $industry->id,
-                'name' => $industry->name,
-                'description' => 'Connect with professionals in ' . $industry->name,
-                'members_count' => $industry->users_count,
-                'logo_url' => asset('assets/images/servicePlaceholderImg.png'),
-            ]);
+
+        // Consolidation mapping (same as your example)
+        $industryConsolidation = [
+            'Finance' => ['Finance', 'Financial Advisor', 'Financial Services', 'FinTech', 'Sharia Compliant Financial Services', 'Investment', 'Private Equity', 'Residential Mortgage', 'Payment Solution'],
+            'Healthcare' => ['Healthcare', 'Medical Practices', 'Medical Billing', 'MedTech', 'Mental Health Therapist', 'Biopharma', 'Pharmaceuticals', 'FemTech'],
+            'Technology' => ['Technology', 'Salesforce', 'Salesforce Consulting', 'Telecommunications', '3D Printing'],
+            'Marketing' => ['Marketing', 'Marketing Services', 'Digital Marketing', 'Advertising Services'],
+            'Construction' => ['Construction', 'Interior design'],
+            'Educational Services' => ['Educational Services', 'Coaching'],
+            'Legal' => ['Legal', 'Law Practice'],
+            'Non-profit' => ['Non Profit', 'Non-profit', 'Non-profit Organizations'],
+            'Business Consulting' => ['Business Consulting', 'Business Consulting and Services', 'Outsourcing and Offshoring Consulting'],
+            'Staffing' => ['Staffing', 'Head Hunter', 'Resource Augmentation'],
+            'Retail' => ['Retail', 'Restaurant', 'Halal Meat'],
+            'Real Estate and Rental and Leasing' => ['Real Estate and Rental and Leasing'],
+            'Administrative and Support and Waste Management and Remediation Services' => ['Administrative and Support and Waste Management and Remediation Services', 'Cleaning Services'],
+            'Professional, Scientific, and Technical Services' => ['Professional, Scientific, and Technical Services', 'Creative Design', 'Writing and Editing', 'Ideation'],
+            'Engineering' => ['Engineering', 'mechanical or industrial engineering'],
+            'Logistics' => ['Logistics'],
+            'Accounting' => ['Accounting'],
+            'Printing' => ['Printing'],
+            'InsurTech' => ['InsurTech'],
+        ];
+
+        // Flatten all variations into one searchable array
+        $allIndustryVariations = collect($industryConsolidation)->flatten()->unique()->values();
+
+        // Get ONLY 3 users total
+        $recentIndustryExperts = User::where('status', 'complete')
+            ->whereHas('company', function ($q) use ($allIndustryVariations) {
+                $q->where('status', 'complete')
+                    ->where(function ($sub) use ($allIndustryVariations) {
+                        foreach ($allIndustryVariations as $variation) {
+                            $sub->orWhere('company_industry', 'LIKE', "%{$variation}%");
+                        }
+                    });
+            })
+            ->with('company')
+            ->latest()
+            ->limit(2)
+            ->get();
+
+        // Add photo data
+        if (method_exists($this, 'addPhotoDataToCollection')) {
+            $recentIndustryExperts = $this->addPhotoDataToCollection($recentIndustryExperts);
+        }
+
+
 
         $suggestedConnections = collect();
         try {
@@ -109,14 +151,14 @@ class FeedController extends Controller
                         ->where('connected_user_id', Auth::id())
                         ->where('status', 'accepted'))
                     ->inRandomOrder()
-                    ->limit(3)
+                    ->limit(2)
                     ->get();
             } else {
                 $suggestedConnections = \App\Models\User::where('id', '!=', Auth::id())
                     ->where('status', 'active')
                     ->whereNull('deleted_at')
                     ->inRandomOrder()
-                    ->limit(3)
+                    ->limit(2)
                     ->get();
             }
         } catch (\Exception $e) {
@@ -129,11 +171,31 @@ class FeedController extends Controller
             'postImpressions' => $postImpressions,
             'recentProducts' => $recentProducts,
             'recentServices' => $recentServices,
-            'recentIndustries' => $recentIndustries,
+            'recentIndustryExperts' => $recentIndustryExperts,
             'suggestedConnections' => $suggestedConnections,
+            'authUserData' => $authUserData,
         ]);
     }
+    /**
+     * Add photo and initials data to a collection of users or nested structures
+     *
+     * @param \Illuminate\Support\Collection $items
+     * @return \Illuminate\Support\Collection
+     */
+    public function addPhotoDataToCollection($items)
+    {
+        return $items->map(function ($item) {
+            // Handle array structure with 'user' key
+            if (is_array($item) && array_key_exists('user', $item)) {
+                // Modify the user object directly
+                $this->addPhotoData($item['user']);
+                return $item;
+            }
 
+            // Handle direct user object
+            return $this->addPhotoData($item);
+        });
+    }
     /**
      * Display a single post detail page
      */
@@ -384,7 +446,7 @@ class FeedController extends Controller
         $request->validate([
             'content' => 'nullable|string|max:10000',
             'media' => 'nullable|array|max:10',
-            'media.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv|max:4096',
+            'media.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv,webm|max:10240', // 10MB
             'comments_enabled' => 'nullable|boolean',
             'visibility' => 'nullable|string|in:public,private,connections',
         ]);
@@ -413,8 +475,8 @@ class FeedController extends Controller
                 $order = 0;
 
                 foreach ($request->file('media') as $file) {
-                    if ($file->getSize() > 4096 * 1024) {
-                        throw new \Exception('File ' . $file->getClientOriginalName() . ' exceeds 4MB limit.');
+                    if ($file->getSize() > 10240 * 1024) {
+                        throw new \Exception('File ' . $file->getClientOriginalName() . ' exceeds 10MB limit.');
                     }
 
                     $uploadResult = $s3Service->uploadMedia($file, 'posts');

@@ -14,13 +14,13 @@
 .sidebar-widget .divider {
     height: 1.34px;
     background: #e9ebf0;
-    margin: 14px 0 16px 0;
+    margin: 10px 0 12px 0;
 }
 .widget-header {
     color: #333333;
     font-family: "Inter", sans-serif;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 100%;
     display: flex;
     align-items: center;
@@ -45,14 +45,24 @@
     padding: 6.05px 6.05px 8.3px 6.05px;
     border-radius: 8.61px;
 }
-
+.sidebar-widget.industry .feed-item {
+    align-items: stretch;
+}
 .feed-item:hover {
     background: rgba(0, 0, 0, 0.04);
 }
-
+.feed-item-1 {
+    background: #bae1ff4d;
+}
+.feed-item-2 {
+    background: #ffdfba4d;
+}
+.feed-item-3 {
+    background: #baffc94d;
+}
 .feed-icon {
-    width: 119px;
-    height: 119px;
+    width: 70px;
+    height: 70px;
     border-radius: 4px;
     flex-shrink: 0;
     display: flex;
@@ -60,6 +70,41 @@
     justify-content: center;
     overflow: hidden;
     position: relative;
+}
+.sidebar-widget.services .feed-icon {
+    width: 50.13px;
+    height: 50.13px;
+}
+.sidebar-widget.industry .feed-icon {
+    width: 50.13px;
+    height: 50.13px;
+}
+.sidebar-widget.industry .feed-icon .avatar-initials {
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 50%;
+}
+.feed-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4.72px;
+}
+.feed-actions a {
+    width: 30.18px;
+    height: 30.18px;
+    background: #ffffff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #273572;
 }
 .feed-icon small {
     background: #b8c034;
@@ -77,6 +122,12 @@
     height: 100%;
     object-fit: cover;
 }
+.sidebar-widget.industry .feed-icon img {
+    border-radius: 50%;
+}
+.sidebar-widget.services .feed-icon img {
+    border-radius: 50%;
+}
 
 .feed-info {
     flex: 1;
@@ -89,7 +140,7 @@
     margin-bottom: 2.47px;
     font-family: "Poppins", sans-serif;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 100%;
 }
 
@@ -128,8 +179,8 @@
     transition: background 0.2s;
     color: #333;
     font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 14px;
     line-height: 100%;
     background: transparent;
     border-radius: 8px;

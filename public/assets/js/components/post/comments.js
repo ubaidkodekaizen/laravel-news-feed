@@ -56,6 +56,8 @@ export function toggleReplyInput(commentId) {
         if (input) {
             setTimeout(() => input.focus(), 100);
         }
+        // Initialize emoji picker for this reply input
+        window.dispatchEvent(new Event('commentsLoaded'));
     }
 }
 
@@ -365,18 +367,52 @@ async function loadCommentsForPost(postId) {
                     const commentHtml = createCommentHTML(comment, postId);
                     commentsList.insertAdjacentHTML('beforeend', commentHtml);
                 });
+                window.dispatchEvent(new Event('commentsLoaded'));
             }
         }
     } catch (error) {
         console.error('Error loading comments:', error);
     }
 }
+// helper to build avatar HTML with onerror fallback to initials
+function renderAvatar(user, size = 40) {
+    // safe values
+    const hasPhoto = !!(user && user.has_photo && user.avatar);
+    const name = user && user.name ? user.name : 'User';
+    const initials = user && user.initials
+        ? escapeHtml(user.initials)
+        : escapeHtml((name || 'U').charAt(0).toUpperCase());
+
+    const imgStyle = `width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;display:block;`;
+    const initialsFontSize = Math.max(10, Math.floor(size / 2.5));
+    const initialsStyle = `width:${size}px;height:${size}px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${initialsFontSize}px;background:#ccc;color:#fff;`;
+
+    if (hasPhoto) {
+        // NOTE: the initials div must be the immediate next sibling of the <img>
+        return `
+            <img src="${user.avatar}" class="user-img" alt="${escapeHtml(name)}"
+
+                 onerror="this.onerror=null;this.style.display='none';if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
+            <div class="reply-initials-avatar" style="display:none;">
+                ${initials}
+            </div>
+        `;
+    }
+
+    // no photo -> show initials immediately
+    return `<div class="reply-initials-avatar" style="display:flex;">${initials}</div>`;
+}
+
+
+/* -------------------------
+   Updated comment / reply functions
+   ------------------------- */
 
 function createCommentHTML(comment, postId) {
     console.log("comment", comment);
-    const userAvatar = comment.user.has_photo && comment.user.avatar
-        ? `<img src="${comment.user.avatar}" class="user-img" alt="${comment.user.name}">`
-        : `<div class="user-initials-avatar" style="width: 40px; height: 40px; font-size: 14px;">${comment.user.initials}</div>`;
+
+    // Build avatar HTML using helper (size 40)
+    const userAvatar = renderAvatar(comment.user || {}, 40);
 
     const isOwner = window.authUserId && window.authUserId === comment.user.id;
     const deleteButton = isOwner
@@ -415,12 +451,13 @@ function createCommentHTML(comment, postId) {
             </div>
         </div>
     `;
+
+    window.dispatchEvent(new Event('commentsLoaded'));
 }
 
 function createReplyHTML(reply) {
-    const userAvatar = reply.user.has_photo && reply.user.avatar
-        ? `<img src="${reply.user.avatar}" class="user-img" alt="${reply.user.name}">`
-        : `<div class="user-initials-avatar" style="width: 32px; height: 32px; font-size: 12px;">${reply.user.initials}</div>`;
+    // avatar size 32 for replies
+    const userAvatar = renderAvatar(reply.user || {}, 32);
 
     return `
         <div class="comment reply" data-comment-id="${reply.id}">
@@ -437,12 +474,15 @@ function createReplyHTML(reply) {
 }
 
 function createReplyInputHTML(commentId, postId) {
-    const userAvatar = window.authUserAvatar || '';
-    const userInitials = window.authUserInitials || 'U';
+    const user = {
+        has_photo: !!window.authUserAvatar,
+        avatar: window.authUserAvatar || '',
+        initials: window.authUserInitials || (window.authUserName ? window.authUserName.charAt(0).toUpperCase() : 'U'),
+        name: window.authUserName || 'You'
+    };
 
-    const avatarHTML = userAvatar
-        ? `<img src="${userAvatar}" class="user-img" alt="You">`
-        : `<div class="user-initials-avatar" style="width: 40px; height: 40px; font-size: 14px;">${userInitials}</div>`;
+    // avatar size 40 for reply input
+    const avatarHTML = renderAvatar(user, 64.67);
 
     return `
         <div class="reply-input-wrapper" id="replyInput-${commentId}" style="display: none;">
@@ -457,6 +497,7 @@ function createReplyInputHTML(commentId, postId) {
         </div>
     `;
 }
+
 
 function updateCommentCount(postId, delta) {
     const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);

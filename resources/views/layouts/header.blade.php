@@ -41,7 +41,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
-    @yield('styles')
+
     <link rel="stylesheet" href="{{ asset('assets/css/style.css?v2') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -149,7 +149,7 @@
         }
     </style>
 
-
+    @yield('styles')
 </head>
 
 <body>

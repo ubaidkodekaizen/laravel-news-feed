@@ -10,7 +10,7 @@
     padding: 28px 36px;
 }
 #feedAdCard .card-img {
-    padding: 0 0 126px 0;
+    padding: 0 0 20px 0;
 }
 .feedAdWatermarkImg {
     position: absolute;
@@ -20,7 +20,7 @@
 #feedAdCard h4 {
     font-family: "Inter", sans-serif;
     font-weight: 700;
-    font-size: 22px;
+    font-size: 14px;
     line-height: 1.3em;
     color: #ffffff;
 }
@@ -30,18 +30,18 @@
 #feedAdCard p {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.3em;
     color: #ffffff;
 }
 #feedAdCard .feedAdCardCta {
     font-family: "Inter", sans-serif;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 14px;
     line-height: 100%;
     background: #f3681f;
     color: #101a33;
-    padding: 17px 20px;
+    padding: 10px 20px;
     width: 100%;
     text-align: center;
     border-radius: 8px;
@@ -51,36 +51,50 @@
 #feedAdCard .feedAdCardLinkedin {
     padding: 8.31px;
     background: #0a66c2;
-    border-radius: 14px;
-    width: 56px;
-    height: 56px;
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     text-decoration: none;
-    font-size: 35px;
+    font-size: 24px;
     margin: 0 0 15px 0;
 }
 .profile_cover_bg {
-    height: 111px;
+    height: 58px;
     background: #b8c034;
-    border-radius: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 .profile_card_pic {
     position: relative;
-    width: 100%;
-    max-width: 95.33px;
-    min-height: 95.33px;
+    width: 72px;
+    height: 72px;
     margin: -40px 0 0 19px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #fff !important;
 }
 
 .profile_card_pic img {
     background: #fff;
-    border: 2px solid #fff !important;
     height: 100%;
     width: 100%;
     object-fit: cover;
+}
+
+.profile-initials-avatar {
+    height: 100%;
+    width: 100%;
+    background: #394a93;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
 }
 .profile_card_details {
     padding: 10px 23px 18px 23px;
@@ -91,20 +105,20 @@
     margin-bottom: 4.67px;
     font-family: "Inter", sans-serif;
     font-weight: 700;
-    font-size: 26.95px;
+    font-size: 18px;
     line-height: 100%;
 }
 .profile_card_details p {
     font-family: "Inter", sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.3em;
     color: #333333;
 }
 
 .user-img {
-    width: 64.66px;
-    height: 64.66px;
+    width: 50.13px;
+    height: 50.13px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -139,21 +153,21 @@
 }
 
 .profile_card_details_inner .profile_card_details_inner_box h4 {
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 18.67px;
-    line-height: 100%;
     color: #17272f;
     margin: 0;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 100%;
 }
 
 .profile_card_details_inner .profile_card_details_inner_box p {
-    font-family: "Inter", sans-serif;
-    font-weight: 500;
-    font-size: 18.67px;
-    line-height: 100%;
     color: #1c3395;
     margin: 0;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 100%;
 }
 
 .profile_card_details .divider {
