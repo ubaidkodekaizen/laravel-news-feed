@@ -130,6 +130,7 @@ Route::get('/subscribe/iap/google-test', function (Request $request) {
 */
 
 Route::get('/user/dropdowns', [UserController::class, 'getDropdowns']);
+Route::get('/users', [UserController::class, 'getUsers']);
 Route::post('/register', [UserController::class, 'register'])->middleware('throttle:3,1'); // 3 attempts per minute
 Route::post('/register-amcob', [UserController::class, 'registerAmcob'])->middleware('throttle:3,1'); // 3 attempts per minute
 Route::post('/login', [UserController::class, 'login'])->middleware('throttle:5,1'); // 5 attempts per minute

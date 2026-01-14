@@ -978,29 +978,26 @@ class UserController extends Controller
         $buying_process = \App\Helpers\DropDownHelper::getBuyingProcessArray();
         $categories = \App\Helpers\DropDownHelper::getParentCategoriesArray();
 
-        // Get active users (status = 'complete') - user data only, no relations
-        $users = User::where('status', 'complete')
-            ->whereNull('deleted_at')
-            ->select([
-                'id',
-                'first_name',
-                'last_name',
-                'email',
-                'phone',
-                'slug',
-                'status',
-                'user_position',
-                'gender',
-                'age_group',
-                'nationality',
-                'country',
-                'state',
-                'city',
-                'photo',
-                'created_at',
-                'updated_at'
-            ])
-            ->get();
+        // Ethnicity options - flattened array of all options
+        $ethnicities = [
+            'North African (e.g., Arab, Berber, Nubian)',
+            'Sub-Saharan African (e.g., Hausa, Yoruba, Somali, Zulu)',
+            'Afro-Caribbean',
+            'African-American',
+            'South Asian (e.g., Indian, Pakistani, Bangladeshi, Sri Lankan, Nepali)',
+            'East Asian (e.g., Chinese, Japanese, Korean)',
+            'Southeast Asian (e.g., Malay, Filipino, Indonesian, Thai, Burmese)',
+            'Central Asian (e.g., Kazakh, Uzbek, Turkmen, Tajik, Kyrgyz)',
+            'West Asian/Middle Eastern (e.g., Arab, Persian, Kurdish, Turkish, Assyrian)',
+            'Eastern European (e.g., Russian, Polish, Ukrainian, Romanian)',
+            'Western European (e.g., British, French, German, Dutch)',
+            'Southern European (e.g., Italian, Spanish, Greek, Portuguese)',
+            'Balkan (e.g., Bosnian, Albanian)',
+            'Latino/Hispanic (e.g., Mexican, Brazilian, Colombian, Cuban)',
+            'Multiracial/Mixed Heritage',
+            'Other',
+            'Prefer not to disclose'
+        ];
 
         return response()->json([
             'status' => true,
@@ -1015,6 +1012,7 @@ class UserController extends Controller
                 'genders' => $genders,
                 'age_groups' => $age_groups,
                 'marital_statuses' => $marital_statuses,
+                'ethnicity' => $ethnicities,
                 'business_locations' => $business_locations,
                 'business_challenges' => $business_challenges,
                 'business_goals' => $business_goals,
@@ -1022,8 +1020,44 @@ class UserController extends Controller
                 'technologies' => $technologies,
                 'buying_process' => $buying_process,
                 'categories' => $categories,
-                'users' => $users,
             ],
+        ]);
+    }
+
+    /**
+     * Get users list with specific columns
+     * Returns: first_name, last_name, profile_pic, designation, company, phone_number, user_id
+     */
+    public function getUsers(Request $request)
+    {
+        $users = User::where('status', 'complete')
+            ->whereNull('deleted_at')
+            ->with('company:id,user_id,company_name,company_position')
+            ->select([
+                'id',
+                'first_name',
+                'last_name',
+                'photo',
+                'phone',
+            ])
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'user_id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'profile_pic' => getImageUrl($user->photo),
+                    'designation' => $user->company->company_position ?? null,
+                    'company' => $user->company->company_name ?? null,
+                    'phone_number' => $user->phone,
+                ];
+            });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Users fetched successfully.',
+            'data' => $users,
+            'count' => $users->count(),
         ]);
     }
 
