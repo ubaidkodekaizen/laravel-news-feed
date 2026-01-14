@@ -129,13 +129,18 @@ function renderPosts(posts) {
     initializeVideoPlayers();
 }
 
+// Modified createPostHTML to store images
 function createPostHTML(post) {
     const isOwner = window.authUserId && window.authUserId === post.user.id;
 
+    // Store images for lightbox
+    if (post.media && post.media.length > 0) {
+        const postId = `post-${post.id}`;
+        window.postImages[postId] = post.media.filter(m => m.media_type === 'image');
+    }
+
     return `
-        <div class="post-container card" data-post-id="${
-            post.id
-        }" data-post-slug="${post.slug}">
+        <div class="post-container card" data-post-id="${post.id}" data-post-slug="${post.slug}">
             ${createPostHeader(post, isOwner)}
             ${createSharedPostBadge(post)}
             ${createPostContent(post)}
@@ -407,59 +412,75 @@ function initializeVideoPlayers() {
         video.dataset.initialized = "true";
     });
 }
-
 function createImageGrid(images) {
     const count = images.length;
+    const postId = `post-${Date.now()}`; // Unique ID for this post's images
 
     if (count === 1) {
         return `
-            <div class="post-images" data-image-count="1">
+            <div class="post-images" data-image-count="1" data-post-id="${postId}">
                 <div class="post-images-single">
-                    <img src="${images[0].media_url}" alt="Post image" class="post-image">
+                    <img src="${images[0].media_url}"
+                         alt="Post image"
+                         class="post-image"
+                         onclick="openLightbox('${postId}', 0)"
+                         style="cursor: pointer;">
                 </div>
             </div>
         `;
     } else if (count === 2) {
         return `
-            <div class="post-images post-images-grid post-images-two" data-image-count="2">
+            <div class="post-images post-images-grid post-images-two" data-image-count="2" data-post-id="${postId}">
                 ${images
-                    .map(
-                        (img) =>
-                            `<img src="${img.media_url}" alt="Post image" class="post-image">`
+                    .map((img, index) =>
+                        `<img src="${img.media_url}"
+                              alt="Post image"
+                              class="post-image"
+                              onclick="openLightbox('${postId}', ${index})"
+                              style="cursor: pointer;">`
                     )
                     .join("")}
             </div>
         `;
     } else if (count === 3) {
         return `
-            <div class="post-images post-images-grid post-images-three" data-image-count="3">
-                <img src="${images[0].media_url}" alt="Post image" class="post-image post-image-large">
+            <div class="post-images post-images-grid post-images-three" data-image-count="3" data-post-id="${postId}">
+                <img src="${images[0].media_url}"
+                     alt="Post image"
+                     class="post-image post-image-large"
+                     onclick="openLightbox('${postId}', 0)"
+                     style="cursor: pointer;">
                 <div class="post-images-small">
-                    <img src="${images[1].media_url}" alt="Post image" class="post-image">
-                    <img src="${images[2].media_url}" alt="Post image" class="post-image">
+                    <img src="${images[1].media_url}"
+                         alt="Post image"
+                         class="post-image"
+                         onclick="openLightbox('${postId}', 1)"
+                         style="cursor: pointer;">
+                    <img src="${images[2].media_url}"
+                         alt="Post image"
+                         class="post-image"
+                         onclick="openLightbox('${postId}', 2)"
+                         style="cursor: pointer;">
                 </div>
             </div>
         `;
     } else {
         const remaining = count - 4;
         return `
-            <div class="post-images post-images-grid post-images-four" data-image-count="${count}">
+            <div class="post-images post-images-grid post-images-four" data-image-count="${count}" data-post-id="${postId}">
                 ${images
                     .slice(0, 3)
-                    .map(
-                        (img) =>
-                            `<img src="${img.media_url}" alt="Post image" class="post-image">`
+                    .map((img, index) =>
+                        `<img src="${img.media_url}"
+                              alt="Post image"
+                              class="post-image"
+                              onclick="openLightbox('${postId}', ${index})"
+                              style="cursor: pointer;">`
                     )
                     .join("")}
-                <div class="post-image-wrapper">
-                    <img src="${
-                        images[3].media_url
-                    }" alt="Post image" class="post-image">
-                    ${
-                        remaining > 0
-                            ? `<div class="post-image-overlay">+${remaining}</div>`
-                            : ""
-                    }
+                <div class="post-image-wrapper" onclick="openLightbox('${postId}', 3)" style="cursor: pointer;">
+                    <img src="${images[3].media_url}" alt="Post image" class="post-image">
+                    ${remaining > 0 ? `<div class="post-image-overlay">+${remaining}</div>` : ""}
                 </div>
             </div>
         `;
@@ -776,3 +797,7 @@ function showNotification(message, type = "info") {
         notification.alert("close");
     }, 3000);
 }
+
+
+// Store images for lightbox
+window.postImages = window.postImages || {};
