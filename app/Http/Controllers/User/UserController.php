@@ -93,8 +93,11 @@ class UserController extends Controller
 
             session(['sanctum_token' => $token]);
 
-
+            // Optimize: Eager load company to avoid N+1 query
             if ($user->role_id === 4) {
+                if (!$user->relationLoaded('company')) {
+                    $user->load('company');
+                }
                 if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
                     return redirect()->route('our.community');
                 } else {
@@ -113,13 +116,14 @@ class UserController extends Controller
 
     public function showUserDetailsForm()
     {
-        $user = Auth::user();
+        $user = Auth::user()->load(['company', 'userIcp']);
 
         // Add photo data using the trait
         $this->addPhotoData($user);
 
-        $company = Company::where('user_id', $user->id)->first();
-        $userIcp = \App\Models\UserIcp::where('user_id', $user->id)->first();
+        // Use relationship instead of separate query
+        $company = $user->company;
+        $userIcp = $user->userIcp;
 
         // Get dropdown data
         $designations = \App\Helpers\DropDownHelper::getDesignationsArray();

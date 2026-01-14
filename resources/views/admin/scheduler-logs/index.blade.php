@@ -375,19 +375,30 @@
                                         <td>{{ $log->records_failed ?? 0 }}</td>
                                         <td>{{ \Carbon\Carbon::parse($log->ran_at)->format('d M Y h:i A') }}</td>
                                         <td>
-                                            <a href="{{ route('admin.scheduler-logs.show', $log->id) }}" class="btn btn-primary btn-sm" title="View Details">
-                                                View
+                                            <a id="view" href="{{ route('admin.scheduler-logs.show', $log->id) }}" class="btn btn-primary btn-sm" title="View Details">
+                                                <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <title>View</title>
+                                                    <path d="M20.188 10.9343C20.5762 11.4056 20.7703 11.6412 20.7703 12C20.7703 12.3588 20.5762 12.5944 20.188 13.0657C18.7679 14.7899 15.6357 18 12 18C8.36427 18 5.23206 14.7899 3.81197 13.0657C3.42381 12.5944 3.22973 12.3588 3.22973 12C3.22973 11.6412 3.42381 11.4056 3.81197 10.9343C5.23206 9.21014 8.36427 6 12 6C15.6357 6 18.7679 9.21014 20.188 10.9343Z" fill="#213bae" fill-opacity="0.14"/>
+                                                    <circle cx="12" cy="12" r="3" fill="#273572"/>
+                                                </svg>
                                             </a>
                                             @if($filter !== 'deleted')
                                             <form action="{{ route('admin.scheduler-logs.destroy', $log->id) }}" method="POST" style="display:inline-block;" class="delete-log-form" data-id="{{ $log->id }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger btn-sm delete-log-btn">Delete</button>
+                                                <button type="button" class="btn btn-danger btn-sm delete-log-btn" id="delete"></button>
                                             </form>
                                             @else
                                             <form action="{{ route('admin.scheduler-logs.restore', $log->id) }}" method="POST" style="display:inline-block;" class="restore-log-form" data-id="{{ $log->id }}">
                                                 @csrf
-                                                <button type="button" class="btn btn-success btn-sm restore-log-btn">Restore</button>
+                                                <button type="button" class="btn btn-success btn-sm restore-log-btn" id="restoreBtn">
+                                                    <svg width="30px" height="30px" viewBox="0 0 40 40"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M10 16.682l5.69 5.685 1.408-1.407-3.283-3.28h10.131c1.147 0 2.19.467 2.943 1.222a4.157 4.157 0 011.225 2.946 4.18 4.18 0 01-4.168 4.168h-5.628V28h5.522c3.387 0 6.16-2.77 6.16-6.157a6.117 6.117 0 00-1.81-4.343 6.143 6.143 0 00-4.35-1.805H13.815l3.283-3.285L15.69 11 10 16.682z"
+                                                            fill="#273572" fill-rule="nonzero" />
+                                                    </svg>
+                                                </button>
                                             </form>
                                             @endif
                                         </td>

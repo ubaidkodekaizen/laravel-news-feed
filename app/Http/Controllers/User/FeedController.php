@@ -36,17 +36,20 @@ class FeedController extends Controller
         $userId = Auth::id();
         $profileViews = 0;
 
-        $postImpressions = Post::where('user_id', $userId)
+        // Optimize: Use single query with withCount instead of two separate sum queries
+        $posts = Post::where('user_id', $userId)
             ->where('status', 'active')
             ->whereNull('deleted_at')
-            ->sum('reactions_count') +
-            Post::where('user_id', $userId)
-            ->where('status', 'active')
-            ->whereNull('deleted_at')
-            ->sum('comments_count');
+            ->withCount(['reactions', 'comments'])
+            ->get();
+        
+        $postImpressions = $posts->sum(function ($post) {
+            return ($post->reactions_count ?? 0) + ($post->comments_count ?? 0);
+        });
 
-        // Get sidebar data
-        $recentProducts = \App\Models\Business\Product::with('user')
+        // Optimize: Only select columns that are actually used
+        $recentProducts = \App\Models\Business\Product::select('id', 'title', 'short_description', 'original_price', 'discounted_price', 'product_image', 'user_id')
+            ->with('user:id,first_name,last_name,photo')
             ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
             ->whereNull('deleted_at')
             ->latest()
@@ -60,7 +63,9 @@ class FeedController extends Controller
                 'image_url' => getImageUrl($product->product_image) ?? asset('assets/images/servicePlaceholderImg.png'),
             ]);
 
-        $recentServices = \App\Models\Business\Service::with('user')
+        // Optimize: Only select columns that are actually used
+        $recentServices = \App\Models\Business\Service::select('id', 'title', 'short_description', 'original_price', 'discounted_price', 'service_image', 'user_id')
+            ->with('user:id,first_name,last_name,photo')
             ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
             ->whereNull('deleted_at')
             ->latest()

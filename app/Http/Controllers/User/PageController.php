@@ -194,12 +194,12 @@ class PageController extends Controller
         $blogs = Blog::orderByDesc('id')->get();
         $events = Event::orderByDesc('id')->get();
 
-        // Get only one product per user (latest product for each user)
-        $products = Product::with('user')
+        // Optimize: Only select columns that are actually used, avoid duplicate with('user')
+        $products = Product::select('id', 'title', 'short_description', 'original_price', 'discounted_price', 'product_image', 'user_id', 'quantity', 'unit_of_quantity', 'created_at')
+            ->with('user:id,first_name,last_name,photo')
             ->whereHas('user', function ($query) {
                 $query->where('status', 'complete');
             })
-            ->with('user')
             ->orderByDesc('id')
             ->get()
             ->map(function ($product) {
@@ -231,11 +231,12 @@ class PageController extends Controller
                 return $product;
             });
 
-        // Get only one service per user (latest service for each user) - limit to 3
-        $services = Service::whereHas('user', function ($query) {
-            $query->where('status', 'complete');
-        })
-            ->with('user')
+        // Optimize: Only select columns that are actually used
+        $services = Service::select('id', 'title', 'short_description', 'original_price', 'discounted_price', 'service_image', 'user_id', 'duration', 'created_at')
+            ->whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            })
+            ->with('user:id,first_name,last_name,photo')
             ->orderByDesc('id')
             ->get()
             ->groupBy('user_id')
@@ -278,9 +279,12 @@ class PageController extends Controller
 
     public function products(Request $request)
     {
-        $query = Product::with('user')->whereHas('user', function ($query) {
-            $query->where('status', 'complete');
-        });
+        // Optimize: Only select columns that are actually used
+        $query = Product::select('id', 'title', 'category', 'short_description', 'original_price', 'discounted_price', 'product_image', 'user_id', 'quantity', 'unit_of_quantity', 'created_at', 'updated_at')
+            ->with('user:id,first_name,last_name,photo')
+            ->whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            });
 
         if ($request->has('search') && $request->search !== null) {
             $search = $request->search;
@@ -332,9 +336,12 @@ class PageController extends Controller
 
     public function services(Request $request)
     {
-        $query = Service::with('user')->whereHas('user', function ($query) {
-            $query->where('status', 'complete');
-        });
+        // Optimize: Only select columns that are actually used
+        $query = Service::select('id', 'title', 'category', 'short_description', 'original_price', 'discounted_price', 'service_image', 'user_id', 'duration', 'created_at', 'updated_at')
+            ->with('user:id,first_name,last_name,photo')
+            ->whereHas('user', function ($query) {
+                $query->where('status', 'complete');
+            });
 
         if ($request->has('search') && $request->search !== null) {
             $search = $request->search;
@@ -433,6 +440,9 @@ class PageController extends Controller
             }
         }
 
+        // Optimize: Only select user columns that are actually used in the view
+        // Note: Keep all columns for now as user profile view may need many fields
+        // This is a safe optimization - we're just ensuring company is eager loaded
         $users = User::where('status', 'complete')
             ->whereHas('company', function ($query) use ($industry, $industryVariations) {
                 $query->where('status', 'complete');
@@ -488,7 +498,8 @@ class PageController extends Controller
                 $userIds = collect($recommendations)->pluck('id')->toArray();
 
                 if (!empty($userIds)) {
-                    // Fetch users with their relationships
+                    // Optimize: Eager load relationships to prevent N+1 queries
+                    // Note: Keeping all user columns as profile view needs many fields
                     $users = User::with(['company', 'userEducations'])
                         ->whereIn('id', $userIds)
                         ->whereNull('deleted_at')

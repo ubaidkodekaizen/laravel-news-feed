@@ -82,11 +82,15 @@ class SearchController extends Controller
     {
         $perPage = $request->get('per_page', 12); // Default to 12
 
+        // Optimize: Eager load relationships to prevent N+1 queries
         $query = User::where('status', 'complete')
             ->whereHas('company', function ($query) {
                 $query->where('status', 'complete');
             })
             ->with(['company', 'userIcp']);
+        
+        // Note: If productServices, products, or services are accessed in views, 
+        // add them to the with() array: ->with(['company', 'userIcp', 'company.productServices', 'products', 'services'])
 
 
         if ($request->filled('company_position')) {

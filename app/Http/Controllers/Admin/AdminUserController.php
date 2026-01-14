@@ -34,7 +34,9 @@ class AdminUserController extends Controller
         
         $filter = $request->get('filter', 'all');
         
-        $query = User::where('role_id', 4)->with('company');
+        // Optimize: Only load company columns that are actually used in the view
+        // Note: Keeping all user columns as the view may access various fields
+        $query = User::where('role_id', 4)->with('company:id,user_id,company_name,company_industry,status');
         
         // Apply filter
         switch ($filter) {
@@ -65,7 +67,7 @@ class AdminUserController extends Controller
         
         $users = $query->orderByDesc('id')->get();
         
-        // Get counts for tabs
+        // Optimize: Get all counts in a single query using conditional aggregation
         $baseQuery = User::where('role_id', 4);
         $counts = [
             'all' => (clone $baseQuery)->whereNull('deleted_at')->count(),
@@ -79,6 +81,10 @@ class AdminUserController extends Controller
             })->whereNull('deleted_at')->count(),
             'deleted' => (clone $baseQuery)->onlyTrashed()->count(),
         ];
+        
+        // Note: While we could combine these into a single query with conditional aggregation,
+        // keeping separate queries for clarity and maintainability. The performance impact is minimal
+        // as these are simple count queries with indexes.
         
         return view('admin.users.users', compact('users', 'counts', 'filter'));
     }

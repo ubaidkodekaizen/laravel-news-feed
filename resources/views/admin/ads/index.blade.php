@@ -457,18 +457,19 @@
                                                     @endif
                                                 @endif
                                             </td>
+                                            
                                             <td>
                                                 @if($filter !== 'deleted')
                                                     @if($canEdit)
-                                                    <a href="{{ route('admin.edit.ad', $ad->id) }}"
-                                                        class="btn btn-primary btn-sm">Edit</a>
+                                                    <a id="edit" href="{{ route('admin.edit.ad', $ad->id) }}"
+                                                        class="btn btn-primary btn-sm"></a>
                                                     @endif
                                                     @if($canDelete)
                                                     <form action="{{ route('admin.delete.ad', $ad->id) }}" method="POST"
                                                         style="display:inline-block;" class="delete-ad-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm" id="delete"></button>
                                                     </form>
                                                     @endif
                                                 @else
@@ -476,7 +477,14 @@
                                                     <form action="{{ route('admin.restore.ad', $ad->id) }}" method="POST"
                                                         style="display:inline-block;" class="restore-ad-form">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                                        <button type="submit" class="btn btn-success btn-sm" id="restoreBtn">
+                                                            <svg width="30px" height="30px" viewBox="0 0 40 40"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="M10 16.682l5.69 5.685 1.408-1.407-3.283-3.28h10.131c1.147 0 2.19.467 2.943 1.222a4.157 4.157 0 011.225 2.946 4.18 4.18 0 01-4.168 4.168h-5.628V28h5.522c3.387 0 6.16-2.77 6.16-6.157a6.117 6.117 0 00-1.81-4.343 6.143 6.143 0 00-4.35-1.805H13.815l3.283-3.285L15.69 11 10 16.682z"
+                                                                    fill="#273572" fill-rule="nonzero" />
+                                                            </svg>
+                                                        </button>
                                                     </form>
                                                     @endif
                                                 @endif

@@ -29,7 +29,8 @@ class SubscriptionController extends Controller
             $filter = 'all';
         }
         
-        $query = Subscription::with('user');
+        // Optimize: Only load user columns that are actually used in the view
+        $query = Subscription::with('user:id,first_name,last_name,email,phone');
         
         // Apply filter
         switch ($filter) {
@@ -91,8 +92,8 @@ class SubscriptionController extends Controller
         
         $subscriptions = $query->orderByDesc('id')->get();
 
-        // Get counts for tabs
-        $baseQuery = Subscription::with('user');
+        // Optimize: Get counts efficiently - limit user relationship to only needed columns
+        $baseQuery = Subscription::with('user:id,first_name,last_name,email,phone');
         
         // Count all subscriptions
         $allCount = (clone $baseQuery)->count();
