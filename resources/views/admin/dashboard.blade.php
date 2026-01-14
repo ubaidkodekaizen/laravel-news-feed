@@ -374,14 +374,14 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    // Initialize date inputs with default values (last 30 days for line/bar charts)
+    // Initialize date inputs with default values (last 7 days for first 2 charts)
     const defaultEndDate = new Date().toISOString().split('T')[0];
-    const defaultStartDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const defaultStartDate7Days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-    // Set default dates for line/bar charts only
-    document.getElementById('signups-start-date').value = defaultStartDate;
+    // Set default dates for first 2 charts (7 days)
+    document.getElementById('signups-start-date').value = defaultStartDate7Days;
     document.getElementById('signups-end-date').value = defaultEndDate;
-    document.getElementById('subscribers-start-date').value = defaultStartDate;
+    document.getElementById('subscribers-start-date').value = defaultStartDate7Days;
     document.getElementById('subscribers-end-date').value = defaultEndDate;
 
     // Pie charts start empty (all-time data by default)
@@ -476,11 +476,15 @@
                     data: {
                         labels: data.labels,
                         datasets: [{
-                            label: 'Active Subscriptions',
-                            data: data.paid,
+                            label: 'Active',
+                            data: data.active,
                             backgroundColor: '#28a745'
                         }, {
-                            label: 'Cancelled Subscriptions',
+                            label: 'Renewed',
+                            data: data.renewed,
+                            backgroundColor: '#ffc107'
+                        }, {
+                            label: 'Cancelled',
                             data: data.cancelled,
                             backgroundColor: '#dc3545'
                         }]
@@ -574,7 +578,7 @@
                 }
 
                 platformsChart = new Chart(ctx, {
-                    type: 'doughnut',
+                    type: 'pie',
                     data: {
                         labels: data.labels,
                         datasets: [{
