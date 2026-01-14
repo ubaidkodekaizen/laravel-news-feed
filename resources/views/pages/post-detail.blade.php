@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/components/post-images.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/post-actions.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/share-repost.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components/stats-layout.css') }}">
+
 @endsection
 
 <section class="newFeedSec">
@@ -26,7 +28,7 @@
                     </div>
 
                     <!-- Single Post -->
-                    @if(isset($post))
+                    @if (isset($post))
                         @php
                             $isOwner = auth()->check() && auth()->id() === ($post['user']['id'] ?? null);
                         @endphp
@@ -34,14 +36,15 @@
                         @include('user.components.post-card.index', [
                             'post' => $post,
                             'isOwner' => $isOwner,
-                            'showAllComments' => true
+                            'showAllComments' => true,
                         ])
                     @else
                         <div class="card">
                             <div class="card-body text-center py-5">
                                 <i class="fa-regular fa-newspaper fa-3x text-muted mb-3"></i>
                                 <h5 class="text-muted">Post not found</h5>
-                                <p class="text-muted">This post may have been deleted or you don't have permission to view it.</p>
+                                <p class="text-muted">This post may have been deleted or you don't have permission to
+                                    view it.</p>
                                 <a href="{{ route('news-feed') }}" class="btn btn-primary">Go to Feed</a>
                             </div>
                         </div>
@@ -58,7 +61,9 @@
 
 @section('scripts')
 <script type="module">
-    import { togglePostText } from "{{ asset('assets/js/components/post/expand.js') }}";
+    import {
+        togglePostText
+    } from "{{ asset('assets/js/components/post/expand.js') }}";
     import {
         showReactions,
         hideReactions,
@@ -75,7 +80,8 @@
         toggleReplyButton,
         postReply,
         loadMoreComments,
-        deleteComment
+        deleteComment,
+        likeComment
     } from "{{ asset('assets/js/components/post/comments.js') }}";
     import {
         deletePost,
@@ -114,10 +120,11 @@
     window.instantRepost = instantRepost;
     window.copyPostLink = copyPostLink;
     window.showSharesList = showSharesList;
+    window.likeComment = likeComment;
 
     // Auto-open comments section on detail page
     document.addEventListener('DOMContentLoaded', function() {
-        const postId = '{{ $post["id"] ?? "" }}';
+        const postId = '{{ $post['id'] ?? '' }}';
         if (postId) {
             // Open comments by default on single post page
             const commentSection = document.getElementById(`commentSection-${postId}`);
@@ -125,6 +132,89 @@
                 commentSection.style.display = 'block';
             }
         }
+    });
+
+    // Function to initialize emoji pickers for dynamically loaded comments
+    function initializeCommentEmojiPickers() {
+        document.querySelectorAll('.emoji-picker-btn').forEach(btn => {
+            if (!btn.dataset.initialized) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const input = this.closest('.comment-input-container').querySelector(
+                        'input[type="text"]');
+                    if (input) {
+                        showEmojiPicker(input);
+                    }
+                });
+                btn.dataset.initialized = 'true';
+            }
+        });
+    }
+
+    // Simple emoji picker function
+    function showEmojiPicker(input) {
+        const emojis = ['😊', '😂', '❤️', '👍', '🎉', '🔥', '💯', '🙏', '👏', '✨', '💪', '🤔', '😍', '🥰', '😎'];
+
+        const picker = document.createElement('div');
+        picker.className = 'emoji-picker-popup';
+        picker.innerHTML = emojis.map(e => `<span class="emoji-option">${e}</span>`).join('');
+
+        picker.style.cssText = `
+        position: absolute;
+        background: white;
+        border: 1px solid #e4e6eb;
+        border-radius: 8px;
+        padding: 8px;
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        max-width: 200px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 1000;
+    `;
+
+        const inputRect = input.getBoundingClientRect();
+        picker.style.top = (inputRect.bottom + window.scrollY + 5) + 'px';
+        picker.style.left = inputRect.left + 'px';
+
+        picker.querySelectorAll('.emoji-option').forEach(emoji => {
+            emoji.style.cssText = 'cursor: pointer; padding: 4px; font-size: 20px;';
+            emoji.addEventListener('click', function() {
+                input.value += this.textContent;
+                input.dispatchEvent(new Event('input'));
+                input.focus();
+                picker.remove();
+            });
+        });
+
+        document.body.appendChild(picker);
+
+        setTimeout(() => {
+            document.addEventListener('click', function closeOnClickOutside(e) {
+                if (!picker.contains(e.target) && e.target !== input) {
+                    picker.remove();
+                    document.removeEventListener('click', closeOnClickOutside);
+                }
+            });
+        }, 100);
+    }
+
+    // Re-initialize emoji pickers when comments are loaded
+    window.addEventListener('commentsLoaded', initializeCommentEmojiPickers);
+
+    // Auto-open comments section on detail page
+    document.addEventListener('DOMContentLoaded', function() {
+        const postId = '{{ $post['id'] ?? '' }}';
+        if (postId) {
+            // Open comments by default on single post page
+            const commentSection = document.getElementById(`commentSection-${postId}`);
+            if (commentSection) {
+                commentSection.style.display = 'block';
+            }
+        }
+
+        // Initialize emoji pickers
+        initializeCommentEmojiPickers(); // ← Add this
     });
 </script>
 @endsection

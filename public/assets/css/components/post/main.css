@@ -1,3 +1,105 @@
+:root {
+    --primary: #273572;
+    --secondary: #b8c034;
+    --bg-light: #2a3e812b;
+    --bg-gray: #f4f9ff;
+    --black: #000000;
+    --white: #ffffff;
+    --dark: #333333;
+    --text-color: #333333;
+    --trans: all 0.4s ease 0s;
+}
+
+.newFeedSecInnerColFirst::-webkit-scrollbar {
+    width: 5px; /* width works here */
+}
+
+.newFeedSecInnerColFirst::-webkit-scrollbar-track {
+    background: red !important; /* track color */
+}
+
+.newFeedSecInnerColFirst::-webkit-scrollbar-thumb {
+    background-color: var(--secondary); /* scrollbar thumb color */
+    border-radius: 10px; /* optional for rounded */
+}
+ /* container */
+.video-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+  margin: 12px 0;
+}
+
+/* video element */
+.post-video {
+  display: block;
+  width: 100%;
+  max-height: 500px;
+  height: auto;
+  object-fit: cover;
+  background: #000;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* focus for keyboard users */
+.post-video:focus {
+  outline: 3px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+/* central overlay (clickable) */
+.video-play-overlay {
+  position: absolute;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto; /* make it clickable */
+  background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+  transition: opacity 200ms ease;
+  z-index: 5;
+}
+
+/* play button (big, accessible) */
+.video-play-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.45);
+  border: 2px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.95);
+  font-size: 36px;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.video-play-button:active { transform: scale(0.96); }
+.video-play-button:focus { outline: 3px solid rgba(13,110,253,0.6); }
+
+/* hide overlay while playing */
+.video-overlay-hidden { opacity: 0; pointer-events: none; }
+
+/* poster (cover) */
+.post-video[poster] { object-fit: cover; }
+
+/* optional small spinner state */
+.video-spinner {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.12);
+  border-top-color: rgba(255,255,255,0.9);
+  animation: spin 800ms linear infinite;
+  z-index: 6;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ========================================
    POST CONTAINER - MAIN STYLES
    ======================================== */
@@ -157,7 +259,31 @@
 /* ========================================
    POST CONTENT
    ======================================== */
-
+.feed-sort-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.feed-sort-container label {
+    width: 100%;
+    max-width: 124px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    color: #17272f;
+}
+.feed-sort-container select {
+    width: 100%;
+    max-width: max-content;
+    border: none;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    color: #273572;
+    background-size: 20px 16px;
+}
 .post-content {
     padding: 0 16px 12px;
 }

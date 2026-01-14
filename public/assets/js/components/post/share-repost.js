@@ -384,6 +384,7 @@ export function shareToWhatsApp(url) {
 }
 
 export async function showSharesList(postId) {
+    console.log(postId);
     if (!postId) return;
 
     const modal = document.getElementById('sharesModal');

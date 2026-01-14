@@ -1,4 +1,4 @@
-<div class="card mb-3" id="postCreateSec">
+<div class="card mb-4" id="postCreateSec">
     <div class="card-body">
         <div class="postCreateBtn">
  <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" alt="User"

@@ -14,13 +14,13 @@
     <link rel="stylesheet" href="{{ asset('assets/css/components/post-actions.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/share-repost.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/stats-layout.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/components/skeleton-loading.css') }}">
+
 @endsection
 
 <section class="newFeedSec">
     <div class="newFeedSecInner">
         <!-- Left Sidebar - Profile Card -->
-        <div class="newFeedSecInnerCol">
+        <div class="newFeedSecInnerCol newFeedSecInnerColFirst">
             @include('user.components.profile-card')
         </div>
 
@@ -30,17 +30,14 @@
 
             <!-- Sort Options -->
             <div class="feed-sort-container mb-3">
-                <div class="btn-group" role="group">
-                    <input type="radio" class="btn-check" name="feedSort" id="sortLatest" value="latest" checked>
-                    <label class="btn btn-outline-primary btn-sm" for="sortLatest">Latest</label>
-
-                    <input type="radio" class="btn-check" name="feedSort" id="sortPopular" value="popular">
-                    <label class="btn btn-outline-primary btn-sm" for="sortPopular">Popular</label>
-
-                    <input type="radio" class="btn-check" name="feedSort" id="sortOldest" value="oldest">
-                    <label class="btn btn-outline-primary btn-sm" for="sortOldest">Oldest</label>
-                </div>
+                <label for="feedSort">Filter by:</label>
+                <select name="feedSort" id="feedSort" class="form-select form-select-sm">
+                    <option value="latest" selected>Latest</option>
+                    <option value="popular">Popular</option>
+                    <option value="oldest">Oldest</option>
+                </select>
             </div>
+
 
             <!-- Posts Container -->
             <div id="postsContainer">
@@ -73,7 +70,7 @@
         </div>
 
         <!-- Right Sidebar - Widgets -->
-        <div class="newFeedSecInnerCol">
+        <div class="newFeedSecInnerCol newFeedSecInnerColLast">
             @include('user.components.sidebar-widgets')
         </div>
     </div>
@@ -98,14 +95,19 @@
 
 <!-- Main feed functionality -->
 <script type="module">
-    import { initializeFeed } from "{{ asset('assets/js/components/feed/feed-manager.js') }}";
-    import { togglePostText } from "{{ asset('assets/js/components/post/expand.js') }}";
+    import {
+        initializeFeed
+    } from "{{ asset('assets/js/components/feed/feed-manager.js') }}";
+    import {
+        togglePostText
+    } from "{{ asset('assets/js/components/post/expand.js') }}";
     import {
         showReactions,
         hideReactions,
         cancelHide,
         applyReaction,
-        handleReactionClick
+        handleReactionClick,
+        showReactionsList
     } from "{{ asset('assets/js/components/post/reactions.js') }}";
     import {
         toggleComments,
@@ -115,7 +117,8 @@
         toggleReplyButton,
         postReply,
         loadMoreComments,
-        deleteComment
+        deleteComment,
+        likeComment
     } from "{{ asset('assets/js/components/post/comments.js') }}";
     import {
         deletePost,
@@ -126,14 +129,23 @@
         sendPost,
         repostWithThoughts,
         instantRepost,
-        copyPostLink
+        copyPostLink,
+        showSharesList
     } from "{{ asset('assets/js/components/post/share-repost.js') }}";
-    import { connectUser } from "{{ asset('assets/js/components/connections.js') }}";
+    import {
+        connectUser
+    } from "{{ asset('assets/js/components/connections.js') }}";
+
+
+    // Make globally available
+    window.showSharesList = showSharesList;
+    window.likeComment = likeComment;
 
     // Make all functions globally available
     window.togglePostText = togglePostText;
     window.showReactions = showReactions;
     window.hideReactions = hideReactions;
+    window.showReactionsList = showReactionsList;
     window.cancelHide = cancelHide;
     window.applyReaction = applyReaction;
     window.handleReactionClick = handleReactionClick;
@@ -156,14 +168,87 @@
 
     // Initialize feed with infinite scroll
     document.addEventListener('DOMContentLoaded', function() {
-        initializeFeed();
+        // initialize with default sort
+        initializeFeed(document.getElementById('feedSort').value);
 
         // Handle sort change
-        document.querySelectorAll('input[name="feedSort"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                initializeFeed(this.value);
+        const feedSortSelect = document.getElementById('feedSort');
+        feedSortSelect.addEventListener('change', function() {
+            initializeFeed(this.value);
+        });
+
+        // Initialize emoji pickers for comment inputs
+        initializeCommentEmojiPickers();
+    });
+
+
+
+    // Function to initialize emoji pickers for dynamically loaded comments
+    function initializeCommentEmojiPickers() {
+        document.querySelectorAll('.emoji-picker-btn').forEach(btn => {
+            if (!btn.dataset.initialized) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const input = this.closest('.comment-input-container').querySelector(
+                        'input[type="text"]');
+                    if (input) {
+                        showEmojiPicker(input);
+                    }
+                });
+                btn.dataset.initialized = 'true';
+            }
+        });
+    }
+
+    // Simple emoji picker function
+    function showEmojiPicker(input) {
+        const emojis = ['😊', '😂', '❤️', '👍', '🎉', '🔥', '💯', '🙏', '👏', '✨', '💪', '🤔', '😍', '🥰', '😎'];
+
+        const picker = document.createElement('div');
+        picker.className = 'emoji-picker-popup';
+        picker.innerHTML = emojis.map(e => `<span class="emoji-option">${e}</span>`).join('');
+
+        picker.style.cssText = `
+        position: absolute;
+        background: white;
+        border: 1px solid #e4e6eb;
+        border-radius: 8px;
+        padding: 8px;
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        max-width: 200px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 1000;
+    `;
+
+        const inputRect = input.getBoundingClientRect();
+        picker.style.top = (inputRect.bottom + window.scrollY + 5) + 'px';
+        picker.style.left = inputRect.left + 'px';
+
+        picker.querySelectorAll('.emoji-option').forEach(emoji => {
+            emoji.style.cssText = 'cursor: pointer; padding: 4px; font-size: 20px;';
+            emoji.addEventListener('click', function() {
+                input.value += this.textContent;
+                input.dispatchEvent(new Event('input'));
+                input.focus();
+                picker.remove();
             });
         });
-    });
+
+        document.body.appendChild(picker);
+
+        setTimeout(() => {
+            document.addEventListener('click', function closeOnClickOutside(e) {
+                if (!picker.contains(e.target) && e.target !== input) {
+                    picker.remove();
+                    document.removeEventListener('click', closeOnClickOutside);
+                }
+            });
+        }, 100);
+    }
+
+    // Re-initialize emoji pickers when comments are loaded
+    window.addEventListener('commentsLoaded', initializeCommentEmojiPickers);
 </script>
 @endsection
