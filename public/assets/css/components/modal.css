@@ -81,16 +81,30 @@
     padding-top: 13px;
     border-top: 1.34px solid #cad9ff99;
 }
-
+.create-post-upload-btns {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 16.16px;
+}
+#postModal .create-post-upload-btns button {
+    padding: 0;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+}
 /* Media Upload Buttons */
 #uploadMediaBtn,
 #emojiBtn {
-    border: 1px solid #e5e7eb;
+    border: none;
     background: white;
-    color: #6b7280;
+    color: #000000;
     font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 0;
+    border-radius: 0;
     transition: all 0.2s;
     font-size: 14px;
 }
@@ -635,11 +649,11 @@
         margin: 0.5rem;
     }
 
-    #postModal .modal-header,
+    /* #postModal .modal-header,
     #postModal .modal-body,
     #postModal .modal-footer {
         padding: 16px;
-    }
+    } */
 
     #postText {
         font-size: 15px;

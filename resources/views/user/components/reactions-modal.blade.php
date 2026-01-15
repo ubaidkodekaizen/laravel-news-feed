@@ -280,7 +280,6 @@
 
         .modal-content {
             height: unset;
-            border-radius: 0;
         }
 
         .reaction-tabs .nav-link {
