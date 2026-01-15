@@ -89,6 +89,10 @@ class PostComment extends Model
             }
         });
 
+        static::restored(function ($comment) {
+            $comment->post->incrementCommentsCount();
+        });
+
         static::forceDeleted(function ($comment) {
             $comment->post->decrementCommentsCount();
         });

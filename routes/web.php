@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\AdController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
+use App\Http\Controllers\Admin\FeedController as AdminFeedController;
 use App\Http\Controllers\User\PageController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Auth;
@@ -315,6 +316,14 @@ Route::middleware(['auth', RoleMiddleware::class . ':1|2|3'])->group(function ()
     // Subscriptions Management
     Route::get('/admin/subscriptions', [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions');
     Route::get('/admin/subscriptions/{id}', [AdminSubscriptionController::class, 'show'])->name('admin.subscriptions.show');
+
+    // Feed Management
+    Route::get('/admin/feed', [AdminFeedController::class, 'index'])->name('admin.feed');
+    Route::get('/admin/feed/{id}', [AdminFeedController::class, 'show'])->name('admin.feed.show');
+    Route::delete('/admin/feed/post/{id}', [AdminFeedController::class, 'deletePost'])->name('admin.feed.post.delete');
+    Route::post('/admin/feed/post/{id}/restore', [AdminFeedController::class, 'restorePost'])->name('admin.feed.post.restore');
+    Route::delete('/admin/feed/comment/{id}', [AdminFeedController::class, 'deleteComment'])->name('admin.feed.comment.delete');
+    Route::post('/admin/feed/comment/{id}/restore', [AdminFeedController::class, 'restoreComment'])->name('admin.feed.comment.restore');
 
     // Scheduler Logs Management (Admin only)
     Route::get('/admin/scheduler-logs', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'index'])->name('admin.scheduler-logs');

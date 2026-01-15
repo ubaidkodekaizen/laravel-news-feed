@@ -265,21 +265,38 @@
         border: none;
         border-bottom: 3px solid transparent;
         transition: all 0.3s ease;
+        text-transform: uppercase;
     }
-    .nav-tabs .nav-link:hover {
-        border-bottom-color: #37488E;
+    .nav-tabs .nav-link:hover:not(.active) {
+        border-bottom-color: #37488E !important;
         color: #37488E !important;
     }
     .nav-tabs .nav-link.active {
         border-bottom-color: #37488E;
-        color: #37488E !important;
-        background-color: transparent;
+        color: #ffffff !important;
+        border-radius: 12px;
+        background: #273572!important;
+    }
+
+    .nav-tabs .nav-link.active .badge {
+        color: #ffffff !important;
+    }
+
+    .nav-tabs .nav-item.delete .nav-link.active .badge {
+        color: #ff0000ff !important;
     }
 
     .nav-tabs .badge {
-        margin-left: 5px;
-        font-size: 12px;
-        padding: 4px 8px;
+        color: #000;
+        margin: 0px 0px 0px 0px;
+        font-size: 16px;
+        font-family: "Inter";
+        font-weight: 400;
+        background: transparent !important;
+    }
+
+    .nav-tabs .nav-item.delete .badge {
+        color: #ff0000ff;
     }
 
     .ad-media-preview {
@@ -325,7 +342,7 @@
                         </div>
                         <div class="card-body">
                             <!-- Tabs Navigation -->
-                            <ul class="nav nav-tabs mb-4" id="adTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
+                            <ul class="nav nav-tabs mb-4 pb-3" id="adTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $filter === 'active' ? 'active' : '' }}" 
                                        href="{{ route('admin.ads', ['filter' => 'active']) }}"
@@ -347,7 +364,7 @@
                                         Featured <span class="badge bg-warning">{{ $counts['featured'] ?? 0 }}</span>
                                     </a>
                                 </li>
-                                <li class="nav-item" role="presentation">
+                                <li class="nav-item delete" role="presentation">
                                     <a class="nav-link {{ $filter === 'deleted' ? 'active' : '' }}" 
                                        href="{{ route('admin.ads', ['filter' => 'deleted']) }}"
                                        style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
@@ -355,6 +372,27 @@
                                     </a>
                                 </li>
                             </ul>
+                            <style>
+                                .nav-tabs .nav-link:hover:not(.active) {
+                                    border-bottom-color: #37488E !important;
+                                    color: #37488E !important;
+                                }
+                                
+                                @media (max-width: 768px) {
+                                    ul#adTabs {
+                                        justify-content: center !important;
+                                    }
+
+                                    .nav-tabs .nav-link {
+                                        font-size: 12px;
+                                        padding: 5px 12px !important;
+                                    }
+
+                                    .nav-tabs .badge {
+                                        font-size: 12px;
+                                    }
+                                }
+                            </style>
                             <table id="adsTable" class="table table-striped table-hover">
                                 <thead>
                                     <tr>

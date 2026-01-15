@@ -71,6 +71,11 @@ class PermissionsSeeder extends Seeder
             ['name' => 'View Scheduler Logs', 'slug' => 'scheduler-logs.view', 'group' => 'scheduler-logs', 'description' => 'View scheduler logs list'],
             ['name' => 'Delete Scheduler Logs', 'slug' => 'scheduler-logs.delete', 'group' => 'scheduler-logs', 'description' => 'Delete scheduler logs'],
             ['name' => 'Restore Scheduler Logs', 'slug' => 'scheduler-logs.restore', 'group' => 'scheduler-logs', 'description' => 'Restore deleted scheduler logs'],
+            
+            // Feed Management
+            ['name' => 'View Feed', 'slug' => 'feed.view', 'group' => 'feed', 'description' => 'View feed posts list and details'],
+            ['name' => 'Delete Feed Posts', 'slug' => 'feed.delete', 'group' => 'feed', 'description' => 'Delete feed posts and comments'],
+            ['name' => 'Restore Feed Posts', 'slug' => 'feed.restore', 'group' => 'feed', 'description' => 'Restore deleted feed posts and comments'],
         ];
 
         // Remove dashboard permission if it exists (all roles 1, 2, 3 have dashboard access automatically)

@@ -309,7 +309,7 @@
                                 color: #ffffff !important;
                             }
 
-                            .nav-tabs .nav-item.delete .nav-link.active span.redBadge {
+                            .nav-tabs .nav-item.delete .nav-link.active .badge {
                                 color: #ff0000ff !important;
                             }
                             .nav-tabs .badge {
