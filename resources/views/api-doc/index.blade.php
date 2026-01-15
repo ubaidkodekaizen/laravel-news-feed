@@ -1140,37 +1140,79 @@
                     Get Feed Posts
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/feed/posts?per_page=15</div>
+                <div class="endpoint-url">/feed/posts?per_page=15&sort=latest</div>
                 <p>Get paginated feed posts</p>
-                <p><strong>Query Parameters:</strong> per_page - Number of posts per page (default: 15)</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li>per_page - Number of posts per page (default: 15, min: 5, max: 50)</li>
+                    <li>sort - Sort order: "latest" (default), "popular", or "oldest"</li>
+                </ul>
                 
                 <h5>Response:</h5>
                 <div class="code-block">
                     <pre>{
   "success": true,
-  "data": {
-    "current_page": 1,
-    "data": [
-      {
+  "data": [
+    {
+      "id": 1,
+      "slug": "post-title-15-01-2024-143052",
+      "content": "Post content...",
+      "visibility": "public",
+      "created_at": "2024-01-15T14:30:52.000000Z",
+      "updated_at": "2024-01-15T14:30:52.000000Z",
+      "likes_count": 10,
+      "comments_count": 5,
+      "shares_count": 2,
+      "comments_enabled": true,
+      "user": {
         "id": 1,
-        "slug": "post-title-15-01-2024-143052",
-        "content": "Post content...",
-        "user": {
+        "name": "John Doe",
+        "first_name": "John",
+        "last_name": "Doe",
+        "position": "CEO",
+        "avatar": "https://...",
+        "initials": "JD",
+        "has_photo": true,
+        "slug": "john-doe"
+      },
+      "media": [
+        {
           "id": 1,
-          "first_name": "John",
-          "last_name": "Doe",
-          "photo": "https://...",
-          ...
-        },
-        "media": [...],
-        "reactions": [...],
-        "comments": [...],
-        ...
-      }
-    ],
-    "per_page": 15,
-    "total": 100
-  }
+          "media_type": "image",
+          "media_url": "https://...",
+          "thumbnail_url": "https://...",
+          "mime_type": "image/jpeg",
+          "file_name": "photo.jpg",
+          "duration": null
+        }
+      ],
+      "user_reaction": {
+        "type": "like",
+        "created_at": "2024-01-15T14:35:00.000000Z"
+      },
+      "comments": [
+        {
+          "id": 1,
+          "content": "Great post!",
+          "created_at": "2024-01-15T14:40:00.000000Z",
+          "user_has_reacted": false,
+          "user": {
+            "id": 2,
+            "name": "Jane Smith",
+            "avatar": "https://...",
+            "initials": "JS",
+            "has_photo": true
+          },
+          "replies": []
+        }
+      ]
+    }
+  ],
+  "current_page": 1,
+  "last_page": 10,
+  "per_page": 15,
+  "total": 150,
+  "has_more": true
 }</pre>
                 </div>
             </div>
@@ -1193,26 +1235,47 @@
     "id": 1,
     "slug": "post-title-15-01-2024-143052",
     "content": "Post content...",
-    "user": {...},
+    "visibility": "public",
+    "created_at": "2024-01-15T14:30:52.000000Z",
+    "updated_at": "2024-01-15T14:30:52.000000Z",
+    "likes_count": 10,
+    "comments_count": 5,
+    "shares_count": 2,
+    "comments_enabled": true,
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "first_name": "John",
+      "last_name": "Doe",
+      "position": "CEO",
+      "avatar": "https://...",
+      "initials": "JD",
+      "has_photo": true,
+      "slug": "john-doe"
+    },
     "media": [...],
-    "reactions": [...],
+    "user_reaction": {
+      "type": "like",
+      "created_at": "2024-01-15T14:35:00.000000Z"
+    },
     "comments": [...],
-    "user_reaction": {...}
+    "original_post": {
+      "id": 10,
+      "slug": "original-post-slug",
+      "content": "Original post content",
+      "created_at": "2024-01-10T10:00:00.000000Z",
+      "user": {...},
+      "media": [...]
+    }
+  },
+  "user_reaction": {
+    "id": 1,
+    "reaction_type": "like",
+    ...
   }
 }</pre>
                 </div>
-            </div>
-
-            <div class="api-endpoint">
-                <h3>
-                    <span class="method-badge method-get">GET</span>
-                    Get User Posts
-                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
-                </h3>
-                <div class="endpoint-url">/feed/user/{userId?}/posts?per_page=15</div>
-                <p>Get posts by a specific user. If userId is omitted, returns current user's posts.</p>
-                <p><strong>URL Parameters:</strong> {userId} - Optional user ID</p>
-                <p><strong>Query Parameters:</strong> per_page - Number of posts per page (default: 15)</p>
+                <p><strong>Note:</strong> Returns 403 if post visibility is 'private' and user is not the owner.</p>
             </div>
 
             <div class="api-endpoint">
@@ -1245,13 +1308,19 @@
                             <td>media</td>
                             <td>array</td>
                             <td>No</td>
-                            <td>Array of media files (max 10 files, 10MB each). Supported: jpeg, jpg, png, gif, mp4, mov, avi</td>
+                            <td>Array of media files (max 10 files, 10MB each). Supported: jpeg, jpg, png, gif, webp, mp4, mov, avi, mkv, webm. Files must be uploaded as multipart/form-data</td>
                         </tr>
                         <tr>
                             <td>comments_enabled</td>
                             <td>boolean</td>
                             <td>No</td>
                             <td>Enable/disable comments (default: true)</td>
+                        </tr>
+                        <tr>
+                            <td>visibility</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Post visibility: "public" (default), "private", or "connections"</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1260,7 +1329,8 @@
                 <div class="code-block">
                     <pre>{
   "content": "This is my post content!",
-  "comments_enabled": true
+  "comments_enabled": true,
+  "visibility": "public"
 }</pre>
                 </div>
 
@@ -1273,9 +1343,25 @@
     "id": 1,
     "slug": "post-title-15-01-2024-143052",
     "content": "This is my post content!",
-    "user": {...},
+    "visibility": "public",
+    "likes_count": 0,
+    "comments_count": 0,
+    "shares_count": 0,
+    "comments_enabled": true,
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "first_name": "John",
+      "last_name": "Doe",
+      "position": "CEO",
+      "avatar": "https://...",
+      "initials": "JD",
+      "has_photo": true,
+      "slug": "john-doe"
+    },
     "media": [...],
-    ...
+    "user_reaction": null,
+    "comments": []
   }
 }</pre>
                 </div>
@@ -1314,6 +1400,12 @@
                             <td>No</td>
                             <td>Enable/disable comments</td>
                         </tr>
+                        <tr>
+                            <td>visibility</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Post visibility: "public", "private", or "connections"</td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -1321,7 +1413,8 @@
                 <div class="code-block">
                     <pre>{
   "content": "Updated post content!",
-  "comments_enabled": true
+  "comments_enabled": true,
+  "visibility": "public"
 }</pre>
                 </div>
 
@@ -1332,8 +1425,17 @@
   "message": "Post updated successfully!",
   "data": {
     "id": 1,
+    "slug": "post-title-15-01-2024-143052",
     "content": "Updated post content!",
-    ...
+    "visibility": "public",
+    "likes_count": 10,
+    "comments_count": 5,
+    "shares_count": 2,
+    "comments_enabled": true,
+    "user": {...},
+    "media": [...],
+    "user_reaction": {...},
+    "comments": [...]
   }
 }</pre>
                 </div>
@@ -1382,7 +1484,7 @@
                             <td>reactionable_type</td>
                             <td>string</td>
                             <td><span class="required">Yes</span></td>
-                            <td>Type: "App\Models\Feed\Post" or "App\Models\Feed\PostComment"</td>
+                            <td>Type: "Post" or "PostComment" (also accepts full namespace: "App\Models\Feed\Post" or "App\Models\Feed\PostComment")</td>
                         </tr>
                         <tr>
                             <td>reactionable_id</td>
@@ -1402,7 +1504,7 @@
                 <h5>Request Body Example:</h5>
                 <div class="code-block">
                     <pre>{
-  "reactionable_type": "App\\Models\\Feed\\Post",
+  "reactionable_type": "Post",
   "reactionable_id": 1,
   "reaction_type": "like"
 }</pre>
@@ -1446,7 +1548,7 @@
                             <td>reactionable_type</td>
                             <td>string</td>
                             <td><span class="required">Yes</span></td>
-                            <td>Type: "App\Models\Feed\Post" or "App\Models\Feed\PostComment"</td>
+                            <td>Type: "Post" or "PostComment" (also accepts full namespace: "App\Models\Feed\Post" or "App\Models\Feed\PostComment")</td>
                         </tr>
                         <tr>
                             <td>reactionable_id</td>
@@ -1460,7 +1562,7 @@
                 <h5>Request Body Example:</h5>
                 <div class="code-block">
                     <pre>{
-  "reactionable_type": "App\\Models\\Feed\\Post",
+  "reactionable_type": "Post",
   "reactionable_id": 1
 }</pre>
                 </div>
@@ -1470,6 +1572,120 @@
                     <pre>{
   "success": true,
   "message": "Reaction removed"
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Reactions List
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{postId}/reactions-list</div>
+                <p>Get list of all reactions for a post with user details</p>
+                <p><strong>URL Parameters:</strong> Replace {postId} with the post ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "count": 10,
+  "reactions": [
+    {
+      "id": 1,
+      "type": "like",
+      "created_at": "2024-01-15T10:30:00.000000Z",
+      "user": {
+        "id": 1,
+        "name": "John Doe",
+        "avatar": "https://...",
+        "initials": "JD",
+        "has_photo": true,
+        "position": "CEO"
+      }
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Reactions Count
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{postId}/reactions-count</div>
+                <p>Get reaction count and details for a post</p>
+                <p><strong>URL Parameters:</strong> Replace {postId} with the post ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "count": 10,
+  "reactions": [
+    {
+      "type": "like",
+      "user_id": 1,
+      "user_name": "John Doe"
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Shares List
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{postId}/shares-list</div>
+                <p>Get list of all shares for a post with user details</p>
+                <p><strong>URL Parameters:</strong> Replace {postId} with the post ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "count": 5,
+  "shares": [
+    {
+      "id": 1,
+      "share_type": "repost",
+      "shared_content": "Check this out!",
+      "created_at": "2024-01-15T10:30:00.000000Z",
+      "user": {
+        "id": 1,
+        "name": "John Doe",
+        "avatar": "https://...",
+        "initials": "JD",
+        "has_photo": true,
+        "position": "CEO"
+      }
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Comments Count
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/posts/{postId}/comments-count</div>
+                <p>Get comment count for a post (active comments only)</p>
+                <p><strong>URL Parameters:</strong> Replace {postId} with the post ID</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "count": 25
 }</pre>
                 </div>
             </div>
@@ -1526,9 +1742,17 @@
   "data": {
     "id": 1,
     "content": "Great post!",
-    "user": {...},
-    "replies": [],
-    ...
+    "created_at": "2024-01-15T14:40:00.000000Z",
+    "parent_id": null,
+    "user_has_reacted": false,
+    "user": {
+      "id": 2,
+      "name": "Jane Smith",
+      "avatar": "https://...",
+      "initials": "JS",
+      "has_photo": true
+    },
+    "replies": []
   }
 }</pre>
                 </div>
@@ -1579,7 +1803,14 @@
   "data": {
     "id": 1,
     "content": "Updated comment text",
-    ...
+    "created_at": "2024-01-15T14:40:00.000000Z",
+    "user": {
+      "id": 2,
+      "name": "Jane Smith",
+      "avatar": "https://...",
+      "initials": "JS",
+      "has_photo": true
+    }
   }
 }</pre>
                 </div>
@@ -1620,18 +1851,39 @@
                     <pre>{
   "success": true,
   "data": {
-    "current_page": 1,
     "data": [
       {
         "id": 1,
         "content": "Comment text",
-        "user": {...},
-        "replies": [...],
-        "reactions": [...],
-        ...
+        "created_at": "2024-01-15T14:40:00.000000Z",
+        "user_has_reacted": false,
+        "user": {
+          "id": 2,
+          "name": "Jane Smith",
+          "avatar": "https://...",
+          "initials": "JS",
+          "has_photo": true
+        },
+        "replies": [
+          {
+            "id": 2,
+            "content": "Reply text",
+            "created_at": "2024-01-15T14:45:00.000000Z",
+            "user": {
+              "id": 3,
+              "name": "Bob Wilson",
+              "avatar": "https://...",
+              "initials": "BW",
+              "has_photo": true
+            }
+          }
+        ]
       }
     ],
-    "per_page": 20
+    "current_page": 1,
+    "last_page": 5,
+    "per_page": 20,
+    "total": 100
   }
 }</pre>
                 </div>
@@ -1688,14 +1940,89 @@
   "message": "Post shared successfully!",
   "data": {
     "id": 1,
+    "post_id": 10,
+    "user_id": 1,
+    "shared_post_id": 15,
+    "shared_content": "Check this out!",
     "share_type": "repost",
-    "user": {...},
-    "post": {...},
-    ...
+    "created_at": "2024-01-15T14:50:00.000000Z",
+    "updated_at": "2024-01-15T14:50:00.000000Z",
+    "user": {
+      "id": 1,
+      "first_name": "John",
+      "last_name": "Doe",
+      "slug": "john-doe",
+      "photo": "https://..."
+    },
+    "post": {
+      "id": 10,
+      "user": {
+        "id": 2,
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "slug": "jane-smith",
+        "photo": "https://..."
+      }
+    }
   }
 }</pre>
                 </div>
+                <p><strong>Note:</strong> When share_type is "repost", a new post is created that references the original post via original_post_id. The shared_post_id field contains the ID of the newly created post. The response returns the PostShare record with related user and post data.</p>
             </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get User Posts
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/feed/user/{userId?}/posts?per_page=15</div>
+                <p>Get all posts for a specific user. If userId is not provided, returns current user's posts.</p>
+                <p><strong>URL Parameters:</strong> {userId} is optional - if omitted, returns authenticated user's posts</p>
+                <p><strong>Query Parameters:</strong> per_page - Number of posts per page (default: 15)</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "slug": "post-title-15-01-2024-143052",
+      "content": "Post content...",
+      "visibility": "public",
+      "created_at": "2024-01-15T14:30:52.000000Z",
+      "updated_at": "2024-01-15T14:30:52.000000Z",
+      "likes_count": 10,
+      "comments_count": 5,
+      "shares_count": 2,
+      "comments_enabled": true,
+      "user": {
+        "id": 1,
+        "name": "John Doe",
+        "first_name": "John",
+        "last_name": "Doe",
+        "position": "CEO",
+        "avatar": "https://...",
+        "initials": "JD",
+        "has_photo": true,
+        "slug": "john-doe"
+      },
+      "media": [...],
+      "user_reaction": {
+        "type": "like",
+        "created_at": "2024-01-15T14:35:00.000000Z"
+      },
+      "comments": [...]
+    }
+  ],
+  "current_page": 1,
+  "last_page": 5,
+  "has_more": true
+}</pre>
+                </div>
+            </div>
+
         </div>
 
         <!-- User Profile Routes -->

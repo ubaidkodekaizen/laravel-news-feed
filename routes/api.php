@@ -252,11 +252,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/feed/posts/{id}', [FeedController::class, 'deletePost'])->name('api.feed.post.delete');
     Route::post('/feed/reactions', [FeedController::class, 'addReaction'])->name('api.feed.reaction.add');
     Route::delete('/feed/reactions', [FeedController::class, 'removeReaction'])->name('api.feed.reaction.remove');
+    Route::get('/feed/posts/{postId}/reactions-count', [FeedController::class, 'getReactionCount'])->name('api.feed.post.reactions.count');
+    Route::get('/feed/posts/{postId}/reactions-list', [FeedController::class, 'getReactionsList'])->name('api.feed.post.reactions.list');
     Route::post('/feed/posts/{postId}/comments', [FeedController::class, 'addComment'])->name('api.feed.comment.add');
     Route::put('/feed/comments/{commentId}', [FeedController::class, 'updateComment'])->name('api.feed.comment.update');
     Route::delete('/feed/comments/{commentId}', [FeedController::class, 'deleteComment'])->name('api.feed.comment.delete');
     Route::get('/feed/posts/{postId}/comments', [FeedController::class, 'getComments'])->name('api.feed.comments');
+    Route::get('/feed/posts/{postId}/comments-count', [FeedController::class, 'getCommentCount'])->name('api.feed.post.comments.count');
     Route::post('/feed/posts/{postId}/share', [FeedController::class, 'sharePost'])->name('api.feed.post.share');
+    Route::get('/feed/posts/{postId}/shares-list', [FeedController::class, 'getSharesList'])->name('api.feed.post.shares.list');
     Route::get('/feed/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('api.feed.user.posts');
 
     /*

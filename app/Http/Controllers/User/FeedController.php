@@ -618,15 +618,25 @@ class FeedController extends Controller
     public function addReaction(Request $request)
     {
         $request->validate([
-            'reactionable_type' => 'required|string|in:App\Models\Feed\Post,App\Models\Feed\PostComment',
+            'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
             'reaction_type' => 'required|string|in:like,love,haha,wow,sad,angry',
         ]);
 
         $userId = Auth::id();
+        
+        // Normalize reactionable_type to full namespace
+        $reactionableType = $request->reactionable_type;
+        if ($reactionableType === 'Post') {
+            $reactionableType = 'App\Models\Feed\Post';
+        } elseif ($reactionableType === 'PostComment') {
+            $reactionableType = 'App\Models\Feed\PostComment';
+        }
+        
+        $reactionableId = $request->reactionable_id;
 
-        $existingReaction = Reaction::where('reactionable_type', $request->reactionable_type)
-            ->where('reactionable_id', $request->reactionable_id)
+        $existingReaction = Reaction::where('reactionable_type', $reactionableType)
+            ->where('reactionable_id', $reactionableId)
             ->where('user_id', $userId)
             ->first();
 
@@ -649,8 +659,8 @@ class FeedController extends Controller
             }
         } else {
             $reaction = new Reaction();
-            $reaction->reactionable_type = $request->reactionable_type;
-            $reaction->reactionable_id = $request->reactionable_id;
+            $reaction->reactionable_type = $reactionableType; // Already normalized above
+            $reaction->reactionable_id = $reactionableId;
             $reaction->user_id = $userId;
             $reaction->reaction_type = $request->reaction_type;
             $reaction->save();
@@ -739,13 +749,23 @@ class FeedController extends Controller
     public function removeReaction(Request $request)
     {
         $request->validate([
-            'reactionable_type' => 'required|string|in:App\Models\Feed\Post,App\Models\Feed\PostComment',
+            'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
         ]);
 
-        $reaction = Reaction::where('reactionable_type', $request->reactionable_type)
+        $userId = Auth::id();
+        
+        // Normalize reactionable_type to full namespace
+        $reactionableType = $request->reactionable_type;
+        if ($reactionableType === 'Post') {
+            $reactionableType = 'App\Models\Feed\Post';
+        } elseif ($reactionableType === 'PostComment') {
+            $reactionableType = 'App\Models\Feed\PostComment';
+        }
+
+        $reaction = Reaction::where('reactionable_type', $reactionableType)
             ->where('reactionable_id', $request->reactionable_id)
-            ->where('user_id', Auth::id())
+            ->where('user_id', $userId)
             ->firstOrFail();
 
         $reaction->delete();

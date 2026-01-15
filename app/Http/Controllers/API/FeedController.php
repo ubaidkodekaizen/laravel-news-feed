@@ -9,6 +9,8 @@ use App\Models\Feed\PostComment;
 use App\Models\Feed\Reaction;
 use App\Models\Feed\PostShare;
 use App\Services\S3Service;
+use App\Traits\FormatsUserData;
+use App\Traits\HasUserPhotoData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,37 +20,79 @@ use Illuminate\Support\Str;
 
 class FeedController extends Controller
 {
+    use FormatsUserData;
+    use HasUserPhotoData;
     /**
      * Get posts for the feed (paginated).
      */
     public function getFeed(Request $request)
     {
+        $request->validate([
+            'per_page' => 'nullable|integer|min:5|max:50',
+            'sort' => 'nullable|string|in:latest,popular,oldest',
+        ]);
+
         $perPage = $request->get('per_page', 15);
+        $sort = $request->get('sort', 'latest');
         $userId = Auth::id();
 
-        $posts = Post::with([
-            'user:id,first_name,last_name,slug,photo,user_position',
-            'user.company:id,user_id,company_name,company_logo',
-            'media',
-            'reactions' => function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            },
-            'comments' => function ($query) {
-                $query->where('status', 'active')
-                    ->with(['user:id,first_name,last_name,slug,photo', 'replies.user:id,first_name,last_name,slug,photo'])
-                    ->orderBy('created_at', 'asc')
-                    ->limit(3);
-            },
-            'originalPost.user:id,first_name,last_name,slug,photo',
-        ])
-        ->where('status', 'active')
-        ->whereNull('deleted_at')
-        ->orderBy('created_at', 'desc')
-        ->paginate($perPage);
+        $query = Post::withCount(['reactions', 'comments', 'shares'])
+            ->with([
+                'user:id,first_name,last_name,slug,photo,user_position',
+                'user.company:id,user_id,company_name,company_logo',
+                'media',
+                'reactions' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                },
+                'comments' => function ($query) use ($userId) {
+                    $query->where('status', 'active')
+                        ->whereNull('parent_id')
+                        ->with([
+                            'user:id,first_name,last_name,slug,photo',
+                            'reactions' => function ($r) use ($userId) {
+                                $r->where('user_id', $userId)->where('reaction_type', 'like');
+                            }
+                        ])
+                        ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
+                            $r->where('user_id', $userId)->where('reaction_type', 'like');
+                        }])
+                        ->orderBy('created_at', 'asc')
+                        ->limit(2);
+                },
+                'originalPost.user:id,first_name,last_name,slug,photo,user_position',
+                'originalPost.media',
+            ])
+            ->where('status', 'active')
+            ->whereNull('deleted_at');
+
+        // Apply sorting
+        switch ($sort) {
+            case 'popular':
+                $query->orderByRaw('(reactions_count + comments_count + shares_count) DESC');
+                break;
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'latest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $posts = $query->paginate($perPage);
+
+        $transformedPosts = $posts->getCollection()->map(function ($post) use ($userId) {
+            return $this->transformPost($post, $userId);
+        });
 
         return response()->json([
             'success' => true,
-            'data' => $posts
+            'data' => $transformedPosts,
+            'current_page' => $posts->currentPage(),
+            'last_page' => $posts->lastPage(),
+            'per_page' => $posts->perPage(),
+            'total' => $posts->total(),
+            'has_more' => $posts->hasMorePages(),
         ]);
     }
 
@@ -59,39 +103,55 @@ class FeedController extends Controller
     {
         $userId = Auth::id();
 
-        $post = Post::with([
-            'user:id,first_name,last_name,slug,photo,user_position',
-            'user.company:id,user_id,company_name,company_logo',
-            'media',
-            'reactions.user:id,first_name,last_name,slug,photo',
-            'comments' => function ($query) {
-                $query->where('status', 'active')
-                    ->whereNull('parent_id')
-                    ->with([
-                        'user:id,first_name,last_name,slug,photo',
-                        'replies' => function ($query) {
-                            $query->where('status', 'active')
-                                ->with('user:id,first_name,last_name,slug,photo')
-                                ->orderBy('created_at', 'asc');
-                        },
-                        'reactions.user:id,first_name,last_name,slug,photo'
-                    ])
-                    ->orderBy('created_at', 'asc');
-            },
-            'originalPost.user:id,first_name,last_name,slug,photo',
-            'originalPost.media'
-        ])
-        ->where('slug', $slug)
-        ->where('status', 'active')
-        ->whereNull('deleted_at')
-        ->firstOrFail();
+        $post = Post::withCount(['reactions', 'comments', 'shares'])
+            ->with([
+                'user:id,first_name,last_name,slug,photo,user_position',
+                'user.company:id,user_id,company_name,company_logo',
+                'media',
+                'reactions' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                },
+                'comments' => function ($query) use ($userId) {
+                    $query->where('status', 'active')
+                        ->whereNull('parent_id')
+                        ->with([
+                            'user:id,first_name,last_name,slug,photo',
+                            'replies' => function ($query) {
+                                $query->where('status', 'active')
+                                    ->with('user:id,first_name,last_name,slug,photo')
+                                    ->orderBy('created_at', 'asc');
+                            },
+                            'reactions' => function ($r) use ($userId) {
+                                $r->where('user_id', $userId)->where('reaction_type', 'like');
+                            }
+                        ])
+                        ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
+                            $r->where('user_id', $userId)->where('reaction_type', 'like');
+                        }])
+                        ->orderBy('created_at', 'asc');
+                },
+                'originalPost.user:id,first_name,last_name,slug,photo,user_position',
+                'originalPost.media'
+            ])
+            ->where('slug', $slug)
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->firstOrFail();
+
+        // Check visibility
+        if ($post->visibility === 'private' && $post->user_id !== $userId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to view this post'
+            ], 403);
+        }
 
         // Check if current user has reacted
         $userReaction = $post->reactions()->where('user_id', $userId)->first();
 
         return response()->json([
             'success' => true,
-            'data' => $post,
+            'data' => $this->transformPost($post, $userId),
             'user_reaction' => $userReaction
         ]);
     }
@@ -104,8 +164,9 @@ class FeedController extends Controller
         $request->validate([
             'content' => 'nullable|string|max:10000',
             'media' => 'nullable|array|max:10',
-            'media.*' => 'file|mimes:jpeg,jpg,png,gif,mp4,mov,avi|max:10240', // 10MB max
+            'media.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv,webm|max:10240', // 10MB max
             'comments_enabled' => 'nullable|boolean',
+            'visibility' => 'nullable|string|in:public,private,connections',
         ]);
 
         try {
@@ -115,6 +176,7 @@ class FeedController extends Controller
             $post->user_id = Auth::id();
             $post->content = $request->content;
             $post->comments_enabled = $request->get('comments_enabled', true);
+            $post->visibility = $request->get('visibility', 'public');
             $post->status = 'active';
             
             // Generate slug from content (title) with date and time in d-m-Y format
@@ -167,16 +229,27 @@ class FeedController extends Controller
 
             DB::commit();
 
-            $post->load([
-                'user:id,first_name,last_name,slug,photo,user_position',
-                'user.company:id,user_id,company_name,company_logo',
-                'media'
-            ]);
+            $post->loadCount(['reactions', 'comments', 'shares'])
+                ->load([
+                    'user:id,first_name,last_name,slug,photo,user_position',
+                    'user.company:id,user_id,company_name,company_logo',
+                    'media',
+                    'reactions' => function ($query) {
+                        $query->where('user_id', Auth::id());
+                    },
+                    'comments' => function ($query) {
+                        $query->where('status', 'active')
+                            ->whereNull('parent_id')
+                            ->with(['user:id,first_name,last_name,slug,photo'])
+                            ->orderBy('created_at', 'asc')
+                            ->limit(2);
+                    }
+                ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Post created successfully!',
-                'data' => $post
+                'data' => $this->transformPost($post, Auth::id())
             ], 201);
 
         } catch (\Exception $e) {
@@ -198,6 +271,7 @@ class FeedController extends Controller
         $request->validate([
             'content' => 'nullable|string|max:10000',
             'comments_enabled' => 'nullable|boolean',
+            'visibility' => 'nullable|string|in:public,private,connections',
         ]);
 
         $post = Post::where('user_id', Auth::id())
@@ -209,18 +283,30 @@ class FeedController extends Controller
         $post->comments_enabled = $request->has('comments_enabled') 
             ? $request->comments_enabled 
             : $post->comments_enabled;
+        $post->visibility = $request->get('visibility', $post->visibility);
         $post->save();
 
-        $post->load([
-            'user:id,first_name,last_name,slug,photo,user_position',
-            'user.company:id,user_id,company_name,company_logo',
-            'media'
-        ]);
+        $post->loadCount(['reactions', 'comments', 'shares'])
+            ->load([
+                'user:id,first_name,last_name,slug,photo,user_position',
+                'user.company:id,user_id,company_name,company_logo',
+                'media',
+                'reactions' => function ($query) {
+                    $query->where('user_id', Auth::id());
+                },
+                'comments' => function ($query) {
+                    $query->where('status', 'active')
+                        ->whereNull('parent_id')
+                        ->with(['user:id,first_name,last_name,slug,photo'])
+                        ->orderBy('created_at', 'asc')
+                        ->limit(2);
+                }
+            ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Post updated successfully!',
-            'data' => $post
+            'data' => $this->transformPost($post, Auth::id())
         ]);
     }
 
@@ -249,13 +335,21 @@ class FeedController extends Controller
     public function addReaction(Request $request)
     {
         $request->validate([
-            'reactionable_type' => 'required|string|in:App\Models\Feed\Post,App\Models\Feed\PostComment',
+            'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
             'reaction_type' => 'required|string|in:like,love,haha,wow,sad,angry',
         ]);
 
         $userId = Auth::id();
+        
+        // Normalize reactionable_type to full namespace
         $reactionableType = $request->reactionable_type;
+        if ($reactionableType === 'Post') {
+            $reactionableType = 'App\Models\Feed\Post';
+        } elseif ($reactionableType === 'PostComment') {
+            $reactionableType = 'App\Models\Feed\PostComment';
+        }
+        
         $reactionableId = $request->reactionable_id;
 
         // Check if reaction already exists
@@ -287,7 +381,7 @@ class FeedController extends Controller
         } else {
             // Create new reaction
             $reaction = new Reaction();
-            $reaction->reactionable_type = $reactionableType;
+            $reaction->reactionable_type = $reactionableType; // Already normalized above
             $reaction->reactionable_id = $reactionableId;
             $reaction->user_id = $userId;
             $reaction->reaction_type = $request->reaction_type;
@@ -307,14 +401,24 @@ class FeedController extends Controller
     public function removeReaction(Request $request)
     {
         $request->validate([
-            'reactionable_type' => 'required|string|in:App\Models\Feed\Post,App\Models\Feed\PostComment',
+            'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
         ]);
 
         $userId = Auth::id();
+        
+        // Normalize reactionable_type to full namespace
+        $reactionableType = $request->reactionable_type;
+        if ($reactionableType === 'Post') {
+            $reactionableType = 'App\Models\Feed\Post';
+        } elseif ($reactionableType === 'PostComment') {
+            $reactionableType = 'App\Models\Feed\PostComment';
+        }
+        
+        $reactionableId = $request->reactionable_id;
 
-        $reaction = Reaction::where('reactionable_type', $request->reactionable_type)
-            ->where('reactionable_id', $request->reactionable_id)
+        $reaction = Reaction::where('reactionable_type', $reactionableType)
+            ->where('reactionable_id', $reactionableId)
             ->where('user_id', $userId)
             ->firstOrFail();
 
@@ -361,10 +465,26 @@ class FeedController extends Controller
             'replies.user:id,first_name,last_name,slug,photo'
         ]);
 
+        $userData = $this->formatUserData($comment->user);
+
         return response()->json([
             'success' => true,
             'message' => 'Comment added successfully!',
-            'data' => $comment
+            'data' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'parent_id' => $comment->parent_id,
+                'user_has_reacted' => false,
+                'user' => [
+                    'id' => $userData['id'],
+                    'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
+                    'avatar' => $userData['photo'],
+                    'initials' => $userData['user_initials'],
+                    'has_photo' => $userData['user_has_photo'],
+                ],
+                'replies' => [],
+            ]
         ], 201);
     }
 
@@ -390,10 +510,30 @@ class FeedController extends Controller
             'replies.user:id,first_name,last_name,slug,photo'
         ]);
 
+        if (!$comment->user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Comment user not found'
+            ], 404);
+        }
+
+        $userData = $this->formatUserData($comment->user);
+
         return response()->json([
             'success' => true,
             'message' => 'Comment updated successfully!',
-            'data' => $comment
+            'data' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'user' => [
+                    'id' => $userData['id'],
+                    'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
+                    'avatar' => $userData['photo'],
+                    'initials' => $userData['user_initials'],
+                    'has_photo' => $userData['user_has_photo'],
+                ],
+            ]
         ]);
     }
 
@@ -428,6 +568,8 @@ class FeedController extends Controller
             ->whereNull('deleted_at')
             ->firstOrFail();
 
+        $userId = Auth::id();
+
         $comments = PostComment::where('post_id', $postId)
             ->where('status', 'active')
             ->whereNull('parent_id')
@@ -438,14 +580,67 @@ class FeedController extends Controller
                         ->with('user:id,first_name,last_name,slug,photo')
                         ->orderBy('created_at', 'asc');
                 },
-                'reactions.user:id,first_name,last_name,slug,photo'
+                'reactions' => function ($r) use ($userId) {
+                    $r->where('user_id', $userId)->where('reaction_type', 'like');
+                }
             ])
+            ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
+                $r->where('user_id', $userId)->where('reaction_type', 'like');
+            }])
             ->orderBy('created_at', 'asc')
             ->paginate($perPage);
 
+        // Transform comments data
+        $transformedComments = $comments->getCollection()->map(function ($comment) {
+            if (!$comment->user) {
+                return null; // Skip comments with deleted users
+            }
+            $commentUserData = $this->formatUserData($comment->user);
+
+            $repliesData = $comment->replies->map(function ($reply) {
+                if (!$reply->user) {
+                    return null; // Skip replies with deleted users
+                }
+                $replyUserData = $this->formatUserData($reply->user);
+                return [
+                    'id' => $reply->id,
+                    'content' => $reply->content,
+                    'created_at' => $reply->created_at,
+                    'user' => [
+                        'id' => $replyUserData['id'],
+                        'name' => trim($replyUserData['first_name'] . ' ' . $replyUserData['last_name']),
+                        'avatar' => $replyUserData['photo'],
+                        'initials' => $replyUserData['user_initials'],
+                        'has_photo' => $replyUserData['user_has_photo'],
+                    ],
+                ];
+            })->filter()->values(); // Filter out null replies
+
+            return [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at,
+                'user_has_reacted' => isset($comment->user_has_reacted) && $comment->user_has_reacted > 0,
+                'user' => [
+                    'id' => $commentUserData['id'],
+                    'name' => trim($commentUserData['first_name'] . ' ' . $commentUserData['last_name']),
+                    'avatar' => $commentUserData['photo'],
+                    'initials' => $commentUserData['user_initials'],
+                    'has_photo' => $commentUserData['user_has_photo'],
+                ],
+                'replies' => $repliesData,
+            ];
+        })->filter(); // Filter out null comments
+
         return response()->json([
             'success' => true,
-            'data' => $comments
+            'data' => [
+                'data' => $transformedComments,
+                'current_page' => $comments->currentPage(),
+                'last_page' => $comments->lastPage(),
+                'per_page' => $comments->perPage(),
+                'total' => $comments->total(),
+            ]
         ]);
     }
 
@@ -549,30 +744,271 @@ class FeedController extends Controller
         $targetUserId = $userId ?? Auth::id();
         $perPage = $request->get('per_page', 15);
 
-        $posts = Post::with([
-            'user:id,first_name,last_name,slug,photo,user_position',
-            'user.company:id,user_id,company_name,company_logo',
-            'media',
-            'reactions' => function ($query) {
-                $query->where('user_id', Auth::id());
-            },
-            'comments' => function ($query) {
-                $query->where('status', 'active')
-                    ->with(['user:id,first_name,last_name,slug,photo'])
-                    ->orderBy('created_at', 'asc')
-                    ->limit(3);
-            },
-        ])
-        ->where('user_id', $targetUserId)
-        ->where('status', 'active')
-        ->whereNull('deleted_at')
-        ->orderBy('created_at', 'desc')
-        ->paginate($perPage);
+        $userId = Auth::id();
+
+        $posts = Post::withCount(['reactions', 'comments', 'shares'])
+            ->with([
+                'user:id,first_name,last_name,slug,photo,user_position',
+                'user.company:id,user_id,company_name,company_logo',
+                'media',
+                'reactions' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                },
+                'comments' => function ($query) use ($userId) {
+                    $query->where('status', 'active')
+                        ->whereNull('parent_id')
+                        ->with([
+                            'user:id,first_name,last_name,slug,photo',
+                            'reactions' => function ($r) use ($userId) {
+                                $r->where('user_id', $userId)->where('reaction_type', 'like');
+                            }
+                        ])
+                        ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
+                            $r->where('user_id', $userId)->where('reaction_type', 'like');
+                        }])
+                        ->orderBy('created_at', 'asc')
+                        ->limit(3);
+                },
+            ])
+            ->where('user_id', $targetUserId)
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        $transformedPosts = $posts->getCollection()->map(function ($post) use ($userId) {
+            return $this->transformPost($post, $userId);
+        });
 
         return response()->json([
             'success' => true,
-            'data' => $posts
+            'data' => $transformedPosts,
+            'current_page' => $posts->currentPage(),
+            'last_page' => $posts->lastPage(),
+            'has_more' => $posts->hasMorePages(),
         ]);
+    }
+
+    /**
+     * Get reactions for a post with user details.
+     */
+    public function getReactionsList(Request $request, $postId)
+    {
+        $post = Post::findOrFail($postId);
+
+        $reactions = $post->reactions()
+            ->with('user:id,first_name,last_name,photo,user_position')
+            ->get()
+            ->map(function ($reaction) {
+                if (!$reaction->user) {
+                    return null; // Skip reactions with deleted users
+                }
+                $userData = $this->formatUserData($reaction->user);
+                return [
+                    'id' => $reaction->id,
+                    'type' => $reaction->reaction_type,
+                    'created_at' => $reaction->created_at,
+                    'user' => [
+                        'id' => $userData['id'],
+                        'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
+                        'avatar' => $userData['photo'],
+                        'initials' => $userData['user_initials'],
+                        'has_photo' => $userData['user_has_photo'],
+                        'position' => $reaction->user->user_position ?? '',
+                    ]
+                ];
+            })->filter(); // Filter out null reactions
+
+        return response()->json([
+            'success' => true,
+            'count' => $reactions->count(),
+            'reactions' => $reactions
+        ]);
+    }
+
+    /**
+     * Get shares for a post with user details.
+     */
+    public function getSharesList(Request $request, $postId)
+    {
+        $post = Post::findOrFail($postId);
+
+        $shares = $post->shares()
+            ->with('user:id,first_name,last_name,photo,user_position')
+            ->latest()
+            ->get()
+            ->map(function ($share) {
+                if (!$share->user) {
+                    return null; // Skip shares with deleted users
+                }
+                $userData = $this->formatUserData($share->user);
+                return [
+                    'id' => $share->id,
+                    'share_type' => $share->share_type,
+                    'shared_content' => $share->shared_content,
+                    'created_at' => $share->created_at,
+                    'user' => [
+                        'id' => $userData['id'],
+                        'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
+                        'avatar' => $userData['photo'],
+                        'initials' => $userData['user_initials'],
+                        'has_photo' => $userData['user_has_photo'],
+                        'position' => $share->user->user_position ?? '',
+                    ]
+                ];
+            })->filter(); // Filter out null shares
+
+        return response()->json([
+            'success' => true,
+            'count' => $shares->count(),
+            'shares' => $shares
+        ]);
+    }
+
+    /**
+     * Get reaction count for a post.
+     */
+    public function getReactionCount($postId)
+    {
+        $post = Post::findOrFail($postId);
+
+        $reactions = $post->reactions()
+            ->with('user:id,first_name,last_name,photo')
+            ->get()
+            ->map(function ($reaction) {
+                return [
+                    'type' => $reaction->reaction_type,
+                    'user_id' => $reaction->user_id,
+                    'user_name' => trim($reaction->user->first_name . ' ' . $reaction->user->last_name),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'count' => $reactions->count(),
+            'reactions' => $reactions
+        ]);
+    }
+
+    /**
+     * Get comment count for a post.
+     */
+    public function getCommentCount($postId)
+    {
+        $post = Post::findOrFail($postId);
+        $count = $post->comments()->where('status', 'active')->whereNull('deleted_at')->count();
+
+        return response()->json([
+            'success' => true,
+            'count' => $count
+        ]);
+    }
+
+    /**
+     * Transform post data for consistent output.
+     */
+    private function transformPost($post, $userId = null)
+    {
+        // Handle case where user might be null (shouldn't happen, but safety check)
+        if (!$post->user) {
+            throw new \Exception('Post user not found');
+        }
+        
+        $userData = $this->formatUserData($post->user);
+
+        $userReaction = null;
+        if ($userId && $post->relationLoaded('reactions')) {
+            $userReaction = $post->reactions->first();
+        }
+
+        $transformed = [
+            'id' => $post->id,
+            'slug' => $post->slug,
+            'content' => $post->content,
+            'visibility' => $post->visibility ?? 'public',
+            'created_at' => $post->created_at,
+            'updated_at' => $post->updated_at,
+            'likes_count' => $post->reactions_count ?? 0,
+            'comments_count' => $post->comments_count ?? 0,
+            'shares_count' => $post->shares_count ?? 0,
+            'original_post_id' => $post->original_post_id,
+            'comments_enabled' => (bool) $post->comments_enabled,
+            'user' => [
+                'id' => $userData['id'],
+                'name' => trim($userData['first_name'] . ' ' . $userData['last_name']) ?: 'Unknown User',
+                'first_name' => $userData['first_name'],
+                'last_name' => $userData['last_name'],
+                'position' => $post->user->user_position ?? $post->user->position ?? '',
+                'avatar' => $userData['photo'],
+                'initials' => $userData['user_initials'],
+                'has_photo' => $userData['user_has_photo'],
+                'slug' => $post->user->slug ?? '',
+            ],
+            'media' => $post->relationLoaded('media') && $post->media 
+                ? $post->media->map(fn($m) => [
+                    'id' => $m->id,
+                    'media_type' => $m->media_type,
+                    'media_url' => $m->media_url,
+                    'thumbnail_url' => $m->thumbnail_path ?? $m->media_url,
+                    'mime_type' => $m->mime_type,
+                    'file_name' => $m->file_name,
+                    'duration' => $m->duration,
+                ])->toArray()
+                : [],
+            'user_reaction' => $userReaction ? [
+                'type' => $userReaction->reaction_type,
+                'created_at' => $userReaction->created_at,
+            ] : null,
+            'comments' => $post->relationLoaded('comments') && $post->comments
+                ? $post->comments->map(function ($comment) use ($userId) {
+                    if (!$comment->user) {
+                        return null; // Skip comments with deleted users
+                    }
+                    $commentUserData = $this->formatUserData($comment->user);
+                    return [
+                        'id' => $comment->id,
+                        'content' => $comment->content,
+                        'created_at' => $comment->created_at,
+                        'user_has_reacted' => isset($comment->user_has_reacted) ? $comment->user_has_reacted > 0 : false,
+                        'user' => [
+                            'id' => $commentUserData['id'],
+                            'name' => trim($commentUserData['first_name'] . ' ' . $commentUserData['last_name']),
+                            'avatar' => $commentUserData['photo'],
+                            'initials' => $commentUserData['user_initials'],
+                            'has_photo' => $commentUserData['user_has_photo'],
+                        ],
+                        'replies' => []
+                    ];
+                })->filter()->values()->toArray() // Filter out null comments
+                : [],
+        ];
+
+        // Add original post data if this is a shared post
+        if ($post->original_post_id && $post->relationLoaded('originalPost') && $post->originalPost && $post->originalPost->user) {
+            $originalUserData = $this->formatUserData($post->originalPost->user);
+            $transformed['original_post'] = [
+                'id' => $post->originalPost->id,
+                'slug' => $post->originalPost->slug,
+                'content' => $post->originalPost->content,
+                'created_at' => $post->originalPost->created_at,
+                'user' => [
+                    'id' => $originalUserData['id'],
+                    'name' => trim($originalUserData['first_name'] . ' ' . $originalUserData['last_name']),
+                    'position' => $post->originalPost->user->user_position ?? '',
+                    'avatar' => $originalUserData['photo'],
+                    'initials' => $originalUserData['user_initials'],
+                    'has_photo' => $originalUserData['user_has_photo'],
+                ],
+                'media' => ($post->originalPost->relationLoaded('media') && $post->originalPost->media)
+                    ? $post->originalPost->media->map(fn($m) => [
+                        'media_type' => $m->media_type,
+                        'media_url' => $m->media_url,
+                    ])->toArray()
+                    : [],
+            ];
+        }
+
+        return $transformed;
     }
 }
 

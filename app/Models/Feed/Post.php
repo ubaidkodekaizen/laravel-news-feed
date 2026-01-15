@@ -24,6 +24,7 @@ class Post extends Model
         'content',
         'slug',
         'comments_enabled',
+        'visibility',
         'status',
         'reactions_count',
         'comments_count',
