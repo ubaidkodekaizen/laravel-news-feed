@@ -829,20 +829,19 @@
             }
         });
 
-        // Handle filter dropdown changes
+        // Handle filter dropdown changes - only apply the changed filter
         document.querySelectorAll('.subscription-filter').forEach(select => {
             select.addEventListener('change', function() {
-                const status = document.getElementById('statusFilter').value;
-                const platform = document.getElementById('platformFilter').value;
-                const type = document.getElementById('typeFilter').value;
+                const filterName = this.name; // 'status', 'platform', or 'type'
+                const filterValue = this.value;
 
-                // Build URL with all filter parameters
+                // Build URL with only the changed filter parameter
                 const params = new URLSearchParams();
-                if (status !== 'all') params.append('status', status);
-                if (platform !== 'all') params.append('platform', platform);
-                if (type !== 'all') params.append('type', type);
+                if (filterValue !== 'all') {
+                    params.append(filterName, filterValue);
+                }
 
-                // Redirect to filtered URL
+                // Redirect to filtered URL (only the selected filter will be applied)
                 const url = '{{ route("admin.subscriptions") }}' + (params.toString() ? '?' + params.toString() : '');
                 window.location.href = url;
             });
