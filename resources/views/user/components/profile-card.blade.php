@@ -36,16 +36,59 @@
     </div>
 </div>
 
+
+@if(isset($ads) && $ads->count() > 0)
 <div class="card" id="feedAdCard">
-    <div class="card-img">
-        <img src="{{ asset('assets/images/postAdImg.png') }}" class="img-fluid" alt="">
-        <img src="{{ asset('assets/images/postAdIcon.png') }}" class="img-fluid feedAdWatermarkImg" alt="">
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            @foreach($ads as $ad)
+                <div class="swiper-slide">
+                    <a href="{{ $ad->url }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       onclick="trackAdClick({{ $ad->id }})">
+                        <div class="ad-slide-content">
+                            <img src="{{ $ad->media }}"
+                                 alt="Advertisement"
+                                 class="ad-image"
+                                 onerror="this.src='{{ asset('assets/images/ad-placeholder.png') }}'">
+                            @if($ad->featured)
+                                <span class="featured-badge">
+                                    <i class="fa-solid fa-star"></i> Featured
+                                </span>
+                            @endif
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Pagination dots -->
+        @if($ads->count() > 1)
+            <div class="swiper-pagination"></div>
+        @endif
+
+        <!-- Navigation arrows (only show if more than 1 ad) -->
+        @if($ads->count() > 1)
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        @endif
     </div>
-    <a href="#" class="feedAdCardLinkedin">
-        <i class="fa-brands fa-linkedin-in"></i>
-    </a>
-    <h4>Transform Your LinkedIn Outreach with <span>KodeReach</span></h4>
-    <p>KodeReach is an advanced automation tool built to simplify LinkedIn prospecting. With just a LinkedIn or Sales
-        Navigator URL.</p>
-    <a href="#" class="feedAdCardCta">Request a Demo</a>
 </div>
+
+
+
+<script>
+function trackAdClick(adId) {
+    // Track ad clicks
+    fetch('/ads/track-click', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ ad_id: adId })
+    }).catch(err => console.log('Ad tracking failed:', err));
+}
+</script>
+@endif

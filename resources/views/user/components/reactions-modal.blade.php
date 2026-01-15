@@ -3,47 +3,57 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="reactionsModalLabel">Reactions</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
+            <ul class="nav nav-tabs reaction-tabs mb-3" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#allReactions" type="button"
+                        role="tab">
+                        All <span id="allCount" class="badge bg-secondary ms-1">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#likeReactions" type="button"
+                        role="tab">
+                        👍 <span id="likeCount" class="badge bg-secondary ms-1">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#loveReactions" type="button"
+                        role="tab">
+                        ❤️ <span id="loveCount" class="badge bg-secondary ms-1">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#hahaReactions" type="button"
+                        role="tab">
+                        😂 <span id="hahaCount" class="badge bg-secondary ms-1">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#wowReactions" type="button"
+                        role="tab">
+                        😮 <span id="wowCount" class="badge bg-secondary ms-1">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sadReactions" type="button"
+                        role="tab">
+                        😢 <span id="sadCount" class="badge bg-secondary ms-1">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#angryReactions" type="button"
+                        role="tab">
+                        😠 <span id="angryCount" class="badge bg-secondary ms-1">0</span>
+                    </button>
+                </li>
+            </ul>
             <div class="modal-body">
-                <!-- Tabs -->
-                <ul class="nav nav-tabs reaction-tabs mb-3" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#allReactions" type="button" role="tab">
-                            All <span id="allCount" class="badge bg-secondary ms-1">0</span>
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#likeReactions" type="button" role="tab">
-                            👍 <span id="likeCount" class="badge bg-secondary ms-1">0</span>
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#loveReactions" type="button" role="tab">
-                            ❤️ <span id="loveCount" class="badge bg-secondary ms-1">0</span>
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#hahaReactions" type="button" role="tab">
-                            😂 <span id="hahaCount" class="badge bg-secondary ms-1">0</span>
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#wowReactions" type="button" role="tab">
-                            😮 <span id="wowCount" class="badge bg-secondary ms-1">0</span>
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sadReactions" type="button" role="tab">
-                            😢 <span id="sadCount" class="badge bg-secondary ms-1">0</span>
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#angryReactions" type="button" role="tab">
-                            😠 <span id="angryCount" class="badge bg-secondary ms-1">0</span>
-                        </button>
-                    </li>
-                </ul>
+
+
 
                 <!-- Tab Content -->
                 <div class="tab-content">
@@ -102,135 +112,180 @@
 </div>
 
 <style>
-.reaction-tabs {
-    border-bottom: 2px solid #e4e6eb;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-
-.reaction-tabs::-webkit-scrollbar {
-    display: none;
-}
-
-.reaction-tabs .nav-item {
-    flex-shrink: 0;
-}
-
-.reaction-tabs .nav-link {
-    border: none;
-    color: #65676b;
-    padding: 8px 12px;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-}
-
-.reaction-tabs .nav-link:hover {
-    color: #050505;
-    background-color: #f0f2f5;
-}
-
-.reaction-tabs .nav-link.active {
-    color: #0d6efd;
-    border-bottom-color: #0d6efd;
-    background-color: transparent;
-}
-
-.reaction-tabs .badge {
-    font-size: 11px;
-    padding: 2px 6px;
-}
-
-.reactions-list {
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.reaction-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
-}
-
-.reaction-item:hover {
-    background-color: #f0f2f5;
-}
-
-.reaction-item .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-}
-
-.reaction-item .user-initials {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 14px;
-    text-transform: uppercase;
-    flex-shrink: 0;
-}
-
-.reaction-item .user-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.reaction-item .user-name {
-    font-weight: 600;
-    font-size: 14px;
-    color: #050505;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.reaction-item .user-position {
-    font-size: 13px;
-    color: #65676b;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.reaction-item .reaction-emoji {
-    font-size: 20px;
-    flex-shrink: 0;
-}
-
-/* Mobile responsive */
-@media (max-width: 576px) {
-    .modal-dialog {
-        margin: 0;
-        max-width: 100%;
-        height: 100vh;
+    .reaction-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 9px 24px;
+        background: #D9D9D933;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 5px;
     }
 
-    .modal-content {
-        height: 100vh;
-        border-radius: 0;
+    .reaction-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .reaction-tabs .nav-item {
+        flex-shrink: 0;
     }
 
     .reaction-tabs .nav-link {
-        padding: 6px 8px;
-        font-size: 13px;
+        border: none;
+        color: #65676b;
+        padding: 4px 12px 4px 9px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s;
+        border: 1px solid var(--2, #2D3B68);
+        border-radius: 53px;
+        line-height: 1.3em;
     }
-}
+
+    .reaction-tabs .nav-link:hover {
+        color: #050505;
+        background-color: #f0f2f5;
+    }
+
+    .reaction-tabs .nav-link.active {
+        color: #fff;
+        border-color: #2D3B68;
+        background: #2D3B68;
+    }
+
+    .reaction-tabs .nav-link.active .badge {
+        color: #fff;
+    }
+
+    .reaction-tabs .badge {
+        padding: 0;
+        font-family: Inter;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 100%;
+        color: #333333;
+        background: none !important;
+        margin: 0px 0px 0px 4px !important;
+    }
+
+    .reactions-list {
+        max-height: 298px;
+        overflow-y: auto;
+        padding: 0px 10px 0 0px;
+    }
+
+    .reaction-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 0;
+        border-bottom: 1.34px solid #CAD9FF99;
+        transition: background-color 0.2s;
+    }
+
+    .reaction-item:last-child {
+        border-bottom: none;
+    }
+
+    .reaction-item:hover {
+        background-color: #f0f2f5;
+    }
+
+    .reaction-item .user-avatar {
+        width: 50.13px;
+        height: 50.13px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .reaction-item .user-initials {
+        width: 50.13px;
+        height: 50.13px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+
+    .reaction-item .user-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .reaction-item .user-name {
+        color: #17272F;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: Inter;
+        font-weight: 600;
+        font-size: 14.5px;
+        line-height: 100%;
+        margin: 0 0 4px 0;
+    }
+
+    .reaction-item .user-position {
+        color: #5D5D5D;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: Roboto;
+        font-weight: 400;
+        font-size: 12.93px;
+        line-height: 100%;
+    }
+
+    .reaction-avatar-box {
+        position: relative;
+    }
+
+    .reaction-item .reaction-emoji {
+        cursor: pointer;
+        padding: 0 !important;
+        border-radius: 50%;
+        transition: transform 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        background: none;
+        font-size: 16px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: auto;
+            max-width: 95%;
+            height: 100vh;
+        }
+
+        .modal-content {
+            height: unset;
+            border-radius: 0;
+        }
+
+        .reaction-tabs .nav-link {
+            padding: 6px 8px;
+            font-size: 13px;
+        }
+    }
 </style>

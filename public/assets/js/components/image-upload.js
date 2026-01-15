@@ -297,7 +297,7 @@ $('.visibility-option').click(function(e) {
                      visibility === 'private' ? 'fa-lock' : 'fa-user-group';
     const text = visibility.charAt(0).toUpperCase() + visibility.slice(1);
 
-    $('#visibilityIcon').attr('class', `fa-solid ${iconClass}`);
+
     $('#visibilityText').text(text);
     $('#postModal').data('visibility', visibility);
 

@@ -3,59 +3,67 @@
    ======================================== */
 
 #postModal .modal-content {
-    border-radius: 12px;
+    /* border-radius: 12px;
     border: none;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); */
 }
 
 #postModal .modal-header {
-    border-bottom: 1px solid #e5e7eb;
+    /* border-bottom: 1px solid #e5e7eb;
     padding: 20px 24px;
     background: #ffffff;
-    border-radius: 12px 12px 0 0;
+    border-radius: 12px 12px 0 0; */
 }
 
 #postModal .modal-title {
-    font-size: 20px;
+    /* font-size: 20px;
     font-weight: 600;
-    color: #111827;
-}
-
-#postModal .btn-close {
-    opacity: 0.5;
-    transition: opacity 0.2s;
-}
-
-#postModal .btn-close:hover {
-    opacity: 1;
+    color: #111827; */
 }
 
 #postModal .modal-body {
-    padding: 24px;
-    background: #ffffff;
+    /* padding: 24px;
+    background: #ffffff; */
 }
 
 #postModal .modal-footer {
     border-top: 1px solid #e5e7eb;
-    padding: 16px 24px;
-    background: #f9fafb;
+    padding: 20px 24px;
     border-radius: 0 0 12px 12px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
+    gap: 10px;
+    background: #d9d9d912;
 }
-
+#postModal .modal-footer button {
+    border: 0.75px solid #2d3b68;
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 12.06px;
+    line-height: 100%;
+    color: #2d3b68;
+    padding: 10px 30px;
+    border-radius: 24px;
+    background: transparent;
+}
+#postModal .modal-footer button:last-child {
+    background: #2d3b68;
+    color: #fff;
+}
 /* Post Text Area */
 #postText {
     border: none;
     resize: none;
-    font-size: 16px;
-    line-height: 1.6;
     padding: 0;
     outline: none;
     box-shadow: none;
-    color: #111827;
+    color: #333333;
     min-height: 120px;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 14px !important;
+    line-height: 100%;
 }
 
 #postText:focus {
@@ -70,8 +78,8 @@
 /* Action Buttons Row */
 #postModal .d-flex.justify-content-between {
     margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid #f3f4f6;
+    padding-top: 13px;
+    border-top: 1.34px solid #cad9ff99;
 }
 
 /* Media Upload Buttons */
@@ -109,11 +117,14 @@
 /* Comments Toggle Switch */
 #postModal .form-check {
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #postModal .form-check-input {
-    width: 44px;
-    height: 24px;
+    width: 27px;
+    height: 13px;
     cursor: pointer;
     background-color: #d1d5db;
     border: none;
@@ -122,28 +133,46 @@
 }
 
 #postModal .form-check-input:focus {
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1),
+        0 0 0 3px rgba(59, 130, 246, 0.1);
     border: none;
 }
 
 #postModal .form-check-input:checked {
-    background-color: #3b82f6;
+    background-color: #2d3b68;
     border: none;
+    margin: 0px 0px 0px 0px;
 }
 
 #postModal .form-check-label {
     cursor: pointer;
-    color: #6b7280;
-    font-weight: 500;
+    color: #273572;
     margin-left: 10px;
-    font-size: 14px;
     user-select: none;
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 11.79px;
+    line-height: 100%;
 }
 
 #postModal .form-check-input:checked ~ .form-check-label {
-    color: #111827;
+    color: #273572;
 }
-
+#postModal .dropdown button {
+    border: none;
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 11.79px;
+    line-height: 100%;
+    color: #273572;
+    padding: 0 0 3px 0;
+}
+#postModal .dropdown button:active {
+    background: transparent;
+}
+#postModal .dropdown button:hover {
+    background-color: transparent;
+}
 /* Footer Visibility Indicator */
 #postModal .modal-footer .text-muted {
     display: flex;
@@ -156,23 +185,6 @@
 #postModal .modal-footer .text-muted i {
     color: #9ca3af;
     font-size: 14px;
-}
-
-/* Post Button */
-#postModal .modal-footer .btn-primary {
-    padding: 8px 24px;
-    font-weight: 600;
-    border-radius: 24px;
-    transition: all 0.2s;
-}
-
-#postModal .modal-footer .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-#postModal .modal-footer .btn-primary:active {
-    transform: translateY(0);
 }
 
 /* Selected Images Preview */
@@ -704,8 +716,12 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Hover Effects */

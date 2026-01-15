@@ -136,11 +136,15 @@ function createPostHTML(post) {
     // Store images for lightbox
     if (post.media && post.media.length > 0) {
         const postId = `post-${post.id}`;
-        window.postImages[postId] = post.media.filter(m => m.media_type === 'image');
+        window.postImages[postId] = post.media.filter(
+            (m) => m.media_type === "image"
+        );
     }
 
     return `
-        <div class="post-container card" data-post-id="${post.id}" data-post-slug="${post.slug}">
+        <div class="post-container card" data-post-id="${
+            post.id
+        }" data-post-slug="${post.slug}">
             ${createPostHeader(post, isOwner)}
             ${createSharedPostBadge(post)}
             ${createPostContent(post)}
@@ -263,7 +267,7 @@ function createPostMedia(post) {
 
     // For now, show first image or video
     if (images.length > 0) {
-        return createImageGrid(images);
+        return createImageGrid(images, post.id);
     } // inside createPostMedia (replace fields to match your data model)
     else if (videos.length > 0) {
         const v = videos[0];
@@ -412,31 +416,32 @@ function initializeVideoPlayers() {
         video.dataset.initialized = "true";
     });
 }
-function createImageGrid(images) {
+function createImageGrid(images, postId) {
     const count = images.length;
-    const postId = `post-${Date.now()}`; // Unique ID for this post's images
 
+ const dataPostId = `post-${postId}`;
     if (count === 1) {
         return `
-            <div class="post-images" data-image-count="1" data-post-id="${postId}">
+            <div class="post-images" data-image-count="1" data-post-id="${dataPostId}">
                 <div class="post-images-single">
                     <img src="${images[0].media_url}"
                          alt="Post image"
                          class="post-image"
-                         onclick="openLightbox('${postId}', 0)"
+                         onclick="openLightbox('${dataPostId}', 0)"
                          style="cursor: pointer;">
                 </div>
             </div>
         `;
     } else if (count === 2) {
         return `
-            <div class="post-images post-images-grid post-images-two" data-image-count="2" data-post-id="${postId}">
+            <div class="post-images post-images-grid post-images-two" data-image-count="2" data-post-id="${dataPostId}">
                 ${images
-                    .map((img, index) =>
-                        `<img src="${img.media_url}"
+                    .map(
+                        (img, index) =>
+                            `<img src="${img.media_url}"
                               alt="Post image"
                               class="post-image"
-                              onclick="openLightbox('${postId}', ${index})"
+                              onclick="openLightbox('${dataPostId}', ${index})"
                               style="cursor: pointer;">`
                     )
                     .join("")}
@@ -444,22 +449,22 @@ function createImageGrid(images) {
         `;
     } else if (count === 3) {
         return `
-            <div class="post-images post-images-grid post-images-three" data-image-count="3" data-post-id="${postId}">
+            <div class="post-images post-images-grid post-images-three" data-image-count="3" data-post-id="${dataPostId}">
                 <img src="${images[0].media_url}"
                      alt="Post image"
                      class="post-image post-image-large"
-                     onclick="openLightbox('${postId}', 0)"
+                     onclick="openLightbox('${dataPostId}', 0)"
                      style="cursor: pointer;">
                 <div class="post-images-small">
                     <img src="${images[1].media_url}"
                          alt="Post image"
                          class="post-image"
-                         onclick="openLightbox('${postId}', 1)"
+                         onclick="openLightbox('${dataPostId}', 1)"
                          style="cursor: pointer;">
                     <img src="${images[2].media_url}"
                          alt="Post image"
                          class="post-image"
-                         onclick="openLightbox('${postId}', 2)"
+                         onclick="openLightbox('${dataPostId}', 2)"
                          style="cursor: pointer;">
                 </div>
             </div>
@@ -467,20 +472,27 @@ function createImageGrid(images) {
     } else {
         const remaining = count - 4;
         return `
-            <div class="post-images post-images-grid post-images-four" data-image-count="${count}" data-post-id="${postId}">
+            <div class="post-images post-images-grid post-images-four" data-image-count="${count}" data-post-id="${dataPostId}">
                 ${images
                     .slice(0, 3)
-                    .map((img, index) =>
-                        `<img src="${img.media_url}"
+                    .map(
+                        (img, index) =>
+                            `<img src="${img.media_url}"
                               alt="Post image"
                               class="post-image"
-                              onclick="openLightbox('${postId}', ${index})"
+                              onclick="openLightbox('${dataPostId}', ${index})"
                               style="cursor: pointer;">`
                     )
                     .join("")}
-                <div class="post-image-wrapper" onclick="openLightbox('${postId}', 3)" style="cursor: pointer;">
-                    <img src="${images[3].media_url}" alt="Post image" class="post-image">
-                    ${remaining > 0 ? `<div class="post-image-overlay">+${remaining}</div>` : ""}
+                <div class="post-image-wrapper" onclick="openLightbox('${dataPostId}', 3)" style="cursor: pointer;">
+                    <img src="${
+                        images[3].media_url
+                    }" alt="Post image" class="post-image">
+                    ${
+                        remaining > 0
+                            ? `<div class="post-image-overlay">+${remaining}</div>`
+                            : ""
+                    }
                 </div>
             </div>
         `;
@@ -616,7 +628,7 @@ function createPostActions(post) {
                      onclick="handleReactionClick('${post.id}', '${reactionType}')"
                      data-current-reaction="${reactionType}">
                     <span class="reaction-icon">${reactionEmoji}</span>
-                    <span class="reaction-label">${reactionLabel}</span>
+                    <span class="reaction-label action-btn-text">${reactionLabel}</span>
                 </div>
                 <div class="reaction-panel d-none" onmouseenter="cancelHide()" onmouseleave="hideReactions(this)">
                     <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Like', 'like')" title="Like">👍</span>
@@ -628,13 +640,13 @@ function createPostActions(post) {
                 </div>
             </div>
             <div class="action-btn comment-trigger" onclick="toggleComments('${post.id}')">
-                <i class="fa-regular fa-comment-dots"></i> Comment
+                <i class="fa-regular fa-comment-dots"></i> <span class="action-btn-text">Comment</span>
             </div>
             <div class="action-btn" onclick="sharePost('${post.id}')">
-                <i class="fa-solid fa-retweet"></i> Repost
+                <i class="fa-solid fa-retweet"></i> <span class="action-btn-text">Repost</span>
             </div>
             <div class="action-btn" onclick="sendPost('${post.id}')">
-                <i class="fa-regular fa-paper-plane"></i> Send
+                <i class="fa-regular fa-paper-plane"></i> <span class="action-btn-text">Send</span>
             </div>
         </div>
     `;
@@ -798,6 +810,113 @@ function showNotification(message, type = "info") {
     }, 3000);
 }
 
-
 // Store images for lightbox
 window.postImages = window.postImages || {};
+
+// Lightbox Functions
+window.openLightbox = function (postId, index) {
+    const images = window.postImages[postId];
+    if (!images || images.length === 0) return;
+
+    // Create lightbox if doesn't exist
+    let lightbox = document.getElementById("imageLightbox");
+    if (!lightbox) {
+        lightbox = document.createElement("div");
+        lightbox.id = "imageLightbox";
+        lightbox.className = "lightbox";
+        lightbox.innerHTML = `
+            <div class="lightbox-overlay" onclick="closeLightbox()"></div>
+            <div class="lightbox-content">
+                <button class="lightbox-close" onclick="closeLightbox()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <button class="lightbox-prev" onclick="navigateLightbox(-1)">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="lightbox-next" onclick="navigateLightbox(1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <img class="lightbox-image" src="" alt="Image">
+                <div class="lightbox-counter"></div>
+            </div>
+        `;
+        document.body.appendChild(lightbox);
+    }
+
+    // Set current images and index
+    window.currentLightboxImages = images;
+    window.currentLightboxIndex = index;
+
+    // Show image
+    updateLightboxImage();
+
+    // Show lightbox
+    lightbox.classList.add("active");
+    document.body.style.overflow = "hidden";
+};
+
+window.closeLightbox = function () {
+    const lightbox = document.getElementById("imageLightbox");
+    if (lightbox) {
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "";
+    }
+};
+
+window.navigateLightbox = function (direction) {
+    if (!window.currentLightboxImages) return;
+
+    window.currentLightboxIndex += direction;
+
+    // Loop around
+    if (window.currentLightboxIndex < 0) {
+        window.currentLightboxIndex = window.currentLightboxImages.length - 1;
+    } else if (
+        window.currentLightboxIndex >= window.currentLightboxImages.length
+    ) {
+        window.currentLightboxIndex = 0;
+    }
+
+    updateLightboxImage();
+};
+
+function updateLightboxImage() {
+    const image = window.currentLightboxImages[window.currentLightboxIndex];
+    const lightboxImage = document.querySelector(".lightbox-image");
+    const counter = document.querySelector(".lightbox-counter");
+    const prevBtn = document.querySelector(".lightbox-prev");
+    const nextBtn = document.querySelector(".lightbox-next");
+
+    if (lightboxImage && image) {
+        lightboxImage.src = image.media_url;
+    }
+
+    if (counter) {
+        counter.textContent = `${window.currentLightboxIndex + 1} / ${
+            window.currentLightboxImages.length
+        }`;
+    }
+
+    // Show/hide navigation buttons
+    if (window.currentLightboxImages.length <= 1) {
+        prevBtn.style.display = "none";
+        nextBtn.style.display = "none";
+    } else {
+        prevBtn.style.display = "flex";
+        nextBtn.style.display = "flex";
+    }
+}
+
+// Keyboard navigation
+document.addEventListener("keydown", function (e) {
+    const lightbox = document.getElementById("imageLightbox");
+    if (lightbox && lightbox.classList.contains("active")) {
+        if (e.key === "Escape") {
+            closeLightbox();
+        } else if (e.key === "ArrowLeft") {
+            navigateLightbox(-1);
+        } else if (e.key === "ArrowRight") {
+            navigateLightbox(1);
+        }
+    }
+});

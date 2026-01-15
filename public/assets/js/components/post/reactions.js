@@ -7,27 +7,27 @@
 let hideTimeout = null;
 
 export function showReactions(el) {
-    const wrapper = el.closest('.reaction-wrapper');
+    const wrapper = el.closest(".reaction-wrapper");
     if (!wrapper) return;
 
-    const panel = wrapper.querySelector('.reaction-panel');
+    const panel = wrapper.querySelector(".reaction-panel");
     if (!panel) return;
 
     // Reset animations
-    panel.querySelectorAll('.reaction-emoji').forEach(emoji => {
-        emoji.style.animation = 'none';
+    panel.querySelectorAll(".reaction-emoji").forEach((emoji) => {
+        emoji.style.animation = "none";
         emoji.offsetHeight; // Trigger reflow
-        emoji.style.animation = '';
+        emoji.style.animation = "";
     });
 
-    panel.classList.remove('d-none');
+    panel.classList.remove("d-none");
     clearTimeout(hideTimeout);
 }
 
 export function hideReactions(el) {
     hideTimeout = setTimeout(() => {
-        const panel = el.querySelector('.reaction-panel');
-        if (panel) panel.classList.add('d-none');
+        const panel = el.querySelector(".reaction-panel");
+        if (panel) panel.classList.add("d-none");
     }, 250);
 }
 
@@ -37,33 +37,38 @@ export function cancelHide() {
 
 export function applyReaction(span, emoji, label, type) {
     if (!span || !type) {
-        console.error('Invalid reaction parameters');
+        console.error("Invalid reaction parameters");
         return;
     }
 
-    const wrapper = span.closest('.reaction-wrapper');
+    const wrapper = span.closest(".reaction-wrapper");
     if (!wrapper) return;
 
-    const iconWrapper = wrapper.querySelector('.reaction-icon');
-    const labelEl = wrapper.querySelector('.reaction-label');
-    const postId = wrapper.dataset.postId || wrapper.closest('.post-container')?.dataset.postId;
-    const actionBtn = wrapper.querySelector('.action-btn');
+    const iconWrapper = wrapper.querySelector(".reaction-icon");
+    const labelEl = wrapper.querySelector(".reaction-label");
+    const postId =
+        wrapper.dataset.postId ||
+        wrapper.closest(".post-container")?.dataset.postId;
+    const actionBtn = wrapper.querySelector(".action-btn");
 
     if (!postId) {
-        console.error('Post ID not found');
-        showNotification('Unable to add reaction. Please refresh the page.', 'error');
+        console.error("Post ID not found");
+        showNotification(
+            "Unable to add reaction. Please refresh the page.",
+            "error"
+        );
         return;
     }
 
     // Get current reaction
-    const currentReaction = actionBtn?.dataset.currentReaction || '';
+    const currentReaction = actionBtn?.dataset.currentReaction || "";
 
     // Optimistically update UI
     if (iconWrapper) iconWrapper.innerHTML = emoji;
     if (labelEl) labelEl.textContent = label;
     if (actionBtn) actionBtn.dataset.currentReaction = type;
 
-    wrapper.querySelector('.reaction-panel')?.classList.add('d-none');
+    wrapper.querySelector(".reaction-panel")?.classList.add("d-none");
 
     // Send to backend
     saveReaction(postId, type, currentReaction, {
@@ -71,23 +76,25 @@ export function applyReaction(span, emoji, label, type) {
         labelEl,
         actionBtn,
         emoji,
-        label
+        label,
     });
 }
 
 async function saveReaction(postId, reactionType, currentReaction, elements) {
     try {
-        const response = await fetch('/feed/reactions', {
-            method: 'POST',
+        const response = await fetch("/feed/reactions", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).content,
             },
             body: JSON.stringify({
-                reactionable_type: 'App\\Models\\Feed\\Post',
+                reactionable_type: "App\\Models\\Feed\\Post",
                 reactionable_id: postId,
-                reaction_type: reactionType
-            })
+                reaction_type: reactionType,
+            }),
         });
 
         if (!response.ok) {
@@ -100,10 +107,10 @@ async function saveReaction(postId, reactionType, currentReaction, elements) {
             // Update reaction count and preview
             updateReactionDisplay(postId, result.reaction);
         } else {
-            throw new Error(result.message || 'Failed to save reaction');
+            throw new Error(result.message || "Failed to save reaction");
         }
     } catch (error) {
-        console.error('Error saving reaction:', error);
+        console.error("Error saving reaction:", error);
 
         // Revert UI on error
         if (currentReaction) {
@@ -112,15 +119,19 @@ async function saveReaction(postId, reactionType, currentReaction, elements) {
             const label = capitalizeFirst(currentReaction);
             if (elements.iconWrapper) elements.iconWrapper.innerHTML = emoji;
             if (elements.labelEl) elements.labelEl.textContent = label;
-            if (elements.actionBtn) elements.actionBtn.dataset.currentReaction = currentReaction;
+            if (elements.actionBtn)
+                elements.actionBtn.dataset.currentReaction = currentReaction;
         } else {
             // Restore to default (no reaction)
-            if (elements.iconWrapper) elements.iconWrapper.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>';
-            if (elements.labelEl) elements.labelEl.textContent = 'Like';
-            if (elements.actionBtn) elements.actionBtn.dataset.currentReaction = '';
+            if (elements.iconWrapper)
+                elements.iconWrapper.innerHTML =
+                    '<i class="fa-regular fa-thumbs-up"></i>';
+            if (elements.labelEl) elements.labelEl.textContent = "Like";
+            if (elements.actionBtn)
+                elements.actionBtn.dataset.currentReaction = "";
         }
 
-        showNotification('Failed to save reaction. Please try again.', 'error');
+        showNotification("Failed to save reaction. Please try again.", "error");
     }
 }
 
@@ -137,12 +148,14 @@ export function handleReactionClick(postId, currentReactionType) {
 export async function removeReaction(postId) {
     if (!postId) return;
 
-    const wrapper = document.querySelector(`.reaction-wrapper[data-post-id="${postId}"]`);
+    const wrapper = document.querySelector(
+        `.reaction-wrapper[data-post-id="${postId}"]`
+    );
     if (!wrapper) return;
 
-    const iconWrapper = wrapper.querySelector('.reaction-icon');
-    const labelEl = wrapper.querySelector('.reaction-label');
-    const actionBtn = wrapper.querySelector('.action-btn');
+    const iconWrapper = wrapper.querySelector(".reaction-icon");
+    const labelEl = wrapper.querySelector(".reaction-label");
+    const actionBtn = wrapper.querySelector(".action-btn");
 
     // Store current state for potential revert
     const previousEmoji = iconWrapper?.innerHTML;
@@ -150,21 +163,24 @@ export async function removeReaction(postId) {
     const previousReaction = actionBtn?.dataset.currentReaction;
 
     // Optimistically update UI to default
-    if (iconWrapper) iconWrapper.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>';
-    if (labelEl) labelEl.textContent = 'Like';
-    if (actionBtn) actionBtn.dataset.currentReaction = '';
+    if (iconWrapper)
+        iconWrapper.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>';
+    if (labelEl) labelEl.textContent = "Like";
+    if (actionBtn) actionBtn.dataset.currentReaction = "";
 
     try {
-        const response = await fetch('/feed/reactions', {
-            method: 'DELETE',
+        const response = await fetch("/feed/reactions", {
+            method: "DELETE",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).content,
             },
             body: JSON.stringify({
-                reactionable_type: 'App\\Models\\Feed\\Post',
-                reactionable_id: postId
-            })
+                reactionable_type: "App\\Models\\Feed\\Post",
+                reactionable_id: postId,
+            }),
         });
 
         if (!response.ok) {
@@ -177,31 +193,36 @@ export async function removeReaction(postId) {
             // Update count
             updateReactionDisplay(postId, null);
         } else {
-            throw new Error(result.message || 'Failed to remove reaction');
+            throw new Error(result.message || "Failed to remove reaction");
         }
     } catch (error) {
-        console.error('Error removing reaction:', error);
+        console.error("Error removing reaction:", error);
 
         // Revert UI on error
         if (iconWrapper) iconWrapper.innerHTML = previousEmoji;
         if (labelEl) labelEl.textContent = previousLabel;
         if (actionBtn) actionBtn.dataset.currentReaction = previousReaction;
 
-        showNotification('Failed to remove reaction. Please try again.', 'error');
+        showNotification(
+            "Failed to remove reaction. Please try again.",
+            "error"
+        );
     }
 }
 
 async function updateReactionDisplay(postId, reaction) {
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    const postContainer = document.querySelector(
+        `.post-container[data-post-id="${postId}"]`
+    );
     if (!postContainer) return;
 
     try {
         // Fetch updated reaction count from server
         const response = await fetch(`/feed/posts/${postId}/reactions-count`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+                "X-Requested-With": "XMLHttpRequest",
+            },
         });
 
         if (!response.ok) return;
@@ -209,7 +230,9 @@ async function updateReactionDisplay(postId, reaction) {
         const result = await response.json();
 
         if (result.success) {
-            const likesCountEl = postContainer.querySelector('.likes-count .count-text');
+            const likesCountEl = postContainer.querySelector(
+                ".likes-count .count-text"
+            );
             if (likesCountEl) {
                 likesCountEl.textContent = result.count;
             }
@@ -219,26 +242,29 @@ async function updateReactionDisplay(postId, reaction) {
                 updateReactionsPreview(postId, result.reactions);
             } else {
                 // Clear reactions preview if no reactions
-                const reactionsPreview = postContainer.querySelector('.reactions-preview');
+                const reactionsPreview =
+                    postContainer.querySelector(".reactions-preview");
                 if (reactionsPreview) {
-                    reactionsPreview.innerHTML = '';
+                    reactionsPreview.innerHTML = "";
                 }
             }
         }
     } catch (error) {
-        console.error('Error fetching reaction count:', error);
+        console.error("Error fetching reaction count:", error);
     }
 }
 
 function updateReactionsPreview(postId, reactions) {
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    const postContainer = document.querySelector(
+        `.post-container[data-post-id="${postId}"]`
+    );
     if (!postContainer) return;
 
-    const reactionsPreview = postContainer.querySelector('.reactions-preview');
+    const reactionsPreview = postContainer.querySelector(".reactions-preview");
     if (!reactionsPreview) return;
 
     // Clear existing reactions
-    reactionsPreview.innerHTML = '';
+    reactionsPreview.innerHTML = "";
 
     // Get unique reaction types (up to 3)
     const uniqueReactions = [];
@@ -252,10 +278,10 @@ function updateReactionsPreview(postId, reactions) {
     }
 
     // Add reaction emojis
-    uniqueReactions.forEach(reaction => {
+    uniqueReactions.forEach((reaction) => {
         const emoji = getReactionEmoji(reaction.type);
-        const span = document.createElement('span');
-        span.className = 'reaction-emoji-preview';
+        const span = document.createElement("span");
+        span.className = "reaction-emoji-preview";
         span.textContent = emoji;
         reactionsPreview.appendChild(span);
     });
@@ -264,9 +290,9 @@ function updateReactionsPreview(postId, reactions) {
 export async function showReactionsList(postId) {
     if (!postId) return;
 
-    const modal = document.getElementById('reactionsModal');
+    const modal = document.getElementById("reactionsModal");
     if (!modal) {
-        console.error('Reactions modal not found');
+        console.error("Reactions modal not found");
         return;
     }
 
@@ -275,36 +301,41 @@ export async function showReactionsList(postId) {
     bsModal.show();
 
     // Show loading state
-    document.getElementById('reactionsLoading')?.classList.remove('d-none');
-    document.getElementById('reactionsEmpty')?.classList.add('d-none');
+    document.getElementById("reactionsLoading")?.classList.remove("d-none");
+    document.getElementById("reactionsEmpty")?.classList.add("d-none");
 
     try {
         const response = await fetch(`/feed/posts/${postId}/reactions-list`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+                "X-Requested-With": "XMLHttpRequest",
+            },
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch reactions');
+            throw new Error("Failed to fetch reactions");
         }
 
         const result = await response.json();
 
         // Hide loading
-        document.getElementById('reactionsLoading')?.classList.add('d-none');
+        document.getElementById("reactionsLoading")?.classList.add("d-none");
 
         if (result.success && result.reactions && result.reactions.length > 0) {
             displayReactionsList(result.reactions);
         } else {
-            document.getElementById('reactionsEmpty')?.classList.remove('d-none');
+            document
+                .getElementById("reactionsEmpty")
+                ?.classList.remove("d-none");
         }
     } catch (error) {
-        console.error('Error loading reactions:', error);
-        document.getElementById('reactionsLoading')?.classList.add('d-none');
-        document.getElementById('reactionsEmpty')?.classList.remove('d-none');
-        showNotification('Failed to load reactions. Please try again.', 'error');
+        console.error("Error loading reactions:", error);
+        document.getElementById("reactionsLoading")?.classList.add("d-none");
+        document.getElementById("reactionsEmpty")?.classList.remove("d-none");
+        showNotification(
+            "Failed to load reactions. Please try again.",
+            "error"
+        );
     }
 }
 
@@ -312,67 +343,90 @@ function displayReactionsList(reactions) {
     // Group reactions by type
     const reactionsByType = {
         all: reactions,
-        like: reactions.filter(r => r.type === 'like'),
-        love: reactions.filter(r => r.type === 'love'),
-        haha: reactions.filter(r => r.type === 'haha'),
-        wow: reactions.filter(r => r.type === 'wow'),
-        sad: reactions.filter(r => r.type === 'sad'),
-        angry: reactions.filter(r => r.type === 'angry'),
+        like: reactions.filter((r) => r.type === "like"),
+        love: reactions.filter((r) => r.type === "love"),
+        haha: reactions.filter((r) => r.type === "haha"),
+        wow: reactions.filter((r) => r.type === "wow"),
+        sad: reactions.filter((r) => r.type === "sad"),
+        angry: reactions.filter((r) => r.type === "angry"),
     };
 
     // Update counts
-    document.getElementById('allCount').textContent = reactionsByType.all.length;
-    document.getElementById('likeCount').textContent = reactionsByType.like.length;
-    document.getElementById('loveCount').textContent = reactionsByType.love.length;
-    document.getElementById('hahaCount').textContent = reactionsByType.haha.length;
-    document.getElementById('wowCount').textContent = reactionsByType.wow.length;
-    document.getElementById('sadCount').textContent = reactionsByType.sad.length;
-    document.getElementById('angryCount').textContent = reactionsByType.angry.length;
+    document.getElementById("allCount").textContent =
+        reactionsByType.all.length;
+    document.getElementById("likeCount").textContent =
+        reactionsByType.like.length;
+    document.getElementById("loveCount").textContent =
+        reactionsByType.love.length;
+    document.getElementById("hahaCount").textContent =
+        reactionsByType.haha.length;
+    document.getElementById("wowCount").textContent =
+        reactionsByType.wow.length;
+    document.getElementById("sadCount").textContent =
+        reactionsByType.sad.length;
+    document.getElementById("angryCount").textContent =
+        reactionsByType.angry.length;
 
     // Render lists
-    renderReactionsList('allReactionsList', reactionsByType.all);
-    renderReactionsList('likeReactionsList', reactionsByType.like);
-    renderReactionsList('loveReactionsList', reactionsByType.love);
-    renderReactionsList('hahaReactionsList', reactionsByType.haha);
-    renderReactionsList('wowReactionsList', reactionsByType.wow);
-    renderReactionsList('sadReactionsList', reactionsByType.sad);
-    renderReactionsList('angryReactionsList', reactionsByType.angry);
+    renderReactionsList("allReactionsList", reactionsByType.all);
+    renderReactionsList("likeReactionsList", reactionsByType.like);
+    renderReactionsList("loveReactionsList", reactionsByType.love);
+    renderReactionsList("hahaReactionsList", reactionsByType.haha);
+    renderReactionsList("wowReactionsList", reactionsByType.wow);
+    renderReactionsList("sadReactionsList", reactionsByType.sad);
+    renderReactionsList("angryReactionsList", reactionsByType.angry);
 }
 
 function renderReactionsList(containerId, reactions) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    container.innerHTML = '';
+    container.innerHTML = "";
 
     if (reactions.length === 0) {
-        container.innerHTML = '<p class="text-center text-muted py-4">No reactions of this type</p>';
+        container.innerHTML =
+            '<p class="text-center text-muted py-4">No reactions of this type</p>';
         return;
     }
 
-    reactions.forEach(reaction => {
+    reactions.forEach((reaction) => {
         const item = createReactionItem(reaction);
         container.appendChild(item);
     });
 }
 
 function createReactionItem(reaction) {
-    const div = document.createElement('div');
-    div.className = 'reaction-item';
-
-    const avatarHTML = reaction.user.has_photo && reaction.user.avatar
-        ? `<img src="${reaction.user.avatar}" class="user-avatar" alt="${reaction.user.name}">`
-        : `<div class="user-initials">${reaction.user.initials}</div>`;
-
+    const div = document.createElement("div");
+    div.className = "reaction-item";
     const emoji = getReactionEmoji(reaction.type);
+    const avatarHTML =
+        reaction.user.has_photo && reaction.user.avatar
+            ? `<div class="reaction-avatar-box">
+                    <img src="${reaction.user.avatar}" class="user-avatar" alt="${reaction.user.name}"/>
+                    <div class="reaction-emoji">${emoji}</div>
+                </div>`
+            : `<div class="reaction-avatar-box">
+            <div class="user-initials">
+
+            ${reaction.user.initials}
+
+            </div>
+            <div class="reaction-emoji">${emoji}</div>
+           </div>`;
 
     div.innerHTML = `
         ${avatarHTML}
         <div class="user-info">
             <div class="user-name">${escapeHtml(reaction.user.name)}</div>
-            ${reaction.user.position ? `<div class="user-position">${escapeHtml(reaction.user.position)}</div>` : ''}
+            ${
+                reaction.user.position
+                    ? `<div class="user-position">${escapeHtml(
+                          reaction.user.position
+                      )}</div>`
+                    : ""
+            }
         </div>
-        <div class="reaction-emoji">${emoji}</div>
+
     `;
 
     return div;
@@ -382,71 +436,83 @@ export async function likeComment(commentId) {
     if (!commentId) return;
 
     const button = event.target;
-    const wasLiked = button.classList.contains('liked');
+    const wasLiked = button.classList.contains("liked");
 
     // Optimistic UI update
-    button.classList.toggle('liked');
-    button.textContent = button.classList.contains('liked') ? 'Liked' : 'Like';
+    button.classList.toggle("liked");
+    button.textContent = button.classList.contains("liked") ? "Liked" : "Like";
 
     try {
-        const response = await fetch('/feed/reactions', {
-            method: wasLiked ? 'DELETE' : 'POST',
+        const response = await fetch("/feed/reactions", {
+            method: wasLiked ? "DELETE" : "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]'
+                ).content,
             },
             body: JSON.stringify({
-                reactionable_type: 'App\\Models\\Feed\\PostComment',
+                reactionable_type: "App\\Models\\Feed\\PostComment",
                 reactionable_id: commentId,
-                reaction_type: 'like'
-            })
+                reaction_type: "like",
+            }),
         });
 
         const result = await response.json();
 
         if (!result.success) {
             // Revert on failure
-            button.classList.toggle('liked');
-            button.textContent = button.classList.contains('liked') ? 'Liked' : 'Like';
-            throw new Error(result.message || 'Failed to update reaction');
+            button.classList.toggle("liked");
+            button.textContent = button.classList.contains("liked")
+                ? "Liked"
+                : "Like";
+            throw new Error(result.message || "Failed to update reaction");
         }
     } catch (error) {
-        console.error('Error liking comment:', error);
-        showNotification('Failed to update reaction. Please try again.', 'error');
+        console.error("Error liking comment:", error);
+        showNotification(
+            "Failed to update reaction. Please try again.",
+            "error"
+        );
     }
 }
 
 function getReactionEmoji(type) {
     const emojiMap = {
-        'like': '👍',
-        'love': '❤️',
-        'haha': '😂',
-        'wow': '😮',
-        'sad': '😢',
-        'angry': '😠'
+        like: "👍",
+        love: "❤️",
+        haha: "😂",
+        wow: "😮",
+        sad: "😢",
+        angry: "😠",
     };
-    return emojiMap[type] || '👍';
+    return emojiMap[type] || "👍";
 }
 
 function capitalizeFirst(str) {
-    if (!str) return '';
+    if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function escapeHtml(text) {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
 }
 
-function showNotification(message, type = 'info') {
-    if ($('#notification-container').length === 0) {
-        $('body').append('<div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>');
+function showNotification(message, type = "info") {
+    if ($("#notification-container").length === 0) {
+        $("body").append(
+            '<div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>'
+        );
     }
 
-    const alertClass = type === 'success' ? 'alert-success' :
-                      type === 'error' ? 'alert-danger' :
-                      'alert-info';
+    const alertClass =
+        type === "success"
+            ? "alert-success"
+            : type === "error"
+            ? "alert-danger"
+            : "alert-info";
 
     const notification = $(`
         <div class="alert ${alertClass} alert-dismissible fade show" role="alert" style="min-width: 250px;">
@@ -455,9 +521,9 @@ function showNotification(message, type = 'info') {
         </div>
     `);
 
-    $('#notification-container').append(notification);
+    $("#notification-container").append(notification);
 
     setTimeout(() => {
-        notification.alert('close');
+        notification.alert("close");
     }, 3000);
 }

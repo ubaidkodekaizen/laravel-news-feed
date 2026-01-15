@@ -165,6 +165,19 @@ class FeedController extends Controller
             Log::warning('Error fetching suggested connections: ' . $e->getMessage());
         }
 
+        // Get active ads
+        $ads = \App\Models\Ad::where('status', 'active')
+            ->orderBy('featured', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit(5) // Limit to 5 ads for slider
+            ->get()
+            ->map(fn($ad) => (object) [
+                'id' => $ad->id,
+                'media' => getImageUrl($ad->media) ?? asset('assets/images/ad-placeholder.png'),
+                'url' => $ad->url,
+                'featured' => $ad->featured,
+            ]);
+
         return view('pages.news-feed', [
             'posts' => [],
             'profileViews' => $profileViews,
@@ -174,6 +187,7 @@ class FeedController extends Controller
             'recentIndustryExperts' => $recentIndustryExperts,
             'suggestedConnections' => $suggestedConnections,
             'authUserData' => $authUserData,
+            'ads' => $ads,
         ]);
     }
     /**

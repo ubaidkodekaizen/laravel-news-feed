@@ -482,7 +482,9 @@
             <h1 class="main_heading">
                 Products Offered by <span class="feedLpPri">Muslim<span class="feedLpSec">Lynk Members</span></span>
             </h1>
-            <p class="feedLpPara">MuslimLynk members offer a diverse range of products designed to support businesses at every stage. From e-commerce goods to specialized manufacturing outputs, the community delivers reliable, high-quality products that empower growth, efficiency, and scalability.</p>
+            <p class="feedLpPara">MuslimLynk members offer a diverse range of products designed to support businesses at
+                every stage. From e-commerce goods to specialized manufacturing outputs, the community delivers reliable,
+                high-quality products that empower growth, efficiency, and scalability.</p>
             {{-- <div class="service_search_area">
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
@@ -502,7 +504,8 @@
     <!-- Categories Section -->
     <section class="product-categories-section" style="padding: 40px 0;">
         <div class="container">
-            <h2 class="text-center mb-4" style="font-weight: bold; font-family: 'Inter', sans-serif; color: #B8C034; font-size: 24px;">
+            <h2 class="text-center mb-4"
+                style="font-weight: bold; font-family: 'Inter', sans-serif; color: #B8C034; font-size: 24px;">
                 Explore Products by Category
             </h2>
             <div id="categoriesContainer">
@@ -573,12 +576,15 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 12px;
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
         }
 
         #categoriesContainer .category-card {
             flex: 0 0 auto;
-            min-width: 140px;
-            max-width: 180px;
+            max-width: max-content;
+            width: 100%;
         }
     </style>
 
@@ -602,7 +608,8 @@
 
                     card.addEventListener('click', function() {
                         // Remove active class from all cards
-                        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+                        document.querySelectorAll('.category-card').forEach(c => c.classList.remove(
+                            'active'));
                         // Add active class to clicked card
                         card.classList.add('active');
                         // Load products for this category
@@ -616,7 +623,8 @@
             function loadProductsByCategory(category) {
                 const productsContainer = document.getElementById('productsContainer');
                 productsContainer.classList.add('loading');
-                productsContainer.innerHTML = '<div class="col-12"><div class="loading-spinner"><p>Loading products...</p></div></div>';
+                productsContainer.innerHTML =
+                    '<div class="col-12"><div class="loading-spinner"><p>Loading products...</p></div></div>';
 
                 // Use jQuery AJAX to match existing code style
                 jQuery.ajax({
@@ -632,12 +640,14 @@
                             // Re-attach event listeners for product modals
                             attachEventListeners();
                         } else {
-                            productsContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>No products found in this category.</p></div></div>';
+                            productsContainer.innerHTML =
+                                '<div class="col-12"><div class="text-center"><p>No products found in this category.</p></div></div>';
                         }
                     },
                     error: function() {
                         productsContainer.classList.remove('loading');
-                        productsContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>Error loading products. Please try again.</p></div></div>';
+                        productsContainer.innerHTML =
+                            '<div class="col-12"><div class="text-center"><p>Error loading products. Please try again.</p></div></div>';
                     }
                 });
             }
@@ -746,7 +756,7 @@
                 // Get selected category
                 const activeCategory = document.querySelector('.category-card.active');
                 const category = activeCategory ? activeCategory.dataset.category : '';
-                
+
                 jQuery.ajax({
                     url: "{{ route('products') }}",
                     method: "GET",

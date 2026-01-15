@@ -5,63 +5,108 @@
     background: #ffffff;
 }
 #feedAdCard {
-    background: #101a33;
     position: relative;
-    padding: 28px 36px;
+    padding: 0;
 }
-#feedAdCard .card-img {
-    padding: 0 0 126px 0;
-}
-.feedAdWatermarkImg {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-#feedAdCard h4 {
-    font-family: "Inter", sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 1.3em;
-    color: #ffffff;
-}
-#feedAdCard h4 span {
-    color: #f3681f;
-}
-#feedAdCard p {
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 1.3em;
-    color: #ffffff;
-}
-#feedAdCard .feedAdCardCta {
-    font-family: "Inter", sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 100%;
-    background: #f3681f;
-    color: #101a33;
-    padding: 10px 20px;
+
+#feedAdCard .swiper {
     width: 100%;
-    text-align: center;
+}
+
+#feedAdCard .swiper-slide {
+    width: 100% !important;
+}
+
+#feedAdCard .swiper-slide a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.ad-slide-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.ad-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
     border-radius: 8px;
-    border: none;
-    text-decoration: none;
 }
-#feedAdCard .feedAdCardLinkedin {
-    padding: 8.31px;
-    background: #0a66c2;
-    border-radius: 10px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    text-decoration: none;
-    font-size: 24px;
-    margin: 0 0 15px 0;
+
+.featured-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10;
 }
+
+.featured-badge i {
+    font-size: 10px;
+}
+
+/* Swiper navigation buttons */
+#feedAdCard .swiper-button-next,
+#feedAdCard .swiper-button-prev {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    color: white;
+}
+
+#feedAdCard .swiper-button-next::after,
+#feedAdCard .swiper-button-prev::after {
+    font-size: 14px;
+}
+
+#feedAdCard .swiper-button-next {
+    right: 8px;
+}
+
+#feedAdCard .swiper-button-prev {
+    left: 8px;
+}
+
+/* Swiper pagination */
+#feedAdCard .swiper-pagination {
+    bottom: 8px;
+}
+
+#feedAdCard .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+}
+
+#feedAdCard .swiper-pagination-bullet-active {
+    background: white;
+}
+
+/* Hover effects */
+#feedAdCard .swiper-button-next,
+#feedAdCard .swiper-button-prev {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#feedAdCard:hover .swiper-button-next,
+#feedAdCard:hover .swiper-button-prev {
+    opacity: 1;
+}
+
 .profile_cover_bg {
     height: 58px;
     background: #b8c034;
@@ -175,4 +220,22 @@
     height: 1.33px;
     width: 100%;
     margin: 19.67px 0 21.33px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #feedAdCard .swiper {
+        /* height: 200px; */
+    }
+
+    #feedAdCard .swiper-button-next,
+    #feedAdCard .swiper-button-prev {
+        width: 28px;
+        height: 28px;
+    }
+
+    #feedAdCard .swiper-button-next::after,
+    #feedAdCard .swiper-button-prev::after {
+        font-size: 12px;
+    }
 }
