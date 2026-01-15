@@ -578,7 +578,7 @@
                 }
 
                 platformsChart = new Chart(ctx, {
-                    type: 'pie',
+                    type: 'doughnut',
                     data: {
                         labels: data.labels,
                         datasets: [{
@@ -698,7 +698,7 @@
                 });
 
                 accountCreationChart = new Chart(ctx, {
-                    type: 'doughnut',
+                    type: 'pie',
                     data: {
                         labels: labels,
                         datasets: [{
