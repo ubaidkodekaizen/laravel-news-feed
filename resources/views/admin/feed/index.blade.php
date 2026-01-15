@@ -288,6 +288,10 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
+    table.dataTable td {
+        vertical-align: middle !important;
+    }
 </style>
 @section('content')
     <main class="main-content">
@@ -342,6 +346,7 @@
                                         <th>#</th>
                                         <th>User</th>
                                         <th>Content</th>
+                                        <th>Media</th>
                                         <th>Likes</th>
                                         <th>Comments</th>
                                         <th>Shares</th>
@@ -365,6 +370,35 @@
                                                 <div class="post-content-preview" title="{{ strip_tags($post->content ?? '') }}">
                                                     {{ Str::limit(strip_tags($post->content ?? ''), 50) }}
                                                 </div>
+                                            </td>
+                                            <td>
+                                                @if($post->media && $post->media->count() > 0)
+                                                    @php
+                                                        $imagesCount = $post->media->where('media_type', 'image')->count();
+                                                        $videosCount = $post->media->where('media_type', 'video')->count();
+                                                        $firstMedia = $post->media->first();
+                                                        $firstMediaUrl = function_exists('getImageUrl') && $firstMedia->media_url ? getImageUrl($firstMedia->media_url) : ($firstMedia->media_url ?? '');
+                                                    @endphp
+                                                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                                        @if($imagesCount > 0 && $firstMedia->media_type === 'image' && $firstMediaUrl)
+                                                            <img src="{{ $firstMediaUrl }}" alt="Media" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #E9EBF0; cursor: pointer;" onclick="window.open('{{ $firstMediaUrl }}', '_blank')">
+                                                        @elseif($videosCount > 0 && $firstMedia->media_type === 'video')
+                                                            <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #E9EBF0;">
+                                                                <i class="fa-solid fa-video" style="color: #273572; font-size: 18px;"></i>
+                                                            </div>
+                                                        @endif
+                                                        <div style="font-size: 11px; color: #666; line-height: 1.4;">
+                                                            @if($imagesCount > 0)
+                                                                <div><i class="fa-solid fa-image" style="color: #28a745; margin-right: 4px;"></i>{{ $imagesCount }}</div>
+                                                            @endif
+                                                            @if($videosCount > 0)
+                                                                <div><i class="fa-solid fa-video" style="color: #dc3545; margin-right: 4px;"></i>{{ $videosCount }}</div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    <span style="color: #999; font-size: 12px;">—</span>
+                                                @endif
                                             </td>
                                             <td>{{ $post->reactions_count ?? 0 }}</td>
                                             <td>{{ $post->comments_count ?? 0 }}</td>
@@ -401,7 +435,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="8" class="text-center">No posts found</td>
+                                            <td colspan="9" class="text-center">No posts found</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
