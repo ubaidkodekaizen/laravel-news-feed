@@ -3,13 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Models\Business\Subscription;
-use App\Models\SchedulerLog;
 use App\Models\User;
+use App\Models\SchedulerLog;
+use App\Mail\SubscriptionRenewalReminder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\SubscriptionRenewalReminder;
+use Illuminate\Support\Facades\Log;
 
 class SendRenewalReminders extends Command
 {
@@ -25,7 +25,113 @@ class SendRenewalReminders extends Command
      *
      * @var string
      */
-    protected $description = 'Send email reminders to users whose subscriptions are renewing within 3 days';
+    protected $description = 'Send renewal reminder emails to users with subscriptions expiring soon';
+
+    /**
+     * Get list of excluded email addresses from environment
+     * These emails will not receive renewal reminders
+     */
+    private function getExcludedEmails(): array
+    {
+        $excluded = env('SCHEDULER_EXCLUDED_EMAILS', '');
+        if (empty($excluded)) {
+            return [];
+        }
+        
+        // Split by comma and trim each email
+        return array_map('trim', explode(',', $excluded));
+    }
+
+    /**
+     * Check if email should be excluded
+     */
+    private function shouldSkipEmail($userEmail, array $excludedEmails): bool
+    {
+        if (empty($excludedEmails) || !$userEmail) {
+            return false;
+        }
+        
+        // Case-insensitive comparison
+        $userEmailLower = strtolower(trim($userEmail));
+        $excludedEmailsLower = array_map('strtolower', $excludedEmails);
+        
+        return in_array($userEmailLower, $excludedEmailsLower);
+    }
+
+    /**
+     * Calculate expiration date for a subscription
+     */
+    private function getExpirationDate(Subscription $subscription, ?User $user = null): ?Carbon
+    {
+        // First, check if expires_at or renewal_date exists (works for both paid and free)
+        if ($subscription->expires_at) {
+            return Carbon::parse($subscription->expires_at);
+        }
+        if ($subscription->renewal_date) {
+            return Carbon::parse($subscription->renewal_date);
+        }
+        
+        // For paid subscriptions (Annual/Monthly), if no dates exist, return null
+        if ($subscription->subscription_type !== 'Free' && $subscription->subscription_type !== null) {
+            return null;
+        }
+        
+        // For free subscriptions, calculate from start_date + duration
+        if ($subscription->subscription_type === 'Free' && $subscription->start_date) {
+            $startDate = Carbon::parse($subscription->start_date);
+            
+            // Get duration from user, default to 90 days if null
+            $duration = $user && $user->duration ? $user->duration : 90;
+            
+            // Convert duration to integer (handle string "30", "60", "90")
+            $durationDays = (int) $duration;
+            
+            // Ensure minimum of 1 day
+            if ($durationDays < 1) {
+                $durationDays = 90;
+            }
+            
+            return $startDate->copy()->addDays($durationDays);
+        }
+        
+        return null;
+    }
+
+    /**
+     * Get reminder days before expiration based on subscription type
+     */
+    private function getReminderDays(string $subscriptionType): array
+    {
+        $subscriptionTypeLower = strtolower($subscriptionType ?? '');
+        
+        if (strpos($subscriptionTypeLower, 'annual') !== false || strpos($subscriptionTypeLower, 'yearly') !== false || strpos($subscriptionTypeLower, 'year') !== false) {
+            return [30]; // Annual: 30 days before
+        } elseif (strpos($subscriptionTypeLower, 'monthly') !== false || strpos($subscriptionTypeLower, 'month') !== false) {
+            return [5]; // Monthly: 5 days before
+        } elseif ($subscriptionType === 'Free') {
+            // For free subscriptions, we'll determine based on duration
+            return [3, 7, 10]; // Will be filtered based on duration
+        }
+        
+        return [];
+    }
+
+    /**
+     * Get reminder days for free subscription based on duration
+     */
+    private function getFreeReminderDays(?string $duration): array
+    {
+        $durationDays = (int) ($duration ?? 90);
+        
+        if ($durationDays === 30) {
+            return [3]; // 30-day free: 3 days before
+        } elseif ($durationDays === 60) {
+            return [7]; // 60-day free: 7 days before
+        } else {
+            // 90 days or null (defaults to 90)
+            return [10]; // 90-day free: 10 days before
+        }
+    }
 
     /**
      * Execute the console command.
@@ -35,98 +141,152 @@ class SendRenewalReminders extends Command
         $startTime = microtime(true);
         $ranAt = now();
         
-        $this->info('Starting subscription renewal reminder process...');
+        $this->info('Starting renewal reminder email process...');
         $this->newLine();
-
-        $totalProcessed = 0;
-        $totalSent = 0;
-        $totalSkipped = 0;
-        $totalErrors = 0;
+        
+        $excludedEmails = $this->getExcludedEmails();
+        if (!empty($excludedEmails)) {
+            $this->info('Excluded emails from .env (will not receive reminders): ' . implode(', ', $excludedEmails));
+            $this->newLine();
+        }
+        
+        $today = Carbon::today();
+        $sentCount = 0;
+        $skippedCount = 0;
+        $errorCount = 0;
+        $status = 'success';
         $errorMessage = null;
         $errorTrace = null;
-        $status = 'success';
-        $usersSent = [];
-
+        $sentEmails = [];
+        $failedEmails = [];
+        
         try {
-            // Calculate the date 3 days from now
-            $threeDaysFromNow = Carbon::now()->addDays(3)->format('Y-m-d');
-            $today = Carbon::now()->format('Y-m-d');
-
-            // Find all active subscriptions that are renewing within 3 days
+            // Get all active subscriptions where auto_renewing is false or null, OR free subscriptions (which may not have auto_renewing set)
             $subscriptions = Subscription::with('user')
                 ->where('status', 'active')
-                ->whereNotNull('renewal_date')
-                ->whereDate('renewal_date', '>=', $today)
-                ->whereDate('renewal_date', '<=', $threeDaysFromNow)
-                ->where(function($query) {
-                    // Only send if reminder hasn't been sent in the last 24 hours
-                    $query->whereNull('renewal_reminder_sent_at')
-                          ->orWhere('renewal_reminder_sent_at', '<', Carbon::now()->subDay());
+                ->where(function ($query) {
+                    $query->where(function ($q) {
+                        // Paid subscriptions: must have auto_renewing = false or null
+                        $q->where('auto_renewing', false)
+                          ->orWhereNull('auto_renewing');
+                    })
+                    ->orWhere('subscription_type', 'Free'); // Include free subscriptions regardless of auto_renewing
                 })
+                ->whereNotNull('user_id')
                 ->get();
-
-            if ($subscriptions->isEmpty()) {
-                $this->info('No subscriptions found that need renewal reminders.');
-                $status = 'success';
-            } else {
-                $this->info("Found {$subscriptions->count()} subscription(s) that need renewal reminders.");
-
-                foreach ($subscriptions as $subscription) {
-                    $totalProcessed++;
-                    
-                    try {
-                        // Skip if user doesn't exist or email is invalid
-                        if (!$subscription->user || !$subscription->user->email) {
-                            $this->warn("Subscription ID {$subscription->id} - User or email not found, skipping");
-                            $totalSkipped++;
-                            continue;
-                        }
-
-                        // Skip if subscription is cancelled (shouldn't happen but safety check)
-                        if ($subscription->status !== 'active') {
-                            $this->warn("Subscription ID {$subscription->id} - Not active, skipping");
-                            $totalSkipped++;
-                            continue;
-                        }
-
-                        // Get current pricing from subscription (not old pricing)
-                        $currentAmount = $subscription->subscription_amount ?? 0;
+            
+            $this->info("Found {$subscriptions->count()} active subscription(s) without auto-renewal.");
+            $this->newLine();
+            
+            foreach ($subscriptions as $subscription) {
+                try {
+                $user = $subscription->user;
+                
+                // Skip if user doesn't exist or is deleted
+                if (!$user || $user->trashed()) {
+                    $skippedCount++;
+                    continue;
+                }
+                
+                // Skip excluded emails
+                if ($this->shouldSkipEmail($user->email, $excludedEmails)) {
+                    $skippedCount++;
+                    continue;
+                }
+                
+                // Calculate expiration date
+                $expirationDate = $this->getExpirationDate($subscription, $user);
+                
+                if (!$expirationDate) {
+                    $skippedCount++;
+                    $this->line("Skipping subscription ID {$subscription->id} - Could not determine expiration date");
+                    continue;
+                }
+                
+                // Get reminder days based on subscription type
+                $reminderDays = $this->getReminderDays($subscription->subscription_type ?? '');
+                
+                // For free subscriptions, adjust based on duration
+                if ($subscription->subscription_type === 'Free') {
+                    $reminderDays = $this->getFreeReminderDays($user->duration);
+                }
+                
+                if (empty($reminderDays)) {
+                    $skippedCount++;
+                    continue;
+                }
+                
+                // Skip if expiration date is in the past
+                if ($expirationDate->isPast()) {
+                    $skippedCount++;
+                    continue;
+                }
+                
+                // Check if we should send reminder today
+                $shouldSend = false;
+                $daysUntilExpiration = $today->diffInDays($expirationDate, false);
+                
+                // Only proceed if expiration is in the future
+                if ($daysUntilExpiration < 0) {
+                    $skippedCount++;
+                    continue;
+                }
+                
+                foreach ($reminderDays as $daysBefore) {
+                    if ($daysUntilExpiration === $daysBefore) {
+                        // Check if reminder was already sent for this expiration period
+                        // We'll track by checking if renewal_reminder_sent_at is within the last 2 days
+                        // This prevents duplicate sends if the command runs multiple times
+                        $lastSent = $subscription->renewal_reminder_sent_at 
+                            ? Carbon::parse($subscription->renewal_reminder_sent_at) 
+                            : null;
                         
-                        // Send the reminder email
-                        Mail::to($subscription->user->email)
-                            ->send(new SubscriptionRenewalReminder($subscription->user, $subscription));
-
-                        // Update subscription to mark reminder as sent
-                        $subscription->renewal_reminder_sent_at = now();
-                        $subscription->save();
-
-                        $totalSent++;
-                        $usersSent[] = [
-                            'user_id' => $subscription->user->id,
-                            'email' => $subscription->user->email,
-                            'name' => trim(($subscription->user->first_name ?? '') . ' ' . ($subscription->user->last_name ?? '')) ?: 'N/A',
-                            'subscription_id' => $subscription->id,
-                            'platform' => $subscription->platform ?? 'Unknown',
-                            'renewal_date' => $subscription->renewal_date,
-                            'amount' => $currentAmount,
-                        ];
-
-                        $this->info("Reminder sent to {$subscription->user->email} for subscription ID {$subscription->id} (Renewal: {$subscription->renewal_date})");
-                    } catch (\Exception $e) {
-                        $this->error("Error sending reminder for subscription ID {$subscription->id}: " . $e->getMessage());
-                        Log::error("Renewal reminder error for subscription {$subscription->id}: " . $e->getMessage());
-                        $totalErrors++;
+                        // Only send if not sent in the last 2 days (to avoid duplicates)
+                        if (!$lastSent || $lastSent->lt($today->copy()->subDays(2))) {
+                            $shouldSend = true;
+                            break;
+                        }
                     }
                 }
+                
+                if (!$shouldSend) {
+                    continue;
+                }
+                
+                // Send the email
+                try {
+                    Mail::to($user->email)->send(new SubscriptionRenewalReminder($user, $subscription));
+                    
+                    // Update the reminder sent timestamp
+                    $subscription->renewal_reminder_sent_at = now();
+                    $subscription->save();
+                    
+                    $sentCount++;
+                    $sentEmails[] = $user->email;
+                    $this->info("✓ Sent renewal reminder to {$user->email} (Subscription ID: {$subscription->id}, Expires: {$expirationDate->format('Y-m-d')}, Days until expiration: {$daysUntilExpiration})");
+                } catch (\Exception $e) {
+                    $errorCount++;
+                    $failedEmails[$user->email] = $e->getMessage();
+                    $this->error("✗ Failed to send email to {$user->email} (Subscription ID: {$subscription->id}): " . $e->getMessage());
+                    Log::error('Renewal reminder email failed', [
+                        'user_id' => $user->id,
+                        'subscription_id' => $subscription->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+                
+            } catch (\Exception $e) {
+                $errorCount++;
+                if (isset($user) && $user && $user->email) {
+                    $failedEmails[$user->email] = $e->getMessage();
+                }
+                $this->error("✗ Error processing subscription ID {$subscription->id}: " . $e->getMessage());
+                Log::error('Renewal reminder processing error', [
+                    'subscription_id' => $subscription->id,
+                    'error' => $e->getMessage(),
+                ]);
+                }
             }
-
-            // Determine status
-            if ($totalErrors > 0 && $totalSent > 0) {
-                $status = 'partial';
-            } elseif ($totalErrors > 0) {
-                $status = 'failed';
-            }
-
         } catch (\Exception $e) {
             $status = 'failed';
             $errorMessage = $e->getMessage();
@@ -136,55 +296,89 @@ class SendRenewalReminders extends Command
                 'trace' => $errorTrace,
             ]);
         }
-
-        $executionTime = (int) ((microtime(true) - $startTime) * 1000);
-
+        
+        $executionTime = (int) ((microtime(true) - $startTime) * 1000); // Convert to milliseconds
+        
         $this->newLine();
-        $this->info("=== Renewal Reminder Process Complete ===");
-        $this->info("Total Processed: {$totalProcessed}");
-        $this->info("Reminders Sent: {$totalSent}");
-        $this->info("Skipped: {$totalSkipped}");
-        $this->info("Errors: {$totalErrors}");
+        $this->info("=== Summary ===");
+        $this->info("Emails sent: {$sentCount}");
+        $this->info("Skipped: {$skippedCount}");
+        $this->info("Errors: {$errorCount}");
         $this->info("Execution Time: {$executionTime}ms");
+        
+        // Determine status
+        if ($errorCount > 0 && $sentCount > 0) {
+            $status = 'partial';
+        } elseif ($errorCount > 0) {
+            $status = 'failed';
+        }
+        
+        // Build detailed result text
+        $resultDetail = $this->buildResultDetail($sentCount, $skippedCount, $errorCount, $sentEmails, $failedEmails);
+        
+        // Build structured result data (JSON)
+        $resultData = [
+            'emails_sent' => $sentCount,
+            'emails_skipped' => $skippedCount,
+            'emails_failed' => $errorCount,
+            'sent_emails' => $sentEmails,
+            'failed_emails' => $failedEmails,
+        ];
+        
+        // Log to database
+        try {
+            SchedulerLog::create([
+                'scheduler' => 'subscriptions:send-renewal-reminders',
+                'command' => 'subscriptions:send-renewal-reminders',
+                'status' => $status,
+                'result_detail' => $resultDetail,
+                'result_data' => $resultData,
+                'records_processed' => $sentCount + $skippedCount + $errorCount,
+                'records_updated' => $sentCount,
+                'records_failed' => $errorCount,
+                'error_message' => $errorMessage,
+                'error_trace' => $errorTrace,
+                'execution_time_ms' => $executionTime,
+                'ran_at' => $ranAt,
+            ]);
+        } catch (\Exception $e) {
+            $this->error('Failed to log to database: ' . $e->getMessage());
+            Log::error('Failed to log renewal reminders to scheduler_logs', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+        
+        return $status === 'failed' ? 1 : 0;
+    }
 
-        // Build result detail
-        $resultDetail = "=== Renewal Reminder Results ===\n";
-        $resultDetail .= "Total Processed: {$totalProcessed}\n";
-        $resultDetail .= "Reminders Sent: {$totalSent}\n";
-        $resultDetail .= "Skipped: {$totalSkipped}\n";
-        $resultDetail .= "Errors: {$totalErrors}\n";
-        if (!empty($usersSent)) {
-            $resultDetail .= "\n=== Users Notified ===\n";
-            foreach ($usersSent as $user) {
-                $resultDetail .= "User: {$user['name']} ({$user['email']}) - Platform: {$user['platform']} - Renewal: {$user['renewal_date']} - Amount: \${$user['amount']}\n";
+    /**
+     * Build detailed result string for logging
+     */
+    private function buildResultDetail(int $sentCount, int $skippedCount, int $errorCount, array $sentEmails, array $failedEmails): string
+    {
+        $details = [];
+        
+        $details[] = "=== Renewal Reminder Email Results ===";
+        $details[] = "Emails Sent: {$sentCount}";
+        $details[] = "Emails Skipped: {$skippedCount}";
+        $details[] = "Emails Failed: {$errorCount}";
+        
+        if (!empty($sentEmails)) {
+            $details[] = "";
+            $details[] = "Successfully Sent Emails:";
+            foreach ($sentEmails as $email) {
+                $details[] = "  - {$email}";
             }
         }
-
-        // Build structured result data
-        $resultData = [
-            'total_processed' => $totalProcessed,
-            'total_sent' => $totalSent,
-            'total_skipped' => $totalSkipped,
-            'total_errors' => $totalErrors,
-            'users_sent' => $usersSent,
-        ];
-
-        // Log to database
-        SchedulerLog::create([
-            'scheduler' => 'subscriptions:send-renewal-reminders',
-            'command' => 'subscriptions:send-renewal-reminders',
-            'status' => $status,
-            'result_detail' => $resultDetail,
-            'result_data' => $resultData,
-            'records_processed' => $totalProcessed,
-            'records_updated' => $totalSent,
-            'records_failed' => $totalErrors,
-            'error_message' => $errorMessage,
-            'error_trace' => $errorTrace,
-            'execution_time_ms' => $executionTime,
-            'ran_at' => $ranAt,
-        ]);
-
-        return $status === 'failed' ? 1 : 0;
+        
+        if (!empty($failedEmails)) {
+            $details[] = "";
+            $details[] = "Failed Emails:";
+            foreach ($failedEmails as $email => $error) {
+                $details[] = "  - {$email}: {$error}";
+            }
+        }
+        
+        return implode("\n", $details);
     }
 }

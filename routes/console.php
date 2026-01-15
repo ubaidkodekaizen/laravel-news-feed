@@ -11,11 +11,11 @@ Artisan::command('inspire', function () {
 // Schedule unified subscription sync for all platforms (Web/Authorize.Net, Google Play, Apple)
 Schedule::command('subscriptions:sync-all')
     ->daily()
-    ->at('02:00')
-    ->timezone('America/New_York'); // Adjust timezone as needed
+    ->at('05:00')
+    ->timezone('America/Los_Angeles'); // Irvine, California timezone
 
-// Renewal reminder scheduler - Currently disabled
-// Schedule::command('subscriptions:send-renewal-reminders')
-//     ->daily()
-//     ->at('02:03')
-//     ->timezone('America/New_York');
+// Schedule renewal reminder emails (runs 5 minutes after subscription sync)
+Schedule::command('subscriptions:send-renewal-reminders')
+    ->daily()
+    ->at('05:05')
+    ->timezone('America/Los_Angeles'); // Irvine, California timezone

@@ -117,77 +117,50 @@
                                                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                     <tr>
                                                                                         <td style="font-size:16px; line-height:24px; color:#282828; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 20px;">
-                                                                                            This is a friendly reminder that your <strong>{{ $subscriptionType }}</strong> subscription will automatically renew in 3 days.
+                                                                                            Salaam - You've been part of MuslimLynk and your membership is coming up for renewal.
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td style="font-size:16px; line-height:24px; color:#282828; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 20px;">
-                                                                                            <strong>Renewal Details:</strong>
+                                                                                            In a world that's loud, crowded and often impersonal, we built MuslimLynk to feel different. A place where connections are real, conversations lead somewhere and people show up with intention.
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="font-size:16px; line-height:24px; color:#282828; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 20px;">
+                                                                                            If this space has helped you feel more connected, more supported, or simply more aligned with how you want to grow; we'd love to keep going with you.
                                                                                         </td>
                                                                                     </tr>
                                                                                 </table>
                                                                                 <!-- END Message -->
 
-                                                                                <!-- Details Box -->
+                                                                                <!-- Platform-Specific Instructions -->
                                                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
                                                                                     <tr>
                                                                                         <td>
                                                                                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                                 <tr>
-                                                                                                    <td style="font-size:14px; line-height:22px; color:#666; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 8px;">
-                                                                                                        <strong style="color:#282828;">Renewal Date:</strong> {{ $renewalDate }}
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td style="font-size:14px; line-height:22px; color:#666; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 8px;">
-                                                                                                        <strong style="color:#282828;">Amount:</strong> ${{ $amount }}
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td style="font-size:14px; line-height:22px; color:#666; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 8px;">
-                                                                                                        <strong style="color:#282828;">Platform:</strong> {{ $platform }}
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
                                                                                                     <td style="font-size:14px; line-height:22px; color:#666; font-family:'PT Sans', Arial, sans-serif;">
-                                                                                                        <strong style="color:#282828;">Subscription Type:</strong> {{ $subscriptionType }}
+                                                                                                        <strong style="color:#282828; display:block; margin-bottom:8px;">To continue your access:</strong>
+                                                                                                        <span style="color:#282828;">{{ $renewalInstructions }}</span>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </table>
                                                                                         </td>
                                                                                     </tr>
                                                                                 </table>
-                                                                                <!-- END Details Box -->
-
-                                                                                <!-- Action Button -->
-                                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                                                    <tr>
-                                                                                        <td align="center" style="padding-bottom: 20px;">
-                                                                                            <table border="0" cellspacing="0" cellpadding="0" style="min-width:200px;">
-                                                                                                <tr>
-                                                                                                    <td class="btn-primary" style="background:#273572; border-radius:25px;">
-                                                                                                        <a href="{{ $manageUrl }}" style="padding: 15px 35px; display: block; text-decoration: none; color: #ffffff; font-size:16px; font-weight:bold; text-transform:uppercase;">
-                                                                                                            Manage Subscription
-                                                                                                        </a>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </table>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </table>
-                                                                                <!-- END Action Button -->
+                                                                                <!-- END Platform-Specific Instructions -->
 
                                                                                 <!-- Footer Message -->
                                                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                     <tr>
-                                                                                        <td style="font-size:14px; line-height:22px; color:#666; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 30px; text-align:center;">
-                                                                                            If you wish to cancel your subscription, please do so before {{ $renewalDate }} to avoid being charged.
+                                                                                        <td style="font-size:16px; line-height:24px; color:#282828; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 20px;">
+                                                                                            And if this season of life is pulling you elsewhere, that's okay too. You can step back anytime and you'll always be welcome here when you're ready.
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td style="font-size:14px; line-height:22px; color:#282828; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 30px;">
-                                                                                            Thank you for being part of our community!<br>
-                                                                                            <strong>MuslimLynk Team</strong>
+                                                                                            With appreciation,<br>
+                                                                                            <strong>The MuslimLynk Team</strong>
                                                                                         </td>
                                                                                     </tr>
                                                                                 </table>
