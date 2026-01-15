@@ -110,9 +110,14 @@
     .sidebar-menu li a:hover svg,
     .sidebar-menu li a.active svg,
     .sidebar-menu li a:hover svg path,
-    .sidebar-menu li a.active svg path {
-        fill: #fff;
-        color: #fff;
+    .sidebar-menu li a.active svg path,
+    .sidebar-menu li a:hover svg circle,
+    .sidebar-menu li a.active svg circle,
+    .sidebar-menu li a:hover svg *,
+    .sidebar-menu li a.active svg * {
+        fill: #fff !important;
+        stroke: #fff !important;
+        color: #fff !important;
     }
 
 
@@ -456,9 +461,8 @@
                         class="{{ request()->routeIs('admin.scheduler-logs*') ? 'active' : '' }}">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <title>Scheduler</title>
-                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 13H11V7H13V13ZM13 17H11V15H13V17Z" fill="#333"/>
                             <circle cx="12" cy="12" r="10" stroke="#333" stroke-width="2" fill="none"/>
-                            <path d="M12 6V12L16 14" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M12 6V12L16 14" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         <span class="menu-text">Scheduler</span>
                     </a>
