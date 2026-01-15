@@ -2,6 +2,7 @@
 @section('content')
 @section('styles')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/components/news-feed.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/profile-card.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/post-create.css') }}">
@@ -14,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/components/post-actions.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/share-repost.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/stats-layout.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('assets/css/components/lightbox.css') }}">
 @endsection
 
 <section class="newFeedSec">
@@ -92,6 +93,8 @@
 <script src="{{ asset('assets/js/components/emoji-picker.js') }}" type="module"></script>
 <script src="{{ asset('assets/js/components/image-upload.js') }}"></script>
 <script src="{{ asset('assets/js/components/cropper-editor.js') }}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <!-- Main feed functionality -->
 <script type="module">
@@ -179,6 +182,38 @@
 
         // Initialize emoji pickers for comment inputs
         initializeCommentEmojiPickers();
+        const swiperEl = document.querySelector('#feedAdCard .swiper');
+        const wrapper = swiperEl.querySelector('.swiper-wrapper');
+        const slides = wrapper.querySelectorAll('.swiper-slide');
+
+        if (slides.length === 1) {
+            for (let i = 0; i < 3; i++) {
+                const clone = slides[0].cloneNode(true);
+                wrapper.appendChild(clone);
+            }
+        }
+
+        const adSwiper = new Swiper('#feedAdCard .swiper', {
+            slidesPerView: 1,
+            loopedSlides: 1,
+            spaceBetween: 0,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+            speed: 800,
+            effect: 'fade',
+            pagination: {
+                el: '#feedAdCard .swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '#feedAdCard .swiper-button-next',
+                prevEl: '#feedAdCard .swiper-button-prev',
+            },
+        });
     });
 
 

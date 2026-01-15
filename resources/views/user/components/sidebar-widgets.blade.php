@@ -47,49 +47,7 @@
         </div>
     @endif
 
-    <!-- Recent Industry -->
 
-    @if (isset($recentIndustryExperts) && $recentIndustryExperts->isNotEmpty())
-        <div class="sidebar-widget industry">
-            <div class="widget-header">
-                Industry Experts
-                {{-- <a href="#" class="see-all-btn">View All</a> --}}
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="sidebar-widget-inner">
-                @foreach ($recentIndustryExperts as $user)
-                    <div class="feed-item" data-user-id="{{ $user->id }}">
-                        <div class="feed-icon">
-                            @if (!empty($user->user_has_photo) && !empty($user->photo))
-                                <img src="{{ getImageUrl($user->photo) }}"
-                                    alt="{{ $user->first_name }}'s Profile Picture" class="industryProfileImg">
-                            @else
-                                <div class="avatar-initials industryProfileImg">
-                                    {{ $user->user_initials }}
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="feed-info">
-                            <div class="feed-name">
-                                {{ $user->first_name }} {{ $user->last_name }}
-                            </div>
-                            <div class="feed-para">
-                                {{  Str::limit($user->company->company_position ?? 'N/A' , 20) }}
-                            </div>
-                        </div>
-
-                        <div class="feed-actions">
-                            <a href="{{route('user.profile', ['slug' => $user->slug] ) }}"><i class="fas fa-eye"></i></a>
-                            <a href="{{$user->linkedin_url ?? '' }}"><i class="fab fa-linkedin"></i></a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
 
 
     <!-- Suggested Connections -->

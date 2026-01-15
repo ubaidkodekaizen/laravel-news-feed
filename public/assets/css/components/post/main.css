@@ -9,7 +9,94 @@
     --text-color: #333333;
     --trans: all 0.4s ease 0s;
 }
-
+.alert {
+    margin: 20px 0 0 0;
+}
+.modal-header {
+    padding: 25px 26px 19px 26px;
+}
+.modal-title {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 100%;
+    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+.modal-header .btn-close {
+    position: relative;
+    z-index: 2;
+    background: #b8b9a53b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2d3b68;
+    opacity: 1;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.modal-header .btn-close:hover {
+    background: #dc3545;
+    color: #fff;
+    transition: 0.3s;
+}
+.modal-content {
+    border-radius: 28.54px;
+    overflow: hidden;
+}
+.modal-body {
+    padding: 19px 26px;
+}
+.modal-footer {
+    padding: 0;
+}
+.modal-footer button {
+    margin: 0;
+    padding: 0;
+    border-radius: 0px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 100%;
+    color: #333333;
+    min-height: 44px;
+    border: none;
+}
+.modal-footer button:hover {
+    background: #efefeb;
+    color: #333333;
+}
+.social-share-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.social-share-buttons button {
+    padding: 11px 0;
+    border-radius: 53px;
+    margin: 0 !important;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 100%;
+    color: #ffffff;
+    border: none;
+}
+.social-share-buttons button.social-share-facebook-btn {
+    background: #0866ff;
+}
+.social-share-buttons button.social-share-twitter-btn {
+    background: #5ac8ec;
+}
+.social-share-buttons button.social-share-linkedin-btn {
+    background: #0b66c3;
+}
+.social-share-buttons button.social-share-whatsapp-btn {
+    background: #07d94b;
+}
 /* container */
 .video-container {
     position: relative;
@@ -478,5 +565,14 @@
 
     .post-action {
         padding: 8px 4px;
+    }
+}
+@media (max-width: 500px) {
+    .action-btn .action-btn-text {
+        display: none;
+    }
+    .action-btn i,
+    .action-btn .reaction-icon {
+        font-size: 20px;
     }
 }

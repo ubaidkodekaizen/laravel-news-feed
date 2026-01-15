@@ -5,7 +5,9 @@
             <form id="postForm" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="postModalLabel">Create a Post</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- Post Content -->
@@ -45,7 +47,7 @@
                             <!-- Visibility Dropdown -->
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="visibilityDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-globe" id="visibilityIcon"></i>
+
                                     <span id="visibilityText">Public</span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="visibilityDropdown">
@@ -103,7 +105,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="submitPostBtn">
-                        <i class="fa-solid fa-paper-plane me-1"></i> Post
+                          Post
                     </button>
                 </div>
             </form>
