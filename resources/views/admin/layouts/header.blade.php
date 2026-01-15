@@ -460,7 +460,7 @@
                             <circle cx="12" cy="12" r="10" stroke="#333" stroke-width="2" fill="none"/>
                             <path d="M12 6V12L16 14" stroke="#333" stroke-width="2" stroke-linecap="round"/>
                         </svg>
-                        Scheduler
+                        <span class="menu-text">Scheduler</span>
                     </a>
                 </li>
                 @endif
@@ -472,10 +472,9 @@
                         class="{{ request()->routeIs('admin.managers*') ? 'active' : '' }}">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <title>User Access</title>
-                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#333"/>
-                            <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="#333"/>
+                            <path d="M17 8H16V6C16 3.79 14.21 2 12 2S8 3.79 8 6V8H7C5.9 8 5 8.9 5 10V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V10C19 8.9 18.1 8 17 8ZM10 6C10 4.9 10.9 4 12 4S14 4.9 14 6V8H10V6ZM17 20H7V10H17V20Z" fill="#333"/>
                         </svg>
-                        User Access
+                        <span class="menu-text">User Access</span>
                     </a>
                 </li>
                 @endif

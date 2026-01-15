@@ -314,6 +314,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1|2|3'])->group(function ()
 
     // Subscriptions Management
     Route::get('/admin/subscriptions', [AdminSubscriptionController::class, 'index'])->name('admin.subscriptions');
+    Route::get('/admin/subscriptions/{id}', [AdminSubscriptionController::class, 'show'])->name('admin.subscriptions.show');
 
     // Scheduler Logs Management (Admin only)
     Route::get('/admin/scheduler-logs', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'index'])->name('admin.scheduler-logs');

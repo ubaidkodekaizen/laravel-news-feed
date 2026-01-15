@@ -311,11 +311,122 @@
     table#usersTable tbody tr.subscription-free:hover td {
         background-color: #ffeaa7 !important;
     }
+
+    /* Make table rows clickable */
+    table#usersTable tbody tr {
+        cursor: pointer;
+    }
+
+    /* Modal Styles */
+    .subscription-modal .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .subscription-modal .modal-header {
+        background: #273572;
+        color: white;
+        border-radius: 15px 15px 0 0;
+        padding: 20px 30px;
+        border-bottom: none;
+    }
+
+    .subscription-modal .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+
+    .subscription-modal .modal-title {
+        font-family: 'Inter';
+        font-weight: 600;
+        font-size: 24px;
+    }
+
+    .subscription-modal .modal-body {
+        padding: 30px;
+        font-family: 'Inter';
+    }
+
+    .subscription-detail-row {
+        display: flex;
+        padding: 15px 0;
+        border-bottom: 1px solid #E9EBF0;
+    }
+
+    .subscription-detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .subscription-detail-label {
+        font-weight: 600;
+        color: #333;
+        width: 200px;
+        flex-shrink: 0;
+        font-size: 16px;
+    }
+
+    .subscription-detail-value {
+        color: #666;
+        flex: 1;
+        font-size: 16px;
+        word-break: break-word;
+    }
+
+    .subscription-detail-section {
+        margin-bottom: 30px;
+    }
+
+    .subscription-detail-section-title {
+        font-family: 'Inter';
+        font-weight: 600;
+        font-size: 20px;
+        color: #273572;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #E9EBF0;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-cancelled,
+    .status-inactive {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .status-free {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .loading-spinner {
+        text-align: center;
+        padding: 40px;
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3em;
+    }
 </style>
 @section('content')
     <main class="main-content">
         @php
-            $filter = $filter ?? 'all';
+            $statusFilter = $statusFilter ?? 'all';
+            $platformFilter = $platformFilter ?? 'all';
+            $typeFilter = $typeFilter ?? 'all';
             $counts = $counts ?? [];
             $user = Auth::user();
             $isAdmin = $user && $user->role_id == 1;
@@ -335,129 +446,69 @@
                             <h4 class="card-title">Subscriptions</h4>
                         </div>
                         <div class="card-body">
-                            <!-- Tabs Navigation - Only show if user has filter permission -->
+                            <!-- Filter Dropdowns - Only show if user has filter permission -->
                             @if($canFilter)
-                            <ul class="nav nav-tabs mb-4 pb-3" id="subscriptionTabs" role="tablist" style="border-bottom: 2px solid #E1E0E0;">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'all' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'all']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        ALL <span class="badge bg-secondary">{{ $counts['all'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'active' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'active']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        ACTIVE <span class="badge bg-secondary">{{ $counts['active'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'inactive' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'inactive']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        INACTIVE <span class="badge bg-secondary">{{ $counts['inactive'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'web' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'web']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        WEB <span class="badge bg-secondary">{{ $counts['web'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'google' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'google']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        GOOGLE <span class="badge bg-secondary">{{ $counts['google'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'apple' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'apple']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        APPLE <span class="badge bg-secondary">{{ $counts['apple'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'amcob' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'amcob']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        AMCOB <span class="badge bg-secondary">{{ $counts['amcob'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'monthly' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'monthly']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        MONTHLY <span class="badge bg-secondary">{{ $counts['monthly'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'annual' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'annual']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        ANNUAL <span class="badge bg-secondary">{{ $counts['annual'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link {{ $filter === 'free' ? 'active' : '' }}"
-                                       href="{{ route('admin.subscriptions', ['filter' => 'free']) }}"
-                                       style="color: #333; font-family: 'Inter'; font-weight: 500; padding: 12px 20px; border: none;">
-                                        FREE <span class="badge bg-secondary">{{ $counts['free'] ?? 0 }}</span>
-                                    </a>
-                                </li>
-                            </ul>
+                            <div class="row mb-4">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="statusFilter" class="form-label" style="font-family: 'Inter'; font-weight: 600; font-size: 16px; color: #333; margin-bottom: 8px;">Status</label>
+                                    <select class="form-select subscription-filter" id="statusFilter" name="status">
+                                        <option value="all" {{ $statusFilter === 'all' ? 'selected' : '' }}>ALL ({{ $counts['all'] ?? 0 }})</option>
+                                        <option value="active" {{ $statusFilter === 'active' ? 'selected' : '' }}>ACTIVE ({{ $counts['active'] ?? 0 }})</option>
+                                        <option value="inactive" {{ $statusFilter === 'inactive' ? 'selected' : '' }}>INACTIVE ({{ $counts['inactive'] ?? 0 }})</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="platformFilter" class="form-label" style="font-family: 'Inter'; font-weight: 600; font-size: 16px; color: #333; margin-bottom: 8px;">Platform</label>
+                                    <select class="form-select subscription-filter" id="platformFilter" name="platform">
+                                        <option value="all" {{ $platformFilter === 'all' ? 'selected' : '' }}>ALL</option>
+                                        <option value="web" {{ $platformFilter === 'web' ? 'selected' : '' }}>WEB ({{ $counts['web'] ?? 0 }})</option>
+                                        <option value="google" {{ $platformFilter === 'google' ? 'selected' : '' }}>GOOGLE ({{ $counts['google'] ?? 0 }})</option>
+                                        <option value="apple" {{ $platformFilter === 'apple' ? 'selected' : '' }}>APPLE ({{ $counts['apple'] ?? 0 }})</option>
+                                        <option value="amcob" {{ $platformFilter === 'amcob' ? 'selected' : '' }}>AMCOB ({{ $counts['amcob'] ?? 0 }})</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="typeFilter" class="form-label" style="font-family: 'Inter'; font-weight: 600; font-size: 16px; color: #333; margin-bottom: 8px;">Type</label>
+                                    <select class="form-select subscription-filter" id="typeFilter" name="type">
+                                        <option value="all" {{ $typeFilter === 'all' ? 'selected' : '' }}>ALL</option>
+                                        <option value="monthly" {{ $typeFilter === 'monthly' ? 'selected' : '' }}>MONTHLY ({{ $counts['monthly'] ?? 0 }})</option>
+                                        <option value="annual" {{ $typeFilter === 'annual' ? 'selected' : '' }}>ANNUAL ({{ $counts['annual'] ?? 0 }})</option>
+                                        <option value="free" {{ $typeFilter === 'free' ? 'selected' : '' }}>FREE ({{ $counts['free'] ?? 0 }})</option>
+                                    </select>
+                                </div>
+                            </div>
                             @else
                             {{-- Show message if user can view but not filter --}}
                             <div class="alert alert-info mb-4">
-                                <i class="fas fa-info-circle"></i> You have view-only access. Filter tabs are not available.
+                                <i class="fas fa-info-circle"></i> You have view-only access. Filters are not available.
                             </div>
                             @endif
                             <style>
-                            .nav-tabs .nav-link {
-                                border: none;
-                                border-bottom: 3px solid transparent;
-                                transition: all 0.3s ease;
-                                text-transform: uppercase;
-                            }
-                            .nav-tabs .nav-link:hover {
-                                border-bottom-color: #37488E;
-                                color: #37488E !important;
-                            }
-                            .nav-tabs .nav-link.active {
-                                border-bottom-color: #37488E;
-                                color: #ffffff !important;
-                                border-radius: 12px;
-                                background: #273572;
-                            }
-
-                            .nav-tabs .nav-link.active .badge {
-                                color: #ffffff !important;
-                            }
-                            .nav-tabs .badge {
-                                color: #000;
-                                margin: 0px 0px 0px 0px;
+                            .subscription-filter {
+                                font-family: 'Inter';
                                 font-size: 16px;
-                                font-family: "Inter";
-                                font-weight: 400;
-                                background: transparent !important;
+                                font-weight: 500;
+                                padding: 12px 16px;
+                                border: 1.5px solid #E1E0E0;
+                                border-radius: 10px;
+                                background-color: #fff;
+                                color: #333;
+                                transition: all 0.3s ease;
                             }
-                            @media (max-width: 768px) {
-                                    ul#subscriptionTabs {
-                                        justify-content: center;
-                                    }
 
-                                    .nav-tabs .nav-link {
-                                        font-size: 12px;
-                                        padding: 5px 12px !important;
-                                    }
+                            .subscription-filter:hover {
+                                border-color: #37488E;
+                            }
 
-                                    .nav-tabs .badge {
-                                        font-size: 12px;
-                                    }
-                                }
+                            .subscription-filter:focus {
+                                border-color: #273572;
+                                box-shadow: 0 0 0 0.2rem rgba(39, 53, 114, 0.25);
+                                outline: none;
+                            }
+
+                            .form-label {
+                                display: block;
+                            }
                         </style>
                             <table id="usersTable" class="table table-striped table-hover">
                                 <thead>
@@ -489,7 +540,7 @@
                                                 $statusClass = 'subscription-cancelled subscription-inactive';
                                             }
                                         @endphp
-                                        <tr class="{{ $statusClass }}">
+                                        <tr class="{{ $statusClass }}" data-subscription-id="{{ $subscription->id }}">
                                             <td>{{ $subscription->id }}</td>
                                             <td>
                                                 @if($subscription->user)
@@ -556,4 +607,245 @@
         </div>
 
     </main>
+
+    <!-- Subscription Detail Modal -->
+    <div class="modal fade subscription-modal" id="subscriptionDetailModal" tabindex="-1" aria-labelledby="subscriptionDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subscriptionDetailModalLabel">Subscription Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="subscriptionDetailContent">
+                    <div class="loading-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = new bootstrap.Modal(document.getElementById('subscriptionDetailModal'));
+            const modalContent = document.getElementById('subscriptionDetailContent');
+            const modalTitle = document.getElementById('subscriptionDetailModalLabel');
+
+            // Add click event to table rows
+            document.querySelectorAll('table#usersTable tbody tr[data-subscription-id]').forEach(row => {
+                row.addEventListener('click', function(e) {
+                    // Don't trigger if clicking on a link or button
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('button')) {
+                        return;
+                    }
+
+                    const subscriptionId = this.getAttribute('data-subscription-id');
+                    loadSubscriptionDetails(subscriptionId);
+                });
+            });
+
+            function loadSubscriptionDetails(id) {
+                // Show loading spinner
+                modalContent.innerHTML = `
+                    <div class="loading-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                `;
+                modal.show();
+
+                fetch(`{{ route('admin.subscriptions.show', '') }}/${id}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load subscription details');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderSubscriptionDetails(data);
+                })
+                .catch(error => {
+                    modalContent.innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Error:</strong> ${error.message}
+                        </div>
+                    `;
+                });
+            }
+
+            function renderSubscriptionDetails(data) {
+                const statusClass = data.status.toLowerCase();
+                let statusBadgeClass = 'status-active';
+                if (statusClass.includes('cancelled') || statusClass.includes('inactive')) {
+                    statusBadgeClass = 'status-cancelled';
+                } else if (data.subscription_type && data.subscription_type.toLowerCase() === 'free') {
+                    statusBadgeClass = 'status-free';
+                }
+
+                let receiptDataHtml = '';
+                if (data.receipt_data && typeof data.receipt_data === 'object') {
+                    receiptDataHtml = '<pre style="background: #f5f5f5; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 12px;">' + JSON.stringify(data.receipt_data, null, 2) + '</pre>';
+                } else if (data.receipt_data) {
+                    receiptDataHtml = '<pre style="background: #f5f5f5; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 12px;">' + data.receipt_data + '</pre>';
+                } else {
+                    receiptDataHtml = 'N/A';
+                }
+
+                modalContent.innerHTML = `
+                    <div class="subscription-detail-section">
+                        <div class="subscription-detail-section-title">User Information</div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">User ID:</div>
+                            <div class="subscription-detail-value">${data.user.id || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Name:</div>
+                            <div class="subscription-detail-value">${data.user.name || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Email:</div>
+                            <div class="subscription-detail-value">${data.user.email || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Phone:</div>
+                            <div class="subscription-detail-value">${data.user.phone || 'N/A'}</div>
+                        </div>
+                    </div>
+
+                    <div class="subscription-detail-section">
+                        <div class="subscription-detail-section-title">Subscription Information</div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Subscription ID:</div>
+                            <div class="subscription-detail-value">${data.id || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Plan:</div>
+                            <div class="subscription-detail-value">${data.plan.name || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Type:</div>
+                            <div class="subscription-detail-value">${data.subscription_type || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Amount:</div>
+                            <div class="subscription-detail-value">${data.subscription_amount || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Platform:</div>
+                            <div class="subscription-detail-value">${data.platform || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Status:</div>
+                            <div class="subscription-detail-value">
+                                <span class="status-badge ${statusBadgeClass}">${data.status || 'N/A'}</span>
+                            </div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Transaction ID:</div>
+                            <div class="subscription-detail-value">${data.transaction_id || 'N/A'}</div>
+                        </div>
+                    </div>
+
+                    <div class="subscription-detail-section">
+                        <div class="subscription-detail-section-title">Dates & Timeline</div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Start Date:</div>
+                            <div class="subscription-detail-value">${data.start_date || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Renewal Date:</div>
+                            <div class="subscription-detail-value">${data.renewal_date || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Expires At:</div>
+                            <div class="subscription-detail-value">${data.expires_at || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Last Renewed:</div>
+                            <div class="subscription-detail-value">${data.last_renewed_at || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Renewal Count:</div>
+                            <div class="subscription-detail-value">${data.renewal_count || 0}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Cancelled At:</div>
+                            <div class="subscription-detail-value">${data.cancelled_at || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Grace Period Ends:</div>
+                            <div class="subscription-detail-value">${data.grace_period_ends_at || 'N/A'}</div>
+                        </div>
+                    </div>
+
+                    <div class="subscription-detail-section">
+                        <div class="subscription-detail-section-title">Additional Information</div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Auto Renewing:</div>
+                            <div class="subscription-detail-value">${data.auto_renewing || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Payment State:</div>
+                            <div class="subscription-detail-value">${data.payment_state || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Last Checked:</div>
+                            <div class="subscription-detail-value">${data.last_checked_at || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Renewal Reminder Sent:</div>
+                            <div class="subscription-detail-value">${data.renewal_reminder_sent_at || 'N/A'}</div>
+                        </div>
+                    </div>
+
+                    <div class="subscription-detail-section">
+                        <div class="subscription-detail-section-title">System Information</div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Created At:</div>
+                            <div class="subscription-detail-value">${data.created_at || 'N/A'}</div>
+                        </div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label">Updated At:</div>
+                            <div class="subscription-detail-value">${data.updated_at || 'N/A'}</div>
+                        </div>
+                    </div>
+
+                    <div class="subscription-detail-section">
+                        <div class="subscription-detail-section-title">Receipt Data</div>
+                        <div class="subscription-detail-row">
+                            <div class="subscription-detail-label" style="width: 100%; margin-bottom: 10px;">Receipt Information:</div>
+                            <div class="subscription-detail-value" style="width: 100%;">${receiptDataHtml}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        // Handle filter dropdown changes
+        document.querySelectorAll('.subscription-filter').forEach(select => {
+            select.addEventListener('change', function() {
+                const status = document.getElementById('statusFilter').value;
+                const platform = document.getElementById('platformFilter').value;
+                const type = document.getElementById('typeFilter').value;
+
+                // Build URL with all filter parameters
+                const params = new URLSearchParams();
+                if (status !== 'all') params.append('status', status);
+                if (platform !== 'all') params.append('platform', platform);
+                if (type !== 'all') params.append('type', type);
+
+                // Redirect to filtered URL
+                const url = '{{ route("admin.subscriptions") }}' + (params.toString() ? '?' + params.toString() : '');
+                window.location.href = url;
+            });
+        });
+    </script>
 @endsection
