@@ -16,7 +16,7 @@ class TestRenewalReminderEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'test:renewal-reminder-email {email}';
+    protected $signature = 'test:renewal-reminder-email {email} {--platform=web : Platform (web, google, apple)}';
 
     /**
      * The console command description.
@@ -31,6 +31,21 @@ class TestRenewalReminderEmail extends Command
     public function handle()
     {
         $email = $this->argument('email');
+        $platform = strtolower($this->option('platform') ?? 'web');
+        
+        // Normalize platform names
+        $platformMap = [
+            'web' => 'web',
+            'google' => 'google',
+            'apple' => 'apple',
+        ];
+        
+        if (!isset($platformMap[$platform])) {
+            $this->error("Invalid platform. Use: web, google, or apple");
+            return 1;
+        }
+        
+        $platformName = $platformMap[$platform];
         
         $this->info("Creating test user and subscription data...");
         
@@ -47,7 +62,7 @@ class TestRenewalReminderEmail extends Command
         $testSubscription->user_id = 999999;
         $testSubscription->subscription_type = 'Annual'; // Can be Annual, Monthly, or Free
         $testSubscription->subscription_amount = 99.99;
-        $testSubscription->platform = 'Web'; // Can be Web, Google, Apple, or null for Free
+        $testSubscription->platform = ucfirst($platformName === 'web' ? 'Web' : ($platformName === 'google' ? 'Google' : 'Apple'));
         $testSubscription->renewal_date = Carbon::now()->addDays(30)->format('Y-m-d');
         $testSubscription->expires_at = Carbon::now()->addDays(30);
         $testSubscription->start_date = Carbon::now()->subYear()->format('Y-m-d');
@@ -63,7 +78,7 @@ class TestRenewalReminderEmail extends Command
         
         try {
             Mail::to($email)->send(new SubscriptionRenewalReminder($testUser, $testSubscription));
-            $this->info("✓ Test email sent successfully to {$email}!");
+            $this->info("✓ Test email sent successfully to {$email} for {$testSubscription->platform} platform!");
         } catch (\Exception $e) {
             $this->error("✗ Failed to send email: " . $e->getMessage());
             return 1;
