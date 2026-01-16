@@ -104,7 +104,7 @@
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td style="font-size:18px; line-height:26px; color:#303030; font-family:'PT Sans', Arial, sans-serif; text-align:center; padding-bottom: 30px;">
-                                                                                                        Hi {{ $userName }},
+                                                                                                        Salaam {{ $userName }},
                                                                                                     </td>
                                                                                                 </tr>
                                                                                             </table>
@@ -117,7 +117,7 @@
                                                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                     <tr>
                                                                                         <td style="font-size:16px; line-height:24px; color:#282828; font-family:'PT Sans', Arial, sans-serif; padding-bottom: 20px;">
-                                                                                            Salaam - You've been part of MuslimLynk and your membership is coming up for renewal.
+                                                                                            You've been part of MuslimLynk and your membership is coming up for renewal.
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
@@ -140,7 +140,6 @@
                                                                                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                                 <tr>
                                                                                                     <td style="font-size:14px; line-height:22px; color:#666; font-family:'PT Sans', Arial, sans-serif;">
-                                                                                                        <strong style="color:#282828; display:block; margin-bottom:8px;">To continue your access:</strong>
                                                                                                         <span style="color:#282828;">{{ $renewalInstructions }}</span>
                                                                                                     </td>
                                                                                                 </tr>
