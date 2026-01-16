@@ -416,12 +416,72 @@ class SyncSubscriptionBillingHistory extends Command
                 }
 
                 // Parse Apple receipt data to get ACTUAL transaction history from latest_receipt_info
-                $receiptData = $subscription->receipt_data ? json_decode($subscription->receipt_data, true) : [];
+                // Apple receipt_data can be stored as:
+                // 1. Base64-encoded string (needs base64_decode)
+                // 2. JSON string (needs json_decode)
+                // 3. Already decoded array/object
                 
-                if (!is_array($receiptData) || empty($receiptData['latest_receipt_info'])) {
-                    $this->warn("Subscription ID {$subscription->id} - No receipt_data or latest_receipt_info found, skipping");
+                $receiptData = null;
+                $rawReceiptData = $subscription->receipt_data;
+                
+                if (empty($rawReceiptData)) {
+                    $this->warn("Subscription ID {$subscription->id} - receipt_data is empty, skipping");
                     $errorCount++;
                     continue;
+                }
+                
+                // Try to parse as JSON first
+                if (is_string($rawReceiptData)) {
+                    // Check if it looks like base64 (most Apple receipts are base64-encoded)
+                    if (base64_encode(base64_decode($rawReceiptData, true)) === $rawReceiptData && strlen($rawReceiptData) > 100) {
+                        // It's likely base64-encoded, try to decode
+                        $decoded = base64_decode($rawReceiptData, true);
+                        if ($decoded !== false) {
+                            // Try to JSON decode the decoded base64
+                            $receiptData = json_decode($decoded, true);
+                            if (json_last_error() !== JSON_ERROR_NONE) {
+                                // If JSON decode fails, it might be binary PKCS7 data
+                                // Try treating the original string as JSON directly
+                                $receiptData = json_decode($rawReceiptData, true);
+                            }
+                        } else {
+                            // Not valid base64, try as JSON directly
+                            $receiptData = json_decode($rawReceiptData, true);
+                        }
+                    } else {
+                        // Try as JSON directly (might be JSON string)
+                        $receiptData = json_decode($rawReceiptData, true);
+                    }
+                } elseif (is_array($rawReceiptData)) {
+                    // Already an array
+                    $receiptData = $rawReceiptData;
+                } else {
+                    $receiptData = null;
+                }
+                
+                if (!is_array($receiptData)) {
+                    $this->warn("Subscription ID {$subscription->id} - receipt_data could not be parsed as JSON (length: " . strlen($rawReceiptData) . " chars). It might be base64-encoded PKCS7 binary data. Skipping.");
+                    $errorCount++;
+                    continue;
+                }
+                
+                if (empty($receiptData['latest_receipt_info'])) {
+                    // Check if it's a different structure - sometimes Apple receipts have different keys
+                    if (empty($receiptData['pending_renewal_info']) && empty($receiptData['receipt']) && empty($receiptData['status'])) {
+                        $this->warn("Subscription ID {$subscription->id} - latest_receipt_info not found in receipt_data. Available keys: " . implode(', ', array_keys($receiptData)) . ". Skipping.");
+                        $errorCount++;
+                        continue;
+                    }
+                    // If we have receipt but no latest_receipt_info, it might be an older format
+                    // Check receipt.in_app for transaction history
+                    if (isset($receiptData['receipt']['in_app']) && is_array($receiptData['receipt']['in_app'])) {
+                        // Use receipt.in_app as fallback (older format)
+                        $receiptData['latest_receipt_info'] = $receiptData['receipt']['in_app'];
+                    } else {
+                        $this->warn("Subscription ID {$subscription->id} - latest_receipt_info not found and no fallback available. Skipping.");
+                        $errorCount++;
+                        continue;
+                    }
                 }
 
                 $transactions = $receiptData['latest_receipt_info'];
