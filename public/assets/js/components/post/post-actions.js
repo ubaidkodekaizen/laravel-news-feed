@@ -117,7 +117,9 @@ function showEditPostModal(postId, currentContent) {
                         <form id="editPostForm">
                             <div class="modal-header">
                                 <h5 class="modal-title">Edit Post</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                 <i class="fa-solid fa-xmark"></i>
+                                </button>
                             </div>
                             <div class="modal-body">
                                 <textarea class="form-control" id="editPostText" rows="5" placeholder="What do you want to talk about?"></textarea>
