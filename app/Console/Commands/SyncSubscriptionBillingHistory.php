@@ -162,81 +162,101 @@ class SyncSubscriptionBillingHistory extends Command
                     continue;
                 }
 
-                $purchase = $googlePlay->getSubscriptionPurchase($productId, $purchaseToken);
-                $initiationTimeMillis = $purchase->getInitiationTimestampMsec();
-                $expiryTimeMillis = $purchase->getExpiryTimeMillis();
+                try {
+                    $purchase = $googlePlay->getSubscriptionPurchase($productId, $purchaseToken);
+                } catch (\Google\Service\Exception $e) {
+                    // Handle expired subscriptions gracefully
+                    $errorDetails = json_decode($e->getMessage(), true);
+                    if (isset($errorDetails['error']['code']) && $errorDetails['error']['code'] == 410) {
+                        $this->warn("Subscription ID {$subscription->id} - Subscription expired too long ago, cannot fetch details. Using database start_date for billing calculation.");
+                        // Fall through to calculate from start_date only
+                        $purchase = null;
+                    } else {
+                        throw $e;
+                    }
+                }
+
+                // Get purchase details if available, otherwise use defaults
+                $expiryTimeMillis = $purchase ? $purchase->getExpiryTimeMillis() : null;
                 $expiryDate = $expiryTimeMillis ? Carbon::createFromTimestampMs($expiryTimeMillis) : null;
-                $paymentState = (int) $purchase->getPaymentState();
-                $autoRenewing = (bool) $purchase->getAutoRenewing();
-                $cancelReason = $purchase->getCancelReason();
+                $paymentState = $purchase ? (int) $purchase->getPaymentState() : null;
+                $autoRenewing = $purchase ? (bool) $purchase->getAutoRenewing() : false;
+                $cancelReason = $purchase ? $purchase->getCancelReason() : null;
 
-                if ($initiationTimeMillis) {
-                    $startDate = Carbon::createFromTimestampMs($initiationTimeMillis);
-                    $currentDate = Carbon::now();
-                    $intervalLength = $subscription->subscription_type === 'Monthly' ? 1 : 12;
-                    $intervalUnit = 'months';
+                // Use subscription start_date from database (Google Play API doesn't provide initiation timestamp)
+                $startDate = $subscription->start_date ? Carbon::parse($subscription->start_date) : null;
+                
+                if (!$startDate) {
+                    $this->warn("Subscription ID {$subscription->id} - No start_date found, skipping billing history calculation");
+                    continue;
+                }
 
-                    // Calculate billing dates from initiation date
-                    $billingDates = [];
-                    $nextBilling = clone $startDate;
+                $currentDate = Carbon::now();
+                $intervalLength = $subscription->subscription_type === 'Monthly' ? 1 : 12;
+                $intervalUnit = 'months';
 
-                    while ($nextBilling->lte($currentDate)) {
-                        $billingDates[] = clone $nextBilling;
-                        $nextBilling->addMonths($intervalLength);
-                        
-                        // Safety check to prevent infinite loop
-                        if (count($billingDates) > 120) { // Max 10 years for monthly, ~10 years for yearly
-                            break;
-                        }
+                // Calculate billing dates from start date
+                $billingDates = [];
+                $nextBilling = clone $startDate;
+
+                while ($nextBilling->lte($currentDate)) {
+                    $billingDates[] = clone $nextBilling;
+                    $nextBilling->addMonths($intervalLength);
+                    
+                    // Safety check to prevent infinite loop
+                    if (count($billingDates) > 120) { // Max 10 years for monthly, ~10 years for yearly
+                        break;
                     }
+                }
 
-                    // Record "created" event (first billing date)
-                    if (count($billingDates) > 0) {
-                        $createdDate = $billingDates[0];
-                        SubscriptionBilling::createEvent([
-                            'subscription_id' => $subscription->id,
-                            'user_id' => $subscription->user_id,
-                            'platform' => 'google',
-                            'event_type' => SubscriptionBilling::EVENT_CREATED,
-                            'event_date' => $createdDate->format('Y-m-d'),
-                            'billing_date' => $createdDate->format('Y-m-d'),
-                            'amount' => $subscription->subscription_amount ?? 0,
-                            'transaction_id' => $purchaseToken,
-                            'status' => 'success',
-                            'notes' => 'Subscription created - synced from Google Play',
-                        ]);
-                        $billingHistoryCount++;
+                // Record "created" event (first billing date)
+                if (count($billingDates) > 0) {
+                    $createdDate = $billingDates[0];
+                    SubscriptionBilling::createEvent([
+                        'subscription_id' => $subscription->id,
+                        'user_id' => $subscription->user_id,
+                        'platform' => 'google',
+                        'event_type' => SubscriptionBilling::EVENT_CREATED,
+                        'event_date' => $createdDate->format('Y-m-d'),
+                        'billing_date' => $createdDate->format('Y-m-d'),
+                        'amount' => $subscription->subscription_amount ?? 0,
+                        'transaction_id' => $purchaseToken,
+                        'status' => 'success',
+                        'notes' => 'Subscription created - synced from Google Play',
+                    ]);
+                    $billingHistoryCount++;
+                }
+
+                // Record "renewed" events (all subsequent billings)
+                foreach (array_slice($billingDates, 1) as $billingDate) {
+                    SubscriptionBilling::createEvent([
+                        'subscription_id' => $subscription->id,
+                        'user_id' => $subscription->user_id,
+                        'platform' => 'google',
+                        'event_type' => SubscriptionBilling::EVENT_RENEWED,
+                        'event_date' => $billingDate->format('Y-m-d'),
+                        'billing_date' => $billingDate->format('Y-m-d'),
+                        'amount' => $subscription->subscription_amount ?? 0,
+                        'transaction_id' => $purchaseToken,
+                        'status' => 'success',
+                        'notes' => 'Subscription renewed - synced from Google Play',
+                    ]);
+                    $billingHistoryCount++;
+                }
+
+                // Update renewal count
+                $renewalCount = max(0, count($billingDates) - 1);
+                if ($subscription->renewal_count !== $renewalCount) {
+                    $subscription->renewal_count = $renewalCount;
+                    if (count($billingDates) > 1) {
+                        $subscription->last_renewed_at = end($billingDates);
                     }
+                    $subscription->save();
+                    $updatedCount++;
+                }
 
-                    // Record "billing" or "renewed" events (all subsequent billings)
-                    foreach (array_slice($billingDates, 1) as $billingDate) {
-                        SubscriptionBilling::createEvent([
-                            'subscription_id' => $subscription->id,
-                            'user_id' => $subscription->user_id,
-                            'platform' => 'google',
-                            'event_type' => SubscriptionBilling::EVENT_RENEWED,
-                            'event_date' => $billingDate->format('Y-m-d'),
-                            'billing_date' => $billingDate->format('Y-m-d'),
-                            'amount' => $subscription->subscription_amount ?? 0,
-                            'transaction_id' => $purchaseToken,
-                            'status' => 'success',
-                            'notes' => 'Subscription renewed - synced from Google Play',
-                        ]);
-                        $billingHistoryCount++;
-                    }
-
-                    // Update renewal count
-                    $renewalCount = max(0, count($billingDates) - 1);
-                    if ($subscription->renewal_count !== $renewalCount) {
-                        $subscription->renewal_count = $renewalCount;
-                        if (count($billingDates) > 1) {
-                            $subscription->last_renewed_at = end($billingDates);
-                        }
-                        $subscription->save();
-                        $updatedCount++;
-                    }
-
-                    // Record "cancelled" or "expired" event if not active
+                // Record "cancelled" or "expired" event if not active (only if we have purchase data)
+                if ($purchase) {
                     $isActive = $expiryTimeMillis && $expiryDate && $expiryDate->isFuture() && $paymentState === 1 && $autoRenewing;
 
                     if (!$isActive || $cancelReason || ($expiryDate && $expiryDate->isPast())) {
@@ -259,6 +279,7 @@ class SyncSubscriptionBillingHistory extends Command
                         ]);
                         $billingHistoryCount++;
                     }
+                }
                 }
             } catch (\Exception $e) {
                 $this->error("Error processing subscription ID {$subscription->id}: " . $e->getMessage());
