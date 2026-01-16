@@ -19,7 +19,7 @@ class GeneralHelper
 
     public static function getUserCount(): int
     {
-        return User::count();
+        return User::where('role_id', 4)->whereNull('deleted_at')->count();
     }
 
     public static function getSubscriberCount(): int
