@@ -88,6 +88,13 @@ class SyncSubscriptionBillingHistory extends Command
                     continue;
                 }
 
+                // Get subscription details from Authorize.Net
+                // NOTE: For complete historical transaction data with actual amounts per transaction,
+                // you would need to use Transaction Reporting API (getTransactionListRequest)
+                // to query transactions by subscription ID. The ARB API only provides schedule info,
+                // not individual transaction history with varying amounts.
+                // For now, we use the subscription amount and calculate dates from payment schedule.
+                
                 $detailRequest = new AnetAPI\ARBGetSubscriptionRequest();
                 $detailRequest->setMerchantAuthentication($merchantAuthentication);
                 $detailRequest->setSubscriptionId($subscription->transaction_id);
@@ -235,7 +242,12 @@ class SyncSubscriptionBillingHistory extends Command
                 // Use database amount for Google Play (amount not available in subscription purchase API response)
                 $billingAmount = $subscription->subscription_amount ?? 0;
 
-                // Use subscription start_date from database (Google Play API doesn't provide initiation timestamp)
+                // IMPORTANT LIMITATION: Google Play Developer API does NOT provide historical transaction/renewal history
+                // There is NO API endpoint that returns past renewal transactions with dates and amounts
+                // We can only get the current subscription state, not historical renewals
+                // Therefore, we must calculate billing dates from start_date (not ideal, but only option)
+                // Note: For accurate historical data, you would need to log each renewal via Real-Time Developer Notifications (RTDN) as it happens
+                
                 $startDate = $subscription->start_date ? Carbon::parse($subscription->start_date) : null;
                 
                 if (!$startDate) {
@@ -247,7 +259,8 @@ class SyncSubscriptionBillingHistory extends Command
                 $intervalLength = $subscription->subscription_type === 'Monthly' ? 1 : 12;
                 $intervalUnit = 'months';
 
-                // Calculate billing dates from start date
+                // Calculate billing dates from start date (Google Play doesn't provide historical transactions)
+                // WARNING: These are calculated dates, not actual transaction dates from Google Play
                 $billingDates = [];
                 $nextBilling = clone $startDate;
 
@@ -288,7 +301,7 @@ class SyncSubscriptionBillingHistory extends Command
                         'amount' => $billingAmount,
                         'transaction_id' => $purchaseToken,
                         'status' => $platformStatus,
-                        'notes' => 'Subscription created - synced from Google Play',
+                        'notes' => 'Subscription created - synced from Google Play (calculated date - Google Play API does not provide historical transactions)',
                     ]);
                     if ($result['wasCreated']) {
                         $billingHistoryCount++;
@@ -307,7 +320,7 @@ class SyncSubscriptionBillingHistory extends Command
                         'amount' => $billingAmount,
                         'transaction_id' => $purchaseToken,
                         'status' => $platformStatus,
-                        'notes' => 'Subscription renewed - synced from Google Play',
+                        'notes' => 'Subscription renewed - synced from Google Play (calculated date - Google Play API does not provide historical transactions)',
                     ]);
                     if ($result['wasCreated']) {
                         $billingHistoryCount++;
@@ -402,53 +415,33 @@ class SyncSubscriptionBillingHistory extends Command
                     continue;
                 }
 
-                // Calculate billing dates from start_date (Apple doesn't provide detailed history easily)
-                if (!$subscription->start_date) {
-                    $this->warn("Subscription ID {$subscription->id} - No start_date found");
+                // Parse Apple receipt data to get ACTUAL transaction history from latest_receipt_info
+                $receiptData = $subscription->receipt_data ? json_decode($subscription->receipt_data, true) : [];
+                
+                if (!is_array($receiptData) || empty($receiptData['latest_receipt_info'])) {
+                    $this->warn("Subscription ID {$subscription->id} - No receipt_data or latest_receipt_info found, skipping");
                     $errorCount++;
                     continue;
                 }
 
-                // Try to get amount from Apple receipt data (platform source)
-                $appleAmount = null;
-                $receiptData = $subscription->receipt_data ? json_decode($subscription->receipt_data, true) : [];
-                if (is_array($receiptData)) {
-                    // Apple receipt might have price in receipt data
-                    if (isset($receiptData['price'])) {
-                        $appleAmount = (float) $receiptData['price'];
-                    } elseif (isset($receiptData['latest_receipt_info'])) {
-                        // Latest receipt info might have price information
-                        $latestReceipt = is_array($receiptData['latest_receipt_info']) ? end($receiptData['latest_receipt_info']) : null;
-                        if ($latestReceipt && isset($latestReceipt['price'])) {
-                            $appleAmount = (float) $latestReceipt['price'];
-                        }
-                    }
+                $transactions = $receiptData['latest_receipt_info'];
+                if (!is_array($transactions) || empty($transactions)) {
+                    $this->warn("Subscription ID {$subscription->id} - latest_receipt_info is empty, skipping");
+                    $errorCount++;
+                    continue;
                 }
-                $billingAmount = $appleAmount ?? ($subscription->subscription_amount ?? 0);
 
-                $startDate = Carbon::parse($subscription->start_date);
-                $currentDate = Carbon::now();
-                $intervalLength = $subscription->subscription_type === 'Monthly' ? 1 : 12;
-                $intervalUnit = 'months';
-
-                // Calculate billing dates
-                $billingDates = [];
-                $nextBilling = clone $startDate;
-
-                while ($nextBilling->lte($currentDate)) {
-                    $billingDates[] = clone $nextBilling;
-                    $nextBilling->addMonths($intervalLength);
-                    
-                    // Safety check to prevent infinite loop
-                    if (count($billingDates) > 120) { // Max 10 years
-                        break;
-                    }
-                }
+                // Sort transactions by purchase_date_ms (oldest first)
+                usort($transactions, function($a, $b) {
+                    $dateA = isset($a['purchase_date_ms']) ? (int)$a['purchase_date_ms'] : 0;
+                    $dateB = isset($b['purchase_date_ms']) ? (int)$b['purchase_date_ms'] : 0;
+                    return $dateA <=> $dateB;
+                });
 
                 // Determine status from Apple subscription status (platform source)
                 // Apple status: 1=Active, 2=Expired, 3=In Billing Retry Period, 4=In Grace Period, 5=Revoked
                 $platformStatus = 'success';
-                if (is_array($receiptData) && isset($receiptData['status'])) {
+                if (isset($receiptData['status'])) {
                     $appleStatus = (int) $receiptData['status'];
                     $platformStatus = match($appleStatus) {
                         1 => 'success', // Active
@@ -460,43 +453,75 @@ class SyncSubscriptionBillingHistory extends Command
                     };
                 }
 
-                // Record "created" event (first billing date)
-                if (count($billingDates) > 0) {
-                    $createdDate = $billingDates[0];
-                    $result = SubscriptionBilling::createEvent([
-                        'subscription_id' => $subscription->id,
-                        'user_id' => $subscription->user_id,
-                        'platform' => 'apple',
-                        'event_type' => SubscriptionBilling::EVENT_CREATED,
-                        'event_date' => $createdDate->format('Y-m-d'),
-                        'billing_date' => $createdDate->format('Y-m-d'),
-                        'amount' => $billingAmount,
-                        'transaction_id' => $subscription->transaction_id,
-                        'status' => $platformStatus,
-                        'notes' => 'Subscription created - synced from Apple',
-                    ]);
-                    if ($result['wasCreated']) {
-                        $billingHistoryCount++;
-                    }
-                }
+                // Process each ACTUAL transaction from Apple receipt data
+                $originalTransactionId = $subscription->transaction_id;
+                $isFirstTransaction = true;
 
-                // Record "renewed" events (all subsequent billings)
-                foreach (array_slice($billingDates, 1) as $billingDate) {
+                foreach ($transactions as $txn) {
+                    // Get transaction date from purchase_date_ms (milliseconds) or purchase_date
+                    $purchaseDate = null;
+                    if (isset($txn['purchase_date_ms'])) {
+                        $purchaseDate = Carbon::createFromTimestampMs((int)$txn['purchase_date_ms']);
+                    } elseif (isset($txn['purchase_date'])) {
+                        try {
+                            $purchaseDate = Carbon::parse($txn['purchase_date']);
+                        } catch (\Exception $e) {
+                            Log::warning("Invalid purchase_date format for subscription {$subscription->id}: " . $txn['purchase_date']);
+                            continue;
+                        }
+                    }
+
+                    if (!$purchaseDate) {
+                        $this->warn("Subscription ID {$subscription->id} - Transaction missing purchase_date, skipping");
+                        continue;
+                    }
+
+                    // Get transaction ID from receipt data
+                    $txnId = $txn['transaction_id'] ?? $subscription->transaction_id;
+                    
+                    // Get amount - Apple receipts don't include price, so use subscription_amount from DB
+                    // If you have stored different amounts per transaction, check receipt_data for custom fields
+                    $txnAmount = $subscription->subscription_amount ?? 0;
+                    
+                    // Check if this is a trial period transaction (shouldn't count as billing)
+                    $isTrial = isset($txn['is_trial_period']) && strtolower($txn['is_trial_period']) === 'true';
+                    
+                    if ($isTrial) {
+                        // Skip trial periods - don't create billing records for free trials
+                        continue;
+                    }
+
+                    // Determine if this is the original purchase or a renewal
+                    $originalTxnId = $txn['original_transaction_id'] ?? null;
+                    $isOriginal = ($originalTxnId && $txnId === $originalTxnId) || $isFirstTransaction;
+
+                    $eventType = $isOriginal ? SubscriptionBilling::EVENT_CREATED : SubscriptionBilling::EVENT_RENEWED;
+
                     $result = SubscriptionBilling::createEvent([
                         'subscription_id' => $subscription->id,
                         'user_id' => $subscription->user_id,
                         'platform' => 'apple',
-                        'event_type' => SubscriptionBilling::EVENT_RENEWED,
-                        'event_date' => $billingDate->format('Y-m-d'),
-                        'billing_date' => $billingDate->format('Y-m-d'),
-                        'amount' => $billingAmount,
-                        'transaction_id' => $subscription->transaction_id,
+                        'event_type' => $eventType,
+                        'event_date' => $purchaseDate->format('Y-m-d'),
+                        'billing_date' => $purchaseDate->format('Y-m-d'),
+                        'amount' => $txnAmount,
+                        'transaction_id' => $txnId,
                         'status' => $platformStatus,
-                        'notes' => 'Subscription renewed - synced from Apple',
+                        'notes' => $isOriginal 
+                            ? "Subscription created - actual transaction from Apple receipt" 
+                            : "Subscription renewed - actual transaction from Apple receipt",
+                        'metadata' => [
+                            'original_transaction_id' => $originalTxnId,
+                            'expires_date_ms' => $txn['expires_date_ms'] ?? null,
+                            'product_id' => $txn['product_id'] ?? null,
+                        ],
                     ]);
+                    
                     if ($result['wasCreated']) {
                         $billingHistoryCount++;
                     }
+
+                    $isFirstTransaction = false;
                 }
 
                 // Record "cancelled" or "expired" event based on platform status
@@ -548,12 +573,22 @@ class SyncSubscriptionBillingHistory extends Command
                     }
                 }
 
-                // Update renewal count
-                $renewalCount = max(0, count($billingDates) - 1);
+                // Update renewal count based on actual transactions
+                $renewalCount = max(0, count($transactions) - 1); // Subtract 1 for the "created" transaction
                 if ($subscription->renewal_count !== $renewalCount) {
                     $subscription->renewal_count = $renewalCount;
-                    if (count($billingDates) > 1) {
-                        $subscription->last_renewed_at = end($billingDates);
+                    // Set last_renewed_at from the last transaction if available
+                    if (count($transactions) > 1) {
+                        $lastTxn = end($transactions);
+                        if (isset($lastTxn['purchase_date_ms'])) {
+                            $subscription->last_renewed_at = Carbon::createFromTimestampMs((int)$lastTxn['purchase_date_ms']);
+                        } elseif (isset($lastTxn['purchase_date'])) {
+                            try {
+                                $subscription->last_renewed_at = Carbon::parse($lastTxn['purchase_date']);
+                            } catch (\Exception $e) {
+                                // Skip if date parsing fails
+                            }
+                        }
                     }
                     $subscription->save();
                     $updatedCount++;
