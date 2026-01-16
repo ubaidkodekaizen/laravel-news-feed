@@ -196,7 +196,8 @@
                             <h5 class="mb-4" style="font-family: 'Inter'; font-weight: 600; color: #333;">Permissions</h5>
                             <p class="text-muted mb-4">Select the permissions for this Manager/Editor. Permissions are grouped by admin sections.</p>
 
-                            @foreach($permissions as $group => $groupPermissions)
+                            @if(isset($permissions) && !empty($permissions))
+                                @foreach($permissions as $group => $groupPermissions)
                                 @if($group !== 'managers' && $group !== 'dashboard') {{-- Don't show Managers and Dashboard tab permissions --}}
                                 <div class="permission-group" data-group="{{ $group }}">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -231,7 +232,12 @@
                                     </div>
                                 </div>
                                 @endif
-                            @endforeach
+                                @endforeach
+                            @else
+                                <div class="alert alert-warning">
+                                    <p class="mb-0">No permissions available. Please run the permissions seeder.</p>
+                                </div>
+                            @endif
 
                             <div class="row mt-4">
                                 <div class="col-12">

@@ -114,11 +114,18 @@ class ManagersController extends Controller
         };
         
         // Reorder groups to match sidebar order and sort permissions within each group by CRUD order
-        $orderedPermissions = collect();
+        $orderedPermissions = [];
         foreach ($groupOrder as $group => $order) {
             if (isset($allPermissions[$group])) {
                 $groupPerms = $allPermissions[$group]->sortBy($getCrudPriority)->values();
                 $orderedPermissions[$group] = $groupPerms;
+            }
+        }
+        
+        // Also include any groups that are not in $groupOrder but exist in permissions
+        foreach ($allPermissions as $group => $perms) {
+            if (!isset($orderedPermissions[$group])) {
+                $orderedPermissions[$group] = $perms->sortBy($getCrudPriority)->values();
             }
         }
         
@@ -222,11 +229,18 @@ class ManagersController extends Controller
         };
         
         // Reorder groups to match sidebar order and sort permissions within each group by CRUD order
-        $orderedPermissions = collect();
+        $orderedPermissions = [];
         foreach ($groupOrder as $group => $order) {
             if (isset($allPermissions[$group])) {
                 $groupPerms = $allPermissions[$group]->sortBy($getCrudPriority)->values();
                 $orderedPermissions[$group] = $groupPerms;
+            }
+        }
+        
+        // Also include any groups that are not in $groupOrder but exist in permissions
+        foreach ($allPermissions as $group => $perms) {
+            if (!isset($orderedPermissions[$group])) {
+                $orderedPermissions[$group] = $perms->sortBy($getCrudPriority)->values();
             }
         }
         
