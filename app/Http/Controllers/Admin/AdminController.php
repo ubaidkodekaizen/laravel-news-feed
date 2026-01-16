@@ -133,16 +133,18 @@ class AdminController extends Controller
 
     private function getSubscribersData($startDate, $endDate)
     {
-        // Active subscriptions created on that day
+        // Active subscriptions created on that day - only Monthly and Yearly
         $active = Subscription::where('status', 'active')
+            ->whereIn('subscription_type', ['Monthly', 'Yearly'])
             ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
-        // Renewed subscriptions (where last_renewed_at is within the date range)
+        // Renewed subscriptions (where last_renewed_at is within the date range) - only Monthly and Yearly
         $renewed = Subscription::where('status', 'active')
+            ->whereIn('subscription_type', ['Monthly', 'Yearly'])
             ->whereNotNull('last_renewed_at')
             ->whereBetween('last_renewed_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->selectRaw('DATE(last_renewed_at) as date, COUNT(*) as count')
@@ -150,8 +152,9 @@ class AdminController extends Controller
             ->orderBy('date')
             ->get();
 
-        // Cancelled subscriptions
+        // Cancelled subscriptions - only Monthly and Yearly
         $cancelled = Subscription::where('status', 'cancelled')
+            ->whereIn('subscription_type', ['Monthly', 'Yearly'])
             ->whereBetween('updated_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
             ->groupBy('date')

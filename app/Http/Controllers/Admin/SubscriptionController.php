@@ -36,7 +36,12 @@ class SubscriptionController extends Controller
         }
         
         // Optimize: Only load user columns that are actually used in the view
-        $query = Subscription::with('user:id,first_name,last_name,email,phone');
+        // Apply same condition as dashboard subscribers box - exclude Free subscriptions
+        $query = Subscription::with('user:id,first_name,last_name,email,phone')
+            ->where(function($q) {
+                $q->where('subscription_type', '!=', 'Free')
+                  ->orWhereNull('subscription_type');
+            });
         
         // Apply Status filter (independent)
         if ($statusFilter !== 'all') {
@@ -115,7 +120,9 @@ class SubscriptionController extends Controller
         $subscriptions = $query->orderByDesc('id')->get();
 
         // Optimize: Get counts efficiently - limit user relationship to only needed columns
-        $baseQuery = Subscription::with('user:id,first_name,last_name,email,phone');
+        // Apply same condition as dashboard subscribers box - include only Monthly and Yearly subscriptions
+        $baseQuery = Subscription::with('user:id,first_name,last_name,email,phone')
+            ->whereIn('subscription_type', ['Monthly', 'Yearly']);
         
         // Count all subscriptions
         $allCount = (clone $baseQuery)->count();

@@ -473,7 +473,6 @@
                                         <option value="all" {{ $typeFilter === 'all' ? 'selected' : '' }}>ALL</option>
                                         <option value="monthly" {{ $typeFilter === 'monthly' ? 'selected' : '' }}>MONTHLY ({{ $counts['monthly'] ?? 0 }})</option>
                                         <option value="annual" {{ $typeFilter === 'annual' ? 'selected' : '' }}>ANNUAL ({{ $counts['annual'] ?? 0 }})</option>
-                                        <option value="free" {{ $typeFilter === 'free' ? 'selected' : '' }}>FREE ({{ $counts['free'] ?? 0 }})</option>
                                     </select>
                                 </div>
                             </div>
