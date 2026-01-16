@@ -280,7 +280,6 @@ class SyncSubscriptionBillingHistory extends Command
                         $billingHistoryCount++;
                     }
                 }
-                }
             } catch (\Exception $e) {
                 $this->error("Error processing subscription ID {$subscription->id}: " . $e->getMessage());
                 Log::error("Google Play billing history sync error for subscription {$subscription->id}: " . $e->getMessage());
