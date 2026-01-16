@@ -432,35 +432,38 @@ class SyncSubscriptionBillingHistory extends Command
                 
                 // Try to parse as JSON first
                 if (is_string($rawReceiptData)) {
-                    // Check if it looks like base64 (most Apple receipts are base64-encoded)
-                    if (base64_encode(base64_decode($rawReceiptData, true)) === $rawReceiptData && strlen($rawReceiptData) > 100) {
-                        // It's likely base64-encoded, try to decode
+                    // First, try direct JSON decode (in case it's already a JSON string)
+                    $receiptData = json_decode($rawReceiptData, true);
+                    
+                    // If direct JSON decode fails, try base64 decode then JSON decode
+                    if (!is_array($receiptData) && json_last_error() !== JSON_ERROR_NONE) {
+                        // Check if it might be base64-encoded
                         $decoded = base64_decode($rawReceiptData, true);
-                        if ($decoded !== false) {
-                            // Try to JSON decode the decoded base64
+                        if ($decoded !== false && $decoded !== $rawReceiptData) {
+                            // It was base64-encoded, try JSON decode on decoded value
                             $receiptData = json_decode($decoded, true);
-                            if (json_last_error() !== JSON_ERROR_NONE) {
-                                // If JSON decode fails, it might be binary PKCS7 data
-                                // Try treating the original string as JSON directly
-                                $receiptData = json_decode($rawReceiptData, true);
+                            
+                            // If still not JSON, the decoded data is likely PKCS7 binary (raw iOS receipt)
+                            // This means receipt_data contains raw receipt, not verifyReceipt API response
+                            if (!is_array($receiptData) || json_last_error() !== JSON_ERROR_NONE) {
+                                $this->warn("Subscription ID {$subscription->id} - receipt_data appears to be raw iOS receipt (base64-encoded PKCS7), not verifyReceipt API response JSON. Raw receipts don't contain latest_receipt_info. To sync transaction history, receipt_data must be the JSON response from Apple's verifyReceipt API. Length: " . strlen($rawReceiptData) . " chars. Skipping.");
+                                $errorCount++;
+                                continue;
                             }
-                        } else {
-                            // Not valid base64, try as JSON directly
-                            $receiptData = json_decode($rawReceiptData, true);
                         }
-                    } else {
-                        // Try as JSON directly (might be JSON string)
-                        $receiptData = json_decode($rawReceiptData, true);
+                    }
+                    
+                    // If still not an array after all attempts, it's invalid
+                    if (!is_array($receiptData)) {
+                        $this->warn("Subscription ID {$subscription->id} - receipt_data could not be parsed as JSON (length: " . strlen($rawReceiptData) . " chars). Expected JSON response from Apple's verifyReceipt API. Skipping.");
+                        $errorCount++;
+                        continue;
                     }
                 } elseif (is_array($rawReceiptData)) {
                     // Already an array
                     $receiptData = $rawReceiptData;
                 } else {
-                    $receiptData = null;
-                }
-                
-                if (!is_array($receiptData)) {
-                    $this->warn("Subscription ID {$subscription->id} - receipt_data could not be parsed as JSON (length: " . strlen($rawReceiptData) . " chars). It might be base64-encoded PKCS7 binary data. Skipping.");
+                    $this->warn("Subscription ID {$subscription->id} - receipt_data is not a string or array. Skipping.");
                     $errorCount++;
                     continue;
                 }
