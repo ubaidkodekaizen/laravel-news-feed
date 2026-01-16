@@ -56,4 +56,10 @@ return [
         'project_id' => env('FIREBASE_PROJECT_ID'),
     ],
 
+    'apple' => [
+        'shared_secret' => env('APPLE_SHARED_SECRET'), // App-specific shared secret from App Store Connect
+        'verify_receipt_url' => env('APPLE_VERIFY_RECEIPT_URL', 'https://buy.itunes.apple.com/verifyReceipt'), // Production
+        'verify_receipt_url_sandbox' => env('APPLE_VERIFY_RECEIPT_URL_SANDBOX', 'https://sandbox.itunes.apple.com/verifyReceipt'), // Sandbox
+    ],
+
 ];

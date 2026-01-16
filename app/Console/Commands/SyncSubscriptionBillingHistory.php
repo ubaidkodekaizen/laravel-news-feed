@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Business\Subscription;
 use App\Models\SubscriptionBilling;
+use App\Models\SchedulerLog;
 use App\Services\GooglePlayService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -32,26 +33,105 @@ class SyncSubscriptionBillingHistory extends Command
      */
     public function handle()
     {
+        $startTime = microtime(true);
+        $ranAt = Carbon::now();
+
         $this->info('Starting to sync billing history for all platforms...');
 
-        // Sync Web/Authorize.Net subscriptions
-        $this->info('=== Syncing Web/Authorize.Net Subscriptions ===');
-        $webResult = $this->syncAuthorizeNetBillingHistory();
+        $status = 'success';
+        $errorMessage = null;
+        $errorTrace = null;
 
-        // Sync Google Play subscriptions
-        $this->info('=== Syncing Google Play Subscriptions ===');
-        $googleResult = $this->syncGooglePlayBillingHistory();
+        try {
+            // Sync Web/Authorize.Net subscriptions
+            $this->info('=== Syncing Web/Authorize.Net Subscriptions ===');
+            $webResult = $this->syncAuthorizeNetBillingHistory();
 
-        // Sync Apple subscriptions
-        $this->info('=== Syncing Apple Subscriptions ===');
-        $appleResult = $this->syncAppleBillingHistory();
+            // Sync Google Play subscriptions
+            $this->info('=== Syncing Google Play Subscriptions ===');
+            $googleResult = $this->syncGooglePlayBillingHistory();
 
-        $this->info('=== Sync Summary ===');
-        $this->info("Web/Authorize.Net: Updated: {$webResult['updated']}, Billing Records: {$webResult['billing_records']}, Errors: {$webResult['errors']}");
-        $this->info("Google Play: Updated: {$googleResult['updated']}, Billing Records: {$googleResult['billing_records']}, Errors: {$googleResult['errors']}");
-        $this->info("Apple: Updated: {$appleResult['updated']}, Billing Records: {$appleResult['billing_records']}, Errors: {$appleResult['errors']}");
+            // Sync Apple subscriptions
+            $this->info('=== Syncing Apple Subscriptions ===');
+            $appleResult = $this->syncAppleBillingHistory();
 
-        return 0;
+            $this->info('=== Sync Summary ===');
+            $this->info("Web/Authorize.Net: Updated: {$webResult['updated']}, Billing Records: {$webResult['billing_records']}, Errors: {$webResult['errors']}");
+            $this->info("Google Play: Updated: {$googleResult['updated']}, Billing Records: {$googleResult['billing_records']}, Errors: {$googleResult['errors']}");
+            $this->info("Apple: Updated: {$appleResult['updated']}, Billing Records: {$appleResult['billing_records']}, Errors: {$appleResult['errors']}");
+
+        } catch (\Exception $e) {
+            $status = 'failed';
+            $errorMessage = $e->getMessage();
+            $errorTrace = $e->getTraceAsString();
+            Log::error('Billing history sync failed: ' . $errorMessage, ['trace' => $errorTrace]);
+            $this->error("Sync failed: {$errorMessage}");
+            
+            // Set defaults if exception occurred
+            $webResult = $webResult ?? ['updated' => 0, 'billing_records' => 0, 'errors' => 0];
+            $googleResult = $googleResult ?? ['updated' => 0, 'billing_records' => 0, 'errors' => 0];
+            $appleResult = $appleResult ?? ['updated' => 0, 'billing_records' => 0, 'errors' => 0];
+        }
+
+        $endTime = microtime(true);
+        $executionTime = (int) (($endTime - $startTime) * 1000); // Convert to milliseconds
+
+        // Calculate totals
+        $totalUpdated = ($webResult['updated'] ?? 0) + ($googleResult['updated'] ?? 0) + ($appleResult['updated'] ?? 0);
+        $totalBillingRecords = ($webResult['billing_records'] ?? 0) + ($googleResult['billing_records'] ?? 0) + ($appleResult['billing_records'] ?? 0);
+        $totalErrors = ($webResult['errors'] ?? 0) + ($googleResult['errors'] ?? 0) + ($appleResult['errors'] ?? 0);
+        $totalProcessed = $totalUpdated + $totalBillingRecords + $totalErrors;
+
+        // Build result detail
+        $resultDetail = sprintf(
+            "Web: %d updated, %d billing records, %d errors | Google Play: %d updated, %d billing records, %d errors | Apple: %d updated, %d billing records, %d errors",
+            $webResult['updated'] ?? 0,
+            $webResult['billing_records'] ?? 0,
+            $webResult['errors'] ?? 0,
+            $googleResult['updated'] ?? 0,
+            $googleResult['billing_records'] ?? 0,
+            $googleResult['errors'] ?? 0,
+            $appleResult['updated'] ?? 0,
+            $appleResult['billing_records'] ?? 0,
+            $appleResult['errors'] ?? 0
+        );
+
+        // Build result data
+        $resultData = [
+            'web' => $webResult ?? [],
+            'google_play' => $googleResult ?? [],
+            'apple' => $appleResult ?? [],
+            'summary' => [
+                'total_updated' => $totalUpdated,
+                'total_billing_records' => $totalBillingRecords,
+                'total_errors' => $totalErrors,
+            ],
+        ];
+
+        // Log to database
+        try {
+            SchedulerLog::create([
+                'scheduler' => 'subscriptions:sync-billing-history',
+                'command' => 'subscriptions:sync-billing-history',
+                'status' => $status,
+                'result_detail' => $resultDetail,
+                'result_data' => $resultData,
+                'records_processed' => $totalProcessed,
+                'records_updated' => $totalBillingRecords, // Billing records are what we're creating
+                'records_failed' => $totalErrors,
+                'error_message' => $errorMessage,
+                'error_trace' => $errorTrace,
+                'execution_time_ms' => $executionTime,
+                'ran_at' => $ranAt,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to log billing history sync to scheduler_logs', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+
+        return $status === 'failed' ? 1 : 0;
     }
 
     /**
@@ -444,30 +524,173 @@ class SyncSubscriptionBillingHistory extends Command
                             $receiptData = json_decode($decoded, true);
                             
                             // If still not JSON, the decoded data is likely PKCS7 binary (raw iOS receipt)
-                            // This means receipt_data contains raw receipt, not verifyReceipt API response
+                            // Try to verify with Apple's verifyReceipt API to get JSON response
                             if (!is_array($receiptData) || json_last_error() !== JSON_ERROR_NONE) {
-                                $this->warn("Subscription ID {$subscription->id} - receipt_data appears to be raw iOS receipt (base64-encoded PKCS7), not verifyReceipt API response JSON. Raw receipts don't contain latest_receipt_info. To sync transaction history, receipt_data must be the JSON response from Apple's verifyReceipt API. Length: " . strlen($rawReceiptData) . " chars. Skipping.");
-                                $errorCount++;
-                                continue;
+                                // Raw receipt detected - try to verify with Apple's API
+                                $verifiedReceipt = $this->verifyAppleReceipt($rawReceiptData, $subscription->id);
+                                
+                                if ($verifiedReceipt !== null && is_array($verifiedReceipt) && !empty($verifiedReceipt['latest_receipt_info'])) {
+                                    // Successfully verified - use the verified receipt data
+                                    $this->info("Subscription ID {$subscription->id} - Successfully verified raw receipt with Apple's API");
+                                    $receiptData = $verifiedReceipt;
+                                } else {
+                                    // Verification failed or returned no data - fallback to calculated dates
+                                    $this->warn("Subscription ID {$subscription->id} - receipt_data is raw iOS receipt (PKCS7) and verification failed or returned no transaction history. Using calculated dates from start_date (not actual transaction dates). Length: " . strlen($rawReceiptData) . " chars.");
+                                    $receiptData = null; // Mark as invalid JSON so we can use fallback
+                                }
                             }
                         }
                     }
                     
-                    // If still not an array after all attempts, it's invalid
+                    // If still not an array after all attempts, it might be raw receipt or invalid
                     if (!is_array($receiptData)) {
-                        $this->warn("Subscription ID {$subscription->id} - receipt_data could not be parsed as JSON (length: " . strlen($rawReceiptData) . " chars). Expected JSON response from Apple's verifyReceipt API. Skipping.");
-                        $errorCount++;
-                        continue;
+                        // Check if it's a short string (like transaction ID) or invalid
+                        if (strlen($rawReceiptData) < 100) {
+                            $this->warn("Subscription ID {$subscription->id} - receipt_data appears to be invalid or just a transaction ID (length: " . strlen($rawReceiptData) . " chars). Using calculated dates from start_date.");
+                            $receiptData = null; // Mark as invalid to use fallback
+                        } else {
+                            // It's likely raw PKCS7 receipt - try to verify with Apple's API
+                            $verifiedReceipt = $this->verifyAppleReceipt($rawReceiptData, $subscription->id);
+                            
+                            if ($verifiedReceipt !== null && is_array($verifiedReceipt) && !empty($verifiedReceipt['latest_receipt_info'])) {
+                                // Successfully verified - use the verified receipt data
+                                $this->info("Subscription ID {$subscription->id} - Successfully verified raw receipt with Apple's API");
+                                $receiptData = $verifiedReceipt;
+                            } else {
+                                // Verification failed - use fallback
+                                $this->warn("Subscription ID {$subscription->id} - receipt_data could not be parsed as JSON and verification failed (length: " . strlen($rawReceiptData) . " chars). Using calculated dates from start_date (not actual transaction dates).");
+                                $receiptData = null; // Mark as invalid to use fallback
+                            }
+                        }
                     }
                 } elseif (is_array($rawReceiptData)) {
                     // Already an array
                     $receiptData = $rawReceiptData;
                 } else {
-                    $this->warn("Subscription ID {$subscription->id} - receipt_data is not a string or array. Skipping.");
-                    $errorCount++;
-                    continue;
+                    $this->warn("Subscription ID {$subscription->id} - receipt_data is not a string or array. Using calculated dates from start_date.");
+                    $receiptData = null; // Mark as invalid to use fallback
                 }
                 
+                // If receipt_data is valid JSON but doesn't have latest_receipt_info, or is null (raw receipt), use fallback
+                if ($receiptData === null || empty($receiptData['latest_receipt_info'])) {
+                    // Fallback: Use calculated dates from start_date (not ideal, but better than nothing)
+                    if ($subscription->start_date) {
+                        $this->info("Subscription ID {$subscription->id} - Using calculated billing dates from start_date (receipt_data is raw PKCS7 or missing latest_receipt_info)");
+                        
+                        // Use the existing calculated dates approach
+                        $startDate = Carbon::parse($subscription->start_date);
+                        $currentDate = Carbon::now();
+                        $intervalLength = $subscription->subscription_type === 'Monthly' ? 1 : 12;
+                        
+                        $billingDates = [];
+                        $nextBilling = clone $startDate;
+                        
+                        while ($nextBilling->lte($currentDate)) {
+                            $billingDates[] = clone $nextBilling;
+                            $nextBilling->addMonths($intervalLength);
+                            
+                            if (count($billingDates) > 120) {
+                                break;
+                            }
+                        }
+                        
+                        // Get status from subscription status (platform source)
+                        $platformStatus = 'success';
+                        if (is_array($receiptData) && isset($receiptData['status'])) {
+                            $appleStatus = (int) $receiptData['status'];
+                            $platformStatus = match($appleStatus) {
+                                1 => 'success',
+                                2 => 'expired',
+                                3 => 'retry',
+                                4 => 'grace_period',
+                                5 => 'revoked',
+                                default => 'success'
+                            };
+                        } elseif ($subscription->status === 'cancelled') {
+                            $platformStatus = 'cancelled';
+                        }
+                        
+                        $billingAmount = $subscription->subscription_amount ?? 0;
+                        
+                        // Record "created" event (first billing date)
+                        if (count($billingDates) > 0) {
+                            $createdDate = $billingDates[0];
+                            $result = SubscriptionBilling::createEvent([
+                                'subscription_id' => $subscription->id,
+                                'user_id' => $subscription->user_id,
+                                'platform' => 'apple',
+                                'event_type' => SubscriptionBilling::EVENT_CREATED,
+                                'event_date' => $createdDate->format('Y-m-d'),
+                                'billing_date' => $createdDate->format('Y-m-d'),
+                                'amount' => $billingAmount,
+                                'transaction_id' => $subscription->transaction_id,
+                                'status' => $platformStatus,
+                                'notes' => 'Subscription created - calculated from start_date (receipt_data is raw PKCS7, not verifyReceipt JSON)',
+                            ]);
+                            if ($result['wasCreated']) {
+                                $billingHistoryCount++;
+                            }
+                        }
+                        
+                        // Record "renewed" events
+                        foreach (array_slice($billingDates, 1) as $billingDate) {
+                            $result = SubscriptionBilling::createEvent([
+                                'subscription_id' => $subscription->id,
+                                'user_id' => $subscription->user_id,
+                                'platform' => 'apple',
+                                'event_type' => SubscriptionBilling::EVENT_RENEWED,
+                                'event_date' => $billingDate->format('Y-m-d'),
+                                'billing_date' => $billingDate->format('Y-m-d'),
+                                'amount' => $billingAmount,
+                                'transaction_id' => $subscription->transaction_id,
+                                'status' => $platformStatus,
+                                'notes' => 'Subscription renewed - calculated from start_date (receipt_data is raw PKCS7, not verifyReceipt JSON)',
+                            ]);
+                            if ($result['wasCreated']) {
+                                $billingHistoryCount++;
+                            }
+                        }
+                        
+                        // Record cancelled/expired events if applicable
+                        if ($subscription->status === 'cancelled' && $subscription->cancelled_at) {
+                            $cancelledAt = is_string($subscription->cancelled_at) ? Carbon::parse($subscription->cancelled_at) : $subscription->cancelled_at;
+                            $result = SubscriptionBilling::createEvent([
+                                'subscription_id' => $subscription->id,
+                                'user_id' => $subscription->user_id,
+                                'platform' => 'apple',
+                                'event_type' => SubscriptionBilling::EVENT_CANCELLED,
+                                'event_date' => $cancelledAt->format('Y-m-d'),
+                                'status_from' => 'active',
+                                'status_to' => 'cancelled',
+                                'notes' => 'Subscription cancelled - from database status',
+                            ]);
+                            if ($result['wasCreated']) {
+                                $billingHistoryCount++;
+                            }
+                        }
+                        
+                        // Update renewal count
+                        $renewalCount = max(0, count($billingDates) - 1);
+                        if ($subscription->renewal_count !== $renewalCount) {
+                            $subscription->renewal_count = $renewalCount;
+                            if (count($billingDates) > 1) {
+                                $subscription->last_renewed_at = end($billingDates);
+                            }
+                            $subscription->save();
+                            $updatedCount++;
+                        }
+                        
+                        // Continue to next subscription (skip the actual receipt parsing)
+                        continue;
+                    } else {
+                        // No start_date available - can't calculate
+                        $this->warn("Subscription ID {$subscription->id} - No start_date found and receipt_data is invalid. Skipping.");
+                        $errorCount++;
+                        continue;
+                    }
+                }
+                
+                // Normal path: receipt_data is valid JSON with latest_receipt_info
                 if (empty($receiptData['latest_receipt_info'])) {
                     // Check if it's a different structure - sometimes Apple receipts have different keys
                     if (empty($receiptData['pending_renewal_info']) && empty($receiptData['receipt']) && empty($receiptData['status'])) {
@@ -827,5 +1050,129 @@ class SyncSubscriptionBillingHistory extends Command
         }
 
         return ['updated' => 0, 'billing_records' => $billingHistoryCount];
+    }
+
+    /**
+     * Verify Apple receipt with Apple's verifyReceipt API
+     * 
+     * @param string $receiptData Base64-encoded receipt data (raw PKCS7)
+     * @param int $subscriptionId Subscription ID for logging
+     * @return array|null Verified receipt data with latest_receipt_info, or null on failure
+     */
+    private function verifyAppleReceipt(string $receiptData, int $subscriptionId): ?array
+    {
+        $sharedSecret = config('services.apple.shared_secret');
+        
+        if (empty($sharedSecret)) {
+            // Secret not configured - skip verification and let the caller use fallback (calculated dates)
+            // This is expected when keys are not yet available
+            return null;
+        }
+
+        $verifyUrl = config('services.apple.verify_receipt_url', 'https://buy.itunes.apple.com/verifyReceipt');
+        $sandboxUrl = config('services.apple.verify_receipt_url_sandbox', 'https://sandbox.itunes.apple.com/verifyReceipt');
+
+        // Prepare request data
+        $requestData = [
+            'receipt-data' => $receiptData,
+            'password' => $sharedSecret,
+            'exclude-old-transactions' => false, // Include all transaction history
+        ];
+
+        try {
+            // Try production first
+            $ch = curl_init($verifyUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($curlError) {
+                Log::error("Apple verifyReceipt cURL error for subscription {$subscriptionId}: {$curlError}");
+                return null;
+            }
+
+            if ($httpCode !== 200) {
+                Log::warning("Apple verifyReceipt HTTP error for subscription {$subscriptionId}: HTTP {$httpCode}");
+                return null;
+            }
+
+            $result = json_decode($response, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::error("Apple verifyReceipt JSON decode error for subscription {$subscriptionId}: " . json_last_error_msg());
+                return null;
+            }
+
+            // Check if receipt is from sandbox (status 21007)
+            if (isset($result['status']) && $result['status'] == 21007) {
+                // Receipt is from sandbox - try sandbox URL
+                $this->info("Subscription ID {$subscriptionId} - Receipt is from sandbox, verifying with sandbox endpoint...");
+                
+                $ch = curl_init($sandboxUrl);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $curlError = curl_error($ch);
+                curl_close($ch);
+
+                if ($curlError || $httpCode !== 200) {
+                    Log::warning("Apple verifyReceipt sandbox error for subscription {$subscriptionId}: HTTP {$httpCode}, Error: {$curlError}");
+                    return null;
+                }
+
+                $result = json_decode($response, true);
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    Log::error("Apple verifyReceipt sandbox JSON decode error for subscription {$subscriptionId}: " . json_last_error_msg());
+                    return null;
+                }
+            }
+
+            // Check status code (0 = valid receipt)
+            if (isset($result['status']) && $result['status'] !== 0) {
+                $statusMessages = [
+                    21000 => 'The App Store could not read the JSON object you provided.',
+                    21002 => 'The data in the receipt-data property was malformed or missing.',
+                    21003 => 'The receipt could not be authenticated.',
+                    21004 => 'The shared secret you provided does not match the shared secret on file for your account.',
+                    21005 => 'The receipt server is not currently available.',
+                    21006 => 'This receipt is valid but the subscription has expired.',
+                    21007 => 'This receipt is from the sandbox environment, sent to production.',
+                    21008 => 'This receipt is from the production environment, sent to sandbox.',
+                    21010 => 'This receipt could not be authorized. Treat this the same as if a purchase was never made.',
+                ];
+                
+                $statusMsg = $statusMessages[$result['status']] ?? "Unknown status: {$result['status']}";
+                $this->warn("Subscription ID {$subscriptionId} - Apple verifyReceipt failed: {$statusMsg} (Status: {$result['status']})");
+                Log::warning("Apple verifyReceipt failed for subscription {$subscriptionId}: {$statusMsg}");
+                return null;
+            }
+
+            // Success - return the verified receipt data
+            if (!empty($result['latest_receipt_info'])) {
+                return $result;
+            } else {
+                $this->warn("Subscription ID {$subscriptionId} - Apple verifyReceipt succeeded but no latest_receipt_info found in response");
+                Log::warning("Apple verifyReceipt for subscription {$subscriptionId} succeeded but no latest_receipt_info found");
+                return $result; // Return anyway, might have other useful data
+            }
+
+        } catch (\Exception $e) {
+            Log::error("Apple verifyReceipt exception for subscription {$subscriptionId}: " . $e->getMessage());
+            $this->warn("Subscription ID {$subscriptionId} - Error verifying receipt with Apple: " . $e->getMessage());
+            return null;
+        }
     }
 }

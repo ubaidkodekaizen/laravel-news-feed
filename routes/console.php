@@ -19,3 +19,10 @@ Schedule::command('subscriptions:send-renewal-reminders')
     ->daily()
     ->at('05:05')
     ->timezone('America/Los_Angeles'); // Irvine, California timezone
+
+// Schedule billing history sync (runs 10 minutes after subscription sync)
+// This syncs actual transaction history and billing events from all platforms
+Schedule::command('subscriptions:sync-billing-history')
+    ->daily()
+    ->at('05:10')
+    ->timezone('America/Los_Angeles'); // Irvine, California timezone
