@@ -98,9 +98,9 @@
                                                                                         <td style="padding-bottom: 20px;">
                                                                                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                                                 <tr>
-                                                                                                    <td style="font-size:28px; line-height:35px; color:#282828; font-family:'PT Sans', Arial, sans-serif; text-align:center; padding-bottom: 10px;">
-                                                                                                        <strong>Subscription Renewal Reminder</strong>
-                                                                                                    </td>
+                                                                    <td style="font-size:28px; line-height:35px; color:#282828; font-family:'PT Sans', Arial, sans-serif; text-align:center; padding-bottom: 10px;">
+                                                                        <strong>Your place in MuslimLynk</strong>
+                                                                    </td>
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td style="font-size:18px; line-height:26px; color:#303030; font-family:'PT Sans', Arial, sans-serif; text-align:center; padding-bottom: 30px;">

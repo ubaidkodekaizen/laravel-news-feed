@@ -63,14 +63,14 @@ class SubscriptionRenewalReminder extends Mailable
     {
         // For free subscriptions without a platform, provide generic instructions
         if ($isFree && (empty($platform) || $platform === 'unknown')) {
-            return 'To continue your access, please visit your subscription page and renew your membership. You can upgrade to a paid plan or extend your free membership if eligible.';
+            return 'Renew your membership. Takes less than a minute. Secure checkout.';
         }
         
         return match($platform) {
-            'web', 'authorize.net' => 'To continue your access, please visit your subscription page and renew your membership. Your payment will be processed securely through our website.',
-            'google', 'google play' => 'To continue your access, please renew your subscription through the Google Play Store. Open the Google Play Store app, go to Subscriptions, and renew your MuslimLynk subscription.',
-            'apple', 'apple app store' => 'To continue your access, please renew your subscription through the Apple App Store. Open the App Store app, tap your profile, go to Subscriptions, and renew your MuslimLynk subscription.',
-            default => 'To continue your access, please visit your subscription page and renew your membership through your subscription management page.',
+            'web', 'authorize.net' => 'Renew your membership. Takes less than a minute. Secure checkout.',
+            'google', 'google play' => 'Renew your membership. Takes less than a minute. Secure checkout through the Google Play Store.',
+            'apple', 'apple app store' => 'Renew your membership. Takes less than a minute. Secure checkout through the Apple App Store.',
+            default => 'Renew your membership. Takes less than a minute. Secure checkout.',
         };
     }
 

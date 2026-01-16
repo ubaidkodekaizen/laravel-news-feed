@@ -369,13 +369,29 @@ class UserController extends Controller
 
         /** @var GooglePlayService $googlePlay */
         $googlePlay = app(GooglePlayService::class);
-        $googlePlay->acknowledgeSubscription($productId, $purchaseToken, $developerPayload, $packageName);
+        $acknowledged = $googlePlay->acknowledgeSubscription($productId, $purchaseToken, $developerPayload, $packageName);
 
         $receiptData['purchaseToken'] = $purchaseToken;
         $receiptData['acknowledged'] = true;
+        $receiptData['acknowledged_at'] = now()->toIso8601String();
 
         $subscription->receipt_data = json_encode($receiptData);
         $subscription->save();
+
+        // Log acknowledgment status
+        if ($acknowledged) {
+            Log::info('Google Play subscription acknowledged successfully', [
+                'subscription_id' => $subscription->id,
+                'user_id' => $subscription->user_id,
+                'product_id' => $productId,
+            ]);
+        } else {
+            Log::info('Google Play subscription was already acknowledged', [
+                'subscription_id' => $subscription->id,
+                'user_id' => $subscription->user_id,
+                'product_id' => $productId,
+            ]);
+        }
     }
 
     public function login(Request $request)

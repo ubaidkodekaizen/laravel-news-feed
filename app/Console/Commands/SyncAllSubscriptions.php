@@ -502,13 +502,37 @@ class SyncAllSubscriptions extends Command
                 // Get subscription status from Google Play
                 $purchase = $googlePlay->getSubscriptionPurchase($productId, $purchaseToken);
                 
+                // Safety check: Acknowledge subscription if not already acknowledged
+                // This handles cases where acknowledgment might have been missed during creation
+                $acknowledgmentState = (int) $purchase->getAcknowledgementState();
+                $isAcknowledged = isset($receiptData['acknowledged']) && $receiptData['acknowledged'] === true;
+                $needsAckSave = false;
+                
+                if ($acknowledgmentState === 0 && !$isAcknowledged) {
+                    try {
+                        $acknowledged = $googlePlay->acknowledgeSubscription($productId, $purchaseToken, null, config('services.google_play.package_name'));
+                        if ($acknowledged) {
+                            $receiptData['acknowledged'] = true;
+                            $receiptData['acknowledged_at'] = now()->toIso8601String();
+                            $subscription->receipt_data = json_encode($receiptData);
+                            $needsAckSave = true; // Track if acknowledgment was saved
+                            $this->info("Subscription ID {$subscription->id} - Acknowledged during sync");
+                        }
+                    } catch (\Exception $ackException) {
+                        // Log but don't fail the sync - acknowledgment is optional after 3 days
+                        Log::warning("Failed to acknowledge subscription during sync: " . $ackException->getMessage(), [
+                            'subscription_id' => $subscription->id,
+                        ]);
+                    }
+                }
+                
                 $expiryTimeMillis = $purchase->getExpiryTimeMillis();
                 $expiryDate = $expiryTimeMillis ? Carbon::createFromTimestampMs($expiryTimeMillis) : null;
                 $paymentState = (int) $purchase->getPaymentState();
                 $autoRenewing = (bool) $purchase->getAutoRenewing();
                 $cancelReason = $purchase->getCancelReason();
                 
-                $needsSave = false;
+                $needsSave = $needsAckSave; // Start with acknowledgment save status
                 $oldExpiryDate = $subscription->expires_at ? Carbon::parse($subscription->expires_at) : null;
                 
                 // Check if subscription is still active
