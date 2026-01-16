@@ -133,16 +133,21 @@ class AdminController extends Controller
 
     private function getSubscribersData($startDate, $endDate)
     {
-        // Active subscriptions created on that day - only Monthly and Yearly
+        // Active subscriptions - use start_date (actual subscription start date) if available, otherwise created_at
+        // Only Monthly and Yearly subscriptions
         $active = Subscription::where('status', 'active')
             ->whereIn('subscription_type', ['Monthly', 'Yearly'])
-            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->whereRaw("COALESCE(start_date, DATE(created_at)) BETWEEN ? AND ?", [
+                $startDate, 
+                $endDate
+            ])
+            ->selectRaw('DATE(COALESCE(start_date, created_at)) as date, COUNT(*) as count')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
-        // Renewed subscriptions (where last_renewed_at is within the date range) - only Monthly and Yearly
+        // Renewed subscriptions - use last_renewed_at (actual renewal date from platform)
+        // Only Monthly and Yearly subscriptions that are still active
         $renewed = Subscription::where('status', 'active')
             ->whereIn('subscription_type', ['Monthly', 'Yearly'])
             ->whereNotNull('last_renewed_at')
@@ -153,10 +158,15 @@ class AdminController extends Controller
             ->get();
 
         // Cancelled subscriptions - only Monthly and Yearly
+        // Use cancelled_at if available (actual cancellation date), otherwise fallback to updated_at
+        // COALESCE ensures we use cancelled_at (actual cancellation date) when available, otherwise updated_at
         $cancelled = Subscription::where('status', 'cancelled')
             ->whereIn('subscription_type', ['Monthly', 'Yearly'])
-            ->whereBetween('updated_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
-            ->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
+            ->whereRaw("COALESCE(cancelled_at, updated_at) BETWEEN ? AND ?", [
+                $startDate . ' 00:00:00', 
+                $endDate . ' 23:59:59'
+            ])
+            ->selectRaw('DATE(COALESCE(cancelled_at, updated_at)) as date, COUNT(*) as count')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
