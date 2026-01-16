@@ -607,33 +607,11 @@
 
     </main>
 
-    <!-- Subscription Detail Modal -->
-    <div class="modal fade subscription-modal" id="subscriptionDetailModal" tabindex="-1" aria-labelledby="subscriptionDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="subscriptionDetailModalLabel">Subscription Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="subscriptionDetailContent">
-                    <div class="loading-spinner">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const modal = new bootstrap.Modal(document.getElementById('subscriptionDetailModal'));
-            const modalContent = document.getElementById('subscriptionDetailContent');
-            const modalTitle = document.getElementById('subscriptionDetailModalLabel');
-
-            // Add click event to table rows
+            // Add click event to table rows - navigate to detail page
             document.querySelectorAll('table#usersTable tbody tr[data-subscription-id]').forEach(row => {
+                row.style.cursor = 'pointer';
                 row.addEventListener('click', function(e) {
                     // Don't trigger if clicking on a link or button
                     if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('button')) {
@@ -641,209 +619,41 @@
                     }
 
                     const subscriptionId = this.getAttribute('data-subscription-id');
-                    loadSubscriptionDetails(subscriptionId);
+                    window.location.href = `{{ route('admin.subscriptions.show', '') }}/${subscriptionId}`;
                 });
             });
 
-            function loadSubscriptionDetails(id) {
-                // Show loading spinner
-                modalContent.innerHTML = `
-                    <div class="loading-spinner">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                `;
-                modal.show();
+            // Handle filter dropdown changes - preserve all filter values when one changes
+            document.querySelectorAll('.subscription-filter').forEach(select => {
+                select.addEventListener('change', function() {
+                    const filterName = this.name; // 'status', 'platform', or 'type'
+                    const filterValue = this.value;
 
-                fetch(`{{ route('admin.subscriptions.show', '') }}/${id}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
+                    // Get all current filter values
+                    const statusFilter = document.getElementById('statusFilter')?.value || 'all';
+                    const platformFilter = document.getElementById('platformFilter')?.value || 'all';
+                    const typeFilter = document.getElementById('typeFilter')?.value || 'all';
+
+                    // Build URL with all filter parameters
+                    const params = new URLSearchParams();
+                    
+                    // Add all filter values
+                    if (statusFilter !== 'all') {
+                        params.append('status', statusFilter);
                     }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to load subscription details');
+                    if (platformFilter !== 'all') {
+                        params.append('platform', platformFilter);
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    renderSubscriptionDetails(data);
-                })
-                .catch(error => {
-                    modalContent.innerHTML = `
-                        <div class="alert alert-danger">
-                            <strong>Error:</strong> ${error.message}
-                        </div>
-                    `;
+                    if (typeFilter !== 'all') {
+                        params.append('type', typeFilter);
+                    }
+
+                    // Redirect to filtered URL
+                    const url = '{{ route("admin.subscriptions") }}' + (params.toString() ? '?' + params.toString() : '');
+                    window.location.href = url;
                 });
-            }
-
-            function renderSubscriptionDetails(data) {
-                const statusClass = data.status.toLowerCase();
-                let statusBadgeClass = 'status-active';
-                if (statusClass.includes('cancelled') || statusClass.includes('inactive')) {
-                    statusBadgeClass = 'status-cancelled';
-                } else if (data.subscription_type && data.subscription_type.toLowerCase() === 'free') {
-                    statusBadgeClass = 'status-free';
-                }
-
-                let receiptDataHtml = '';
-                if (data.receipt_data && typeof data.receipt_data === 'object') {
-                    receiptDataHtml = '<pre style="background: #f5f5f5; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 12px;">' + JSON.stringify(data.receipt_data, null, 2) + '</pre>';
-                } else if (data.receipt_data) {
-                    receiptDataHtml = '<pre style="background: #f5f5f5; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 12px;">' + data.receipt_data + '</pre>';
-                } else {
-                    receiptDataHtml = 'N/A';
-                }
-
-                modalContent.innerHTML = `
-                    <div class="subscription-detail-section">
-                        <div class="subscription-detail-section-title">User Information</div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">User ID:</div>
-                            <div class="subscription-detail-value">${data.user.id || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Name:</div>
-                            <div class="subscription-detail-value">${data.user.name || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Email:</div>
-                            <div class="subscription-detail-value">${data.user.email || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Phone:</div>
-                            <div class="subscription-detail-value">${data.user.phone || 'N/A'}</div>
-                        </div>
-                    </div>
-
-                    <div class="subscription-detail-section">
-                        <div class="subscription-detail-section-title">Subscription Information</div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Subscription ID:</div>
-                            <div class="subscription-detail-value">${data.id || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Plan:</div>
-                            <div class="subscription-detail-value">${data.plan.name || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Type:</div>
-                            <div class="subscription-detail-value">${data.subscription_type || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Amount:</div>
-                            <div class="subscription-detail-value">${data.subscription_amount || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Platform:</div>
-                            <div class="subscription-detail-value">${data.platform || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Status:</div>
-                            <div class="subscription-detail-value">
-                                <span class="status-badge ${statusBadgeClass}">${data.status || 'N/A'}</span>
-                            </div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Transaction ID:</div>
-                            <div class="subscription-detail-value">${data.transaction_id || 'N/A'}</div>
-                        </div>
-                    </div>
-
-                    <div class="subscription-detail-section">
-                        <div class="subscription-detail-section-title">Dates & Timeline</div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Start Date:</div>
-                            <div class="subscription-detail-value">${data.start_date || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Renewal Date:</div>
-                            <div class="subscription-detail-value">${data.renewal_date || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Expires At:</div>
-                            <div class="subscription-detail-value">${data.expires_at || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Last Renewed:</div>
-                            <div class="subscription-detail-value">${data.last_renewed_at || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Renewal Count:</div>
-                            <div class="subscription-detail-value">${data.renewal_count || 0}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Cancelled At:</div>
-                            <div class="subscription-detail-value">${data.cancelled_at || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Grace Period Ends:</div>
-                            <div class="subscription-detail-value">${data.grace_period_ends_at || 'N/A'}</div>
-                        </div>
-                    </div>
-
-                    <div class="subscription-detail-section">
-                        <div class="subscription-detail-section-title">Additional Information</div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Auto Renewing:</div>
-                            <div class="subscription-detail-value">${data.auto_renewing || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Payment State:</div>
-                            <div class="subscription-detail-value">${data.payment_state || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Last Checked:</div>
-                            <div class="subscription-detail-value">${data.last_checked_at || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Renewal Reminder Sent:</div>
-                            <div class="subscription-detail-value">${data.renewal_reminder_sent_at || 'N/A'}</div>
-                        </div>
-                    </div>
-
-                    <div class="subscription-detail-section">
-                        <div class="subscription-detail-section-title">System Information</div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Created At:</div>
-                            <div class="subscription-detail-value">${data.created_at || 'N/A'}</div>
-                        </div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label">Updated At:</div>
-                            <div class="subscription-detail-value">${data.updated_at || 'N/A'}</div>
-                        </div>
-                    </div>
-
-                    <div class="subscription-detail-section">
-                        <div class="subscription-detail-section-title">Receipt Data</div>
-                        <div class="subscription-detail-row">
-                            <div class="subscription-detail-label" style="width: 100%; margin-bottom: 10px;">Receipt Information:</div>
-                            <div class="subscription-detail-value" style="width: 100%;">${receiptDataHtml}</div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-
-        // Handle filter dropdown changes - only apply the changed filter
-        document.querySelectorAll('.subscription-filter').forEach(select => {
-            select.addEventListener('change', function() {
-                const filterName = this.name; // 'status', 'platform', or 'type'
-                const filterValue = this.value;
-
-                // Build URL with only the changed filter parameter
-                const params = new URLSearchParams();
-                if (filterValue !== 'all') {
-                    params.append(filterName, filterValue);
-                }
-
-                // Redirect to filtered URL (only the selected filter will be applied)
-                const url = '{{ route("admin.subscriptions") }}' + (params.toString() ? '?' + params.toString() : '');
-                window.location.href = url;
             });
         });
+
     </script>
 @endsection

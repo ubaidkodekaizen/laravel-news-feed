@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business\Subscription;
+use App\Models\SubscriptionBilling;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -204,46 +205,23 @@ class SubscriptionController extends Controller
         $canView = $isAdmin || ($user && $user->hasPermission('subscriptions.view'));
         
         if (!$canView) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized action.');
         }
 
-        $subscription = Subscription::with(['user', 'plan'])
+        $subscription = Subscription::with(['user', 'plan', 'billings'])
             ->findOrFail($id);
 
-        // Format dates for display
-        $formattedData = [
-            'id' => $subscription->id,
-            'user' => [
-                'id' => $subscription->user->id ?? null,
-                'name' => $subscription->user ? trim(($subscription->user->first_name ?? '') . ' ' . ($subscription->user->last_name ?? '')) : 'N/A',
-                'email' => $subscription->user->email ?? 'N/A',
-                'phone' => $subscription->user->phone ?? 'N/A',
-            ],
-            'plan' => [
-                'id' => $subscription->plan->id ?? null,
-                'name' => $subscription->plan->plan_name ?? 'N/A',
-            ],
-            'subscription_type' => $subscription->subscription_type ?? 'N/A',
-            'subscription_amount' => $subscription->subscription_amount ? '$' . number_format($subscription->subscription_amount, 2) : 'N/A',
-            'platform' => $subscription->platform ?? 'N/A',
-            'status' => ucfirst($subscription->status ?? 'N/A'),
-            'transaction_id' => $subscription->transaction_id ?? 'N/A',
-            'start_date' => $subscription->start_date ? Carbon::parse($subscription->start_date)->format('F d, Y') : 'N/A',
-            'renewal_date' => $subscription->renewal_date ? Carbon::parse($subscription->renewal_date)->format('F d, Y') : 'N/A',
-            'expires_at' => $subscription->expires_at ? Carbon::parse($subscription->expires_at)->format('F d, Y') : 'N/A',
-            'cancelled_at' => $subscription->cancelled_at ? Carbon::parse($subscription->cancelled_at)->format('F d, Y') : 'N/A',
-            'last_renewed_at' => $subscription->last_renewed_at ? Carbon::parse($subscription->last_renewed_at)->format('F d, Y') : 'N/A',
-            'renewal_count' => $subscription->renewal_count ?? 0,
-            'auto_renewing' => $subscription->auto_renewing ? 'Yes' : 'No',
-            'payment_state' => $subscription->payment_state ?? 'N/A',
-            'last_checked_at' => $subscription->last_checked_at ? Carbon::parse($subscription->last_checked_at)->format('F d, Y h:i A') : 'N/A',
-            'grace_period_ends_at' => $subscription->grace_period_ends_at ? Carbon::parse($subscription->grace_period_ends_at)->format('F d, Y') : 'N/A',
-            'renewal_reminder_sent_at' => $subscription->renewal_reminder_sent_at ? Carbon::parse($subscription->renewal_reminder_sent_at)->format('F d, Y h:i A') : 'N/A',
-            'created_at' => $subscription->created_at ? $subscription->created_at->format('F d, Y h:i A') : 'N/A',
-            'updated_at' => $subscription->updated_at ? $subscription->updated_at->format('F d, Y h:i A') : 'N/A',
-            'receipt_data' => $subscription->receipt_data ? (is_string($subscription->receipt_data) ? json_decode($subscription->receipt_data, true) : $subscription->receipt_data) : null,
-        ];
+        // Get billing history ordered by event_date descending
+        $billingHistory = SubscriptionBilling::where('subscription_id', $subscription->id)
+            ->orderBy('event_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return response()->json($formattedData);
+        // Calculate total paid from billing history
+        $totalPaid = $billingHistory->where('status', 'success')
+            ->whereIn('event_type', [SubscriptionBilling::EVENT_CREATED, SubscriptionBilling::EVENT_RENEWED])
+            ->sum('amount');
+
+        return view('admin.subscriptions.show', compact('subscription', 'billingHistory', 'totalPaid'));
     }
 }
