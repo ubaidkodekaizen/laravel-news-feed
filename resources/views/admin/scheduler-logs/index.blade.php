@@ -424,7 +424,7 @@
                                         <td>{{ $log->records_processed ?? 0 }}</td>
                                         <td>{{ $log->records_updated ?? 0 }}</td>
                                         <td>{{ $log->records_failed ?? 0 }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($log->ran_at)->format('d M Y h:i A') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($log->ran_at)->setTimezone('Asia/Karachi')->format('d M Y h:i A') }} (PKT)</td>
                                         <td>
                                             <a id="view" href="{{ route('admin.scheduler-logs.show', $log->id) }}" class="btn btn-primary btn-sm" title="View Details">
                                                 <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

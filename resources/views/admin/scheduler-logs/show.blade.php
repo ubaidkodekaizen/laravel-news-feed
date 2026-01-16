@@ -159,7 +159,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="detail-label">Ran At</div>
-                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->ran_at)->format('d M Y h:i A') }}</div>
+                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->ran_at)->setTimezone('Asia/Karachi')->format('d M Y h:i A') }} (Pakistan Time)</div>
                                     </div>
                                 </div>
                             </div>
@@ -330,16 +330,16 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="detail-label">Created At</div>
-                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->created_at)->format('d M Y h:i A') }}</div>
+                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->created_at)->setTimezone('Asia/Karachi')->format('d M Y h:i A') }} (Pakistan Time)</div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="detail-label">Updated At</div>
-                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->updated_at)->format('d M Y h:i A') }}</div>
+                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->updated_at)->setTimezone('Asia/Karachi')->format('d M Y h:i A') }} (Pakistan Time)</div>
                                     </div>
                                     @if($log->deleted_at)
                                     <div class="col-md-6 mb-3">
                                         <div class="detail-label">Deleted At</div>
-                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->deleted_at)->format('d M Y h:i A') }}</div>
+                                        <div class="detail-value">{{ \Carbon\Carbon::parse($log->deleted_at)->setTimezone('Asia/Karachi')->format('d M Y h:i A') }} (Pakistan Time)</div>
                                     </div>
                                     @endif
                                 </div>
