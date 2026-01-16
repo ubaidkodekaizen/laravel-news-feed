@@ -81,6 +81,13 @@ class SyncSubscriptionBillingHistory extends Command
 
         foreach ($subscriptions as $subscription) {
             try {
+                // Check if user exists (handle soft-deleted users)
+                if (!$subscription->user_id || !\App\Models\User::where('id', $subscription->user_id)->exists()) {
+                    $this->warn("Subscription ID {$subscription->id} - User ID {$subscription->user_id} does not exist (likely soft-deleted), skipping");
+                    $errorCount++;
+                    continue;
+                }
+
                 $detailRequest = new AnetAPI\ARBGetSubscriptionRequest();
                 $detailRequest->setMerchantAuthentication($merchantAuthentication);
                 $detailRequest->setSubscriptionId($subscription->transaction_id);
@@ -141,6 +148,13 @@ class SyncSubscriptionBillingHistory extends Command
 
         foreach ($subscriptions as $subscription) {
             try {
+                // Check if user exists (handle soft-deleted users)
+                if (!$subscription->user_id || !\App\Models\User::where('id', $subscription->user_id)->exists()) {
+                    $this->warn("Subscription ID {$subscription->id} - User ID {$subscription->user_id} does not exist (likely soft-deleted), skipping");
+                    $errorCount++;
+                    continue;
+                }
+
                 $planType = $subscription->subscription_type === 'Monthly' ? 'Premium_Monthly' : 'Premium_Yearly';
                 $productId = config("services.google_play.products.{$planType}");
 
@@ -212,7 +226,7 @@ class SyncSubscriptionBillingHistory extends Command
                 // Record "created" event (first billing date)
                 if (count($billingDates) > 0) {
                     $createdDate = $billingDates[0];
-                    SubscriptionBilling::createEvent([
+                    $result = SubscriptionBilling::createEvent([
                         'subscription_id' => $subscription->id,
                         'user_id' => $subscription->user_id,
                         'platform' => 'google',
@@ -224,12 +238,14 @@ class SyncSubscriptionBillingHistory extends Command
                         'status' => 'success',
                         'notes' => 'Subscription created - synced from Google Play',
                     ]);
-                    $billingHistoryCount++;
+                    if ($result['wasCreated']) {
+                        $billingHistoryCount++;
+                    }
                 }
 
                 // Record "renewed" events (all subsequent billings)
                 foreach (array_slice($billingDates, 1) as $billingDate) {
-                    SubscriptionBilling::createEvent([
+                    $result = SubscriptionBilling::createEvent([
                         'subscription_id' => $subscription->id,
                         'user_id' => $subscription->user_id,
                         'platform' => 'google',
@@ -241,7 +257,9 @@ class SyncSubscriptionBillingHistory extends Command
                         'status' => 'success',
                         'notes' => 'Subscription renewed - synced from Google Play',
                     ]);
-                    $billingHistoryCount++;
+                    if ($result['wasCreated']) {
+                        $billingHistoryCount++;
+                    }
                 }
 
                 // Update renewal count
@@ -261,7 +279,7 @@ class SyncSubscriptionBillingHistory extends Command
 
                     if (!$isActive || $cancelReason || ($expiryDate && $expiryDate->isPast())) {
                         $eventDate = $expiryDate && $expiryDate->isPast() ? $expiryDate : Carbon::now();
-                        SubscriptionBilling::createEvent([
+                        $result = SubscriptionBilling::createEvent([
                             'subscription_id' => $subscription->id,
                             'user_id' => $subscription->user_id,
                             'platform' => 'google',
@@ -277,7 +295,9 @@ class SyncSubscriptionBillingHistory extends Command
                                 'expiry_date' => $expiryDate ? $expiryDate->toIso8601String() : null,
                             ],
                         ]);
-                        $billingHistoryCount++;
+                        if ($result['wasCreated']) {
+                            $billingHistoryCount++;
+                        }
                     }
                 }
             } catch (\Exception $e) {
@@ -313,6 +333,13 @@ class SyncSubscriptionBillingHistory extends Command
 
         foreach ($subscriptions as $subscription) {
             try {
+                // Check if user exists (handle soft-deleted users)
+                if (!$subscription->user_id || !\App\Models\User::where('id', $subscription->user_id)->exists()) {
+                    $this->warn("Subscription ID {$subscription->id} - User ID {$subscription->user_id} does not exist (likely soft-deleted), skipping");
+                    $errorCount++;
+                    continue;
+                }
+
                 // Calculate billing dates from start_date (Apple doesn't provide detailed history easily)
                 if (!$subscription->start_date) {
                     $this->warn("Subscription ID {$subscription->id} - No start_date found");
@@ -342,7 +369,7 @@ class SyncSubscriptionBillingHistory extends Command
                 // Record "created" event (first billing date)
                 if (count($billingDates) > 0) {
                     $createdDate = $billingDates[0];
-                    SubscriptionBilling::createEvent([
+                    $result = SubscriptionBilling::createEvent([
                         'subscription_id' => $subscription->id,
                         'user_id' => $subscription->user_id,
                         'platform' => 'apple',
@@ -354,12 +381,14 @@ class SyncSubscriptionBillingHistory extends Command
                         'status' => 'success',
                         'notes' => 'Subscription created - synced from Apple (calculated from start_date)',
                     ]);
-                    $billingHistoryCount++;
+                    if ($result['wasCreated']) {
+                        $billingHistoryCount++;
+                    }
                 }
 
                 // Record "renewed" events (all subsequent billings)
                 foreach (array_slice($billingDates, 1) as $billingDate) {
-                    SubscriptionBilling::createEvent([
+                    $result = SubscriptionBilling::createEvent([
                         'subscription_id' => $subscription->id,
                         'user_id' => $subscription->user_id,
                         'platform' => 'apple',
@@ -371,13 +400,15 @@ class SyncSubscriptionBillingHistory extends Command
                         'status' => 'success',
                         'notes' => 'Subscription renewed - synced from Apple (calculated from start_date)',
                     ]);
-                    $billingHistoryCount++;
+                    if ($result['wasCreated']) {
+                        $billingHistoryCount++;
+                    }
                 }
 
                 // Record "cancelled" event if cancelled
                 if ($subscription->status === 'cancelled' && $subscription->cancelled_at) {
                     $cancelledAt = is_string($subscription->cancelled_at) ? Carbon::parse($subscription->cancelled_at) : $subscription->cancelled_at;
-                    SubscriptionBilling::createEvent([
+                    $result = SubscriptionBilling::createEvent([
                         'subscription_id' => $subscription->id,
                         'user_id' => $subscription->user_id,
                         'platform' => 'apple',
@@ -388,14 +419,16 @@ class SyncSubscriptionBillingHistory extends Command
                         'notes' => 'Subscription cancelled - synced from Apple',
                         'metadata' => ['cancelled_at' => $cancelledAt->toIso8601String()],
                     ]);
-                    $billingHistoryCount++;
+                    if ($result['wasCreated']) {
+                        $billingHistoryCount++;
+                    }
                 }
 
                 // Record "expired" event if expired (check expires_at)
                 if ($subscription->expires_at) {
                     $expiresAt = is_string($subscription->expires_at) ? Carbon::parse($subscription->expires_at) : $subscription->expires_at;
                     if ($expiresAt->isPast() && $subscription->status === 'active') {
-                        SubscriptionBilling::createEvent([
+                        $result = SubscriptionBilling::createEvent([
                             'subscription_id' => $subscription->id,
                             'user_id' => $subscription->user_id,
                             'platform' => 'apple',
@@ -406,7 +439,9 @@ class SyncSubscriptionBillingHistory extends Command
                             'notes' => 'Subscription expired - synced from Apple',
                             'metadata' => ['expires_at' => $expiresAt->toIso8601String()],
                         ]);
-                        $billingHistoryCount++;
+                        if ($result['wasCreated']) {
+                            $billingHistoryCount++;
+                        }
                     }
                 }
 
@@ -488,7 +523,7 @@ class SyncSubscriptionBillingHistory extends Command
                     // Record "created" event (first billing date)
                     if (count($billingDates) > 0) {
                         $createdDate = $billingDates[0];
-                        SubscriptionBilling::createEvent([
+                        $result = SubscriptionBilling::createEvent([
                             'subscription_id' => $subscription->id,
                             'user_id' => $subscription->user_id,
                             'platform' => $subscription->platform ?? 'Web',
@@ -500,12 +535,14 @@ class SyncSubscriptionBillingHistory extends Command
                             'status' => 'success',
                             'notes' => $notes . ' - Subscription created',
                         ]);
-                        $billingHistoryCount++;
+                        if ($result['wasCreated']) {
+                            $billingHistoryCount++;
+                        }
                     }
 
                     // Record "renewed" events (all subsequent billings)
                     foreach (array_slice($billingDates, 1) as $billingDate) {
-                        SubscriptionBilling::createEvent([
+                        $result = SubscriptionBilling::createEvent([
                             'subscription_id' => $subscription->id,
                             'user_id' => $subscription->user_id,
                             'platform' => $subscription->platform ?? 'Web',
@@ -517,13 +554,15 @@ class SyncSubscriptionBillingHistory extends Command
                             'status' => 'success',
                             'notes' => $notes . ' - Subscription renewed',
                         ]);
-                        $billingHistoryCount++;
+                        if ($result['wasCreated']) {
+                            $billingHistoryCount++;
+                        }
                     }
 
                     // Record "cancelled" event if cancelled
                     if ($subscription->status === 'cancelled' && $subscription->cancelled_at) {
                         $cancelledAt = is_string($subscription->cancelled_at) ? Carbon::parse($subscription->cancelled_at) : $subscription->cancelled_at;
-                        SubscriptionBilling::createEvent([
+                        $result = SubscriptionBilling::createEvent([
                             'subscription_id' => $subscription->id,
                             'user_id' => $subscription->user_id,
                             'platform' => $subscription->platform ?? 'Web',
@@ -534,14 +573,16 @@ class SyncSubscriptionBillingHistory extends Command
                             'notes' => 'Subscription cancelled - synced from Authorize.Net',
                             'metadata' => ['cancelled_at' => $cancelledAt->toIso8601String()],
                         ]);
-                        $billingHistoryCount++;
+                        if ($result['wasCreated']) {
+                            $billingHistoryCount++;
+                        }
                     }
 
                     // Record "expired" event if expired
                     if ($subscription->expires_at) {
                         $expiresAt = is_string($subscription->expires_at) ? Carbon::parse($subscription->expires_at) : $subscription->expires_at;
                         if ($expiresAt->isPast() && $subscription->status === 'active') {
-                            SubscriptionBilling::createEvent([
+                            $result = SubscriptionBilling::createEvent([
                                 'subscription_id' => $subscription->id,
                                 'user_id' => $subscription->user_id,
                                 'platform' => $subscription->platform ?? 'Web',
@@ -552,7 +593,9 @@ class SyncSubscriptionBillingHistory extends Command
                                 'notes' => 'Subscription expired - synced from Authorize.Net',
                                 'metadata' => ['expires_at' => $expiresAt->toIso8601String()],
                             ]);
-                            $billingHistoryCount++;
+                            if ($result['wasCreated']) {
+                                $billingHistoryCount++;
+                            }
                         }
                     }
 
