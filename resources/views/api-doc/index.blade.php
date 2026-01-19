@@ -326,6 +326,47 @@
 
             <div class="api-endpoint">
                 <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Users (Paginated)
+                    <span class="auth-badge auth-public">PUBLIC</span>
+                </h3>
+                <div class="endpoint-url">/users?per_page=10&page=1</div>
+                <p>Get a paginated list of users (only users with <code>status=complete</code>).</p>
+
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li><strong>per_page</strong> - Number of users per page (default: 10)</li>
+                    <li><strong>page</strong> - Page number (default: 1)</li>
+                </ul>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Users fetched successfully.",
+  "users": {
+    "current_page": 1,
+    "data": [
+      {
+        "user_id": 123,
+        "first_name": "John",
+        "last_name": "Doe",
+        "profile_pic": "https://...",
+        "designation": "CEO",
+        "company": "Example Inc",
+        "phone_number": "+1234567890"
+      }
+    ],
+    "per_page": 10,
+    "total": 100,
+    "last_page": 10
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
                     <span class="method-badge method-post">POST</span>
                     Register User
                     <span class="auth-badge auth-public">PUBLIC</span>
