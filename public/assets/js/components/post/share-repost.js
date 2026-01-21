@@ -5,19 +5,21 @@
 
 export function sharePost(postId) {
     if (!postId) {
-        console.error('Post ID is required');
+        console.error("Post ID is required");
         return;
     }
 
     // Get post data
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    const postContainer = document.querySelector(
+        `.post-container[data-post-id="${postId}"]`,
+    );
     if (!postContainer) {
-        console.error('Post container not found');
+        console.error("Post container not found");
         return;
     }
 
     // Show share modal
-    const modal = document.getElementById('shareModal');
+    const modal = document.getElementById("shareModal");
     if (!modal) {
         // Create share modal if it doesn't exist
         createShareModal();
@@ -27,7 +29,7 @@ export function sharePost(postId) {
     window.currentSharePostId = postId;
 
     // Show modal
-    const bsModal = new bootstrap.Modal(document.getElementById('shareModal'));
+    const bsModal = new bootstrap.Modal(document.getElementById("shareModal"));
     bsModal.show();
 }
 
@@ -45,18 +47,22 @@ function createShareModal() {
                     <div class="modal-body">
                         <div class="share-options">
 
-                            <button class="share-option-btn" onclick="repostWithThoughts()">
-                                <i class="fa-solid fa-pen"></i>
-                                <div>
-                                    <strong>Repost with thoughts</strong>
-                                </div>
+                            <button class="share-option-btn with-thoughts" onclick="repostWithThoughts()">
+                                <span>
+                                        <img src="/assets/images/repost-with-thoughts-icon.png" class="img-fluid"/>
+                                    </span>
+                                    <div>
+                                        <strong>Repost with your thoughts</strong>
+                                    </div>
                             </button>
 
-                            <button class="share-option-btn" onclick="instantRepost()">
-                                <i class="fa-solid fa-retweet"></i>
-                                <div>
-                                    <strong>Instant Repost</strong>
-                                </div>
+                            <button class="share-option-btn instant" onclick="instantRepost()">
+                                  <span>
+                                        <img src="/assets/images/repost-instant.png" class="img-fluid"/>
+                                    </span>
+                                    <div>
+                                        <strong>Instant repost</strong>
+                                    </div>
                             </button>
 
                         </div>
@@ -66,36 +72,40 @@ function createShareModal() {
         </div>
     `;
 
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
 
 export async function instantRepost() {
     const postId = window.currentSharePostId;
     if (!postId) {
-        showNotification('Unable to repost. Please try again.', 'error');
+        showNotification("Unable to repost. Please try again.", "error");
         return;
     }
 
     // Close share modal
-    const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+    const shareModal = bootstrap.Modal.getInstance(
+        document.getElementById("shareModal"),
+    );
     if (shareModal) {
         shareModal.hide();
     }
 
     // Show loading notification
-    showNotification('Reposting...', 'info');
+    showNotification("Reposting...", "info");
 
     try {
         const response = await fetch(`/feed/posts/${postId}/share`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]',
+                ).content,
             },
             body: JSON.stringify({
-                share_type: 'repost',
-                shared_content: '' // Empty content for instant repost
-            })
+                share_type: "repost",
+                shared_content: "", // Empty content for instant repost
+            }),
         });
 
         if (!response.ok) {
@@ -109,55 +119,59 @@ export async function instantRepost() {
             updateShareCount(postId, 1);
 
             // Show success message
-            showNotification('Post reposted successfully!', 'success');
+            showNotification("Post reposted successfully!", "success");
 
             // Reload feed after short delay to show the repost
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
         } else {
-            throw new Error(result.message || 'Failed to repost');
+            throw new Error(result.message || "Failed to repost");
         }
     } catch (error) {
-        console.error('Error reposting:', error);
-        showNotification('Failed to repost. Please try again.', 'error');
+        console.error("Error reposting:", error);
+        showNotification("Failed to repost. Please try again.", "error");
     }
 }
 
 export function repostWithThoughts() {
     const postId = window.currentSharePostId;
     if (!postId) {
-        showNotification('Unable to repost. Please try again.', 'error');
+        showNotification("Unable to repost. Please try again.", "error");
         return;
     }
 
     // Close share modal
-    const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+    const shareModal = bootstrap.Modal.getInstance(
+        document.getElementById("shareModal"),
+    );
     if (shareModal) {
         shareModal.hide();
     }
 
     // Get original post data
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    const postContainer = document.querySelector(
+        `.post-container[data-post-id="${postId}"]`,
+    );
     if (!postContainer) {
-        showNotification('Post not found.', 'error');
+        showNotification("Post not found.", "error");
         return;
     }
 
     // Create repost modal if it doesn't exist
-    let repostModal = document.getElementById('repostModal');
+    let repostModal = document.getElementById("repostModal");
     if (!repostModal) {
         createRepostModal();
-        repostModal = document.getElementById('repostModal');
+        repostModal = document.getElementById("repostModal");
     }
 
     // Get post preview
     const postPreview = createPostPreview(postContainer);
 
     // Set content in modal
-    document.getElementById('repostPreview').innerHTML = postPreview;
-    document.getElementById('repostText').value = '';
-    document.getElementById('repostCharCount').textContent = '0';
+    document.getElementById("repostPreview").innerHTML = postPreview;
+    document.getElementById("repostText").value = "";
+    document.getElementById("repostCharCount").textContent = "0";
 
     // Store post ID
     window.currentRepostPostId = postId;
@@ -168,14 +182,15 @@ export function repostWithThoughts() {
 }
 
 function createRepostModal() {
-    const userAvatar = window.authUserAvatar || '';
-    const userName = window.authUserName || 'You';
-    const userInitials = window.authUserInitials || 'U';
+    const userAvatar = window.authUserAvatar || "";
+    const userName = window.authUserName || "You";
+    const userInitials = window.authUserInitials || "U";
     const hasPhoto = window.authUserHasPhoto || false;
 
-    const avatarHTML = hasPhoto && userAvatar ?
-        `<img src="${userAvatar}" class="user-img" alt="${userName}">` :
-        `<div class="user-initials-avatar" style="width: 48px; height: 48px;">${userInitials}</div>`;
+    const avatarHTML =
+        hasPhoto && userAvatar
+            ? `<img src="${userAvatar}" class="user-img" alt="${userName}">`
+            : `<div class="user-initials-avatar" style="width: 48px; height: 48px;">${userInitials}</div>`;
 
     const modalHTML = `
         <div class="modal fade" id="repostModal" tabindex="-1" aria-labelledby="repostModalLabel" aria-hidden="true">
@@ -212,27 +227,29 @@ function createRepostModal() {
         </div>
     `;
 
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
 
 function createPostPreview(postContainer) {
-    const userInfo = postContainer.querySelector('.user-info');
-    const postText = postContainer.querySelector('.post-text');
-    const postMedia = postContainer.querySelector('.post-images, .post-videos');
+    const userInfo = postContainer.querySelector(".user-info");
+    const postText = postContainer.querySelector(".post-text");
+    const postMedia = postContainer.querySelector(".post-images, .post-videos");
 
-    let userName = 'User';
-    let userPosition = '';
-    let userAvatar = '';
+    let userName = "User";
+    let userPosition = "";
+    let userAvatar = "";
 
     if (userInfo) {
-        const nameElement = userInfo.querySelector('.username');
-        const positionElement = userInfo.querySelector('.user-position');
-        const avatarElement = userInfo.querySelector('.user-img, .user-initials-avatar');
+        const nameElement = userInfo.querySelector(".username");
+        const positionElement = userInfo.querySelector(".user-position");
+        const avatarElement = userInfo.querySelector(
+            ".user-img, .user-initials-avatar",
+        );
 
         if (nameElement) userName = nameElement.textContent.trim();
         if (positionElement) userPosition = positionElement.textContent.trim();
         if (avatarElement) {
-            if (avatarElement.tagName === 'IMG') {
+            if (avatarElement.tagName === "IMG") {
                 userAvatar = `<img src="${avatarElement.src}" class="user-img" alt="${userName}">`;
             } else {
                 userAvatar = `<div class="user-initials-avatar" style="width: 32px; height: 32px; font-size: 14px;">${avatarElement.textContent}</div>`;
@@ -240,13 +257,15 @@ function createPostPreview(postContainer) {
         }
     }
 
-    const content = postText ? postText.textContent.trim().substring(0, 200) : '';
+    const content = postText
+        ? postText.textContent.trim().substring(0, 200)
+        : "";
     const hasMore = postText && postText.textContent.trim().length > 200;
 
-    let mediaPreview = '';
+    let mediaPreview = "";
     if (postMedia) {
-        const firstImage = postMedia.querySelector('img');
-        const firstVideo = postMedia.querySelector('video');
+        const firstImage = postMedia.querySelector("img");
+        const firstVideo = postMedia.querySelector("video");
 
         if (firstImage) {
             mediaPreview = `<img src="${firstImage.src}" alt="Post media" style="max-height: 150px; width: 100%; object-fit: cover; border-radius: 8px; margin-top: 8px;">`;
@@ -261,63 +280,66 @@ function createPostPreview(postContainer) {
                 ${userAvatar}
                 <div>
                     <strong>${escapeHtml(userName)}</strong>
-                    ${userPosition ? `<div class="text-muted small">${escapeHtml(userPosition)}</div>` : ''}
+                    ${userPosition ? `<div class="text-muted small">${escapeHtml(userPosition)}</div>` : ""}
                 </div>
             </div>
-            ${content ? `<div class="post-preview-text">${escapeHtml(content)}${hasMore ? '...' : ''}</div>` : ''}
+            ${content ? `<div class="post-preview-text">${escapeHtml(content)}${hasMore ? "..." : ""}</div>` : ""}
             ${mediaPreview}
         </div>
     `;
 }
 
-window.updateRepostCharCount = function() {
-    const textarea = document.getElementById('repostText');
-    const counter = document.getElementById('repostCharCount');
+window.updateRepostCharCount = function () {
+    const textarea = document.getElementById("repostText");
+    const counter = document.getElementById("repostCharCount");
 
     if (textarea && counter) {
         const length = textarea.value.length;
         counter.textContent = length;
 
         const container = counter.parentElement;
-        container.classList.remove('warning', 'error');
+        container.classList.remove("warning", "error");
 
         if (length > 9000) {
-            container.classList.add('error');
+            container.classList.add("error");
         } else if (length > 8000) {
-            container.classList.add('warning');
+            container.classList.add("warning");
         }
     }
 };
 
-window.submitRepostWithThoughts = async function() {
+window.submitRepostWithThoughts = async function () {
     const postId = window.currentRepostPostId;
     if (!postId) {
-        showNotification('Unable to repost. Please try again.', 'error');
+        showNotification("Unable to repost. Please try again.", "error");
         return;
     }
 
-    const textarea = document.getElementById('repostText');
-    const content = textarea ? textarea.value.trim() : '';
+    const textarea = document.getElementById("repostText");
+    const content = textarea ? textarea.value.trim() : "";
 
-    const submitBtn = document.querySelector('#repostModal .btn-primary');
-    const originalText = submitBtn ? submitBtn.textContent : 'Repost';
+    const submitBtn = document.querySelector("#repostModal .btn-primary");
+    const originalText = submitBtn ? submitBtn.textContent : "Repost";
 
     if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Reposting...';
+        submitBtn.innerHTML =
+            '<i class="fa fa-spinner fa-spin"></i> Reposting...';
     }
 
     try {
         const response = await fetch(`/feed/posts/${postId}/share`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector(
+                    'meta[name="csrf-token"]',
+                ).content,
             },
             body: JSON.stringify({
-                share_type: 'repost',
-                shared_content: content
-            })
+                share_type: "repost",
+                shared_content: content,
+            }),
         });
 
         if (!response.ok) {
@@ -328,7 +350,9 @@ window.submitRepostWithThoughts = async function() {
 
         if (result.success) {
             // Close modal
-            const repostModal = bootstrap.Modal.getInstance(document.getElementById('repostModal'));
+            const repostModal = bootstrap.Modal.getInstance(
+                document.getElementById("repostModal"),
+            );
             if (repostModal) {
                 repostModal.hide();
             }
@@ -337,18 +361,18 @@ window.submitRepostWithThoughts = async function() {
             updateShareCount(postId, 1);
 
             // Show success message
-            showNotification('Post reposted successfully!', 'success');
+            showNotification("Post reposted successfully!", "success");
 
             // Reload feed after short delay
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
         } else {
-            throw new Error(result.message || 'Failed to repost');
+            throw new Error(result.message || "Failed to repost");
         }
     } catch (error) {
-        console.error('Error reposting:', error);
-        showNotification('Failed to repost. Please try again.', 'error');
+        console.error("Error reposting:", error);
+        showNotification("Failed to repost. Please try again.", "error");
 
         if (submitBtn) {
             submitBtn.disabled = false;
@@ -366,12 +390,12 @@ export function sendPost(postId) {
 
     // Get post URL
     const postContainer = document.querySelector(
-        `.post-container[data-post-id="${postId}"]`
+        `.post-container[data-post-id="${postId}"]`,
     );
     const postSlug = postContainer?.dataset.postSlug;
     const postUrl = postSlug
-        ? `${window.location.origin}/news-feed/posts/${postSlug}`
-        : `${window.location.origin}/news-feed/posts/${postId}`;
+        ? `${window.location.origin}/feed/posts/${postSlug}`
+        : `${window.location.origin}/feed/posts/${postId}`;
 
     // Show social share options
     showSocialShareModal(postUrl, postId);
@@ -445,7 +469,7 @@ function showSocialShareModal(postUrl, postId) {
 
 export function shareToFacebook(url) {
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url
+        url,
     )}`;
     window.open(shareUrl, "_blank", "width=600,height=400");
 }
@@ -453,14 +477,14 @@ export function shareToFacebook(url) {
 export function shareToTwitter(url) {
     const text = "Check out this post on MuslimLynk!";
     const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-        url
+        url,
     )}&text=${encodeURIComponent(text)}`;
     window.open(shareUrl, "_blank", "width=600,height=400");
 }
 
 export function shareToLinkedIn(url) {
     const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        url
+        url,
     )}`;
     window.open(shareUrl, "_blank", "width=600,height=400");
 }
@@ -468,7 +492,7 @@ export function shareToLinkedIn(url) {
 export function shareToWhatsApp(url) {
     const text = "Check out this post on MuslimLynk!";
     const shareUrl = `https://wa.me/?text=${encodeURIComponent(
-        text + " " + url
+        text + " " + url,
     )}`;
     window.open(shareUrl, "_blank");
 }
@@ -479,36 +503,41 @@ export function copyPostLink(postId) {
     }
 
     if (!postId) {
-        showNotification('Unable to copy link. Please try again.', 'error');
+        showNotification("Unable to copy link. Please try again.", "error");
         return;
     }
 
     // Get post slug
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    const postContainer = document.querySelector(
+        `.post-container[data-post-id="${postId}"]`,
+    );
     const postSlug = postContainer ? postContainer.dataset.postSlug : null;
 
     if (!postSlug) {
-        showNotification('Unable to get post link.', 'error');
+        showNotification("Unable to get post link.", "error");
         return;
     }
 
     // Create post URL
-    const postUrl = `${window.location.origin}/news-feed/posts/${postSlug}`;
+    const postUrl = `${window.location.origin}/feed/posts/${postSlug}`;
 
     // Copy to clipboard
     if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(postUrl)
+        navigator.clipboard
+            .writeText(postUrl)
             .then(() => {
-                showNotification('Link copied to clipboard!', 'success');
+                showNotification("Link copied to clipboard!", "success");
 
                 // Close share modal
-                const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+                const shareModal = bootstrap.Modal.getInstance(
+                    document.getElementById("shareModal"),
+                );
                 if (shareModal) {
                     shareModal.hide();
                 }
             })
-            .catch(err => {
-                console.error('Error copying to clipboard:', err);
+            .catch((err) => {
+                console.error("Error copying to clipboard:", err);
                 fallbackCopyToClipboard(postUrl);
             });
     } else {
@@ -517,25 +546,27 @@ export function copyPostLink(postId) {
 }
 
 function fallbackCopyToClipboard(text) {
-    const textarea = document.createElement('textarea');
+    const textarea = document.createElement("textarea");
     textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
     document.body.appendChild(textarea);
     textarea.select();
 
     try {
-        document.execCommand('copy');
-        showNotification('Link copied to clipboard!', 'success');
+        document.execCommand("copy");
+        showNotification("Link copied to clipboard!", "success");
 
         // Close share modal
-        const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+        const shareModal = bootstrap.Modal.getInstance(
+            document.getElementById("shareModal"),
+        );
         if (shareModal) {
             shareModal.hide();
         }
     } catch (err) {
-        console.error('Error copying to clipboard:', err);
-        showNotification('Failed to copy link. Please try again.', 'error');
+        console.error("Error copying to clipboard:", err);
+        showNotification("Failed to copy link. Please try again.", "error");
     } finally {
         document.body.removeChild(textarea);
     }
@@ -544,9 +575,9 @@ function fallbackCopyToClipboard(text) {
 export async function showSharesList(postId) {
     if (!postId) return;
 
-    const modal = document.getElementById('sharesModal');
+    const modal = document.getElementById("sharesModal");
     if (!modal) {
-        console.error('Shares modal not found');
+        console.error("Shares modal not found");
         return;
     }
 
@@ -555,62 +586,65 @@ export async function showSharesList(postId) {
     bsModal.show();
 
     // Show loading
-    document.getElementById('sharesLoading')?.classList.remove('d-none');
-    document.getElementById('sharesEmpty')?.classList.add('d-none');
-    document.getElementById('sharesList').innerHTML = '';
+    document.getElementById("sharesLoading")?.classList.remove("d-none");
+    document.getElementById("sharesEmpty")?.classList.add("d-none");
+    document.getElementById("sharesList").innerHTML = "";
 
     try {
         const response = await fetch(`/feed/posts/${postId}/shares-list`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+                "X-Requested-With": "XMLHttpRequest",
+            },
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch shares');
+            throw new Error("Failed to fetch shares");
         }
 
         const result = await response.json();
 
         // Hide loading
-        document.getElementById('sharesLoading')?.classList.add('d-none');
+        document.getElementById("sharesLoading")?.classList.add("d-none");
 
         if (result.success && result.shares && result.shares.length > 0) {
             displaySharesList(result.shares);
-            document.getElementById('totalSharesCount').textContent = result.count;
+            document.getElementById("totalSharesCount").textContent =
+                result.count;
         } else {
-            document.getElementById('sharesEmpty')?.classList.remove('d-none');
+            document.getElementById("sharesEmpty")?.classList.remove("d-none");
         }
     } catch (error) {
-        console.error('Error loading shares:', error);
-        document.getElementById('sharesLoading')?.classList.add('d-none');
-        document.getElementById('sharesEmpty')?.classList.remove('d-none');
-        showNotification('Failed to load shares. Please try again.', 'error');
+        console.error("Error loading shares:", error);
+        document.getElementById("sharesLoading")?.classList.add("d-none");
+        document.getElementById("sharesEmpty")?.classList.remove("d-none");
+        showNotification("Failed to load shares. Please try again.", "error");
     }
 }
 
 function displaySharesList(shares) {
-    const container = document.getElementById('sharesList');
+    const container = document.getElementById("sharesList");
     if (!container) return;
 
-    container.innerHTML = '';
+    container.innerHTML = "";
 
-    shares.forEach(share => {
+    shares.forEach((share) => {
         const shareItem = createShareItem(share);
         container.appendChild(shareItem);
     });
 }
 
 function createShareItem(share) {
-    const div = document.createElement('div');
-    div.className = 'share-item';
+    const div = document.createElement("div");
+    div.className = "share-item";
 
-    const avatarHTML = share.user.has_photo && share.user.avatar ?
-        `<img src="${share.user.avatar}" class="user-avatar" alt="${escapeHtml(share.user.name)}">` :
-        `<div class="user-initials">${share.user.initials}</div>`;
+    const avatarHTML =
+        share.user.has_photo && share.user.avatar
+            ? `<img src="${share.user.avatar}" class="user-avatar" alt="${escapeHtml(share.user.name)}">`
+            : `<div class="user-initials">${share.user.initials}</div>`;
 
-    const shareTypeLabel = share.share_type === 'repost' ? 'Reposted' : 'Shared';
+    const shareTypeLabel =
+        share.share_type === "repost" ? "Reposted" : "Shared";
 
     div.innerHTML = `
         ${avatarHTML}
@@ -619,8 +653,8 @@ function createShareItem(share) {
                 <div class="user-name">${escapeHtml(share.user.name)}</div>
                 <span class="share-type-badge">${shareTypeLabel}</span>
             </div>
-            ${share.user.position ? `<div class="user-position">${escapeHtml(share.user.position)}</div>` : ''}
-            ${share.shared_content ? `<div class="share-text">${escapeHtml(share.shared_content)}</div>` : ''}
+            ${share.user.position ? `<div class="user-position">${escapeHtml(share.user.position)}</div>` : ""}
+            ${share.shared_content ? `<div class="share-text">${escapeHtml(share.shared_content)}</div>` : ""}
             <div class="share-time">${formatTimeAgo(share.created_at)}</div>
         </div>
     `;
@@ -629,24 +663,28 @@ function createShareItem(share) {
 }
 
 function updateShareCount(postId, change) {
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    const postContainer = document.querySelector(
+        `.post-container[data-post-id="${postId}"]`,
+    );
     if (!postContainer) return;
 
-    const sharesCount = postContainer.querySelector('.shares-count .count-text');
+    const sharesCount = postContainer.querySelector(
+        ".shares-count .count-text",
+    );
     if (sharesCount) {
         const match = sharesCount.textContent.match(/\d+/);
         if (match) {
             let count = parseInt(match[0]) + change;
             count = Math.max(0, count);
-            sharesCount.textContent = `${count} share${count !== 1 ? 's' : ''}`;
+            sharesCount.textContent = `${count} share${count !== 1 ? "s" : ""}`;
         }
     } else if (change > 0) {
         // Create shares count if it doesn't exist
-        const statsRight = postContainer.querySelector('.stats-right');
+        const statsRight = postContainer.querySelector(".stats-right");
         if (statsRight) {
-            const sharesDiv = document.createElement('div');
-            sharesDiv.className = 'shares-count';
-            sharesDiv.style.cursor = 'pointer';
+            const sharesDiv = document.createElement("div");
+            sharesDiv.className = "shares-count";
+            sharesDiv.style.cursor = "pointer";
             sharesDiv.onclick = () => showSharesList(postId);
             sharesDiv.innerHTML = `<span class="count-text">1 share</span>`;
             statsRight.appendChild(sharesDiv);
@@ -665,41 +703,46 @@ function formatTimeAgo(dateString) {
         week: 604800,
         day: 86400,
         hour: 3600,
-        minute: 60
+        minute: 60,
     };
 
     for (const [key, value] of Object.entries(intervals)) {
         const interval = Math.floor(seconds / value);
         if (interval >= 1) {
-            return `${interval} ${key}${interval !== 1 ? 's' : ''} ago`;
+            return `${interval} ${key}${interval !== 1 ? "s" : ""} ago`;
         }
     }
 
-    return 'Just now';
+    return "Just now";
 }
 
 function escapeHtml(text) {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
 }
 
-function showNotification(message, type = 'info') {
-    let container = document.getElementById('notification-container');
+function showNotification(message, type = "info") {
+    let container = document.getElementById("notification-container");
 
     if (!container) {
-        container = document.createElement('div');
-        container.id = 'notification-container';
-        container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999;';
+        container = document.createElement("div");
+        container.id = "notification-container";
+        container.style.cssText =
+            "position: fixed; top: 20px; right: 20px; z-index: 9999;";
         document.body.appendChild(container);
     }
 
-    const alertClass = type === 'success' ? 'alert-success' :
-                      type === 'error' ? 'alert-danger' : 'alert-info';
+    const alertClass =
+        type === "success"
+            ? "alert-success"
+            : type === "error"
+              ? "alert-danger"
+              : "alert-info";
 
-    const notification = document.createElement('div');
+    const notification = document.createElement("div");
     notification.className = `alert ${alertClass} alert-dismissible fade show`;
-    notification.style.minWidth = '250px';
+    notification.style.minWidth = "250px";
     notification.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -708,7 +751,7 @@ function showNotification(message, type = 'info') {
     container.appendChild(notification);
 
     setTimeout(() => {
-        notification.classList.remove('show');
+        notification.classList.remove("show");
         setTimeout(() => notification.remove(), 150);
     }, 3000);
 }

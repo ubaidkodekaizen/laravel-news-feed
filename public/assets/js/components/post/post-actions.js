@@ -109,10 +109,10 @@ export function editPost(postId) {
     });
 }
 
-function openEditModal(postData) {
+ function openEditModal(postData) {
     // Store post ID and original media IDs for tracking
     window.editingPostId = postData.id;
-    window.originalPostMedia = postData.media ? postData.media.map(m => m.id) : []; // ADD THIS LINE
+    window.originalPostMedia = postData.media ? postData.media.map(m => m.id) : [];
 
     // Populate modal with existing content
     $('#postText').val(postData.content || '');
@@ -164,6 +164,7 @@ function openEditModal(postData) {
         }));
 
         updateMediaPreview();
+        updateMediaEditor();
     } else {
         window.mediaList = [];
         $('#selectedMediaPreview').hide();
@@ -171,7 +172,7 @@ function openEditModal(postData) {
 
     // Change modal title and button text
     $('#postModalLabel').text('Edit Post');
-    $('#submitPostBtn').html('<i class="fa-solid fa-pen me-1"></i> Update Post'); // Better icon
+    $('#submitPostBtn').html('<i class="fa-solid fa-pen me-1"></i> Update Post');
 
     // Show modal
     $('#postModal').modal('show');
@@ -399,7 +400,101 @@ function updateMediaPreview() {
         $wrapper.append($item);
     });
 }
+function updateMediaEditor() {
+    if (!window.mediaList || window.mediaList.length === 0) {
+        $('#mediaEditorThumbnails').html('');
+        $('#mainImagePreview').attr('src', '').addClass('d-none');
+        $('#mainVideoPreview').attr('src', '').addClass('d-none');
+        $('#mainMediaPreviewContainer #noMediaPlaceholder').removeClass('d-none');
+        return;
+    }
 
+    // Update thumbnails
+    const $thumbnails = $('#mediaEditorThumbnails');
+    $thumbnails.empty();
+
+    window.mediaList.forEach((media, index) => {
+        const $thumb = $('<div>', {
+            class: 'media-thumbnail' + (index === 0 ? ' active' : ''),
+            'data-index': index
+        });
+
+        if (media.type === 'image') {
+            $thumb.append(`<img src="${media.src}" alt="Thumbnail">`);
+        } else {
+            $thumb.append(`
+                <video src="${media.src}"></video>
+                <div class="video-indicator">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            `);
+        }
+
+        const $deleteBtn = $('<button>', {
+            class: 'delete-media-btn',
+            type: 'button',
+            html: '<i class="fa-solid fa-times"></i>',
+            click: function(e) {
+                e.stopPropagation();
+                removeMediaFromList(index);
+            }
+        });
+
+        $thumb.append($deleteBtn);
+        $thumb.on('click', function() {
+            showMediaInPreview(index);
+        });
+
+        $thumbnails.append($thumb);
+    });
+
+    // Show first media in preview
+    showMediaInPreview(0);
+}
+
+function showMediaInPreview(index) {
+    if (!window.mediaList || !window.mediaList[index]) return;
+
+    const media = window.mediaList[index];
+
+    // Update active thumbnail
+    $('#mediaEditorThumbnails .media-thumbnail').removeClass('active');
+    $(`#mediaEditorThumbnails .media-thumbnail[data-index="${index}"]`).addClass('active');
+
+    // Show appropriate preview
+    if (media.type === 'image') {
+        $('#mainImagePreview').attr('src', media.src).removeClass('d-none');
+        $('#mainVideoPreview').addClass('d-none');
+        $('#mainMediaPreviewContainer #noMediaPlaceholder').addClass('d-none');
+    } else {
+        $('#mainVideoPreview').attr('src', media.src).removeClass('d-none');
+        $('#mainImagePreview').addClass('d-none');
+        $('#mainMediaPreviewContainer #noMediaPlaceholder').addClass('d-none');
+    }
+}
+
+function removeMediaFromList(index) {
+    if (!window.mediaList || !window.mediaList[index]) return;
+
+    const media = window.mediaList[index];
+
+    // Revoke object URL if it's a new upload
+    if (media.src && !media.existingMediaId && media.src.startsWith('blob:')) {
+        URL.revokeObjectURL(media.src);
+    }
+
+    // Remove from list
+    window.mediaList.splice(index, 1);
+
+    // Update both previews
+    updateMediaPreview();
+    updateMediaEditor();
+
+    // If no media left, hide preview
+    if (window.mediaList.length === 0) {
+        $('#selectedMediaPreview').hide();
+    }
+}
 function showEmptyState() {
     const feedColumn = document.querySelector('.newFeedSecInnerCol:nth-child(2)');
     if (!feedColumn) return;
@@ -453,4 +548,6 @@ function showValidationError(message) {
 
 // Export for global access
 window.updateMediaPreview = updateMediaPreview;
+window.clearAllMedia = clearAllMedia;
+window.updateMediaEditor = updateMediaEditor;
 window.clearAllMedia = clearAllMedia;

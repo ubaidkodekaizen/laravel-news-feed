@@ -160,11 +160,11 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
 
     // News Feed API Routes (for AJAX calls)
     Route::prefix('feed')->group(function () {
-       // Post CRUD
+        // Post CRUD
         Route::get('/posts', [FeedController::class, 'getFeed'])->name('feed.posts');
 
-        // ADD THIS - Get single post data for editing
-        Route::get('/posts/{id}/data', [FeedController::class, 'getPost'])->name('feed.post.get');
+        // Get post data for editing (must be before {slug} route)
+        Route::get('/posts/{id}/data', [FeedController::class, 'getPostData'])->name('feed.posts.data');
 
         Route::post('/posts', [FeedController::class, 'createPost'])->name('feed.post.create');
         Route::put('/posts/{id}', [FeedController::class, 'updatePost'])->name('feed.post.update');
@@ -190,7 +190,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
         // User posts
         Route::get('/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('feed.user.posts');
 
-        // IMPORTANT: Single post detail page (must be BEFORE the posts/{slug} API route)
+        // Single post detail page (must be LAST to avoid conflicts)
         Route::get('/posts/{slug}', [FeedController::class, 'showPostPage'])
             ->where('slug', '[a-z0-9\-]+')
             ->name('feed.post.page');

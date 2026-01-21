@@ -659,11 +659,9 @@ function createCommentInput(postId) {
         <div class="comment-input-wrapper">
             ${avatarHTML}
             <div class="comment-input-container">
-                <input type="text" placeholder="Add a comment..." class="comment-input" oninput="toggleCommentButton(this)">
-                <div class="comment-actions">
-                    <button class="emoji-picker-btn"><i class="fa-regular fa-face-smile"></i></button>
-                    <button class="post-comment-btn" disabled onclick="postComment('${postId}')">Post</button>
-                </div>
+                <button class="emoji-picker-btn" type="button"  data-emoji-trigger="#commentInput-${postId}" ><i class="fa-regular fa-face-smile"></i></button>
+                <input type="text" placeholder="Add a comment..."  id="commentInput-${postId}" class="comment-input" oninput="toggleCommentButton(this)">
+                <button class="post-comment-btn" disabled onclick="postComment('${postId}')"><i class="fa-regular fa-paper-plane"></i></button>
             </div>
         </div>
     `;

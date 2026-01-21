@@ -32,7 +32,7 @@
                                 <img src="{{ asset('assets/images/postVideo.svg') }}" class="img-fluid" alt="">
                                 Video
                             </button>
-                            <button type="button" class="btn btn-light btn-sm" id="emojiBtn">
+                            <button type="button" class="btn btn-light btn-sm" data-emoji-trigger="#postText"  id="emojiBtn">
                                 <i class="fa-regular fa-face-smile"></i>
                             </button>
                         </div>

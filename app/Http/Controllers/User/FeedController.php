@@ -546,6 +546,49 @@ class FeedController extends Controller
         }
     }
 
+
+    /**
+     * Get post data for editing (separate from getPost to avoid confusion)
+     */
+    public function getPostData($id)
+    {
+        try {
+            $userId = Auth::id();
+
+            $post = Post::with(['media'])
+                ->where('id', $id)
+                ->where('user_id', $userId)
+                ->where('status', 'active')
+                ->whereNull('deleted_at')
+                ->firstOrFail();
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $post->id,
+                    'content' => $post->content,
+                    'visibility' => $post->visibility ?? 'public',
+                    'comments_enabled' => (bool) $post->comments_enabled,
+                    'media' => $post->media->map(fn($m) => [
+                        'id' => $m->id,
+                        'media_type' => $m->media_type,
+                        'media_url' => $m->media_url,
+                        'mime_type' => $m->mime_type,
+                        'file_name' => $m->file_name,
+                    ])->toArray(),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching post data for edit: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load post data'
+            ], 404);
+        }
+    }
+
+
+
     /**
      * Generate unique slug for post.
      */

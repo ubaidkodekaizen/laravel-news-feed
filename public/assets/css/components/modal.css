@@ -63,7 +63,7 @@
 }
 #repostModal .modal-footer button {
     border: 0.75px solid #2d3b68;
-    font-family: Inter;
+    font-family: "Inter", sans-serif;
     font-weight: 600;
     font-size: 12.06px;
     line-height: 100%;
@@ -76,8 +76,28 @@
     background: #2d3b68;
     color: #fff;
 }
-
-
+.modal .dropdown-menu {
+    padding: 0 0;
+}
+.modal .dropdown-menu .dropdown-item {
+    border-bottom: 1px solid #e1e0e0;
+}
+.modal .dropdown-menu strong {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    line-height: 100%;
+    color: #17272f;
+    margin: 0px 0px 2px 0;
+    display: block;
+}
+.modal .dropdown-menu .small {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 12.93px;
+    line-height: 100%;
+    color: #5d5d5d !important;
+}
 /* Post Text Area */
 #postText {
     border: none;
@@ -174,7 +194,8 @@
 }
 
 #postModal .form-check-input:focus {
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.1),
         0 0 0 3px rgba(59, 130, 246, 0.1);
     border: none;
 }
