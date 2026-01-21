@@ -109,9 +109,12 @@
 
 .profile_cover_bg {
     height: 58px;
-    background: #b8c034;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    border-bottom: 1px solid #e9ebf1;
 }
 .profile_card_pic {
     position: relative;

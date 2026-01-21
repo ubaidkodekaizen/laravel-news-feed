@@ -39,8 +39,25 @@ class FeedController extends Controller
         $userId = Auth::id();
         $profileViews = 0;
 
-        $authUser = Auth::user();
+        $authUser = Auth::user()->load('company');
         $authUserData = $this->formatUserData($authUser);
+
+        $company = $authUser->company;
+        if ($company) {
+            $companyLogoUrl = getImageUrl($company->company_logo) ?? null;
+            $authUserData['company'] = [
+                'id' => $company->id,
+                'name' => $company->company_name,
+                'slug' => $company->company_slug,
+                'email' => $company->company_email ?? null,
+                'web_url' => $company->company_web_url ?? null,
+                'position' => $company->company_position ?? null,
+                'logo' => $companyLogoUrl,
+                'has_logo' => (bool) $companyLogoUrl,
+            ];
+        } else {
+            $authUserData['company'] = null;
+        }
 
         $posts = Post::where('user_id', $userId)
             ->where('status', 'active')
