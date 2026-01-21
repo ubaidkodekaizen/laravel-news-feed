@@ -1,18 +1,19 @@
 <div class="comment reply" data-comment-id="{{ $reply['id'] ?? '' }}">
     @php
-        $replyUserHasPhoto = $reply['user']['has_photo'] ?? !empty($reply['user']['avatar']);
-        $replyUserAvatar = $reply['user']['avatar'] ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png';
-        $replyUserInitials = $reply['user']['initials'] ??
+        $replyUser = $reply['user'] ?? [];
+        $replyUserPhoto = $replyUser['avatar'] ?? '';
+        $replyUserHasPhoto = ($replyUser['has_photo'] ?? false) && !empty($replyUserPhoto);
+        $replyUserInitials = $replyUser['initials'] ??
             strtoupper(
-                (isset($reply['user']['first_name']) ? substr($reply['user']['first_name'], 0, 1) : '') .
-                (isset($reply['user']['last_name']) ? substr($reply['user']['last_name'], 0, 1) : 'U')
+                (isset($replyUser['first_name']) ? substr($replyUser['first_name'], 0, 1) : '') .
+                (isset($replyUser['last_name']) ? substr($replyUser['last_name'], 0, 1) : 'U')
             );
     @endphp
 
-    @if($replyUserHasPhoto && $replyUserAvatar)
-        <img src="{{ $replyUserAvatar }}"
-             class="user-img"
-             alt="{{ $reply['user']['name'] ?? 'User' }}"
+    @if($replyUserHasPhoto && $replyUserPhoto)
+        <img src="{{ $replyUserPhoto }}"
+             class="user-img reply-avatar-img"
+             alt="{{ $replyUser['name'] ?? 'User' }}"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="user-initials-avatar reply-avatar" style="display: none;">
             {{ $replyUserInitials }}
@@ -25,7 +26,7 @@
 
     <div class="comment-body">
         <div class="comment-header">
-            <strong>{{ $reply['user']['name'] ?? ($reply['user']['first_name'] ?? '') . ' ' . ($reply['user']['last_name'] ?? '') }}</strong>
+            <strong>{{ $replyUser['name'] ?? (($replyUser['first_name'] ?? '') . ' ' . ($replyUser['last_name'] ?? '')) }}</strong>
             <span class="comment-time">
                 @if(isset($reply['created_at']) && $reply['created_at'] instanceof \Carbon\Carbon)
                     {{ $reply['created_at']->diffForHumans() }}
@@ -34,11 +35,15 @@
                 @endif
             </span>
         </div>
-        <div class="comment-content">{{ $reply['content'] ?? '' }}</div>
+        <div class="comment-content" id="commentContent-{{ $reply['id'] ?? '' }}">
+            {{ $reply['content'] ?? '' }}
+        </div>
         <div class="comment-actions">
             <button class="like-comment-btn" onclick="likeComment('{{ $reply['id'] ?? '' }}')">Like</button>
-            @if(auth()->check() && auth()->id() === ($reply['user_id'] ?? $reply['user']['id'] ?? null))
-                <button class="delete-comment-btn" onclick="deleteComment('{{ $reply['id'] ?? '' }}', '{{ $postId ?? $post['id'] ?? '' }}')">Delete</button>
+
+            @if(auth()->check() && auth()->id() === ($reply['user_id'] ?? $replyUser['id'] ?? null))
+                <button class="edit-comment-btn" onclick="editComment('{{ $reply['id'] ?? '' }}')">Edit</button>
+                <button class="delete-comment-btn" onclick="deleteComment('{{ $reply['id'] ?? '' }}', '{{ $postId ?? ($post['id'] ?? '') }}')">Delete</button>
             @endif
         </div>
     </div>
@@ -56,8 +61,21 @@
     height: 32px;
 }
 
+.reply-avatar-img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .reply .user-initials-avatar {
     font-size: 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 .replies-container {

@@ -51,6 +51,33 @@
     background: #2d3b68;
     color: #fff;
 }
+#repostModal .modal-footer {
+    border-top: 1px solid #e5e7eb;
+    padding: 20px 24px;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    background: #d9d9d912;
+}
+#repostModal .modal-footer button {
+    border: 0.75px solid #2d3b68;
+    font-family: Inter;
+    font-weight: 600;
+    font-size: 12.06px;
+    line-height: 100%;
+    color: #2d3b68;
+    padding: 10px 30px;
+    border-radius: 24px;
+    background: transparent;
+}
+#repostModal .modal-footer button:last-child {
+    background: #2d3b68;
+    color: #fff;
+}
+
+
 /* Post Text Area */
 #postText {
     border: none;

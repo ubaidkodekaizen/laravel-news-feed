@@ -1,17 +1,19 @@
 <div class="comment-input-wrapper">
     @php
-        $authUserHasPhoto = auth()->user()->photo ?? false;
-        $authUserAvatar = getImageUrl(auth()->user()->photo) ?? auth()->user()->avatar ?? '';
+        $authUser = auth()->user();
+        $authUserPhoto = $authUser->photo ?? null;
+        $authUserHasPhoto = !empty($authUserPhoto);
+        $authUserAvatar = $authUserHasPhoto ? (getImageUrl($authUserPhoto) ?? '') : '';
         $authUserInitials = strtoupper(
-            (auth()->user()->first_name ? substr(auth()->user()->first_name, 0, 1) : '') .
-            (auth()->user()->last_name ? substr(auth()->user()->last_name, 0, 1) : 'U')
+            (($authUser->first_name ?? '') ? substr($authUser->first_name, 0, 1) : '') .
+            (($authUser->last_name ?? '') ? substr($authUser->last_name, 0, 1) : 'U')
         );
     @endphp
 
     @if($authUserHasPhoto && $authUserAvatar)
         <img src="{{ $authUserAvatar }}"
              class="user-img"
-             alt="{{ auth()->user()->name ?? 'You' }}"
+             alt="{{ $authUser->name ?? 'You' }}"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="user-initials-avatar comment-avatar" style="display: none;">
             {{ $authUserInitials }}
@@ -29,7 +31,7 @@
                oninput="toggleCommentButton(this)">
         <div class="comment-actions">
             <button class="emoji-picker-btn"><i class="fa-regular fa-face-smile"></i></button>
-            <button class="post-comment-btn" disabled onclick="postComment('{{ $postId ?? $post['id'] ?? '' }}')">Post</button>
+            <button class="post-comment-btn" disabled onclick="postComment('{{ $postId ?? ($post['id'] ?? '') }}')">Post</button>
         </div>
     </div>
 </div>

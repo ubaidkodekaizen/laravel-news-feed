@@ -1,4 +1,4 @@
-{{-- This component displays a post that is a repost/share of another post --}}
+{{-- Displays a reposted/shared post --}}
 
 @if(isset($post['original_post_id']) && $post['original_post_id'] && isset($post['original_post']))
     <div class="post-shared-badge">
@@ -61,13 +61,36 @@
         @if(!empty($originalPost['media']) && is_array($originalPost['media']))
             @php
                 $imageUrls = [];
+                $videoUrls = [];
                 foreach ($originalPost['media'] as $media) {
-                    if (isset($media['media_type']) && $media['media_type'] === 'image' && isset($media['media_url'])) {
-                        $imageUrls[] = getImageUrl($media['media_url']) ?? $media['media_url'];
+                    if (isset($media['media_type']) && isset($media['media_url'])) {
+                        $mediaUrl = getImageUrl($media['media_url']) ?? $media['media_url'];
+                        if ($media['media_type'] === 'image') {
+                            $imageUrls[] = $mediaUrl;
+                        } elseif ($media['media_type'] === 'video') {
+                            $videoUrls[] = [
+                                'url' => $mediaUrl,
+                                'mime_type' => $media['mime_type'] ?? 'video/mp4'
+                            ];
+                        }
                     }
                 }
             @endphp
 
+            {{-- Display videos --}}
+            @if(!empty($videoUrls))
+                <div class="post-videos mt-2">
+                    <video controls class="shared-post-video">
+                        <source src="{{ $videoUrls[0]['url'] }}" type="{{ $videoUrls[0]['mime_type'] }}">
+                        Your browser does not support the video tag.
+                    </video>
+                    @if(count($videoUrls) > 1)
+                        <div class="more-media-indicator">+{{ count($videoUrls) - 1 }} more videos</div>
+                    @endif
+                </div>
+            @endif
+
+            {{-- Display images --}}
             @if(!empty($imageUrls))
                 <div class="post-images mt-2">
                     <img src="{{ $imageUrls[0] }}"
@@ -75,7 +98,7 @@
                          class="post-image"
                          style="max-height: 200px; width: 100%; object-fit: cover; border-radius: 8px;">
                     @if(count($imageUrls) > 1)
-                        <div class="more-images-indicator">+{{ count($imageUrls) - 1 }} more</div>
+                        <div class="more-media-indicator">+{{ count($imageUrls) - 1 }} more images</div>
                     @endif
                 </div>
             @endif
@@ -133,12 +156,20 @@
     line-height: 1.5;
 }
 
-.shared-post-wrapper .post-images {
+.shared-post-wrapper .post-images,
+.shared-post-wrapper .post-videos {
     margin-top: 12px;
     position: relative;
 }
 
-.more-images-indicator {
+.shared-post-video {
+    width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    background-color: #000;
+}
+
+.more-media-indicator {
     position: absolute;
     bottom: 8px;
     right: 8px;

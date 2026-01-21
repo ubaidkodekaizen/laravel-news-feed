@@ -163,7 +163,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
        // Post CRUD
         Route::get('/posts', [FeedController::class, 'getFeed'])->name('feed.posts');
 
-
+        // ADD THIS - Get single post data for editing
+        Route::get('/posts/{id}/data', [FeedController::class, 'getPost'])->name('feed.post.get');
 
         Route::post('/posts', [FeedController::class, 'createPost'])->name('feed.post.create');
         Route::put('/posts/{id}', [FeedController::class, 'updatePost'])->name('feed.post.update');

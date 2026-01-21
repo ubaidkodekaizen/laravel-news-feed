@@ -1,7 +1,6 @@
 /**
- * Improved Comments System
- * Handles comment posting, replies, loading, and deletion with proper validation
- * FIXED: Comment likes now working properly
+ * Comments System - Complete Implementation
+ * Handles comments, replies, edit, delete, and like functionality
  */
 
 export function toggleComments(postId) {
@@ -17,80 +16,61 @@ export function toggleComments(postId) {
     } else {
         commentSection.style.display = 'block';
 
-        // Load comments if not already loaded
+        // Load comments if not loaded yet
         const commentsList = document.getElementById(`commentsList-${postId}`);
         if (commentsList && commentsList.children.length === 0) {
-            loadCommentsForPost(postId);
+            loadComments(postId);
         }
     }
 }
 
 export function toggleCommentButton(input) {
-    const button = input.closest('.comment-input-container').querySelector('.post-comment-btn');
+    if (!input) return;
+
+    const container = input.closest('.comment-input-container');
+    if (!container) return;
+
+    const button = container.querySelector('.post-comment-btn, .post-reply-btn');
+    if (!button) return;
+
     const hasContent = input.value.trim().length > 0;
-
     button.disabled = !hasContent;
-    button.classList.toggle('enabled', hasContent);
-}
 
-export function toggleReplyButton(input) {
-    const button = input.closest('.comment-input-container').querySelector('.post-reply-btn');
-    const hasContent = input.value.trim().length > 0;
-
-    button.disabled = !hasContent;
-    button.classList.toggle('enabled', hasContent);
-}
-
-export function toggleReplyInput(commentId) {
-    if (!commentId) return;
-
-    const replyInput = document.getElementById(`replyInput-${commentId}`);
-    if (!replyInput) return;
-
-    const isVisible = replyInput.style.display !== 'none';
-    replyInput.style.display = isVisible ? 'none' : 'flex';
-
-    if (!isVisible) {
-        // Focus the input
-        const input = replyInput.querySelector('.reply-input');
-        if (input) {
-            setTimeout(() => input.focus(), 100);
-        }
-        // Initialize emoji picker for this reply input
-        window.dispatchEvent(new Event('commentsLoaded'));
+    if (hasContent) {
+        button.classList.add('enabled');
+    } else {
+        button.classList.remove('enabled');
     }
 }
 
 export async function postComment(postId) {
-    if (!postId) {
-        showNotification('Unable to post comment. Please try again.', 'error');
-        return;
-    }
+    if (!postId) return;
 
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
-    if (!postContainer) return;
+    const commentSection = document.getElementById(`commentSection-${postId}`);
+    if (!commentSection) return;
 
-    const commentSection = postContainer.querySelector(`#commentSection-${postId}`);
     const input = commentSection.querySelector('.comment-input');
-    const button = commentSection.querySelector('.post-comment-btn');
-
-    if (!input || !button) return;
+    if (!input) return;
 
     const content = input.value.trim();
     if (!content) {
-        showNotification('Please enter a comment.', 'error');
+        showNotification('Please enter a comment', 'error');
         return;
     }
 
     if (content.length > 5000) {
-        showNotification('Comment is too long. Maximum 5000 characters.', 'error');
+        showNotification('Comment is too long (max 5000 characters)', 'error');
         return;
     }
 
-    // Disable input and button
+    // Disable input during submission
+    const submitBtn = commentSection.querySelector('.post-comment-btn');
+    const originalBtnText = submitBtn?.innerHTML;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+    }
     input.disabled = true;
-    button.disabled = true;
-    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
 
     try {
         const response = await fetch(`/feed/posts/${postId}/comments`, {
@@ -99,8 +79,12 @@ export async function postComment(postId) {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: JSON.stringify({ content, parent_id: null })
+            body: JSON.stringify({ content })
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
         const result = await response.json();
 
@@ -111,8 +95,8 @@ export async function postComment(postId) {
             // Add comment to list
             const commentsList = document.getElementById(`commentsList-${postId}`);
             if (commentsList) {
-                const commentHtml = createCommentHTML(result.data, postId);
-                commentsList.insertAdjacentHTML('beforeend', commentHtml);
+                const commentHTML = createCommentHTML(result.data, postId);
+                commentsList.insertAdjacentHTML('beforeend', commentHTML);
             }
 
             // Update comment count
@@ -124,43 +108,66 @@ export async function postComment(postId) {
         }
     } catch (error) {
         console.error('Error posting comment:', error);
-        showNotification(error.message || 'Failed to post comment. Please try again.', 'error');
+        showNotification('Failed to post comment. Please try again.', 'error');
     } finally {
+        // Re-enable input
         input.disabled = false;
-        button.disabled = false;
-        button.textContent = 'Post';
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText || 'Post';
+        }
     }
 }
 
-export async function postReply(commentId, postId) {
-    if (!commentId || !postId) {
-        showNotification('Unable to post reply. Please try again.', 'error');
-        return;
+export function toggleReplyInput(commentId) {
+    if (!commentId) return;
+
+    const replyWrapper = document.getElementById(`replyInput-${commentId}`);
+    if (!replyWrapper) return;
+
+    const isVisible = replyWrapper.style.display !== 'none';
+    replyWrapper.style.display = isVisible ? 'none' : 'flex';
+
+    if (!isVisible) {
+        const input = replyWrapper.querySelector('.reply-input');
+        if (input) {
+            setTimeout(() => input.focus(), 100);
+        }
     }
+}
 
-    const replyInput = document.getElementById(`replyInput-${commentId}`);
-    if (!replyInput) return;
+export function toggleReplyButton(input) {
+    toggleCommentButton(input); // Same logic as comment button
+}
 
-    const input = replyInput.querySelector('.reply-input');
-    const button = replyInput.querySelector('.post-reply-btn');
+export async function postReply(commentId, postId) {
+    if (!commentId || !postId) return;
 
-    if (!input || !button) return;
+    const replyWrapper = document.getElementById(`replyInput-${commentId}`);
+    if (!replyWrapper) return;
+
+    const input = replyWrapper.querySelector('.reply-input');
+    if (!input) return;
 
     const content = input.value.trim();
     if (!content) {
-        showNotification('Please enter a reply.', 'error');
+        showNotification('Please enter a reply', 'error');
         return;
     }
 
     if (content.length > 5000) {
-        showNotification('Reply is too long. Maximum 5000 characters.', 'error');
+        showNotification('Reply is too long (max 5000 characters)', 'error');
         return;
     }
 
-    // Disable input and button
+    // Disable input during submission
+    const submitBtn = replyWrapper.querySelector('.post-reply-btn');
+    const originalBtnText = submitBtn?.innerHTML;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+    }
     input.disabled = true;
-    button.disabled = true;
-    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
 
     try {
         const response = await fetch(`/feed/posts/${postId}/comments`, {
@@ -175,6 +182,10 @@ export async function postReply(commentId, postId) {
             })
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result = await response.json();
 
         if (result.success && result.data) {
@@ -182,25 +193,21 @@ export async function postReply(commentId, postId) {
             input.value = '';
 
             // Hide reply input
-            replyInput.style.display = 'none';
+            replyWrapper.style.display = 'none';
 
-            // Find or create replies container
-            const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"]`);
+            // Add reply to comment
+            const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
             if (commentElement) {
                 let repliesContainer = commentElement.querySelector('.replies-container');
 
                 if (!repliesContainer) {
                     repliesContainer = document.createElement('div');
                     repliesContainer.className = 'replies-container';
-
-                    // Insert after reply input
-                    const commentBody = commentElement.querySelector('.comment-body');
-                    commentBody.appendChild(repliesContainer);
+                    commentElement.querySelector('.comment-body').appendChild(repliesContainer);
                 }
 
-                // Add reply to container
-                const replyHtml = createReplyHTML(result.data);
-                repliesContainer.insertAdjacentHTML('beforeend', replyHtml);
+                const replyHTML = createReplyHTML(result.data, postId);
+                repliesContainer.insertAdjacentHTML('beforeend', replyHTML);
             }
 
             // Update comment count
@@ -212,11 +219,14 @@ export async function postReply(commentId, postId) {
         }
     } catch (error) {
         console.error('Error posting reply:', error);
-        showNotification(error.message || 'Failed to post reply. Please try again.', 'error');
+        showNotification('Failed to post reply. Please try again.', 'error');
     } finally {
+        // Re-enable input
         input.disabled = false;
-        button.disabled = false;
-        button.textContent = 'Post';
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText || 'Post';
+        }
     }
 }
 
@@ -224,6 +234,7 @@ export async function loadMoreComments(postId) {
     if (!postId) return;
 
     const button = event.target;
+    const originalText = button.textContent;
     button.disabled = true;
     button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Loading...';
 
@@ -231,10 +242,13 @@ export async function loadMoreComments(postId) {
         const response = await fetch(`/feed/posts/${postId}/comments?per_page=20`, {
             method: 'GET',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-Requested-With': 'XMLHttpRequest'
             }
         });
+
+        if (!response.ok) {
+            throw new Error('Failed to load comments');
+        }
 
         const result = await response.json();
 
@@ -246,31 +260,191 @@ export async function loadMoreComments(postId) {
 
                 // Add all comments
                 result.data.data.forEach(comment => {
-                    const commentHtml = createCommentHTML(comment, postId);
-                    commentsList.insertAdjacentHTML('beforeend', commentHtml);
+                    const commentHTML = createCommentHTML(comment, postId);
+                    commentsList.insertAdjacentHTML('beforeend', commentHTML);
                 });
             }
 
             // Hide load more button
-            button.closest('.load-more-comments').style.display = 'none';
+            button.closest('.load-more-comments')?.remove();
         }
     } catch (error) {
         console.error('Error loading comments:', error);
         showNotification('Failed to load comments. Please try again.', 'error');
         button.disabled = false;
-        button.textContent = 'Load more comments';
+        button.textContent = originalText;
     }
 }
 
+async function loadComments(postId) {
+    const commentsList = document.getElementById(`commentsList-${postId}`);
+    if (!commentsList) return;
+
+    commentsList.innerHTML = '<div class="text-center py-3"><i class="fa fa-spinner fa-spin"></i> Loading comments...</div>';
+
+    try {
+        const response = await fetch(`/feed/posts/${postId}/comments?per_page=20`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to load comments');
+        }
+
+        const result = await response.json();
+
+        commentsList.innerHTML = '';
+
+        if (result.success && result.data && result.data.data && result.data.data.length > 0) {
+            result.data.data.forEach(comment => {
+                const commentHTML = createCommentHTML(comment, postId);
+                commentsList.insertAdjacentHTML('beforeend', commentHTML);
+            });
+        } else {
+            commentsList.innerHTML = '<p class="text-center text-muted py-3">No comments yet</p>';
+        }
+    } catch (error) {
+        console.error('Error loading comments:', error);
+        commentsList.innerHTML = '<p class="text-center text-danger py-3">Failed to load comments</p>';
+    }
+}
+
+export function editComment(commentId) {
+    if (!commentId) return;
+
+    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (!commentElement) return;
+
+    const contentElement = commentElement.querySelector(`#commentContent-${commentId}`);
+    const actionsElement = commentElement.querySelector('.comment-actions');
+
+    if (!contentElement || !actionsElement) return;
+
+    const currentContent = contentElement.textContent.trim();
+
+    // Create edit form
+    const editForm = document.createElement('div');
+    editForm.className = 'comment-edit-mode';
+    editForm.innerHTML = `
+        <textarea class="comment-edit-input" id="editInput-${commentId}">${escapeHtml(currentContent)}</textarea>
+        <div class="comment-edit-actions">
+            <button class="comment-edit-cancel" onclick="cancelEditComment('${commentId}')">Cancel</button>
+            <button class="comment-edit-save" onclick="saveEditComment('${commentId}')">Save</button>
+        </div>
+    `;
+
+    // Hide content and actions
+    contentElement.style.display = 'none';
+    actionsElement.style.display = 'none';
+
+    // Insert edit form
+    contentElement.parentNode.insertBefore(editForm, actionsElement);
+
+    // Focus textarea
+    const textarea = editForm.querySelector('textarea');
+    if (textarea) {
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    }
+}
+
+window.cancelEditComment = function(commentId) {
+    if (!commentId) return;
+
+    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (!commentElement) return;
+
+    const editForm = commentElement.querySelector('.comment-edit-mode');
+    const contentElement = commentElement.querySelector(`#commentContent-${commentId}`);
+    const actionsElement = commentElement.querySelector('.comment-actions');
+
+    if (editForm) editForm.remove();
+    if (contentElement) contentElement.style.display = 'block';
+    if (actionsElement) actionsElement.style.display = 'flex';
+};
+
+window.saveEditComment = async function(commentId) {
+    if (!commentId) return;
+
+    const textarea = document.getElementById(`editInput-${commentId}`);
+    if (!textarea) return;
+
+    const newContent = textarea.value.trim();
+
+    if (!newContent) {
+        showNotification('Comment cannot be empty', 'error');
+        return;
+    }
+
+    if (newContent.length > 5000) {
+        showNotification('Comment is too long (max 5000 characters)', 'error');
+        return;
+    }
+
+    const saveBtn = textarea.closest('.comment-edit-mode').querySelector('.comment-edit-save');
+    const originalText = saveBtn?.textContent;
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
+    }
+
+    try {
+        const response = await fetch(`/feed/comments/${commentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ content: newContent })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update comment');
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Update content
+            const contentElement = document.getElementById(`commentContent-${commentId}`);
+            if (contentElement) {
+                contentElement.textContent = newContent;
+            }
+
+            // Remove edit form and show content
+            window.cancelEditComment(commentId);
+
+            showNotification('Comment updated successfully!', 'success');
+        } else {
+            throw new Error(result.message || 'Failed to update comment');
+        }
+    } catch (error) {
+        console.error('Error updating comment:', error);
+        showNotification('Failed to update comment. Please try again.', 'error');
+
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText || 'Save';
+        }
+    }
+};
+
 export async function deleteComment(commentId, postId) {
-    if (!commentId || !postId) return;
+    if (!commentId) return;
 
     if (!confirm('Are you sure you want to delete this comment?')) {
         return;
     }
 
-    const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"]`);
+    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
     if (!commentElement) return;
+
+    // Add loading state
+    commentElement.style.opacity = '0.5';
+    commentElement.style.pointerEvents = 'none';
 
     try {
         const response = await fetch(`/feed/comments/${commentId}`, {
@@ -281,208 +455,182 @@ export async function deleteComment(commentId, postId) {
             }
         });
 
+        if (!response.ok) {
+            throw new Error('Failed to delete comment');
+        }
+
         const result = await response.json();
 
         if (result.success) {
-            // Animate removal
-            commentElement.style.transition = 'opacity 0.3s ease';
+            // Animate and remove
+            commentElement.style.transition = 'all 0.3s ease';
             commentElement.style.opacity = '0';
+            commentElement.style.transform = 'translateX(20px)';
 
             setTimeout(() => {
                 commentElement.remove();
-
-                // Update comment count
-                updateCommentCount(postId, -1);
-
-                showNotification('Comment deleted successfully!', 'success');
             }, 300);
+
+            // Update comment count
+            if (postId) {
+                updateCommentCount(postId, -1);
+            }
+
+            showNotification('Comment deleted successfully!', 'success');
         } else {
             throw new Error(result.message || 'Failed to delete comment');
         }
     } catch (error) {
         console.error('Error deleting comment:', error);
-        showNotification(error.message || 'Failed to delete comment. Please try again.', 'error');
+
+        // Restore state
+        commentElement.style.opacity = '1';
+        commentElement.style.pointerEvents = 'auto';
+
+        showNotification('Failed to delete comment. Please try again.', 'error');
     }
 }
 
 export async function likeComment(commentId) {
     if (!commentId) return;
 
-    const button = event.target.closest('.like-comment-btn');
-    if (!button) return;
+    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (!commentElement) return;
 
-    const wasLiked = button.classList.contains('liked');
+    const likeBtn = commentElement.querySelector('.like-comment-btn');
+    if (!likeBtn) return;
+
+    const isLiked = likeBtn.classList.contains('active');
+    const method = isLiked ? 'DELETE' : 'POST';
 
     // Optimistic UI update
-    button.classList.toggle('liked');
-    button.innerHTML = button.classList.contains('liked')
-        ? '<i class="fa-solid fa-thumbs-up"></i> Liked'
-        : '<i class="fa-regular fa-thumbs-up"></i> Like';
+    likeBtn.classList.toggle('active');
+    likeBtn.textContent = isLiked ? 'Like' : 'Liked';
 
     try {
         const response = await fetch('/feed/reactions', {
-            method: wasLiked ? 'DELETE' : 'POST',
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
             body: JSON.stringify({
-                reactionable_type: 'App\\Models\\Feed\\PostComment',
+                reactionable_type: 'PostComment',
                 reactionable_id: commentId,
                 reaction_type: 'like'
             })
         });
 
+        if (!response.ok) {
+            throw new Error('Failed to update reaction');
+        }
+
         const result = await response.json();
 
         if (!result.success) {
-            // Revert on failure
-            button.classList.toggle('liked');
-            button.innerHTML = button.classList.contains('liked')
-                ? '<i class="fa-solid fa-thumbs-up"></i> Liked'
-                : '<i class="fa-regular fa-thumbs-up"></i> Like';
             throw new Error(result.message || 'Failed to update reaction');
         }
     } catch (error) {
         console.error('Error liking comment:', error);
+
+        // Revert UI on error
+        likeBtn.classList.toggle('active');
+        likeBtn.textContent = isLiked ? 'Liked' : 'Like';
+
         showNotification('Failed to update reaction. Please try again.', 'error');
     }
 }
 
-async function loadCommentsForPost(postId) {
-    try {
-        const response = await fetch(`/feed/posts/${postId}/comments?per_page=2`, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        });
-
-        const result = await response.json();
-
-        if (result.success && result.data && result.data.data) {
-            const commentsList = document.getElementById(`commentsList-${postId}`);
-            if (commentsList) {
-                result.data.data.forEach(comment => {
-                    const commentHtml = createCommentHTML(comment, postId);
-                    commentsList.insertAdjacentHTML('beforeend', commentHtml);
-                });
-                window.dispatchEvent(new Event('commentsLoaded'));
-            }
-        }
-    } catch (error) {
-        console.error('Error loading comments:', error);
-    }
-}
-// helper to build avatar HTML with onerror fallback to initials
-function renderAvatar(user, size = 40) {
-    // safe values
-    const hasPhoto = !!(user && user.has_photo && user.avatar);
-    const name = user && user.name ? user.name : 'User';
-    const initials = user && user.initials
-        ? escapeHtml(user.initials)
-        : escapeHtml((name || 'U').charAt(0).toUpperCase());
-
-    const imgStyle = `width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;display:block;`;
-    const initialsFontSize = Math.max(10, Math.floor(size / 2.5));
-    const initialsStyle = `width:${size}px;height:${size}px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${initialsFontSize}px;background:#ccc;color:#fff;`;
-
-    if (hasPhoto) {
-        // NOTE: the initials div must be the immediate next sibling of the <img>
-        return `
-            <img src="${user.avatar}" class="user-img" alt="${escapeHtml(name)}"
-
-                 onerror="this.onerror=null;this.style.display='none';if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
-            <div class="reply-initials-avatar" style="display:none;">
-                ${initials}
-            </div>
-        `;
-    }
-
-    // no photo -> show initials immediately
-    return `<div class="reply-initials-avatar" style="display:flex;">${initials}</div>`;
-}
-
-
-/* -------------------------
-   Updated comment / reply functions
-   ------------------------- */
-
 function createCommentHTML(comment, postId) {
-    console.log("comment", comment);
+    const isOwner = window.authUserId === comment.user_id;
+    const avatarHTML = comment.user.has_photo && comment.user.avatar ?
+        `<img src="${comment.user.avatar}" class="user-img" alt="${escapeHtml(comment.user.name)}"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+         <div class="user-initials-avatar comment-avatar" style="display: none;">${comment.user.initials}</div>` :
+        `<div class="user-initials-avatar comment-avatar">${comment.user.initials}</div>`;
 
-    // Build avatar HTML using helper (size 40)
-    const userAvatar = renderAvatar(comment.user || {}, 40);
+    const ownerActions = isOwner ? `
+        <button class="edit-comment-btn" onclick="editComment('${comment.id}')">Edit</button>
+        <button class="delete-comment-btn" onclick="deleteComment('${comment.id}', '${postId}')">Delete</button>
+    ` : '';
 
-    const isOwner = window.authUserId && window.authUserId === comment.user.id;
-    const deleteButton = isOwner
-        ? `<button class="delete-comment-btn" onclick="deleteComment('${comment.id}', '${postId}')">Delete</button>`
-        : '';
-
-    const isLiked = comment.user_has_reacted || false;
-    const likeButtonClass = isLiked ? 'like-comment-btn liked' : 'like-comment-btn';
-    const likeButtonIcon = isLiked ? 'fa-solid' : 'fa-regular';
-    const likeButtonText = isLiked ? 'Liked' : 'Like';
-
-    const repliesHTML = comment.replies && comment.replies.length > 0
-        ? `<div class="replies-container">
-             ${comment.replies.map(reply => createReplyHTML(reply)).join('')}
-           </div>`
-        : '';
+    let repliesHTML = '';
+    if (comment.replies && comment.replies.length > 0) {
+        repliesHTML = '<div class="replies-container">';
+        comment.replies.forEach(reply => {
+            repliesHTML += createReplyHTML(reply, postId);
+        });
+        repliesHTML += '</div>';
+    }
 
     return `
         <div class="comment" data-comment-id="${comment.id}">
-            ${userAvatar}
+            ${avatarHTML}
             <div class="comment-body">
                 <div class="comment-header">
                     <strong>${escapeHtml(comment.user.name)}</strong>
                     <span class="comment-time">${formatTimeAgo(comment.created_at)}</span>
                 </div>
-                <div class="comment-content">${escapeHtml(comment.content)}</div>
+                <div class="comment-content" id="commentContent-${comment.id}">${escapeHtml(comment.content)}</div>
                 <div class="comment-actions">
-                    <button class="${likeButtonClass}" onclick="likeComment('${comment.id}')">
-                        <i class="${likeButtonIcon} fa-thumbs-up"></i> ${likeButtonText}
+                    <button class="like-comment-btn ${comment.user_has_reacted ? 'active' : ''}"
+                            onclick="likeComment('${comment.id}')">
+                        ${comment.user_has_reacted ? 'Liked' : 'Like'}
                     </button>
                     <button class="reply-comment-btn" onclick="toggleReplyInput('${comment.id}')">Reply</button>
-                    ${deleteButton}
+                    ${ownerActions}
                 </div>
                 ${createReplyInputHTML(comment.id, postId)}
                 ${repliesHTML}
             </div>
         </div>
     `;
-
-    window.dispatchEvent(new Event('commentsLoaded'));
 }
 
-function createReplyHTML(reply) {
-    // avatar size 32 for replies
-    const userAvatar = renderAvatar(reply.user || {}, 32);
+function createReplyHTML(reply, postId) {
+    const isOwner = window.authUserId === reply.user_id;
+    const avatarHTML = reply.user.has_photo && reply.user.avatar ?
+        `<img src="${reply.user.avatar}" class="user-img reply-avatar-img" alt="${escapeHtml(reply.user.name)}"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+         <div class="user-initials-avatar reply-avatar" style="display: none;">${reply.user.initials}</div>` :
+        `<div class="user-initials-avatar reply-avatar">${reply.user.initials}</div>`;
+
+    const ownerActions = isOwner ? `
+        <button class="edit-comment-btn" onclick="editComment('${reply.id}')">Edit</button>
+        <button class="delete-comment-btn" onclick="deleteComment('${reply.id}', '${postId}')">Delete</button>
+    ` : '';
 
     return `
         <div class="comment reply" data-comment-id="${reply.id}">
-            ${userAvatar}
+            ${avatarHTML}
             <div class="comment-body">
                 <div class="comment-header">
                     <strong>${escapeHtml(reply.user.name)}</strong>
                     <span class="comment-time">${formatTimeAgo(reply.created_at)}</span>
                 </div>
-                <div class="comment-content">${escapeHtml(reply.content)}</div>
+                <div class="comment-content" id="commentContent-${reply.id}">${escapeHtml(reply.content)}</div>
+                <div class="comment-actions">
+                    <button class="like-comment-btn ${reply.user_has_reacted ? 'active' : ''}"
+                            onclick="likeComment('${reply.id}')">
+                        ${reply.user_has_reacted ? 'Liked' : 'Like'}
+                    </button>
+                    ${ownerActions}
+                </div>
             </div>
         </div>
     `;
 }
 
 function createReplyInputHTML(commentId, postId) {
-    const user = {
-        has_photo: !!window.authUserAvatar,
-        avatar: window.authUserAvatar || '',
-        initials: window.authUserInitials || (window.authUserName ? window.authUserName.charAt(0).toUpperCase() : 'U'),
-        name: window.authUserName || 'You'
-    };
+    const userAvatar = window.authUserAvatar || '';
+    const userInitials = window.authUserInitials || 'U';
+    const hasPhoto = window.authUserHasPhoto || false;
 
-    // avatar size 40 for reply input
-    const avatarHTML = renderAvatar(user, 64.67);
+    const avatarHTML = hasPhoto && userAvatar ?
+        `<img src="${userAvatar}" class="user-img reply-avatar-img" alt="You"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+         <div class="user-initials-avatar reply-avatar" style="display: none;">${userInitials}</div>` :
+        `<div class="user-initials-avatar reply-avatar">${userInitials}</div>`;
 
     return `
         <div class="reply-input-wrapper" id="replyInput-${commentId}" style="display: none;">
@@ -498,23 +646,19 @@ function createReplyInputHTML(commentId, postId) {
     `;
 }
 
-
-function updateCommentCount(postId, delta) {
+function updateCommentCount(postId, change) {
     const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
     if (!postContainer) return;
 
-    const commentCountEl = postContainer.querySelector('.comments-count .count-text');
-    if (commentCountEl) {
-        const currentCount = parseInt(commentCountEl.textContent) || 0;
-        const newCount = Math.max(0, currentCount + delta);
-        commentCountEl.textContent = `${newCount} comment${newCount !== 1 ? 's' : ''}`;
+    const commentsCount = postContainer.querySelector('.comments-count .count-text');
+    if (commentsCount) {
+        const match = commentsCount.textContent.match(/\d+/);
+        if (match) {
+            let count = parseInt(match[0]) + change;
+            count = Math.max(0, count);
+            commentsCount.textContent = `${count} comment${count !== 1 ? 's' : ''}`;
+        }
     }
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
 }
 
 function formatTimeAgo(dateString) {
@@ -541,14 +685,19 @@ function formatTimeAgo(dateString) {
     return 'Just now';
 }
 
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function showNotification(message, type = 'info') {
     if ($('#notification-container').length === 0) {
         $('body').append('<div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>');
     }
 
     const alertClass = type === 'success' ? 'alert-success' :
-                      type === 'error' ? 'alert-danger' :
-                      'alert-info';
+                      type === 'error' ? 'alert-danger' : 'alert-info';
 
     const notification = $(`
         <div class="alert ${alertClass} alert-dismissible fade show" role="alert" style="min-width: 250px;">
@@ -563,3 +712,15 @@ function showNotification(message, type = 'info') {
         notification.alert('close');
     }, 3000);
 }
+
+// Make edit functions globally available
+window.editComment = editComment;
+window.deleteComment = deleteComment;
+window.likeComment = likeComment;
+window.postComment = postComment;
+window.postReply = postReply;
+window.toggleComments = toggleComments;
+window.toggleCommentButton = toggleCommentButton;
+window.toggleReplyInput = toggleReplyInput;
+window.toggleReplyButton = toggleReplyButton;
+window.loadMoreComments = loadMoreComments;

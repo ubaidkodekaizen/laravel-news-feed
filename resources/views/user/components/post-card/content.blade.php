@@ -1,6 +1,6 @@
 <div class="post-text-wrapper">
     <div class="post-text" id="postTextBlock-{{ $post['id'] ?? '' }}">
-        {!! nl2br(e($post['content'] ?? 'Default content')) !!}
+        {!! nl2br(e($post['content'] ?? '')) !!}
     </div>
     @if(strlen($post['content'] ?? '') > 300)
         <span class="post-text-toggle" onclick="togglePostText('{{ $post['id'] ?? '' }}')">...see more</span>

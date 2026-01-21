@@ -1,5 +1,6 @@
 /**
  * Feed Manager - Handles infinite scroll, post loading, and feed interactions
+ * UPDATED to align with FeedController
  */
 
 let currentPage = 1;
@@ -16,6 +17,11 @@ export function initializeFeed(sortOrder = "latest") {
 
     // Clear existing posts
     const postsContainer = document.getElementById("postsContainer");
+    if (!postsContainer) {
+        console.error('Posts container not found');
+        return;
+    }
+
     postsContainer.innerHTML = "";
 
     // Show skeleton loading
@@ -24,8 +30,11 @@ export function initializeFeed(sortOrder = "latest") {
     // Load first page
     loadPosts(true);
 
-    // Setup infinite scroll
-    setupInfiniteScroll();
+    // Setup infinite scroll (only once)
+    if (!window.infiniteScrollInitialized) {
+        setupInfiniteScroll();
+        window.infiniteScrollInitialized = true;
+    }
 }
 
 function setupInfiniteScroll() {
@@ -51,8 +60,8 @@ async function loadPosts(isFirstLoad = false) {
     isLoading = true;
 
     const loadingIndicator = document.getElementById("loadingIndicator");
-    if (!isFirstLoad) {
-        loadingIndicator?.classList.remove("d-none");
+    if (!isFirstLoad && loadingIndicator) {
+        loadingIndicator.classList.remove("d-none");
     }
 
     try {
@@ -71,7 +80,7 @@ async function loadPosts(isFirstLoad = false) {
         );
 
         if (!response.ok) {
-            throw new Error("Failed to load posts");
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const result = await response.json();
@@ -89,7 +98,10 @@ async function loadPosts(isFirstLoad = false) {
                 hasMorePages = result.has_more;
 
                 // Hide "no more posts" message
-                document.getElementById("noMorePosts")?.classList.add("d-none");
+                const noMorePosts = document.getElementById("noMorePosts");
+                if (noMorePosts) {
+                    noMorePosts.classList.add("d-none");
+                }
             } else if (isFirstLoad) {
                 // Show empty state if no posts on first load
                 showEmptyState();
@@ -97,10 +109,13 @@ async function loadPosts(isFirstLoad = false) {
 
             // Show "no more posts" message if we've reached the end
             if (!result.has_more && currentPage > 1) {
-                document
-                    .getElementById("noMorePosts")
-                    ?.classList.remove("d-none");
+                const noMorePosts = document.getElementById("noMorePosts");
+                if (noMorePosts) {
+                    noMorePosts.classList.remove("d-none");
+                }
             }
+        } else {
+            throw new Error(result.message || 'Failed to load posts');
         }
     } catch (error) {
         console.error("Error loading posts:", error);
@@ -111,45 +126,53 @@ async function loadPosts(isFirstLoad = false) {
                 "Failed to load posts. Please refresh the page.",
                 "error"
             );
+        } else {
+            showNotification("Failed to load more posts.", "error");
         }
     } finally {
         isLoading = false;
-        loadingIndicator?.classList.add("d-none");
+        if (loadingIndicator) {
+            loadingIndicator.classList.add("d-none");
+        }
     }
 }
 
 function renderPosts(posts) {
     const postsContainer = document.getElementById("postsContainer");
+    if (!postsContainer) return;
 
     posts.forEach((post) => {
         const postHtml = createPostHTML(post);
         postsContainer.insertAdjacentHTML("beforeend", postHtml);
     });
-    // Initialize video players
+
+    // Initialize video players after rendering
     initializeVideoPlayers();
 }
 
-// Modified createPostHTML to store images
 function createPostHTML(post) {
     const isOwner = window.authUserId && window.authUserId === post.user.id;
 
     // Store images for lightbox
     if (post.media && post.media.length > 0) {
         const postId = `post-${post.id}`;
+        window.postImages = window.postImages || {};
         window.postImages[postId] = post.media.filter(
             (m) => m.media_type === "image"
         );
     }
 
+    // Check if this is a shared post
+    const isSharedPost = post.original_post_id && post.original_post;
+
     return `
-        <div class="post-container card" data-post-id="${
-            post.id
-        }" data-post-slug="${post.slug}">
+        <div class="post-container card" data-post-id="${post.id}" data-post-slug="${post.slug}">
             ${createPostHeader(post, isOwner)}
-            ${createSharedPostBadge(post)}
-            ${createPostContent(post)}
-            ${createPostMedia(post)}
-            ${post.original_post ? createSharedPostDisplay(post) : ""}
+            ${isSharedPost ? createSharedPostBadge(post) : ''}
+            ${isSharedPost ? createSharedContent(post) : ''}
+            ${!isSharedPost ? createPostContent(post) : ''}
+            ${!isSharedPost ? createPostMedia(post) : ''}
+            ${isSharedPost ? createSharedPostDisplay(post) : ''}
             ${createPostStats(post)}
             ${createPostActions(post)}
             ${createCommentSection(post)}
@@ -160,7 +183,7 @@ function createPostHTML(post) {
 function createPostHeader(post, isOwner) {
     const userAvatar =
         post.user.has_photo && post.user.avatar
-            ? `<img src="${post.user.avatar}" class="user-img" alt="${post.user.name}"
+            ? `<img src="${post.user.avatar}" class="user-img" alt="${escapeHtml(post.user.name)}"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
            <div class="user-initials-avatar" style="display: none;">${post.user.initials}</div>`
             : `<div class="user-initials-avatar">${post.user.initials}</div>`;
@@ -202,9 +225,7 @@ function createPostHeader(post, isOwner) {
             <div class="user-info">
                 ${userAvatar}
                 <div class="user_post_name">
-                    <a href="/user/profile/${
-                        post.user.slug
-                    }" class="username">${escapeHtml(post.user.name)}</a>
+                    <a href="/user/profile/${post.user.slug}" class="username">${escapeHtml(post.user.name)}</a>
                     ${
                         post.user.position
                             ? `<p class="user-position">${escapeHtml(
@@ -224,8 +245,6 @@ function createPostHeader(post, isOwner) {
 }
 
 function createSharedPostBadge(post) {
-    if (!post.original_post_id) return "";
-
     return `
         <div class="post-shared-badge">
             <i class="fa-solid fa-retweet"></i>
@@ -234,8 +253,15 @@ function createSharedPostBadge(post) {
     `;
 }
 
+// For shared posts, show the user's comment about the share
+function createSharedContent(post) {
+    if (!post.content || post.content.trim() === '') return '';
+
+    return createPostContent(post);
+}
+
 function createPostContent(post) {
-    if (!post.content) return "";
+    if (!post.content || post.content.trim() === '') return "";
 
     const content = escapeHtml(post.content);
     const shouldTruncate = content.length > 300;
@@ -243,9 +269,7 @@ function createPostContent(post) {
 
     return `
         <div class="post-text-wrapper">
-            <div class="post-text" id="postTextBlock-${
-                post.id
-            }" data-full-content="${content}">
+            <div class="post-text" id="postTextBlock-${post.id}" data-full-content="${content}">
                 ${displayContent.replace(/\n/g, "<br>")}
             </div>
             ${
@@ -263,52 +287,51 @@ function createPostMedia(post) {
     const images = post.media.filter((m) => m.media_type === "image");
     const videos = post.media.filter((m) => m.media_type === "video");
 
-    if (images.length === 0 && videos.length === 0) return "";
+    let html = '';
 
-    // For now, show first image or video
-    if (images.length > 0) {
-        return createImageGrid(images, post.id);
-    } // inside createPostMedia (replace fields to match your data model)
-    else if (videos.length > 0) {
-        const v = videos[0];
-        const posterAttr = v.poster ? `poster="${v.poster}"` : "";
-        const captionsTrack = v.captions_url
-            ? `<track kind="captions" src="${v.captions_url}" srclang="en" label="English captions">`
-            : "";
-        return `
-    <div class="post-media video-container">
-      <video
-        class="post-video"
-        preload="metadata"
-        playsinline
-        controls
-        controlslist="nodownload"
-        ${posterAttr}
-        aria-label="Video: ${escapeHtml(v.title || v.filename || "post video")}"
-        data-src="${v.media_url}"
-        data-mime="${v.mime_type || ""}"
-        tabindex="0"
-      >
-        <!-- source will be set lazily by JS -->
-        <source data-src="${v.media_url}" type="${v.mime_type || ""}">
-        ${captionsTrack}
-        Your browser does not support the video tag.
-      </video>
-
-      <div class="video-play-overlay" aria-hidden="false">
-        <button class="video-play-button" aria-label="Play video">
-          <i class="fa-solid fa-circle-play" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-  `;
+    // Show videos first
+    if (videos.length > 0) {
+        html += createVideoPlayer(videos[0]);
     }
 
-    return "";
+    // Then show images
+    if (images.length > 0) {
+        html += createImageGrid(images, post.id);
+    }
+
+    return html;
 }
-// call after posts are rendered
+
+function createVideoPlayer(video) {
+    const posterAttr = video.thumbnail_url ? `poster="${video.thumbnail_url}"` : "";
+
+    return `
+        <div class="post-media video-container">
+            <video
+                class="post-video"
+                preload="metadata"
+                playsinline
+                controls
+                controlslist="nodownload"
+                ${posterAttr}
+                aria-label="Video: ${escapeHtml(video.file_name || "post video")}"
+                data-src="${video.media_url}"
+                data-mime="${video.mime_type || "video/mp4"}"
+                tabindex="0"
+            >
+                <source data-src="${video.media_url}" type="${video.mime_type || "video/mp4"}">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-play-overlay" aria-hidden="false">
+                <button class="video-play-button" aria-label="Play video">
+                    <i class="fa-solid fa-circle-play" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
 function initializeVideoPlayers() {
-    // pause all other videos when one plays
     function pauseAllExcept(current) {
         document.querySelectorAll("video.post-video").forEach((v) => {
             if (v !== current && !v.paused) {
@@ -317,7 +340,6 @@ function initializeVideoPlayers() {
         });
     }
 
-    // lazy loader using IntersectionObserver
     const lazyObserver = new IntersectionObserver(
         (entries, obs) => {
             entries.forEach((entry) => {
@@ -337,49 +359,36 @@ function initializeVideoPlayers() {
     document.querySelectorAll(".post-media").forEach((container) => {
         const video = container.querySelector("video.post-video");
         const overlay = container.querySelector(".video-play-overlay");
-        const playBtn = overlay
-            ? overlay.querySelector(".video-play-button")
-            : null;
+        const playBtn = overlay?.querySelector(".video-play-button");
 
         if (!video || video.dataset.initialized) return;
 
-        // lazy-load observer
         lazyObserver.observe(video);
 
-        // overlay click / button toggles playback
         if (playBtn) {
             playBtn.addEventListener("click", (e) => {
                 e.preventDefault();
                 if (video.paused) {
-                    // try to ensure source is loaded
                     const s = video.querySelector("source[data-src]");
                     if (s && !s.src) {
                         s.src = s.dataset.src;
                         video.load();
                     }
-                    // attempt play
                     const p = video.play();
-                    // handle promise rejection (autoplay blocked)
-                    if (p && p.catch)
-                        p.catch(() => {
-                            /* swallow; user must interact */
-                        });
+                    if (p && p.catch) p.catch(() => {});
                 } else {
                     video.pause();
                 }
             });
         }
 
-        // also allow clicking overlay area to toggle
         if (overlay) {
             overlay.addEventListener("click", (e) => {
-                // ignore clicks on controls (if any)
                 if (e.target.closest("button")) return;
                 playBtn && playBtn.click();
             });
         }
 
-        // keyboard accessibility: space/enter toggles play when video focused
         video.addEventListener("keydown", (e) => {
             if (e.key === " " || e.key === "Spacebar" || e.key === "Enter") {
                 e.preventDefault();
@@ -388,7 +397,6 @@ function initializeVideoPlayers() {
             }
         });
 
-        // update overlay visibility on play/pause/ended
         const hideOverlay = () => {
             if (overlay) overlay.classList.add("video-overlay-hidden");
         };
@@ -400,26 +408,17 @@ function initializeVideoPlayers() {
             pauseAllExcept(video);
             hideOverlay();
         });
-
         video.addEventListener("pause", showOverlay);
         video.addEventListener("ended", showOverlay);
 
-        // show spinner when buffering (optional UX)
-        video.addEventListener("waiting", () => {
-            // you could append a spinner element here if desired
-        });
-        video.addEventListener("playing", () => {
-            // remove spinner
-        });
-
-        // mark initialized
         video.dataset.initialized = "true";
     });
 }
+
 function createImageGrid(images, postId) {
     const count = images.length;
+    const dataPostId = `post-${postId}`;
 
- const dataPostId = `post-${postId}`;
     if (count === 1) {
         return `
             <div class="post-images" data-image-count="1" data-post-id="${dataPostId}">
@@ -485,14 +484,8 @@ function createImageGrid(images, postId) {
                     )
                     .join("")}
                 <div class="post-image-wrapper" onclick="openLightbox('${dataPostId}', 3)" style="cursor: pointer;">
-                    <img src="${
-                        images[3].media_url
-                    }" alt="Post image" class="post-image">
-                    ${
-                        remaining > 0
-                            ? `<div class="post-image-overlay">+${remaining}</div>`
-                            : ""
-                    }
+                    <img src="${images[3].media_url}" alt="Post image" class="post-image">
+                    ${remaining > 0 ? `<div class="post-image-overlay">+${remaining}</div>` : ""}
                 </div>
             </div>
         `;
@@ -505,104 +498,83 @@ function createSharedPostDisplay(post) {
     const op = post.original_post;
     const opAvatar =
         op.user.has_photo && op.user.avatar
-            ? `<img src="${op.user.avatar}" class="user-img" alt="${op.user.name}">`
+            ? `<img src="${op.user.avatar}" class="user-img" alt="${escapeHtml(op.user.name)}"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+               <div class="user-initials-avatar" style="display: none; width: 32px; height: 32px; font-size: 14px;">${op.user.initials}</div>`
             : `<div class="user-initials-avatar" style="width: 32px; height: 32px; font-size: 14px;">${op.user.initials}</div>`;
 
+    const images = op.media ? op.media.filter(m => m.media_type === 'image') : [];
+    const videos = op.media ? op.media.filter(m => m.media_type === 'video') : [];
+
+    let mediaHTML = '';
+
+    if (videos.length > 0) {
+        const video = videos[0];
+        mediaHTML += `
+            <div class="post-videos mt-2">
+                <video controls class="shared-post-video" preload="metadata">
+                    <source src="${video.media_url}" type="${video.mime_type || 'video/mp4'}">
+                    Your browser does not support the video tag.
+                </video>
+                ${videos.length > 1 ? `<div class="more-media-indicator">+${videos.length - 1} more videos</div>` : ''}
+            </div>
+        `;
+    }
+
+    if (images.length > 0) {
+        mediaHTML += `
+            <div class="post-images mt-2">
+                <img src="${images[0].media_url}" alt="Post image" class="post-image" style="max-height: 200px; width: 100%; object-fit: cover; border-radius: 8px;">
+                ${images.length > 1 ? `<div class="more-media-indicator">+${images.length - 1} more images</div>` : ''}
+            </div>
+        `;
+    }
+
     return `
-        <div class="shared-post-wrapper" onclick="window.location.href='/feed/posts/${
-            op.slug
-        }'">
+        <div class="shared-post-wrapper" onclick="window.location.href='/feed/posts/${op.slug}'">
             <div class="post-header">
                 <div class="user-info">
                     ${opAvatar}
                     <div class="user_post_name">
                         <p class="username">${escapeHtml(op.user.name)}</p>
-                        ${
-                            op.user.position
-                                ? `<p class="user-position">${escapeHtml(
-                                      op.user.position
-                                  )}</p>`
-                                : ""
-                        }
-                        <span class="post-time">${formatTimeAgo(
-                            op.created_at
-                        )}</span>
+                        ${op.user.position ? `<p class="user-position">${escapeHtml(op.user.position)}</p>` : ''}
+                        <span class="post-time">${formatTimeAgo(op.created_at)}</span>
                     </div>
                 </div>
             </div>
-            ${
-                op.content
-                    ? `<div class="post-text">${escapeHtml(
-                          op.content
-                      ).substring(0, 200)}${
-                          op.content.length > 200 ? "..." : ""
-                      }</div>`
-                    : ""
-            }
-            ${
-                op.media && op.media.length > 0
-                    ? `
-                <div class="post-images mt-2">
-                    <img src="${
-                        op.media[0].media_url
-                    }" alt="Post image" class="post-image" style="max-height: 200px;">
-                    ${
-                        op.media.length > 1
-                            ? `<div class="more-images-indicator">+${
-                                  op.media.length - 1
-                              } more</div>`
-                            : ""
-                    }
-                </div>
-            `
-                    : ""
-            }
+            ${op.content ? `<div class="post-text">${escapeHtml(op.content).substring(0, 200)}${op.content.length > 200 ? '...' : ''}</div>` : ''}
+            ${mediaHTML}
         </div>
     `;
 }
 
 function createPostStats(post) {
-    // Create reactions preview
     const reactionsHTML =
         post.likes_count > 0
             ? `<div class="reactions-preview">
-             <span class="reaction-emoji-preview">👍</span>
-           </div>
-           <span class="count-text">${post.likes_count}</span>`
+                 <span class="reaction-emoji-preview">👍</span>
+               </div>
+               <span class="count-text">${post.likes_count}</span>`
             : "";
 
     return `
         <div class="post-stats">
-            <div class="likes-count" onclick="showReactionsList('${
-                post.id
-            }')" style="cursor: pointer;">
+            <div class="likes-count" onclick="showReactionsList('${post.id}')" style="cursor: pointer;">
                 ${reactionsHTML}
             </div>
             <div class="stats-right">
                 ${
                     post.comments_count > 0
-                        ? `
-                    <div class="comments-count" onclick="toggleComments('${
-                        post.id
-                    }')" style="cursor: pointer;">
-                        <span class="count-text">${
-                            post.comments_count
-                        } comment${post.comments_count !== 1 ? "s" : ""}</span>
-                    </div>
-                `
+                        ? `<div class="comments-count" onclick="toggleComments('${post.id}')" style="cursor: pointer;">
+                             <span class="count-text">${post.comments_count} comment${post.comments_count !== 1 ? "s" : ""}</span>
+                           </div>`
                         : ""
                 }
                 ${
                     post.shares_count > 0
-                        ? `
-                    <div class="shares-count" onclick="showSharesList('${
-                        post.id
-                    }')" style="cursor: pointer;">
-                        <span class="count-text">${post.shares_count} share${
-                              post.shares_count !== 1 ? "s" : ""
-                          }</span>
-                    </div>
-                `
+                        ? `<div class="shares-count" onclick="showSharesList('${post.id}')" style="cursor: pointer;">
+                             <span class="count-text">${post.shares_count} share${post.shares_count !== 1 ? "s" : ""}</span>
+                           </div>`
                         : ""
                 }
             </div>
@@ -612,12 +584,8 @@ function createPostStats(post) {
 
 function createPostActions(post) {
     const userReaction = post.user_reaction;
-    const reactionEmoji = userReaction
-        ? getReactionEmoji(userReaction.type)
-        : "👍";
-    const reactionLabel = userReaction
-        ? capitalizeFirst(userReaction.type)
-        : "Like";
+    const reactionEmoji = userReaction ? getReactionEmoji(userReaction.type) : '<i class="fa-regular fa-thumbs-up"></i>';
+    const reactionLabel = userReaction ? capitalizeFirst(userReaction.type) : "Like";
     const reactionType = userReaction ? userReaction.type : "";
 
     return `
@@ -630,7 +598,7 @@ function createPostActions(post) {
                     <span class="reaction-icon">${reactionEmoji}</span>
                     <span class="reaction-label action-btn-text">${reactionLabel}</span>
                 </div>
-                <div class="reaction-panel d-none" onmouseenter="cancelHide()" onmouseleave="hideReactions(this)">
+                <div class="reaction-panel d-none" onmouseenter="cancelHide()" onmouseleave="hideReactions(this.parentElement)">
                     <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Like', 'like')" title="Like">👍</span>
                     <span class="reaction-emoji" onclick="applyReaction(this, '❤️', 'Love', 'love')" title="Love">❤️</span>
                     <span class="reaction-emoji" onclick="applyReaction(this, '😂', 'Haha', 'haha')" title="Haha">😂</span>
@@ -654,24 +622,18 @@ function createPostActions(post) {
 
 function createCommentSection(post) {
     return `
-        <div class="comment-section" id="commentSection-${
-            post.id
-        }" style="display: none;">
+        <div class="comment-section" id="commentSection-${post.id}" style="display: none;">
             ${createCommentInput(post.id)}
             <div class="comments-list" id="commentsList-${post.id}">
                 <!-- Comments will be loaded dynamically -->
             </div>
             ${
                 post.comments_count > 2
-                    ? `
-                <div class="load-more-comments">
-                    <button class="load-more-btn" onclick="loadMoreComments('${
-                        post.id
-                    }')">
-                        Load more comments (${post.comments_count - 2} more)
-                    </button>
-                </div>
-            `
+                    ? `<div class="load-more-comments">
+                         <button class="load-more-btn" onclick="loadMoreComments('${post.id}')">
+                           Load more comments (${post.comments_count - 2} more)
+                         </button>
+                       </div>`
                     : ""
             }
         </div>
@@ -681,22 +643,16 @@ function createCommentSection(post) {
 function createCommentInput(postId) {
     const userAvatar = window.authUserAvatar || "";
     const userInitials = window.authUserInitials || "U";
+    const hasPhoto = window.authUserHasPhoto || false;
 
-    // Build avatar HTML with onerror fallback
-    const avatarHTML = userAvatar
-        ? `
-        <img src="${userAvatar}" class="user-img" alt="You"
-             onerror="
-                this.onerror=null;
-                this.style.display='none';
-                this.nextElementSibling.style.display='flex';
-             ">
-        <div class="comment-initials-avatar">
-            ${userInitials}
-        </div>
-        `
-        : `<div class="comment-initials-avatar">
-                ${userInitials}
+    const avatarHTML = hasPhoto && userAvatar
+        ? `<img src="${userAvatar}" class="user-img" alt="You"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+           <div class="user-initials-avatar comment-avatar" style="display: none;">
+               ${userInitials}
+           </div>`
+        : `<div class="user-initials-avatar comment-avatar">
+               ${userInitials}
            </div>`;
 
     return `
@@ -714,29 +670,29 @@ function createCommentInput(postId) {
 }
 
 function showSkeletonLoading() {
-    const skeletonLoading = document.querySelector(
-        ".skeleton-loading-container"
-    );
+    const skeletonLoading = document.querySelector(".skeleton-loading-container");
     if (skeletonLoading) {
         skeletonLoading.style.display = "block";
     }
 }
 
 function hideSkeletonLoading() {
-    const skeletonLoading = document.querySelector(
-        ".skeleton-loading-container"
-    );
+    const skeletonLoading = document.querySelector(".skeleton-loading-container");
     if (skeletonLoading) {
         skeletonLoading.style.display = "none";
     }
 }
 
 function showEmptyState() {
-    document.getElementById("emptyState")?.classList.remove("d-none");
+    const emptyState = document.getElementById("emptyState");
+    if (emptyState) {
+        emptyState.classList.remove("d-none");
+    }
 }
 
 // Utility functions
 function escapeHtml(text) {
+    if (!text) return '';
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
@@ -779,6 +735,7 @@ function getReactionEmoji(type) {
 }
 
 function capitalizeFirst(str) {
+    if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
@@ -810,15 +767,13 @@ function showNotification(message, type = "info") {
     }, 3000);
 }
 
-// Store images for lightbox
+// Lightbox Functions
 window.postImages = window.postImages || {};
 
-// Lightbox Functions
 window.openLightbox = function (postId, index) {
     const images = window.postImages[postId];
     if (!images || images.length === 0) return;
 
-    // Create lightbox if doesn't exist
     let lightbox = document.getElementById("imageLightbox");
     if (!lightbox) {
         lightbox = document.createElement("div");
@@ -843,14 +798,11 @@ window.openLightbox = function (postId, index) {
         document.body.appendChild(lightbox);
     }
 
-    // Set current images and index
     window.currentLightboxImages = images;
     window.currentLightboxIndex = index;
 
-    // Show image
     updateLightboxImage();
 
-    // Show lightbox
     lightbox.classList.add("active");
     document.body.style.overflow = "hidden";
 };
@@ -868,12 +820,9 @@ window.navigateLightbox = function (direction) {
 
     window.currentLightboxIndex += direction;
 
-    // Loop around
     if (window.currentLightboxIndex < 0) {
         window.currentLightboxIndex = window.currentLightboxImages.length - 1;
-    } else if (
-        window.currentLightboxIndex >= window.currentLightboxImages.length
-    ) {
+    } else if (window.currentLightboxIndex >= window.currentLightboxImages.length) {
         window.currentLightboxIndex = 0;
     }
 
@@ -892,18 +841,15 @@ function updateLightboxImage() {
     }
 
     if (counter) {
-        counter.textContent = `${window.currentLightboxIndex + 1} / ${
-            window.currentLightboxImages.length
-        }`;
+        counter.textContent = `${window.currentLightboxIndex + 1} / ${window.currentLightboxImages.length}`;
     }
 
-    // Show/hide navigation buttons
     if (window.currentLightboxImages.length <= 1) {
-        prevBtn.style.display = "none";
-        nextBtn.style.display = "none";
+        if (prevBtn) prevBtn.style.display = "none";
+        if (nextBtn) nextBtn.style.display = "none";
     } else {
-        prevBtn.style.display = "flex";
-        nextBtn.style.display = "flex";
+        if (prevBtn) prevBtn.style.display = "flex";
+        if (nextBtn) nextBtn.style.display = "flex";
     }
 }
 

@@ -65,7 +65,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    <li>
+                                    {{-- <li>
                                         <a class="dropdown-item visibility-option" href="#"
                                             data-visibility="connections">
                                             <i class="fa-solid fa-user-group me-2"></i>
@@ -74,7 +74,7 @@
                                                 <div class="small text-muted">Only your connections can see</div>
                                             </div>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                     <li>
                                         <a class="dropdown-item visibility-option" href="#"
                                             data-visibility="private">

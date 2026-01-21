@@ -1,17 +1,361 @@
 /**
- * Improved Share/Repost System
- * Handles sharing to social media and reposting within platform
+ * Share and Repost System - Complete Implementation
+ * Handles sharing posts via different methods: instant repost, repost with thoughts, and send
  */
 
 export function sharePost(postId) {
     if (!postId) {
-        console.error("Post ID is required");
-        showNotification("Unable to share post. Please try again.", "error");
+        console.error('Post ID is required');
         return;
     }
 
-    showShareModal(postId);
+    // Get post data
+    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    if (!postContainer) {
+        console.error('Post container not found');
+        return;
+    }
+
+    // Show share modal
+    const modal = document.getElementById('shareModal');
+    if (!modal) {
+        // Create share modal if it doesn't exist
+        createShareModal();
+    }
+
+    // Set current post ID
+    window.currentSharePostId = postId;
+
+    // Show modal
+    const bsModal = new bootstrap.Modal(document.getElementById('shareModal'));
+    bsModal.show();
 }
+
+function createShareModal() {
+    const modalHTML = `
+        <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="shareModalLabel">Share Post</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="share-options">
+
+                            <button class="share-option-btn" onclick="repostWithThoughts()">
+                                <i class="fa-solid fa-pen"></i>
+                                <div>
+                                    <strong>Repost with thoughts</strong>
+                                </div>
+                            </button>
+
+                            <button class="share-option-btn" onclick="instantRepost()">
+                                <i class="fa-solid fa-retweet"></i>
+                                <div>
+                                    <strong>Instant Repost</strong>
+                                </div>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+export async function instantRepost() {
+    const postId = window.currentSharePostId;
+    if (!postId) {
+        showNotification('Unable to repost. Please try again.', 'error');
+        return;
+    }
+
+    // Close share modal
+    const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+    if (shareModal) {
+        shareModal.hide();
+    }
+
+    // Show loading notification
+    showNotification('Reposting...', 'info');
+
+    try {
+        const response = await fetch(`/feed/posts/${postId}/share`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                share_type: 'repost',
+                shared_content: '' // Empty content for instant repost
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Update share count
+            updateShareCount(postId, 1);
+
+            // Show success message
+            showNotification('Post reposted successfully!', 'success');
+
+            // Reload feed after short delay to show the repost
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            throw new Error(result.message || 'Failed to repost');
+        }
+    } catch (error) {
+        console.error('Error reposting:', error);
+        showNotification('Failed to repost. Please try again.', 'error');
+    }
+}
+
+export function repostWithThoughts() {
+    const postId = window.currentSharePostId;
+    if (!postId) {
+        showNotification('Unable to repost. Please try again.', 'error');
+        return;
+    }
+
+    // Close share modal
+    const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+    if (shareModal) {
+        shareModal.hide();
+    }
+
+    // Get original post data
+    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    if (!postContainer) {
+        showNotification('Post not found.', 'error');
+        return;
+    }
+
+    // Create repost modal if it doesn't exist
+    let repostModal = document.getElementById('repostModal');
+    if (!repostModal) {
+        createRepostModal();
+        repostModal = document.getElementById('repostModal');
+    }
+
+    // Get post preview
+    const postPreview = createPostPreview(postContainer);
+
+    // Set content in modal
+    document.getElementById('repostPreview').innerHTML = postPreview;
+    document.getElementById('repostText').value = '';
+    document.getElementById('repostCharCount').textContent = '0';
+
+    // Store post ID
+    window.currentRepostPostId = postId;
+
+    // Show modal
+    const bsModal = new bootstrap.Modal(repostModal);
+    bsModal.show();
+}
+
+function createRepostModal() {
+    const userAvatar = window.authUserAvatar || '';
+    const userName = window.authUserName || 'You';
+    const userInitials = window.authUserInitials || 'U';
+    const hasPhoto = window.authUserHasPhoto || false;
+
+    const avatarHTML = hasPhoto && userAvatar ?
+        `<img src="${userAvatar}" class="user-img" alt="${userName}">` :
+        `<div class="user-initials-avatar" style="width: 48px; height: 48px;">${userInitials}</div>`;
+
+    const modalHTML = `
+        <div class="modal fade" id="repostModal" tabindex="-1" aria-labelledby="repostModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="repostModalLabel">Repost with your thoughts</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="repost-composer">
+                            <div class="d-flex align-items-start gap-3">
+                                ${avatarHTML}
+                                <textarea class="form-control" id="repostText" rows="3"
+                                          placeholder="What do you want to say about this?"
+                                          maxlength="10000"
+                                          oninput="updateRepostCharCount()"></textarea>
+                            </div>
+                            <div class="character-count text-muted small mt-1 text-end">
+                                <span id="repostCharCount">0</span>/10000
+                            </div>
+                        </div>
+
+                        <div id="repostPreview" class="mt-3"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="submitRepostWithThoughts()">Repost</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function createPostPreview(postContainer) {
+    const userInfo = postContainer.querySelector('.user-info');
+    const postText = postContainer.querySelector('.post-text');
+    const postMedia = postContainer.querySelector('.post-images, .post-videos');
+
+    let userName = 'User';
+    let userPosition = '';
+    let userAvatar = '';
+
+    if (userInfo) {
+        const nameElement = userInfo.querySelector('.username');
+        const positionElement = userInfo.querySelector('.user-position');
+        const avatarElement = userInfo.querySelector('.user-img, .user-initials-avatar');
+
+        if (nameElement) userName = nameElement.textContent.trim();
+        if (positionElement) userPosition = positionElement.textContent.trim();
+        if (avatarElement) {
+            if (avatarElement.tagName === 'IMG') {
+                userAvatar = `<img src="${avatarElement.src}" class="user-img" alt="${userName}">`;
+            } else {
+                userAvatar = `<div class="user-initials-avatar" style="width: 32px; height: 32px; font-size: 14px;">${avatarElement.textContent}</div>`;
+            }
+        }
+    }
+
+    const content = postText ? postText.textContent.trim().substring(0, 200) : '';
+    const hasMore = postText && postText.textContent.trim().length > 200;
+
+    let mediaPreview = '';
+    if (postMedia) {
+        const firstImage = postMedia.querySelector('img');
+        const firstVideo = postMedia.querySelector('video');
+
+        if (firstImage) {
+            mediaPreview = `<img src="${firstImage.src}" alt="Post media" style="max-height: 150px; width: 100%; object-fit: cover; border-radius: 8px; margin-top: 8px;">`;
+        } else if (firstVideo) {
+            mediaPreview = `<video src="${firstVideo.src}" style="max-height: 150px; width: 100%; object-fit: cover; border-radius: 8px; margin-top: 8px;"></video>`;
+        }
+    }
+
+    return `
+        <div class="shared-post-preview">
+            <div class="d-flex align-items-start gap-2 mb-2">
+                ${userAvatar}
+                <div>
+                    <strong>${escapeHtml(userName)}</strong>
+                    ${userPosition ? `<div class="text-muted small">${escapeHtml(userPosition)}</div>` : ''}
+                </div>
+            </div>
+            ${content ? `<div class="post-preview-text">${escapeHtml(content)}${hasMore ? '...' : ''}</div>` : ''}
+            ${mediaPreview}
+        </div>
+    `;
+}
+
+window.updateRepostCharCount = function() {
+    const textarea = document.getElementById('repostText');
+    const counter = document.getElementById('repostCharCount');
+
+    if (textarea && counter) {
+        const length = textarea.value.length;
+        counter.textContent = length;
+
+        const container = counter.parentElement;
+        container.classList.remove('warning', 'error');
+
+        if (length > 9000) {
+            container.classList.add('error');
+        } else if (length > 8000) {
+            container.classList.add('warning');
+        }
+    }
+};
+
+window.submitRepostWithThoughts = async function() {
+    const postId = window.currentRepostPostId;
+    if (!postId) {
+        showNotification('Unable to repost. Please try again.', 'error');
+        return;
+    }
+
+    const textarea = document.getElementById('repostText');
+    const content = textarea ? textarea.value.trim() : '';
+
+    const submitBtn = document.querySelector('#repostModal .btn-primary');
+    const originalText = submitBtn ? submitBtn.textContent : 'Repost';
+
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Reposting...';
+    }
+
+    try {
+        const response = await fetch(`/feed/posts/${postId}/share`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                share_type: 'repost',
+                shared_content: content
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Close modal
+            const repostModal = bootstrap.Modal.getInstance(document.getElementById('repostModal'));
+            if (repostModal) {
+                repostModal.hide();
+            }
+
+            // Update share count
+            updateShareCount(postId, 1);
+
+            // Show success message
+            showNotification('Post reposted successfully!', 'success');
+
+            // Reload feed after short delay
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            throw new Error(result.message || 'Failed to repost');
+        }
+    } catch (error) {
+        console.error('Error reposting:', error);
+        showNotification('Failed to repost. Please try again.', 'error');
+
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    }
+};
 
 export function sendPost(postId) {
     if (!postId) {
@@ -26,302 +370,11 @@ export function sendPost(postId) {
     );
     const postSlug = postContainer?.dataset.postSlug;
     const postUrl = postSlug
-        ? `${window.location.origin}/feed/posts/${postSlug}`
-        : `${window.location.origin}/feed/posts/${postId}`;
+        ? `${window.location.origin}/news-feed/posts/${postSlug}`
+        : `${window.location.origin}/news-feed/posts/${postId}`;
 
     // Show social share options
     showSocialShareModal(postUrl, postId);
-}
-
-function showShareModal(postId) {
-    let shareModal = document.getElementById("sharePostModal");
-
-    if (!shareModal) {
-        const modalHtml = `
-            <div class="modal fade" id="sharePostModal" tabindex="-1" aria-labelledby="sharePostModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Share Post</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="share-options">
-                                <button class="share-option-btn with-thoughts" onclick="window.repostWithThoughts('${postId}')">
-                                    <span>
-                                        <img src="/assets/images/repost-with-thoughts-icon.png" class="img-fluid"/>
-                                    </span>
-                                    <div>
-                                        <strong>Repost with your thoughts</strong>
-                                    </div>
-                                </button>
-                                <button class="share-option-btn instant" onclick="window.instantRepost('${postId}')">
-                                    <span>
-                                        <img src="/assets/images/repost-instant.png" class="img-fluid"/>
-                                    </span>
-                                    <div>
-                                        <strong>Instant repost</strong>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.insertAdjacentHTML("beforeend", modalHtml);
-        shareModal = document.getElementById("sharePostModal");
-    }
-
-    // Update onclick handlers with current postId
-    shareModal.querySelectorAll(".share-option-btn").forEach((btn, index) => {
-        const actions = [
-            () => repostWithThoughts(postId),
-            () => instantRepost(postId),
-            () => copyPostLink(postId),
-        ];
-        btn.onclick = actions[index];
-    });
-
-    const bsModal = new bootstrap.Modal(shareModal);
-    bsModal.show();
-}
-
-export function repostWithThoughts(postId) {
-    const shareModal = bootstrap.Modal.getInstance(
-        document.getElementById("sharePostModal")
-    );
-    if (shareModal) shareModal.hide();
-
-    showRepostModal(postId);
-}
-
-function showRepostModal(postId) {
-    const postContainer = document.querySelector(
-        `.post-container[data-post-id="${postId}"]`
-    );
-    if (!postContainer) {
-        console.error("Post container not found");
-        return;
-    }
-
-    const postContent =
-        postContainer.querySelector(".post-text")?.textContent.trim() || "";
-    const userName =
-        postContainer.querySelector(".username")?.textContent.trim() ||
-        "Unknown User";
-    const userAvatar =
-        postContainer.querySelector(".user-img")?.src ||
-        postContainer.querySelector(".user-initials-avatar")?.textContent ||
-        "";
-    const postTime =
-        postContainer.querySelector(".post-time")?.textContent.trim() || "";
-
-    let repostModal = document.getElementById("repostModal");
-
-    if (!repostModal) {
-        const modalHtml = `
-            <div class="modal fade" id="repostModal" tabindex="-1" aria-labelledby="repostModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <form id="repostForm">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Repost with Your Thoughts</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <textarea class="form-control mb-3" id="repostText" rows="3"
-                                          placeholder="What do you think about this?" maxlength="10000"></textarea>
-
-                                <div class="original-post-preview">
-                                    <div class="original-post-header">
-                                        <div id="originalPostAvatar"></div>
-                                        <div>
-                                            <strong class="original-post-name"></strong>
-                                            <span class="original-post-time"></span>
-                                        </div>
-                                    </div>
-                                    <div class="original-post-content"></div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Repost</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.insertAdjacentHTML("beforeend", modalHtml);
-        repostModal = document.getElementById("repostModal");
-
-        document
-            .getElementById("repostForm")
-            .addEventListener("submit", function (e) {
-                e.preventDefault();
-                const repostContent = document
-                    .getElementById("repostText")
-                    .value.trim();
-                const postId = this.dataset.postId;
-                submitRepost(postId, repostContent, "repost");
-            });
-    }
-
-    // Set data
-    document.getElementById("repostForm").dataset.postId = postId;
-
-    const avatarContainer = repostModal.querySelector("#originalPostAvatar");
-    if (userAvatar.startsWith("http")) {
-        avatarContainer.innerHTML = `<img src="${userAvatar}" class="original-post-avatar" alt="User">`;
-    } else {
-        avatarContainer.innerHTML = `<div class="user-initials-avatar" style="width: 40px; height: 40px; font-size: 14px;">${userAvatar}</div>`;
-    }
-
-    repostModal.querySelector(".original-post-name").textContent = userName;
-    repostModal.querySelector(".original-post-time").textContent = postTime;
-    repostModal.querySelector(".original-post-content").textContent =
-        postContent;
-
-    document.getElementById("repostText").value = "";
-
-    const bsModal = new bootstrap.Modal(repostModal);
-    bsModal.show();
-}
-
-export function instantRepost(postId) {
-    if (!confirm("Share this post to your feed immediately?")) {
-        return;
-    }
-
-    const shareModal = bootstrap.Modal.getInstance(
-        document.getElementById("sharePostModal")
-    );
-    if (shareModal) shareModal.hide();
-
-    submitRepost(postId, "", "share");
-}
-
-async function submitRepost(postId, content, shareType) {
-    const submitBtn = document.querySelector(
-        '#repostForm button[type="submit"]'
-    );
-    let originalText = "Repost";
-
-    if (submitBtn) {
-        originalText = submitBtn.innerHTML;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML =
-            '<i class="fa fa-spinner fa-spin"></i> Reposting...';
-    }
-
-    try {
-        const response = await fetch(`/feed/posts/${postId}/share`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document.querySelector(
-                    'meta[name="csrf-token"]'
-                ).content,
-            },
-            body: JSON.stringify({
-                shared_content: content,
-                share_type: shareType,
-            }),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            const repostModal = document.getElementById("repostModal");
-            if (repostModal) {
-                const bsModal = bootstrap.Modal.getInstance(repostModal);
-                if (bsModal) bsModal.hide();
-            }
-
-            showNotification("Post shared successfully!", "success");
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        } else {
-            throw new Error(result.message || "Failed to share post");
-        }
-    } catch (error) {
-        console.error("Error sharing post:", error);
-
-        let errorMessage = "Failed to share post. Please try again.";
-        if (error.responseJSON && error.responseJSON.message) {
-            errorMessage = error.responseJSON.message;
-        } else if (error.message) {
-            errorMessage = error.message;
-        }
-
-        showNotification(errorMessage, "error");
-    } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-        }
-    }
-}
-
-export function copyPostLink(postId) {
-    const postContainer = document.querySelector(
-        `.post-container[data-post-id="${postId}"]`
-    );
-    const postSlug = postContainer?.dataset.postSlug;
-
-    const postUrl = postSlug
-        ? `${window.location.origin}/feed/posts/${postSlug}`
-        : `${window.location.origin}/feed/posts/${postId}`;
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard
-            .writeText(postUrl)
-            .then(() => {
-                showNotification("Link copied to clipboard!", "success");
-
-                const shareModal = bootstrap.Modal.getInstance(
-                    document.getElementById("sharePostModal")
-                );
-                if (shareModal) shareModal.hide();
-            })
-            .catch((err) => {
-                console.error("Failed to copy:", err);
-                fallbackCopyToClipboard(postUrl);
-            });
-    } else {
-        fallbackCopyToClipboard(postUrl);
-    }
-}
-
-function fallbackCopyToClipboard(text) {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.left = "-999999px";
-    document.body.appendChild(textArea);
-    textArea.select();
-
-    try {
-        document.execCommand("copy");
-        showNotification("Link copied to clipboard!", "success");
-
-        const shareModal = bootstrap.Modal.getInstance(
-            document.getElementById("sharePostModal")
-        );
-        if (shareModal) shareModal.hide();
-    } catch (err) {
-        console.error("Failed to copy:", err);
-        showNotification("Failed to copy link. Please copy manually.", "error");
-    }
-
-    document.body.removeChild(textArea);
 }
 
 function showSocialShareModal(postUrl, postId) {
@@ -419,110 +472,186 @@ export function shareToWhatsApp(url) {
     )}`;
     window.open(shareUrl, "_blank");
 }
+export function copyPostLink(postId) {
+    // Use the global postId if not provided
+    if (!postId) {
+        postId = window.currentSharePostId;
+    }
 
-export async function showSharesList(postId) {
-    console.log(postId);
-    if (!postId) return;
-
-    const modal = document.getElementById("sharesModal");
-    if (!modal) {
-        console.error("Shares modal not found");
+    if (!postId) {
+        showNotification('Unable to copy link. Please try again.', 'error');
         return;
     }
 
+    // Get post slug
+    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    const postSlug = postContainer ? postContainer.dataset.postSlug : null;
+
+    if (!postSlug) {
+        showNotification('Unable to get post link.', 'error');
+        return;
+    }
+
+    // Create post URL
+    const postUrl = `${window.location.origin}/news-feed/posts/${postSlug}`;
+
+    // Copy to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(postUrl)
+            .then(() => {
+                showNotification('Link copied to clipboard!', 'success');
+
+                // Close share modal
+                const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+                if (shareModal) {
+                    shareModal.hide();
+                }
+            })
+            .catch(err => {
+                console.error('Error copying to clipboard:', err);
+                fallbackCopyToClipboard(postUrl);
+            });
+    } else {
+        fallbackCopyToClipboard(postUrl);
+    }
+}
+
+function fallbackCopyToClipboard(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+        document.execCommand('copy');
+        showNotification('Link copied to clipboard!', 'success');
+
+        // Close share modal
+        const shareModal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+        if (shareModal) {
+            shareModal.hide();
+        }
+    } catch (err) {
+        console.error('Error copying to clipboard:', err);
+        showNotification('Failed to copy link. Please try again.', 'error');
+    } finally {
+        document.body.removeChild(textarea);
+    }
+}
+
+export async function showSharesList(postId) {
+    if (!postId) return;
+
+    const modal = document.getElementById('sharesModal');
+    if (!modal) {
+        console.error('Shares modal not found');
+        return;
+    }
+
+    // Show modal
     const bsModal = new bootstrap.Modal(modal);
     bsModal.show();
 
-    document.getElementById("sharesLoading")?.classList.remove("d-none");
-    document.getElementById("sharesEmpty")?.classList.add("d-none");
+    // Show loading
+    document.getElementById('sharesLoading')?.classList.remove('d-none');
+    document.getElementById('sharesEmpty')?.classList.add('d-none');
+    document.getElementById('sharesList').innerHTML = '';
 
     try {
         const response = await fetch(`/feed/posts/${postId}/shares-list`, {
-            method: "GET",
+            method: 'GET',
             headers: {
-                "X-Requested-With": "XMLHttpRequest",
-            },
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         });
 
         if (!response.ok) {
-            throw new Error("Failed to fetch shares");
+            throw new Error('Failed to fetch shares');
         }
 
         const result = await response.json();
 
-        document.getElementById("sharesLoading")?.classList.add("d-none");
+        // Hide loading
+        document.getElementById('sharesLoading')?.classList.add('d-none');
 
         if (result.success && result.shares && result.shares.length > 0) {
             displaySharesList(result.shares);
-            document.getElementById("totalSharesCount").textContent =
-                result.count;
+            document.getElementById('totalSharesCount').textContent = result.count;
         } else {
-            document.getElementById("sharesEmpty")?.classList.remove("d-none");
+            document.getElementById('sharesEmpty')?.classList.remove('d-none');
         }
     } catch (error) {
-        console.error("Error loading shares:", error);
-        document.getElementById("sharesLoading")?.classList.add("d-none");
-        document.getElementById("sharesEmpty")?.classList.remove("d-none");
-        showNotification("Failed to load shares. Please try again.", "error");
+        console.error('Error loading shares:', error);
+        document.getElementById('sharesLoading')?.classList.add('d-none');
+        document.getElementById('sharesEmpty')?.classList.remove('d-none');
+        showNotification('Failed to load shares. Please try again.', 'error');
     }
 }
 
 function displaySharesList(shares) {
-    const container = document.getElementById("sharesList");
+    const container = document.getElementById('sharesList');
     if (!container) return;
 
-    container.innerHTML = "";
+    container.innerHTML = '';
 
-    shares.forEach((share) => {
-        const item = createShareItem(share);
-        container.appendChild(item);
+    shares.forEach(share => {
+        const shareItem = createShareItem(share);
+        container.appendChild(shareItem);
     });
 }
 
 function createShareItem(share) {
-    const div = document.createElement("div");
-    div.className = "share-item";
+    const div = document.createElement('div');
+    div.className = 'share-item';
 
-    const avatarHTML =
-        share.user.has_photo && share.user.avatar
-            ? `<img src="${share.user.avatar}" class="user-avatar" alt="${share.user.name}">`
-            : `<div class="user-initials">${share.user.initials}</div>`;
+    const avatarHTML = share.user.has_photo && share.user.avatar ?
+        `<img src="${share.user.avatar}" class="user-avatar" alt="${escapeHtml(share.user.name)}">` :
+        `<div class="user-initials">${share.user.initials}</div>`;
 
-    const shareTextHTML = share.shared_content
-        ? `<div class="share-text">${escapeHtml(share.shared_content)}</div>`
-        : "";
-
-    const typeBadge =
-        share.share_type === "repost"
-            ? '<span class="share-type-badge">Reposted</span>'
-            : '<span class="share-type-badge">Shared</span>';
+    const shareTypeLabel = share.share_type === 'repost' ? 'Reposted' : 'Shared';
 
     div.innerHTML = `
         ${avatarHTML}
         <div class="share-content">
             <div class="share-meta">
-                <span class="user-name">${escapeHtml(share.user.name)}</span>
-                ${typeBadge}
+                <div class="user-name">${escapeHtml(share.user.name)}</div>
+                <span class="share-type-badge">${shareTypeLabel}</span>
             </div>
-            ${
-                share.user.position
-                    ? `<div class="user-position">${escapeHtml(
-                          share.user.position
-                      )}</div>`
-                    : ""
-            }
+            ${share.user.position ? `<div class="user-position">${escapeHtml(share.user.position)}</div>` : ''}
+            ${share.shared_content ? `<div class="share-text">${escapeHtml(share.shared_content)}</div>` : ''}
             <div class="share-time">${formatTimeAgo(share.created_at)}</div>
-            ${shareTextHTML}
         </div>
     `;
 
     return div;
 }
 
-function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
+function updateShareCount(postId, change) {
+    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    if (!postContainer) return;
+
+    const sharesCount = postContainer.querySelector('.shares-count .count-text');
+    if (sharesCount) {
+        const match = sharesCount.textContent.match(/\d+/);
+        if (match) {
+            let count = parseInt(match[0]) + change;
+            count = Math.max(0, count);
+            sharesCount.textContent = `${count} share${count !== 1 ? 's' : ''}`;
+        }
+    } else if (change > 0) {
+        // Create shares count if it doesn't exist
+        const statsRight = postContainer.querySelector('.stats-right');
+        if (statsRight) {
+            const sharesDiv = document.createElement('div');
+            sharesDiv.className = 'shares-count';
+            sharesDiv.style.cursor = 'pointer';
+            sharesDiv.onclick = () => showSharesList(postId);
+            sharesDiv.innerHTML = `<span class="count-text">1 share</span>`;
+            statsRight.appendChild(sharesDiv);
+        }
+    }
 }
 
 function formatTimeAgo(dateString) {
@@ -536,48 +665,61 @@ function formatTimeAgo(dateString) {
         week: 604800,
         day: 86400,
         hour: 3600,
-        minute: 60,
+        minute: 60
     };
 
     for (const [key, value] of Object.entries(intervals)) {
         const interval = Math.floor(seconds / value);
         if (interval >= 1) {
-            return `${interval} ${key}${interval !== 1 ? "s" : ""} ago`;
+            return `${interval} ${key}${interval !== 1 ? 's' : ''} ago`;
         }
     }
 
-    return "Just now";
+    return 'Just now';
 }
 
-function showNotification(message, type = "info") {
-    if ($("#notification-container").length === 0) {
-        $("body").append(
-            '<div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>'
-        );
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function showNotification(message, type = 'info') {
+    let container = document.getElementById('notification-container');
+
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999;';
+        document.body.appendChild(container);
     }
 
-    const alertClass =
-        type === "success"
-            ? "alert-success"
-            : type === "error"
-            ? "alert-danger"
-            : "alert-info";
+    const alertClass = type === 'success' ? 'alert-success' :
+                      type === 'error' ? 'alert-danger' : 'alert-info';
 
-    const notification = $(`
-        <div class="alert ${alertClass} alert-dismissible fade show" role="alert" style="min-width: 250px;">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    `);
+    const notification = document.createElement('div');
+    notification.className = `alert ${alertClass} alert-dismissible fade show`;
+    notification.style.minWidth = '250px';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
 
-    $("#notification-container").append(notification);
+    container.appendChild(notification);
 
     setTimeout(() => {
-        notification.alert("close");
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 150);
     }, 3000);
 }
 
 // Make functions globally available
+window.sharePost = sharePost;
+window.instantRepost = instantRepost;
+window.repostWithThoughts = repostWithThoughts;
+window.sendPost = sendPost;
+window.copyPostLink = copyPostLink;
+window.showSharesList = showSharesList;
 window.shareToFacebook = shareToFacebook;
 window.shareToTwitter = shareToTwitter;
 window.shareToLinkedIn = shareToLinkedIn;

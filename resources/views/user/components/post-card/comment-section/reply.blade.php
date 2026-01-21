@@ -1,17 +1,19 @@
 <div class="reply-input-wrapper" id="replyInput-{{ $commentId ?? '' }}" style="display: none;">
     @php
-        $authUserHasPhoto = auth()->user()->photo ?? false;
-        $authUserAvatar = getImageUrl(auth()->user()->photo) ?? auth()->user()->avatar ?? '';
+        $authUser = auth()->user();
+        $authUserPhoto = $authUser->photo ?? null;
+        $authUserHasPhoto = !empty($authUserPhoto);
+        $authUserAvatar = $authUserHasPhoto ? (getImageUrl($authUserPhoto) ?? '') : '';
         $authUserInitials = strtoupper(
-            (auth()->user()->first_name ? substr(auth()->user()->first_name, 0, 1) : '') .
-            (auth()->user()->last_name ? substr(auth()->user()->last_name, 0, 1) : 'U')
+            (($authUser->first_name ?? '') ? substr($authUser->first_name, 0, 1) : '') .
+            (($authUser->last_name ?? '') ? substr($authUser->last_name, 0, 1) : 'U')
         );
     @endphp
 
     @if($authUserHasPhoto && $authUserAvatar)
         <img src="{{ $authUserAvatar }}"
-             class="user-img"
-             alt="{{ auth()->user()->name ?? 'You' }}"
+             class="user-img reply-avatar-img"
+             alt="{{ $authUser->name ?? 'You' }}"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="user-initials-avatar reply-avatar" style="display: none;">
             {{ $authUserInitials }}
@@ -45,11 +47,28 @@
     margin-top: 8px;
 }
 
+.reply-avatar-img,
 .reply-avatar {
     width: 32px;
     height: 32px;
-    font-size: 12px;
     flex-shrink: 0;
+}
+
+.reply-avatar-img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.reply-avatar {
+    font-size: 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 .reply-input {

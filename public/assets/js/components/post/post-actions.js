@@ -1,16 +1,13 @@
 /**
- * Delete Post Functionality
- * Add this to a new file or include in your main post functions
+ * Post Actions - Delete & Edit
  */
 
 export function deletePost(postId) {
     if (!postId) {
-        console.error('Post ID is required');
         showNotification('Unable to delete post. Please try again.', 'error');
         return;
     }
 
-    // Show confirmation dialog
     if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
         return;
     }
@@ -21,14 +18,12 @@ export function deletePost(postId) {
         return;
     }
 
-    // Show loading state on the post
-    const deleteBtn = postContainer.querySelector('.cross_btn');
+    const deleteBtn = postContainer.querySelector('.post-menu-btn');
     if (deleteBtn) {
         deleteBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
         deleteBtn.disabled = true;
     }
 
-    // Add loading overlay to post
     postContainer.style.position = 'relative';
     postContainer.style.opacity = '0.6';
     postContainer.style.pointerEvents = 'none';
@@ -41,7 +36,6 @@ export function deletePost(postId) {
         },
         success: function(response) {
             if (response.success) {
-                // Animate post removal
                 postContainer.style.transition = 'all 0.3s ease';
                 postContainer.style.opacity = '0';
                 postContainer.style.transform = 'translateX(20px)';
@@ -50,25 +44,19 @@ export function deletePost(postId) {
                     postContainer.remove();
                     showNotification('Post deleted successfully!', 'success');
 
-                    // Check if no posts left
                     const remainingPosts = document.querySelectorAll('.post-container');
                     if (remainingPosts.length === 0) {
                         showEmptyState();
                     }
                 }, 300);
-            } else {
-                throw new Error(response.message || 'Failed to delete post');
             }
         },
-        error: function(xhr, status, error) {
-            console.error('Error deleting post:', error);
-
-            // Restore post state
+        error: function(xhr) {
             postContainer.style.opacity = '1';
             postContainer.style.pointerEvents = 'auto';
 
             if (deleteBtn) {
-                deleteBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                deleteBtn.innerHTML = '<i class="fa-solid fa-ellipsis"></i>';
                 deleteBtn.disabled = false;
             }
 
@@ -87,124 +75,328 @@ export function deletePost(postId) {
 }
 
 export function editPost(postId) {
-    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
-    if (!postContainer) {
-        console.error('Post container not found');
+    if (!postId) {
+        showNotification('Unable to edit post.', 'error');
         return;
     }
 
-    const postTextBlock = postContainer.querySelector('.post-text');
-    if (!postTextBlock) {
-        console.error('Post text block not found');
-        return;
-    }
+    // Show loading notification
+    showNotification('Loading post...', 'info');
 
-    const currentContent = postTextBlock.textContent.trim();
-
-    // Show edit modal or inline editor
-    showEditPostModal(postId, currentContent);
-}
-
-function showEditPostModal(postId, currentContent) {
-    // Check if edit modal exists, if not create it
-    let editModal = document.getElementById('editPostModal');
-
-    if (!editModal) {
-        const modalHtml = `
-            <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <form id="editPostForm">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Post</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                 <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <textarea class="form-control" id="editPostText" rows="5" placeholder="What do you want to talk about?"></textarea>
-                                <small class="text-muted mt-2 d-block">Note: Images cannot be edited. Delete and create a new post if you need to change images.</small>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Update Post</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        editModal = document.getElementById('editPostModal');
-
-        // Add form submit handler
-        document.getElementById('editPostForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            updatePost(postId);
-        });
-    }
-
-    // Set current content
-    document.getElementById('editPostText').value = currentContent;
-
-    // Show modal
-    const bsModal = new bootstrap.Modal(editModal);
-    bsModal.show();
-}
-
-function updatePost(postId) {
-    const content = document.getElementById('editPostText').value.trim();
-
-    if (!content) {
-        showNotification('Please enter some content for your post.', 'error');
-        return;
-    }
-
-    const submitBtn = document.querySelector('#editPostForm button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Updating...';
-
+    // Fetch post data - FIXED URL
     $.ajax({
-        url: `/feed/posts/${postId}`,
-        method: 'PUT',
-        data: {
-            content: content,
-            _token: $('meta[name="csrf-token"]').attr('content')
+        url: `/feed/posts/${postId}/data`, // Changed from /feed/posts/${postId}
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'X-Requested-With': 'XMLHttpRequest'
         },
         success: function(response) {
-            if (response.success) {
-                // Update post content in DOM
-                const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
-                if (postContainer) {
-                    const postTextBlock = postContainer.querySelector('.post-text');
-                    if (postTextBlock) {
-                        postTextBlock.textContent = content;
-                    }
-                }
-
-                // Close modal
-                const editModal = bootstrap.Modal.getInstance(document.getElementById('editPostModal'));
-                editModal.hide();
-
-                showNotification('Post updated successfully!', 'success');
+            if (response.success && response.data) {
+                openEditModal(response.data);
+            } else {
+                throw new Error(response.message || 'Failed to load post');
             }
         },
-        error: function(xhr, status, error) {
-            console.error('Error updating post:', error);
-
-            let errorMessage = 'Failed to update post. Please try again.';
+        error: function(xhr) {
+            console.error('Error loading post:', xhr);
+            let errorMessage = 'Failed to load post data. Please try again.';
             if (xhr.responseJSON && xhr.responseJSON.message) {
                 errorMessage = xhr.responseJSON.message;
             }
-
             showNotification(errorMessage, 'error');
-        },
-        complete: function() {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
         }
+    });
+}
+
+function openEditModal(postData) {
+    // Store post ID and original media IDs for tracking
+    window.editingPostId = postData.id;
+    window.originalPostMedia = postData.media ? postData.media.map(m => m.id) : []; // ADD THIS LINE
+
+    // Populate modal with existing content
+    $('#postText').val(postData.content || '');
+    const contentLength = (postData.content || '').length;
+    $('#charCount').text(contentLength);
+
+    // Update character count styling
+    const $charCountParent = $('#charCount').parent();
+    $charCountParent.removeClass('warning error');
+    if (contentLength > 9000) {
+        $charCountParent.addClass('error');
+    } else if (contentLength > 8000) {
+        $charCountParent.addClass('warning');
+    }
+
+    // Set visibility
+    const visibility = postData.visibility || 'public';
+    $('#postModal').data('visibility', visibility);
+    $('.visibility-option').removeClass('active');
+    $(`.visibility-option[data-visibility="${visibility}"]`).addClass('active');
+
+    const visibilityIcons = {
+        public: 'fa-globe',
+        connections: 'fa-user-group',
+        private: 'fa-lock'
+    };
+    const visibilityLabels = {
+        public: 'Public',
+        connections: 'Connections',
+        private: 'Private'
+    };
+    $('#visibilityIcon').attr('class', 'fa-solid ' + visibilityIcons[visibility]);
+    $('#visibilityText').text(visibilityLabels[visibility]);
+
+    // Set comments toggle
+    $('#commentsEnabledToggle').prop('checked', postData.comments_enabled !== false);
+
+    // Handle existing media
+    if (postData.media && postData.media.length > 0) {
+        window.mediaList = postData.media.map((media, index) => ({
+            id: media.id,
+            existingMediaId: media.id,
+            src: media.media_url,
+            type: media.media_type,
+            size: 0,
+            name: media.file_name || `Media ${index + 1}`,
+            file: null,
+            mime_type: media.mime_type
+        }));
+
+        updateMediaPreview();
+    } else {
+        window.mediaList = [];
+        $('#selectedMediaPreview').hide();
+    }
+
+    // Change modal title and button text
+    $('#postModalLabel').text('Edit Post');
+    $('#submitPostBtn').html('<i class="fa-solid fa-pen me-1"></i> Update Post'); // Better icon
+
+    // Show modal
+    $('#postModal').modal('show');
+}
+
+// Modify the form submission to handle edits
+$(document).ready(function() {
+    const originalSubmitHandler = $('#postForm').off('submit').on('submit', function(e) {
+        e.preventDefault();
+
+        const isEditing = window.editingPostId !== undefined;
+        const postId = window.editingPostId;
+
+        const content = $('#postText').val().trim();
+        const commentsEnabled = $('#commentsEnabledToggle').is(':checked') ? 1 : 0;
+        const visibility = $('#postModal').data('visibility') || 'public';
+
+        $('#postValidationErrors').addClass('d-none').html('');
+
+        if (!content && window.mediaList.length === 0) {
+            showValidationError('Please add some content or media to your post.');
+            return;
+        }
+
+        if (content.length > 10000) {
+            showValidationError('Post content is too long. Maximum 10,000 characters allowed.');
+            return;
+        }
+
+        if (window.mediaList.length > 10) {
+            showValidationError('Maximum 10 media files allowed per post.');
+            return;
+        }
+
+        // Calculate total size for new media only
+        const newMediaSize = window.mediaList
+            .filter(m => !m.existingMediaId && m.file)
+            .reduce((sum, m) => sum + (m.file?.size || 0), 0);
+
+        if (newMediaSize > 10 * 1024 * 1024) {
+            showValidationError('Total new media size exceeds 10MB limit.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('content', content);
+        formData.append('comments_enabled', commentsEnabled);
+        formData.append('visibility', visibility);
+
+        // Track which existing media to keep vs remove
+        const existingMediaIds = window.mediaList
+            .filter(m => m.existingMediaId)
+            .map(m => m.existingMediaId);
+
+        // Add new media files
+        window.mediaList.forEach((media) => {
+            if (media.file && !media.existingMediaId) {
+                formData.append('media[]', media.file);
+            }
+        });
+
+        // If editing, track removed media
+        if (isEditing && postId) {
+            // Get all original media IDs from the post data
+            const originalMediaIds = window.originalPostMedia || [];
+            const removedIds = originalMediaIds.filter(id => !existingMediaIds.includes(id));
+
+            removedIds.forEach(id => {
+                formData.append('remove_media_ids[]', id);
+            });
+        }
+
+        const submitBtn = $('#submitPostBtn');
+        const originalHtml = submitBtn.html();
+        submitBtn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> ' + (isEditing ? 'Updating...' : 'Posting...'));
+
+        const url = isEditing ? `/feed/posts/${postId}` : '/feed/posts';
+        const method = isEditing ? 'POST' : 'POST'; // We'll use _method for PUT
+
+        if (isEditing) {
+            formData.append('_method', 'PUT');
+        }
+
+        $.ajax({
+            url: url,
+            type: method,
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+        .done(function(response) {
+            if (response.success) {
+                $('#postModal').modal('hide');
+                showNotification(isEditing ? 'Post updated successfully!' : 'Post created successfully!', 'success');
+
+                resetPostForm();
+
+                // Update existing post or reload feed
+                if (isEditing && postId) {
+                    updatePostInDOM(postId, response.data);
+                } else {
+                    // For new posts, reload after short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                }
+            } else {
+                throw new Error(response.message || (isEditing ? 'Failed to update post' : 'Failed to create post'));
+            }
+        })
+        .fail(function(error) {
+            let errorMessage = isEditing ? 'Failed to update post. Please try again.' : 'Failed to create post. Please try again.';
+
+            if (error.responseJSON && error.responseJSON.message) {
+                errorMessage = error.responseJSON.message;
+            } else if (error.responseJSON && error.responseJSON.errors) {
+                const errors = Object.values(error.responseJSON.errors).flat();
+                errorMessage = errors.join('<br>');
+            }
+
+            showValidationError(errorMessage);
+        })
+        .always(function() {
+            submitBtn.prop('disabled', false).html(originalHtml);
+        });
+    });
+});
+
+function updatePostInDOM(postId, postData) {
+    const postContainer = document.querySelector(`.post-container[data-post-id="${postId}"]`);
+    if (!postContainer) {
+        // Post not in current view, reload page
+        window.location.reload();
+        return;
+    }
+
+    // Update content
+    const postTextBlock = postContainer.querySelector('.post-text');
+    if (postTextBlock && postData.content) {
+        postTextBlock.innerHTML = postData.content.replace(/\n/g, '<br>');
+    }
+
+    // Update media (simplified - full implementation would rebuild media grid)
+    // For now, just reload the page to show updated media
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
+}
+
+function resetPostForm() {
+    $('#postText').val('');
+    $('#charCount').text('0');
+    $('#charCount').parent().removeClass('warning error');
+    $('#commentsEnabledToggle').prop('checked', true);
+    $('#postModal').data('visibility', 'public');
+    $('#visibilityIcon').attr('class', 'fa-solid fa-globe');
+    $('#visibilityText').text('Public');
+    $('.visibility-option').removeClass('active');
+    $('.visibility-option[data-visibility="public"]').addClass('active');
+
+    // Clear editing state
+    delete window.editingPostId;
+    delete window.originalPostMedia;
+
+    // Reset modal title/button
+    $('#postModalLabel').text('Create a Post');
+    $('#submitPostBtn').text('Post');
+
+    clearAllMedia();
+    $('#postValidationErrors').addClass('d-none').html('');
+}
+
+// Update modal close handler
+$('#postModal').on('hidden.bs.modal', function() {
+    resetPostForm();
+});
+
+function clearAllMedia() {
+    window.mediaList.forEach(media => {
+        if (media.src && !media.existingMediaId) {
+            URL.revokeObjectURL(media.src);
+        }
+    });
+
+    window.mediaList = [];
+    $('#selectedMediaPreview').hide();
+    $('#previewMediaWrapper').html('');
+    $('#mediaEditorThumbnails').html('');
+    $('#mainImagePreview').attr('src', '').addClass('d-none');
+    $('#mainVideoPreview').attr('src', '').addClass('d-none');
+    $('#mainMediaPreviewContainer #noMediaPlaceholder').removeClass('d-none');
+}
+
+function updateMediaPreview() {
+    const $preview = $('#selectedMediaPreview');
+    const $wrapper = $('#previewMediaWrapper');
+    const $count = $('#mediaCount');
+
+    if (window.mediaList.length === 0) {
+        $preview.hide();
+        return;
+    }
+
+    $preview.show();
+    $count.text(window.mediaList.length);
+    $wrapper.empty();
+
+    window.mediaList.forEach((media) => {
+        const $item = $('<div class="media-preview-item"></div>');
+
+        if (media.type === 'image') {
+            $item.append(`<img src="${media.src}" alt="Preview">`);
+        } else {
+            $item.append(`
+                <video src="${media.src}"></video>
+                <div class="video-overlay">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            `);
+        }
+
+        $wrapper.append($item);
     });
 }
 
@@ -225,7 +417,6 @@ function showEmptyState() {
 
     feedColumn.insertAdjacentHTML('beforeend', emptyStateHtml);
 
-    // Add click handler for create post button
     document.getElementById('createFirstPost').addEventListener('click', function() {
         document.getElementById('openPostModal').click();
     });
@@ -253,3 +444,13 @@ function showNotification(message, type = 'info') {
         notification.alert('close');
     }, 3000);
 }
+
+function showValidationError(message) {
+    const errorContainer = $('#postValidationErrors');
+    errorContainer.html(message).removeClass('d-none');
+    errorContainer[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Export for global access
+window.updateMediaPreview = updateMediaPreview;
+window.clearAllMedia = clearAllMedia;

@@ -121,7 +121,8 @@
         postReply,
         loadMoreComments,
         deleteComment,
-        likeComment
+        likeComment,
+        editComment
     } from "{{ asset('assets/js/components/post/comments.js') }}";
     import {
         deletePost,
@@ -143,7 +144,7 @@
     // Make globally available
     window.showSharesList = showSharesList;
     window.likeComment = likeComment;
-
+    window.editComment = editComment;
     // Make all functions globally available
     window.togglePostText = togglePostText;
     window.showReactions = showReactions;
