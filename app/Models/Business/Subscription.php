@@ -4,8 +4,10 @@ namespace App\Models\Business;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\User;
 use App\Models\Business\Plan;
+use App\Models\SubscriptionBilling;
 
 class Subscription extends Model
 {
@@ -41,5 +43,21 @@ class Subscription extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    /**
+     * Get all billing records for this subscription
+     */
+    public function billings(): HasMany
+    {
+        return $this->hasMany(SubscriptionBilling::class);
+    }
+
+    /**
+     * Get total amount paid across all billings
+     */
+    public function getTotalPaidAttribute(): float
+    {
+        return (float) $this->billings()->where('status', 'success')->sum('amount');
     }
 }

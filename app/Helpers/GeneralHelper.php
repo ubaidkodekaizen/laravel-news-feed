@@ -19,15 +19,12 @@ class GeneralHelper
 
     public static function getUserCount(): int
     {
-        return User::count();
+        return User::where('role_id', 4)->whereNull('deleted_at')->count();
     }
 
     public static function getSubscriberCount(): int
     {
-        return Subscription::where(function($query) {
-            $query->whereNotIn('platform', ['DB', 'Amcob'])
-                  ->orWhereNull('platform');
-        })->count();
+        return Subscription::whereIn('subscription_type', ['Monthly', 'Yearly'])->count();
     }
 
     public static function getBlogCount(): int

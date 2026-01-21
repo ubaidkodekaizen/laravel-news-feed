@@ -1046,6 +1046,8 @@ class UserController extends Controller
      */
     public function getUsers(Request $request)
     {
+        $perPage = $request->get('per_page', 10);
+        
         $users = User::where('status', 'complete')
             ->whereNull('deleted_at')
             ->with('company:id,user_id,company_name,company_position')
@@ -1056,24 +1058,25 @@ class UserController extends Controller
                 'photo',
                 'phone',
             ])
-            ->get()
-            ->map(function ($user) {
-                return [
-                    'user_id' => $user->id,
-                    'first_name' => $user->first_name,
-                    'last_name' => $user->last_name,
-                    'profile_pic' => getImageUrl($user->photo),
-                    'designation' => $user->company->company_position ?? null,
-                    'company' => $user->company->company_name ?? null,
-                    'phone_number' => $user->phone,
-                ];
-            });
+            ->paginate($perPage);
+
+        // Transform the data to match the expected format
+        $users->getCollection()->transform(function ($user) {
+            return [
+                'user_id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'profile_pic' => getImageUrl($user->photo),
+                'designation' => $user->company->company_position ?? null,
+                'company' => $user->company->company_name ?? null,
+                'phone_number' => $user->phone,
+            ];
+        });
 
         return response()->json([
             'status' => true,
             'message' => 'Users fetched successfully.',
-            'data' => $users,
-            'count' => $users->count(),
+            'users' => $users,
         ]);
     }
 
