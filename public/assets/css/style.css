@@ -3452,6 +3452,8 @@ button.btn.btn-primary.viewAllBtn {
     align-content: center;
     white-space: nowrap;
     aspect-ratio: 1 / 1;
+    height: 47px;
+    width: 47px;
 }
 
 .top_header_links ul li a:hover {

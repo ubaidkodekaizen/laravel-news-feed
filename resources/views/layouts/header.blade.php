@@ -228,6 +228,14 @@
                                     <div id="inbox-unread-badge"></div>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('news-feed') }}" class="btn btn-primary" data-toggle="tooltip"
+                                    data-placement="bottom" title="News Feed">
+
+                                   <i class="fa-solid fa-newspaper"></i>
+                                </a>
+                            </li>
+
                         </ul>
                     </div>
                     <div class="profile">
@@ -302,6 +310,8 @@
                 <a href="{{ route('our.community') }}" class="btn btn-primary mt-4 w-100">Our Community</a>
                 <a href="{{ route('smart.suggestion') }}" class="btn btn-primary mt-2 w-100">Smart Suggestion</a>
                 <a href="{{ route('inbox') }}" class="btn btn-primary mt-2 w-100">Inbox</a>
+                <a href="{{ route('news-feed') }}" class="btn btn-primary mt-2 w-100">News Feed</a>
+
 
             </div>
         </div>
