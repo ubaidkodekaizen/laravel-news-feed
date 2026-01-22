@@ -196,7 +196,7 @@
 
         const adSwiper = new Swiper('#feedAdCard .swiper', {
             slidesPerView: 1,
-            loopedSlides: 1,
+            // loopedSlides: 2,
             spaceBetween: 0,
             loop: true,
             autoplay: {
@@ -205,14 +205,10 @@
                 pauseOnMouseEnter: true,
             },
             speed: 800,
-            effect: 'fade',
+            // effect: 'fade',
             pagination: {
                 el: '#feedAdCard .swiper-pagination',
                 clickable: true,
-            },
-            navigation: {
-                nextEl: '#feedAdCard .swiper-button-next',
-                prevEl: '#feedAdCard .swiper-button-prev',
             },
         });
     });
