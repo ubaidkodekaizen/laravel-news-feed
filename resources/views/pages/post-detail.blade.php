@@ -95,6 +95,7 @@
         copyPostLink,
         showSharesList
     } from "{{ asset('assets/js/components/post/share-repost.js') }}";
+    import { DEFAULT_EMOJIS } from "{{ asset('assets/js/config/emoji-config.js') }}";
 
     // Make functions globally available
     window.togglePostText = togglePostText;
@@ -132,6 +133,9 @@
                 commentSection.style.display = 'block';
             }
         }
+
+        // Initialize emoji pickers
+        initializeCommentEmojiPickers();
     });
 
     // Function to initialize emoji pickers for dynamically loaded comments
@@ -151,13 +155,11 @@
         });
     }
 
-    // Simple emoji picker function
+    // Emoji picker function using shared emoji config
     function showEmojiPicker(input) {
-        const emojis = ['😊', '😂', '❤️', '👍', '🎉', '🔥', '💯', '🙏', '👏', '✨', '💪', '🤔', '😍', '🥰', '😎'];
-
         const picker = document.createElement('div');
         picker.className = 'emoji-picker-popup';
-        picker.innerHTML = emojis.map(e => `<span class="emoji-option">${e}</span>`).join('');
+        picker.innerHTML = DEFAULT_EMOJIS.map(e => `<span class="emoji-option">${e}</span>`).join('');
 
         picker.style.cssText = `
         position: absolute;
@@ -201,20 +203,5 @@
 
     // Re-initialize emoji pickers when comments are loaded
     window.addEventListener('commentsLoaded', initializeCommentEmojiPickers);
-
-    // Auto-open comments section on detail page
-    document.addEventListener('DOMContentLoaded', function() {
-        const postId = '{{ $post['id'] ?? '' }}';
-        if (postId) {
-            // Open comments by default on single post page
-            const commentSection = document.getElementById(`commentSection-${postId}`);
-            if (commentSection) {
-                commentSection.style.display = 'block';
-            }
-        }
-
-        // Initialize emoji pickers
-        initializeCommentEmojiPickers(); // ← Add this
-    });
 </script>
 @endsection

@@ -108,7 +108,6 @@
         showReactions,
         hideReactions,
         cancelHide,
-        applyReaction,
         handleReactionClick,
         showReactionsList
     } from "{{ asset('assets/js/components/post/reactions.js') }}";
@@ -139,6 +138,7 @@
     import {
         connectUser
     } from "{{ asset('assets/js/components/connections.js') }}";
+    import { DEFAULT_EMOJIS } from "{{ asset('assets/js/config/emoji-config.js') }}";
 
 
     // Make globally available
@@ -236,13 +236,11 @@
         });
     }
 
-    // Simple emoji picker function
+    // Emoji picker function using shared emoji config
     function showEmojiPicker(input) {
-        const emojis = ['😊', '😂', '❤️', '👍', '🎉', '🔥', '💯', '🙏', '👏', '✨', '💪', '🤔', '😍', '🥰', '😎'];
-
         const picker = document.createElement('div');
         picker.className = 'emoji-picker-popup';
-        picker.innerHTML = emojis.map(e => `<span class="emoji-option">${e}</span>`).join('');
+        picker.innerHTML = DEFAULT_EMOJIS.map(e => `<span class="emoji-option">${e}</span>`).join('');
 
         picker.style.cssText = `
         position: absolute;

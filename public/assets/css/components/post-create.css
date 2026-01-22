@@ -96,8 +96,8 @@ button#openPostModal:hover {
 }
 
 #postCreateSec .userProfilePic {
-    height: 67.33px;
-    width: 67.33px;
+    height: 56px;
+    width: 56px;
     border-radius: 50%;
 }
 

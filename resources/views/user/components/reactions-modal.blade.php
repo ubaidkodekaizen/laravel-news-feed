@@ -9,52 +9,42 @@
             </div>
             <ul class="nav nav-tabs reaction-tabs mb-3" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#allReactions" type="button"
-                        role="tab">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#allReactions" type="button" role="tab">
                         All <span id="allCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#likeReactions" type="button"
-                        role="tab">
-                        👍 <span id="likeCount" class="badge bg-secondary ms-1">0</span>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#appreciateReactions" type="button" role="tab">
+                        👍 <span id="appreciateCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#loveReactions" type="button"
-                        role="tab">
-                        ❤️ <span id="loveCount" class="badge bg-secondary ms-1">0</span>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cheersReactions" type="button" role="tab">
+                        🎉 <span id="cheersCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#hahaReactions" type="button"
-                        role="tab">
-                        😂 <span id="hahaCount" class="badge bg-secondary ms-1">0</span>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#supportReactions" type="button" role="tab">
+                        💪 <span id="supportCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#wowReactions" type="button"
-                        role="tab">
-                        😮 <span id="wowCount" class="badge bg-secondary ms-1">0</span>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#insightReactions" type="button" role="tab">
+                        💡 <span id="insightCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sadReactions" type="button"
-                        role="tab">
-                        😢 <span id="sadCount" class="badge bg-secondary ms-1">0</span>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#curiousReactions" type="button" role="tab">
+                        🤔 <span id="curiousCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#angryReactions" type="button"
-                        role="tab">
-                        😠 <span id="angryCount" class="badge bg-secondary ms-1">0</span>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#smileReactions" type="button" role="tab">
+                        😊 <span id="smileCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
             </ul>
             <div class="modal-body">
-
-
-
                 <!-- Tab Content -->
                 <div class="tab-content">
                     <!-- All Reactions -->
@@ -62,34 +52,34 @@
                         <div id="allReactionsList" class="reactions-list"></div>
                     </div>
 
-                    <!-- Like Reactions -->
-                    <div class="tab-pane fade" id="likeReactions" role="tabpanel">
-                        <div id="likeReactionsList" class="reactions-list"></div>
+                    <!-- Appreciate Reactions -->
+                    <div class="tab-pane fade" id="appreciateReactions" role="tabpanel">
+                        <div id="appreciateReactionsList" class="reactions-list"></div>
                     </div>
 
-                    <!-- Love Reactions -->
-                    <div class="tab-pane fade" id="loveReactions" role="tabpanel">
-                        <div id="loveReactionsList" class="reactions-list"></div>
+                    <!-- Cheers Reactions -->
+                    <div class="tab-pane fade" id="cheersReactions" role="tabpanel">
+                        <div id="cheersReactionsList" class="reactions-list"></div>
                     </div>
 
-                    <!-- Haha Reactions -->
-                    <div class="tab-pane fade" id="hahaReactions" role="tabpanel">
-                        <div id="hahaReactionsList" class="reactions-list"></div>
+                    <!-- Support Reactions -->
+                    <div class="tab-pane fade" id="supportReactions" role="tabpanel">
+                        <div id="supportReactionsList" class="reactions-list"></div>
                     </div>
 
-                    <!-- Wow Reactions -->
-                    <div class="tab-pane fade" id="wowReactions" role="tabpanel">
-                        <div id="wowReactionsList" class="reactions-list"></div>
+                    <!-- Insight Reactions -->
+                    <div class="tab-pane fade" id="insightReactions" role="tabpanel">
+                        <div id="insightReactionsList" class="reactions-list"></div>
                     </div>
 
-                    <!-- Sad Reactions -->
-                    <div class="tab-pane fade" id="sadReactions" role="tabpanel">
-                        <div id="sadReactionsList" class="reactions-list"></div>
+                    <!-- Curious Reactions -->
+                    <div class="tab-pane fade" id="curiousReactions" role="tabpanel">
+                        <div id="curiousReactionsList" class="reactions-list"></div>
                     </div>
 
-                    <!-- Angry Reactions -->
-                    <div class="tab-pane fade" id="angryReactions" role="tabpanel">
-                        <div id="angryReactionsList" class="reactions-list"></div>
+                    <!-- Smile Reactions -->
+                    <div class="tab-pane fade" id="smileReactions" role="tabpanel">
+                        <div id="smileReactionsList" class="reactions-list"></div>
                     </div>
                 </div>
 
@@ -110,6 +100,8 @@
         </div>
     </div>
 </div>
+
+
 
 <style>
     .reaction-tabs {

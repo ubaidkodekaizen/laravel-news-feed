@@ -8,14 +8,21 @@ class EmojiPickerManager {
     constructor() {
         this.picker = null;
         this.currentTarget = null;
+        this.initializedButtons = new Set();
+        this.reactionShowTimeout = null;
+        this.reactionHideTimeout = null;
+        this.currentPanel = null;
+        this.isHoveringButton = false;
+        this.isHoveringPanel = false;
 
-        // LinkedIn-style reactions
+        // LinkedIn-inspired reactions matching backend
         this.linkedInReactions = [
-            { emoji: "👍", label: "Like", type: "like" },
-            { emoji: "❤️", label: "Love", type: "love" },
-            { emoji: "👏", label: "Celebrate", type: "celebrate" },
+            { emoji: "👍", label: "Appreciate", type: "appreciate" },
+            { emoji: "🎉", label: "Cheers", type: "cheers" },
             { emoji: "💪", label: "Support", type: "support" },
-            { emoji: "💡", label: "Insightful", type: "insightful" },
+            { emoji: "💡", label: "Insight", type: "insight" },
+            { emoji: "🤔", label: "Curious", type: "curious" },
+            { emoji: "😊", label: "Smile", type: "smile" }
         ];
 
         this.init();
@@ -55,14 +62,14 @@ class EmojiPickerManager {
     }
 
     initializeTriggers() {
-        // Find all buttons with data-emoji-trigger attribute
         document.querySelectorAll("[data-emoji-trigger]").forEach((button) => {
+            if (button.dataset.emojiInitialized) return;
+
             button.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const targetSelector =
-                    button.getAttribute("data-emoji-trigger");
+                const targetSelector = button.getAttribute("data-emoji-trigger");
                 const target = targetSelector
                     ? document.querySelector(targetSelector)
                     : button
@@ -73,24 +80,47 @@ class EmojiPickerManager {
                     this.show(button, target);
                 }
             });
+
+            button.dataset.emojiInitialized = "true";
         });
     }
 
     initializeLinkedInReactions() {
-        // For post/comment reactions (LinkedIn style)
-        document
-            .querySelectorAll("[data-linkedin-reactions]")
-            .forEach((button) => {
-                // Remove existing listeners to prevent duplicates
-                const newButton = button.cloneNode(true);
-                button.parentNode.replaceChild(newButton, button);
+        document.querySelectorAll("[data-linkedin-reactions]").forEach((button) => {
+            if (button.dataset.reactionInitialized) return;
 
-                newButton.addEventListener("mouseenter", (e) => {
-                    const postId = newButton.getAttribute("data-post-id");
-                    const commentId = newButton.getAttribute("data-comment-id");
-                    this.showLinkedInReactions(newButton, postId, commentId);
-                });
+            const buttonElement = button.closest(".action-btn") || button;
+
+            // Mouse enter on button
+            buttonElement.addEventListener("mouseenter", () => {
+                this.isHoveringButton = true;
+
+                // Clear any hide timeout
+                clearTimeout(this.reactionHideTimeout);
+
+                // Show panel after 500ms delay
+                this.reactionShowTimeout = setTimeout(() => {
+                    if (this.isHoveringButton) {
+                        const postId = button.getAttribute("data-post-id");
+                        const commentId = button.getAttribute("data-comment-id");
+                        this.showLinkedInReactions(button, postId, commentId);
+                    }
+                }, 500); // Show after 500ms hover
             });
+
+            // Mouse leave from button
+            buttonElement.addEventListener("mouseleave", () => {
+                this.isHoveringButton = false;
+
+                // Clear show timeout if we leave before panel shows
+                clearTimeout(this.reactionShowTimeout);
+
+                // Start hide countdown (3 seconds)
+                this.scheduleHidePanel();
+            });
+
+            button.dataset.reactionInitialized = "true";
+        });
     }
 
     showLinkedInReactions(button, postId, commentId) {
@@ -106,9 +136,9 @@ class EmojiPickerManager {
             reactionBtn.className = "linkedin-reaction-item";
             reactionBtn.setAttribute("data-type", reaction.type);
             reactionBtn.innerHTML = `
-            <span class="reaction-emoji">${reaction.emoji}</span>
-            <span class="reaction-label">${reaction.label}</span>
-        `;
+                <span class="reaction-emoji">${reaction.emoji}</span>
+                <span class="reaction-label">${reaction.label}</span>
+            `;
             reactionBtn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -119,7 +149,7 @@ class EmojiPickerManager {
                         button,
                         reaction.emoji,
                         reaction.label,
-                        reaction.type,
+                        reaction.type
                     );
                 }
                 this.hideLinkedInReactions();
@@ -129,46 +159,54 @@ class EmojiPickerManager {
 
         // Position the panel FIXED to viewport
         const rect = button.getBoundingClientRect();
-        const panelHeight = 80; // Approximate panel height
 
-        panel.style.position = "fixed"; // Changed from absolute to fixed
-        panel.style.bottom = `${window.innerHeight - rect.top + 8}px`; // Position above button
+        panel.style.position = "fixed";
+        panel.style.bottom = `${window.innerHeight - rect.top + 8}px`;
         panel.style.left = `${rect.left}px`;
         panel.style.zIndex = "10000";
 
         document.body.appendChild(panel);
+        this.currentPanel = panel;
 
-        // Store the button reference to handle mouse leave properly
-        let hideTimeout;
-        const buttonElement = button.closest(".action-btn") || button;
+        // Panel hover handlers
+        panel.addEventListener("mouseenter", () => {
+            this.isHoveringPanel = true;
+            clearTimeout(this.reactionHideTimeout);
+        });
 
-        // Hide on mouse leave from both panel and button
-        const handleMouseLeave = () => {
-            hideTimeout = setTimeout(() => {
-                this.hideLinkedInReactions();
-            }, 300);
-        };
-
-        const handleMouseEnter = () => {
-            clearTimeout(hideTimeout);
-        };
-
-        panel.addEventListener("mouseenter", handleMouseEnter);
-        panel.addEventListener("mouseleave", handleMouseLeave);
-        buttonElement.addEventListener("mouseleave", handleMouseLeave);
-
-        // Clean up event listener when panel is removed
-        panel.addEventListener("remove", () => {
-            buttonElement.removeEventListener("mouseleave", handleMouseLeave);
+        panel.addEventListener("mouseleave", () => {
+            this.isHoveringPanel = false;
+            this.scheduleHidePanel();
         });
     }
 
+    scheduleHidePanel() {
+        // Clear any existing hide timeout
+        clearTimeout(this.reactionHideTimeout);
+
+        // Wait 3 seconds, then check if still hovering
+        this.reactionHideTimeout = setTimeout(() => {
+            // Only hide if not hovering over button or panel
+            if (!this.isHoveringButton && !this.isHoveringPanel) {
+                this.hideLinkedInReactions();
+            } else {
+                // Still hovering, check again after another 3 seconds
+                this.scheduleHidePanel();
+            }
+        }, 3000); // 3 seconds
+    }
+
     hideLinkedInReactions() {
-        document
-            .querySelectorAll(".linkedin-reactions-panel")
-            .forEach((panel) => {
-                panel.remove();
-            });
+        clearTimeout(this.reactionShowTimeout);
+        clearTimeout(this.reactionHideTimeout);
+
+        document.querySelectorAll(".linkedin-reactions-panel").forEach((panel) => {
+            panel.remove();
+        });
+
+        this.currentPanel = null;
+        this.isHoveringButton = false;
+        this.isHoveringPanel = false;
     }
 
     show(button, targetInput) {
@@ -226,8 +264,13 @@ document.addEventListener("hidden.bs.modal", () => {
     emojiPickerManager.hide();
 });
 
+// Use a debounced mutation observer to prevent infinite loops
+let observerTimeout;
 const observer = new MutationObserver(() => {
-    emojiPickerManager.refresh();
+    clearTimeout(observerTimeout);
+    observerTimeout = setTimeout(() => {
+        emojiPickerManager.refresh();
+    }, 100);
 });
 
 observer.observe(document.body, {

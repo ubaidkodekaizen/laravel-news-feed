@@ -714,11 +714,12 @@ function formatTimeAgo(dateString) {
 
 function getReactionEmoji(type) {
     const emojiMap = {
-        like: "👍",
-        love: "❤️",
-        celebrate: "👏",
+        appreciate: "👍",
+        cheers: "🎉",
         support: "💪",
-        insightful: "💡"
+        insight: "💡",
+        curious: "🤔",
+        smile: "😊"
     };
     return emojiMap[type] || "👍";
 }

@@ -205,7 +205,7 @@ function createRepostModal() {
                     <div class="modal-body">
                         <div class="repost-composer">
                             <div class="d-flex align-items-start gap-3">
-                                ${avatarHTML}
+
                                 <textarea class="form-control" id="repostText" rows="3"
                                           placeholder="What do you want to say about this?"
                                           maxlength="10000"

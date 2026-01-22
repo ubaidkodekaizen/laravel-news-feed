@@ -173,22 +173,34 @@
     text-decoration: underline;
     color: #0a66c2;
 }
+
+
 /* LinkedIn-Inspired Reactions Panel - Unique Design */
 .linkedin-reactions-panel {
     display: flex;
     gap: 6px;
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    padding: 7px 5px 5px 5px;
+    padding: 12px 8px;
     border-radius: 10px;
     box-shadow:
         0 8px 24px rgba(0, 0, 0, 0.12),
         0 2px 8px rgba(0, 0, 0, 0.08);
     animation: reactionPanelSlideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     border: 1px solid rgba(0, 0, 0, 0.05);
-     position: fixed; /* Ensure fixed positioning */
-    pointer-events: auto; /* Ensure panel is interactive */
+    position: fixed;
+    pointer-events: auto;
 }
 
+/* Add invisible bridge between button and panel */
+.linkedin-reactions-panel::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 12px; /* Bridge the gap */
+    background: transparent;
+}
 @keyframes reactionPanelSlideUp {
     from {
         opacity: 0;
@@ -205,7 +217,7 @@
     flex-direction: column;
     align-items: center;
     gap: 5px;
-    padding: 2px 5px;
+    padding: 8px 10px; /* Increased padding for larger hover area */
     border: none;
     background: transparent;
     border-radius: 10px;
@@ -218,7 +230,7 @@
 .linkedin-reaction-item::before {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -4px; /* Extended to cover the transform area */
     border-radius: 16px;
     background: linear-gradient(
         135deg,
@@ -227,6 +239,7 @@
     );
     opacity: 0;
     transition: opacity 0.25s ease;
+    pointer-events: none; /* Don't interfere with mouse events */
 }
 
 .linkedin-reaction-item:hover::before {
@@ -234,22 +247,24 @@
 }
 
 .linkedin-reaction-item:hover {
-    transform: scale(1.2) translateY(-6px);
+    transform: scale(1.15) translateY(-3px); /* Reduced transform to stay within bounds */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.5); /* Add subtle background */
 }
 
 .linkedin-reaction-item:active {
-    transform: scale(1.1) translateY(-4px);
+    transform: scale(1.1) translateY(-2px);
 }
 
 .linkedin-reaction-item .reaction-emoji {
-    font-size: 20px;
+    font-size: 24px; /* Slightly larger */
     transition: transform 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    pointer-events: none; /* Don't interfere with button hover */
 }
 
 .linkedin-reaction-item:hover .reaction-emoji {
-    transform: scale(1.25) rotate(10deg);
+    transform: scale(1.2) rotate(8deg); /* Reduced rotation */
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
@@ -262,6 +277,7 @@
     transition: all 0.2s ease;
     text-transform: capitalize;
     line-height: 1.3em;
+    pointer-events: none; /* Don't interfere with button hover */
 }
 
 .linkedin-reaction-item:hover .reaction-label {
@@ -269,16 +285,12 @@
     font-weight: 700;
 }
 
-/* Reaction color themes per type */
-.linkedin-reaction-item:hover[data-type="like"] .reaction-label {
+/* Reaction color themes per type *//* Reaction color themes per type */
+.linkedin-reaction-item:hover[data-type="appreciate"] .reaction-label {
     color: #0073b1;
 }
 
-.linkedin-reaction-item:hover[data-type="love"] .reaction-label {
-    color: #e91e63;
-}
-
-.linkedin-reaction-item:hover[data-type="celebrate"] .reaction-label {
+.linkedin-reaction-item:hover[data-type="cheers"] .reaction-label {
     color: #ffa726;
 }
 
@@ -286,8 +298,16 @@
     color: #9c27b0;
 }
 
-.linkedin-reaction-item:hover[data-type="insightful"] .reaction-label {
+.linkedin-reaction-item:hover[data-type="insight"] .reaction-label {
     color: #ffd700;
+}
+
+.linkedin-reaction-item:hover[data-type="curious"] .reaction-label {
+    color: #00bcd4;
+}
+
+.linkedin-reaction-item:hover[data-type="smile"] .reaction-label {
+    color: #4caf50;
 }
 
 /* Active reaction styling in post */
@@ -296,11 +316,11 @@
     font-weight: 600;
 }
 
-.action-btn[data-current-reaction="love"]:not([data-current-reaction=""]) {
-    color: #e91e63;
+.action-btn[data-current-reaction="appreciate"]:not([data-current-reaction=""]) {
+    color: #0073b1;
 }
 
-.action-btn[data-current-reaction="celebrate"]:not([data-current-reaction=""]) {
+.action-btn[data-current-reaction="cheers"]:not([data-current-reaction=""]) {
     color: #ffa726;
 }
 
@@ -308,8 +328,14 @@
     color: #9c27b0;
 }
 
-.action-btn[data-current-reaction="insightful"]:not(
-        [data-current-reaction=""]
-    ) {
+.action-btn[data-current-reaction="insight"]:not([data-current-reaction=""]) {
     color: #ffd700;
+}
+
+.action-btn[data-current-reaction="curious"]:not([data-current-reaction=""]) {
+    color: #00bcd4;
+}
+
+.action-btn[data-current-reaction="smile"]:not([data-current-reaction=""]) {
+    color: #4caf50;
 }

@@ -573,11 +573,12 @@ export async function likeComment(commentId) {
                 "X-CSRF-TOKEN": document.querySelector(
                     'meta[name="csrf-token"]',
                 ).content,
+                "X-Requested-With": "XMLHttpRequest",
             },
             body: JSON.stringify({
                 reactionable_type: "PostComment",
                 reactionable_id: commentId,
-                reaction_type: "like",
+                reaction_type: "appreciate", // Changed from "like" to "appreciate"
             }),
         });
 
