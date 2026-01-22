@@ -530,9 +530,9 @@ class FeedController extends Controller
                     $postMedia->media_type = $uploadResult['type'];
                     $postMedia->media_path = $uploadResult['path'];
                     $postMedia->media_url = $uploadResult['url'];
-                    $postMedia->file_name = $file->getClientOriginalName();
-                    $postMedia->file_size = $file->getSize();
-                    $postMedia->mime_type = $file->getMimeType();
+                    $postMedia->file_name = $uploadResult['file_name']; // Use S3Service result for consistency
+                    $postMedia->file_size = $uploadResult['file_size']; // Use S3Service result for consistency
+                    $postMedia->mime_type = $uploadResult['mime_type']; // Use S3Service result for consistency
                     $postMedia->order = $order++;
 
                     if ($uploadResult['type'] === 'video') {
@@ -708,9 +708,9 @@ class FeedController extends Controller
                     $postMedia->media_type = $uploadResult['type'];
                     $postMedia->media_path = $uploadResult['path'];
                     $postMedia->media_url = $uploadResult['url'];
-                    $postMedia->file_name = $file->getClientOriginalName();
-                    $postMedia->file_size = $file->getSize();
-                    $postMedia->mime_type = $file->getMimeType();
+                    $postMedia->file_name = $uploadResult['file_name']; // Use S3Service result for consistency
+                    $postMedia->file_size = $uploadResult['file_size']; // Use S3Service result for consistency
+                    $postMedia->mime_type = $uploadResult['mime_type']; // Use S3Service result for consistency
                     $postMedia->order = $order;
 
                     if ($uploadResult['type'] === 'video') {
@@ -776,7 +776,7 @@ class FeedController extends Controller
         $request->validate([
             'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
-            'reaction_type' => 'required|string|in:like,love,haha,wow,sad,angry',
+            'reaction_type' => 'required|string|in:like,love,celebrate,support,insightful', // LinkedIn-style reactions
         ]);
 
         try {

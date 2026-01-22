@@ -1169,6 +1169,136 @@
 ]</pre>
                 </div>
             </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Report User
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/report/user</div>
+                <p>Report a user for inappropriate behavior (required for Apple UGC compliance)</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>user_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the user to report</td>
+                        </tr>
+                        <tr>
+                            <td>reason</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Reason: "spam", "harassment", "inappropriate_content", "fake_account", or "other"</td>
+                        </tr>
+                        <tr>
+                            <td>description</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Additional details about the report (max 1000 characters)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "user_id": 123,
+  "reason": "harassment",
+  "description": "User sent inappropriate messages"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "User reported successfully. Our team will review this report.",
+  "report": {
+    "id": 1,
+    "reason": "harassment",
+    "status": "pending",
+    "created_at": "2024-01-15T14:30:52.000000Z"
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Report Post
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/report/post</div>
+                <p>Report a post for inappropriate content (required for Apple UGC compliance)</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>post_id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>ID of the post to report</td>
+                        </tr>
+                        <tr>
+                            <td>reason</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Reason: "spam", "harassment", "inappropriate_content", "violence", "hate_speech", or "other"</td>
+                        </tr>
+                        <tr>
+                            <td>description</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Additional details about the report (max 1000 characters)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "post_id": 456,
+  "reason": "inappropriate_content",
+  "description": "Post contains offensive material"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "success": true,
+  "message": "Post reported successfully. Our team will review this report.",
+  "report": {
+    "id": 2,
+    "reason": "inappropriate_content",
+    "status": "pending",
+    "created_at": "2024-01-15T14:30:52.000000Z"
+  }
+}</pre>
+                </div>
+            </div>
         </div>
 
         <!-- News Feed Routes -->
@@ -1227,16 +1357,33 @@
           "duration": null
         }
       ],
+      "reactions": [
+        {
+          "type": "like",
+          "count": 5
+        },
+        {
+          "type": "love",
+          "count": 3
+        },
+        {
+          "type": "celebrate",
+          "count": 1
+        },
+        {
+          "type": "support",
+          "count": 0
+        },
+        {
+          "type": "insightful",
+          "count": 1
+        }
+      ],
       "user_reaction": {
         "type": "like",
         "created_at": "2024-01-15T14:35:00.000000Z"
       },
-      "comments": [
-        {
-          "id": 1,
-          "content": "Great post!",
-          "created_at": "2024-01-15T14:40:00.000000Z",
-          "user_has_reacted": false,
+      // Comments removed from feed response - fetch separately via GET /feed/posts/{postId}/comments
           "user": {
             "id": 2,
             "name": "Jane Smith",
@@ -1265,7 +1412,7 @@
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
                 <div class="endpoint-url">/feed/posts/{slug}</div>
-                <p>Get a single post with all details including comments and reactions</p>
+                <p>Get a single post with details. Comments are not included - fetch separately via GET /feed/posts/{postId}/comments</p>
                 <p><strong>URL Parameters:</strong> Replace {slug} with the post slug</p>
                 
                 <h5>Response:</h5>
@@ -1294,12 +1441,44 @@
       "has_photo": true,
       "slug": "john-doe"
     },
-    "media": [...],
+    "media": [
+      {
+        "id": 1,
+        "media_type": "video",
+        "media_url": "https://...",
+        "thumbnail_url": "https://...",
+        "mime_type": "video/mp4",
+        "file_name": "video.mp4",
+        "duration": 120
+      }
+    ],
+    "reactions": [
+      {
+        "type": "like",
+        "count": 5
+      },
+      {
+        "type": "love",
+        "count": 3
+      },
+      {
+        "type": "celebrate",
+        "count": 1
+      },
+      {
+        "type": "support",
+        "count": 0
+      },
+      {
+        "type": "insightful",
+        "count": 1
+      }
+    ],
     "user_reaction": {
       "type": "like",
       "created_at": "2024-01-15T14:35:00.000000Z"
     },
-    "comments": [...],
+    // Comments removed - fetch via GET /feed/posts/{postId}/comments
     "original_post": {
       "id": 10,
       "slug": "original-post-slug",
@@ -1414,9 +1593,9 @@
                     Update Post
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/feed/posts/{id}</div>
+                <div class="endpoint-url">/feed/posts/{slug}</div>
                 <p>Update an existing post. Only the post owner can update.</p>
-                <p><strong>URL Parameters:</strong> Replace {id} with the post ID</p>
+                <p><strong>URL Parameters:</strong> Replace {slug} with the post slug</p>
                 
                 <h5>Request Body:</h5>
                 <table class="param-table">
@@ -1446,6 +1625,18 @@
                             <td>string</td>
                             <td>No</td>
                             <td>Post visibility: "public", "private", or "connections"</td>
+                        </tr>
+                        <tr>
+                            <td>media</td>
+                            <td>array</td>
+                            <td>No</td>
+                            <td>Array of media files to add (max 10 files, 10MB each). Supported: jpeg, jpg, png, gif, webp, mp4, mov, avi, mkv, webm. Files must be uploaded as multipart/form-data</td>
+                        </tr>
+                        <tr>
+                            <td>remove_media_ids</td>
+                            <td>array</td>
+                            <td>No</td>
+                            <td>Array of media IDs to remove from the post</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1488,9 +1679,9 @@
                     Delete Post
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/feed/posts/{id}</div>
+                <div class="endpoint-url">/feed/posts/{slug}</div>
                 <p>Delete a post (soft delete). Only the post owner can delete.</p>
-                <p><strong>URL Parameters:</strong> Replace {id} with the post ID</p>
+                <p><strong>URL Parameters:</strong> Replace {slug} with the post slug</p>
                 
                 <h5>Response:</h5>
                 <div class="code-block">
@@ -1537,7 +1728,7 @@
                             <td>reaction_type</td>
                             <td>string</td>
                             <td><span class="required">Yes</span></td>
-                            <td>Reaction type: "like", "love", "haha", "wow", "sad", or "angry"</td>
+                            <td>Reaction type (LinkedIn-style): "like", "love", "celebrate", "support", or "insightful"</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1547,7 +1738,7 @@
                     <pre>{
   "reactionable_type": "Post",
   "reactionable_id": 1,
-  "reaction_type": "like"
+  "reaction_type": "celebrate"
 }</pre>
                 </div>
 

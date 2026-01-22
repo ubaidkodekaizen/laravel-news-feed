@@ -11,6 +11,7 @@ use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\EducationController;
 use App\Http\Controllers\API\FeedController;
 use App\Http\Controllers\User\BlockController;
+use App\Http\Controllers\API\ReportController;
 use App\Services\GooglePlayService;
 use App\Services\S3Service;
 use Illuminate\Support\Facades\Log;
@@ -163,6 +164,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/unblock-user', [BlockController::class, 'unblockUser'])->name('unblock.user');
     Route::post('/check-block-status', [BlockController::class, 'checkBlockStatus'])->name('check.block.status');
     Route::get('/blocked-users', [BlockController::class, 'getBlockedUsers'])->name('blocked.users');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Report Routes (User-generated content compliance e.g. Apple UGC guidelines)
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/report/user', [ReportController::class, 'reportUser'])->name('report.user');
+    Route::post('/report/post', [ReportController::class, 'reportPost'])->name('report.post');
+
     /*
     |--------------------------------------------------------------------------
     | Firebase Routes
@@ -248,8 +258,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/feed/posts', [FeedController::class, 'getFeed'])->name('api.feed.posts');
     Route::get('/feed/posts/{slug}', [FeedController::class, 'getPost'])->name('api.feed.post.show');
     Route::post('/feed/posts', [FeedController::class, 'createPost'])->name('api.feed.post.create');
-    Route::put('/feed/posts/{id}', [FeedController::class, 'updatePost'])->name('api.feed.post.update');
-    Route::delete('/feed/posts/{id}', [FeedController::class, 'deletePost'])->name('api.feed.post.delete');
+    Route::put('/feed/posts/{slug}', [FeedController::class, 'updatePost'])->name('api.feed.post.update');
+    Route::delete('/feed/posts/{slug}', [FeedController::class, 'deletePost'])->name('api.feed.post.delete');
     Route::post('/feed/reactions', [FeedController::class, 'addReaction'])->name('api.feed.reaction.add');
     Route::delete('/feed/reactions', [FeedController::class, 'removeReaction'])->name('api.feed.reaction.remove');
     Route::get('/feed/posts/{postId}/reactions-count', [FeedController::class, 'getReactionCount'])->name('api.feed.post.reactions.count');

@@ -44,23 +44,10 @@ class FeedController extends Controller
                 'reactions' => function ($query) use ($userId) {
                     $query->where('user_id', $userId);
                 },
-                'comments' => function ($query) use ($userId) {
-                    $query->where('status', 'active')
-                        ->whereNull('parent_id')
-                        ->with([
-                            'user:id,first_name,last_name,slug,photo',
-                            'reactions' => function ($r) use ($userId) {
-                                $r->where('user_id', $userId)->where('reaction_type', 'like');
-                            }
-                        ])
-                        ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
-                            $r->where('user_id', $userId)->where('reaction_type', 'like');
-                        }])
-                        ->orderBy('created_at', 'asc')
-                        ->limit(2);
-                },
+                // Remove comments from feed - should be fetched separately via GET /feed/posts/{postId}/comments
+                // This reduces response size significantly (10 posts × 100 comments × 10 replies = huge payload)
                 'originalPost.user:id,first_name,last_name,slug,photo,user_position',
-                'originalPost.media',
+                'originalPost.media', // Load original post media to include thumbnails
             ])
             ->where('status', 'active')
             ->whereNull('deleted_at');
@@ -111,25 +98,8 @@ class FeedController extends Controller
                 'reactions' => function ($query) use ($userId) {
                     $query->where('user_id', $userId);
                 },
-                'comments' => function ($query) use ($userId) {
-                    $query->where('status', 'active')
-                        ->whereNull('parent_id')
-                        ->with([
-                            'user:id,first_name,last_name,slug,photo',
-                            'replies' => function ($query) {
-                                $query->where('status', 'active')
-                                    ->with('user:id,first_name,last_name,slug,photo')
-                                    ->orderBy('created_at', 'asc');
-                            },
-                            'reactions' => function ($r) use ($userId) {
-                                $r->where('user_id', $userId)->where('reaction_type', 'like');
-                            }
-                        ])
-                        ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
-                            $r->where('user_id', $userId)->where('reaction_type', 'like');
-                        }])
-                        ->orderBy('created_at', 'asc');
-                },
+                // Remove comments from getPost - should be fetched separately via GET /feed/posts/{postId}/comments
+                // This reduces response size significantly
                 'originalPost.user:id,first_name,last_name,slug,photo,user_position',
                 'originalPost.media'
             ])
@@ -151,8 +121,7 @@ class FeedController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $this->transformPost($post, $userId),
-            'user_reaction' => $userReaction
+            'data' => $this->transformPost($post, $userId)
         ]);
     }
 
@@ -168,6 +137,25 @@ class FeedController extends Controller
             'comments_enabled' => 'nullable|boolean',
             'visibility' => 'nullable|string|in:public,private,connections',
         ]);
+
+        // Validate that either content or media is provided
+        if (!$request->content && !$request->hasFile('media')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please provide content or media for your post.'
+            ], 422);
+        }
+
+        // Validate total media size (10MB limit)
+        if ($request->hasFile('media')) {
+            $totalSize = collect($request->file('media'))->sum('size');
+            if ($totalSize > 10 * 1024 * 1024) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Total media size exceeds 10MB limit.'
+                ], 422);
+            }
+        }
 
         try {
             DB::beginTransaction();
@@ -266,25 +254,104 @@ class FeedController extends Controller
     /**
      * Update a post.
      */
-    public function updatePost(Request $request, $id)
+    public function updatePost(Request $request, $slug)
     {
         $request->validate([
             'content' => 'nullable|string|max:10000',
             'comments_enabled' => 'nullable|boolean',
             'visibility' => 'nullable|string|in:public,private,connections',
+            'media' => 'nullable|array|max:10',
+            'media.*' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,mov,avi,mkv,webm|max:10240', // 10MB max
+            'remove_media_ids' => 'nullable|array',
+            'remove_media_ids.*' => 'integer|exists:post_media,id',
         ]);
 
         $post = Post::where('user_id', Auth::id())
-            ->where('id', $id)
+            ->where('slug', $slug)
             ->where('status', 'active')
             ->firstOrFail();
 
+        // Validate total media size if adding new media
+        if ($request->hasFile('media')) {
+            $existingMediaSize = $post->media()->whereNotIn('id', $request->get('remove_media_ids', []))->sum('file_size');
+            $newMediaSize = collect($request->file('media'))->sum('size');
+            $totalSize = $existingMediaSize + $newMediaSize;
+
+            if ($totalSize > 10 * 1024 * 1024) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Total media size exceeds 10MB limit.'
+                ], 422);
+            }
+        }
+
+        // Update content and settings
         $post->content = $request->content ?? $post->content;
         $post->comments_enabled = $request->has('comments_enabled') 
             ? $request->comments_enabled 
             : $post->comments_enabled;
         $post->visibility = $request->get('visibility', $post->visibility);
         $post->save();
+
+        // Handle media removal
+        if ($request->has('remove_media_ids') && is_array($request->remove_media_ids)) {
+            $mediaToRemove = PostMedia::where('post_id', $post->id)
+                ->whereIn('id', $request->remove_media_ids)
+                ->get();
+
+            foreach ($mediaToRemove as $media) {
+                // Delete from S3 if applicable
+                if ($media->media_path && str_starts_with($media->media_path, 'media/')) {
+                    $s3Service = app(S3Service::class);
+                    try {
+                        $s3Service->deleteMedia($media->media_path);
+                        if ($media->thumbnail_path && str_starts_with($media->thumbnail_path, 'media/')) {
+                            $s3Service->deleteMedia($media->thumbnail_path);
+                        }
+                    } catch (\Exception $e) {
+                        Log::warning("Failed to delete media from S3: " . $e->getMessage());
+                    }
+                }
+                $media->delete();
+            }
+        }
+
+        // Handle new media uploads
+        if ($request->hasFile('media')) {
+            $s3Service = app(S3Service::class);
+            $existingMediaCount = $post->media()->count();
+            $maxMedia = 10;
+            
+            foreach ($request->file('media') as $file) {
+                if ($existingMediaCount >= $maxMedia) {
+                    break; // Don't exceed max media limit
+                }
+                
+                $uploadResult = $s3Service->uploadMedia($file, 'posts');
+                
+                $postMedia = new PostMedia();
+                $postMedia->post_id = $post->id;
+                $postMedia->media_type = $uploadResult['type'];
+                $postMedia->media_path = $uploadResult['path'];
+                $postMedia->media_url = $uploadResult['url'];
+                $postMedia->file_name = $uploadResult['file_name'];
+                $postMedia->file_size = $uploadResult['file_size'];
+                $postMedia->mime_type = $uploadResult['mime_type'];
+                
+                // For videos, generate/upload thumbnail if not already done
+                if ($uploadResult['type'] === 'video' && isset($uploadResult['thumbnail_path'])) {
+                    $postMedia->thumbnail_path = $uploadResult['thumbnail_path'];
+                }
+                
+                if (isset($uploadResult['duration'])) {
+                    $postMedia->duration = $uploadResult['duration'];
+                }
+                
+                $postMedia->order = $existingMediaCount;
+                $postMedia->save();
+                $existingMediaCount++;
+            }
+        }
 
         $post->loadCount(['reactions', 'comments', 'shares'])
             ->load([
@@ -294,13 +361,8 @@ class FeedController extends Controller
                 'reactions' => function ($query) {
                     $query->where('user_id', Auth::id());
                 },
-                'comments' => function ($query) {
-                    $query->where('status', 'active')
-                        ->whereNull('parent_id')
-                        ->with(['user:id,first_name,last_name,slug,photo'])
-                        ->orderBy('created_at', 'asc')
-                        ->limit(2);
-                }
+                'originalPost.user:id,first_name,last_name,slug,photo,user_position',
+                'originalPost.media'
             ]);
 
         return response()->json([
@@ -313,10 +375,10 @@ class FeedController extends Controller
     /**
      * Delete a post (soft delete).
      */
-    public function deletePost($id)
+    public function deletePost($slug)
     {
         $post = Post::where('user_id', Auth::id())
-            ->where('id', $id)
+            ->where('slug', $slug)
             ->firstOrFail();
 
         $post->status = 'deleted';
@@ -337,7 +399,7 @@ class FeedController extends Controller
         $request->validate([
             'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
-            'reaction_type' => 'required|string|in:like,love,haha,wow,sad,angry',
+            'reaction_type' => 'required|string|in:like,love,celebrate,support,insightful', // LinkedIn-style reactions
         ]);
 
         $userId = Auth::id();
@@ -873,15 +935,31 @@ class FeedController extends Controller
         $post = Post::findOrFail($postId);
 
         $reactions = $post->reactions()
-            ->with('user:id,first_name,last_name,photo')
+            ->with('user:id,first_name,last_name,photo,user_position,city,state')
             ->get()
             ->map(function ($reaction) {
+                if (!$reaction->user) {
+                    return null; // Skip reactions with deleted users
+                }
+                $userData = $this->formatUserData($reaction->user);
                 return [
+                    'id' => $reaction->id,
                     'type' => $reaction->reaction_type,
+                    'created_at' => $reaction->created_at,
                     'user_id' => $reaction->user_id,
-                    'user_name' => trim($reaction->user->first_name . ' ' . $reaction->user->last_name),
+                    'user_name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
+                    'user' => [
+                        'id' => $userData['id'],
+                        'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
+                        'avatar' => $userData['photo'],
+                        'initials' => $userData['user_initials'],
+                        'has_photo' => $userData['user_has_photo'],
+                        'position' => $reaction->user->user_position ?? '',
+                        'city' => $userData['city'] ?? null,
+                        'state' => $userData['state'] ?? null,
+                    ]
                 ];
-            });
+            })->filter(); // Filter out null reactions
 
         return response()->json([
             'success' => true,
@@ -949,38 +1027,23 @@ class FeedController extends Controller
                     'id' => $m->id,
                     'media_type' => $m->media_type,
                     'media_url' => $m->media_url,
-                    'thumbnail_url' => $m->thumbnail_path ?? $m->media_url,
+                    // Ensure video thumbnails are always included - use thumbnail_path if exists, otherwise generate/use video URL
+                    'thumbnail_url' => $m->media_type === 'video' 
+                        ? ($m->thumbnail_path ?? $m->media_url) 
+                        : ($m->thumbnail_path ?? $m->media_url),
                     'mime_type' => $m->mime_type,
                     'file_name' => $m->file_name,
                     'duration' => $m->duration,
                 ])->toArray()
                 : [],
+            // Reactions as array format (aggregate by type)
+            'reactions' => $this->getReactionsArray($post),
             'user_reaction' => $userReaction ? [
                 'type' => $userReaction->reaction_type,
                 'created_at' => $userReaction->created_at,
             ] : null,
-            'comments' => $post->relationLoaded('comments') && $post->comments
-                ? $post->comments->map(function ($comment) use ($userId) {
-                    if (!$comment->user) {
-                        return null; // Skip comments with deleted users
-                    }
-                    $commentUserData = $this->formatUserData($comment->user);
-                    return [
-                        'id' => $comment->id,
-                        'content' => $comment->content,
-                        'created_at' => $comment->created_at,
-                        'user_has_reacted' => isset($comment->user_has_reacted) ? $comment->user_has_reacted > 0 : false,
-                        'user' => [
-                            'id' => $commentUserData['id'],
-                            'name' => trim($commentUserData['first_name'] . ' ' . $commentUserData['last_name']),
-                            'avatar' => $commentUserData['photo'],
-                            'initials' => $commentUserData['user_initials'],
-                            'has_photo' => $commentUserData['user_has_photo'],
-                        ],
-                        'replies' => []
-                    ];
-                })->filter()->values()->toArray() // Filter out null comments
-                : [],
+            // Remove comments from response to reduce payload size
+            // Comments should be fetched separately via GET /feed/posts/{postId}/comments
         ];
 
         // Add original post data if this is a shared post
@@ -1001,14 +1064,49 @@ class FeedController extends Controller
                 ],
                 'media' => ($post->originalPost->relationLoaded('media') && $post->originalPost->media)
                     ? $post->originalPost->media->map(fn($m) => [
+                        'id' => $m->id,
                         'media_type' => $m->media_type,
                         'media_url' => $m->media_url,
+                        // Include thumbnail for reposted original post media
+                        'thumbnail_url' => $m->media_type === 'video' 
+                            ? ($m->thumbnail_path ?? $m->media_url) 
+                            : ($m->thumbnail_path ?? $m->media_url),
+                        'mime_type' => $m->mime_type,
+                        'file_name' => $m->file_name,
+                        'duration' => $m->duration,
                     ])->toArray()
                     : [],
             ];
         }
 
         return $transformed;
+    }
+
+    /**
+     * Get reactions as array format (aggregated by type)
+     */
+    private function getReactionsArray($post)
+    {
+        // Get reaction counts grouped by type
+        $reactionCounts = Reaction::where('reactionable_type', 'App\Models\Feed\Post')
+            ->where('reactionable_id', $post->id)
+            ->select('reaction_type', DB::raw('count(*) as count'))
+            ->groupBy('reaction_type')
+            ->pluck('count', 'reaction_type')
+            ->toArray();
+
+        // Return as array with all LinkedIn reaction types
+        $reactionTypes = ['like', 'love', 'celebrate', 'support', 'insightful'];
+        $result = [];
+        
+        foreach ($reactionTypes as $type) {
+            $result[] = [
+                'type' => $type,
+                'count' => isset($reactionCounts[$type]) ? (int)$reactionCounts[$type] : 0
+            ];
+        }
+
+        return $result;
     }
 }
 

@@ -74,6 +74,8 @@ trait FormatsUserData
             'photo' => $this->formatUserPhoto($photoPath),
             'user_has_photo' => $hasPhoto,
             'user_initials' => $this->getUserInitials($user->first_name, $user->last_name ?? ''),
+            'city' => $user->city ?? null,
+            'state' => $user->state ?? null,
         ];
     }
 }
