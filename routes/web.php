@@ -6,6 +6,7 @@ use App\Http\Controllers\User\ProductController;
 use App\Http\Controllers\User\SearchController;
 use App\Http\Controllers\User\ServiceController;
 use App\Http\Controllers\User\FeedController;
+use App\Http\Controllers\User\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
@@ -195,6 +196,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
             ->where('slug', '[a-z0-9\-]+')
             ->name('feed.post.page');
     });
+
+    // Report Routes
+    Route::post('/report/user', [ReportController::class, 'reportUser'])->name('report.user');
+    Route::post('/report/post', [ReportController::class, 'reportPost'])->name('report.post');
 
     Route::get('/inbox', function () {
         return view('user.inbox');
