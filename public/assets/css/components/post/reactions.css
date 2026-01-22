@@ -17,8 +17,8 @@
 }
 
 .reaction-emoji {
-    width: 44px;
-    height: 44px;
+    width: 30px;
+    height: 30px;
     background: #f3f2ef;
     border-radius: 50%;
     display: flex;
@@ -29,7 +29,9 @@
     opacity: 0;
     transform: translateY(10px) scale(1);
     animation: slideIn 0.3s ease forwards;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
     position: relative;
 }
 
@@ -79,7 +81,9 @@
     border-radius: 4px;
     white-space: nowrap;
     opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
     pointer-events: none;
 }
 
@@ -137,7 +141,6 @@
     line-height: 100%;
 }
 
-
 .post-stats .likes-count {
     display: flex;
     align-items: center;
@@ -169,4 +172,144 @@
 .comments-count:hover {
     text-decoration: underline;
     color: #0a66c2;
+}
+/* LinkedIn-Inspired Reactions Panel - Unique Design */
+.linkedin-reactions-panel {
+    display: flex;
+    gap: 6px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 7px 5px 5px 5px;
+    border-radius: 10px;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    animation: reactionPanelSlideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+     position: fixed; /* Ensure fixed positioning */
+    pointer-events: auto; /* Ensure panel is interactive */
+}
+
+@keyframes reactionPanelSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.linkedin-reaction-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 5px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 70px;
+    position: relative;
+}
+
+.linkedin-reaction-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.2)
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.linkedin-reaction-item:hover::before {
+    opacity: 1;
+}
+
+.linkedin-reaction-item:hover {
+    transform: scale(1.2) translateY(-6px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.linkedin-reaction-item:active {
+    transform: scale(1.1) translateY(-4px);
+}
+
+.linkedin-reaction-item .reaction-emoji {
+    font-size: 20px;
+    transition: transform 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.linkedin-reaction-item:hover .reaction-emoji {
+    transform: scale(1.25) rotate(10deg);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.linkedin-reaction-item .reaction-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5f6368;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+    text-transform: capitalize;
+    line-height: 1.3em;
+}
+
+.linkedin-reaction-item:hover .reaction-label {
+    color: #1a73e8;
+    font-weight: 700;
+}
+
+/* Reaction color themes per type */
+.linkedin-reaction-item:hover[data-type="like"] .reaction-label {
+    color: #0073b1;
+}
+
+.linkedin-reaction-item:hover[data-type="love"] .reaction-label {
+    color: #e91e63;
+}
+
+.linkedin-reaction-item:hover[data-type="celebrate"] .reaction-label {
+    color: #ffa726;
+}
+
+.linkedin-reaction-item:hover[data-type="support"] .reaction-label {
+    color: #9c27b0;
+}
+
+.linkedin-reaction-item:hover[data-type="insightful"] .reaction-label {
+    color: #ffd700;
+}
+
+/* Active reaction styling in post */
+.action-btn[data-current-reaction]:not([data-current-reaction=""]) {
+    color: #0073b1;
+    font-weight: 600;
+}
+
+.action-btn[data-current-reaction="love"]:not([data-current-reaction=""]) {
+    color: #e91e63;
+}
+
+.action-btn[data-current-reaction="celebrate"]:not([data-current-reaction=""]) {
+    color: #ffa726;
+}
+
+.action-btn[data-current-reaction="support"]:not([data-current-reaction=""]) {
+    color: #9c27b0;
+}
+
+.action-btn[data-current-reaction="insightful"]:not(
+        [data-current-reaction=""]
+    ) {
+    color: #ffd700;
 }

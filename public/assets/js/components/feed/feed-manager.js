@@ -581,7 +581,6 @@ function createPostStats(post) {
         </div>
     `;
 }
-
 function createPostActions(post) {
     const userReaction = post.user_reaction;
     const reactionEmoji = userReaction ? getReactionEmoji(userReaction.type) : '<i class="fa-regular fa-thumbs-up"></i>';
@@ -590,21 +589,14 @@ function createPostActions(post) {
 
     return `
         <div class="post-actions">
-            <div class="reaction-wrapper" onmouseleave="hideReactions(this)" data-post-id="${post.id}">
+            <div class="reaction-wrapper" data-post-id="${post.id}">
                 <div class="action-btn"
-                     onmouseenter="showReactions(this)"
+                     data-linkedin-reactions
+                     data-post-id="${post.id}"
                      onclick="handleReactionClick('${post.id}', '${reactionType}')"
                      data-current-reaction="${reactionType}">
                     <span class="reaction-icon">${reactionEmoji}</span>
                     <span class="reaction-label action-btn-text">${reactionLabel}</span>
-                </div>
-                <div class="reaction-panel d-none" onmouseenter="cancelHide()" onmouseleave="hideReactions(this.parentElement)">
-                    <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Like', 'like')" title="Like">👍</span>
-                    <span class="reaction-emoji" onclick="applyReaction(this, '❤️', 'Love', 'love')" title="Love">❤️</span>
-                    <span class="reaction-emoji" onclick="applyReaction(this, '😂', 'Haha', 'haha')" title="Haha">😂</span>
-                    <span class="reaction-emoji" onclick="applyReaction(this, '😮', 'Wow', 'wow')" title="Wow">😮</span>
-                    <span class="reaction-emoji" onclick="applyReaction(this, '😢', 'Sad', 'sad')" title="Sad">😢</span>
-                    <span class="reaction-emoji" onclick="applyReaction(this, '😠', 'Angry', 'angry')" title="Angry">😠</span>
                 </div>
             </div>
             <div class="action-btn comment-trigger" onclick="toggleComments('${post.id}')">
@@ -724,10 +716,9 @@ function getReactionEmoji(type) {
     const emojiMap = {
         like: "👍",
         love: "❤️",
-        haha: "😂",
-        wow: "😮",
-        sad: "😢",
-        angry: "😠",
+        celebrate: "👏",
+        support: "💪",
+        insightful: "💡"
     };
     return emojiMap[type] || "👍";
 }
