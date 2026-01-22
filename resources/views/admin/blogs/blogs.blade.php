@@ -133,7 +133,9 @@
         pointer-events: none;
     }
 
-    th.sorting, th.sorting_disabled {
+    th, 
+    th.sorting, 
+    th.sorting_disabled {
         color: #333333;
         font-family: "Inter";
         font-size: 18.65px;
@@ -145,6 +147,8 @@
         padding-right: 44px !important;
     }
 
+    th:before,
+    td:before,
     table.dataTable thead > tr > th.sorting:before,
     table.dataTable thead > tr > th.sorting_asc:before,
     table.dataTable thead > tr > th.sorting_desc:before,
@@ -162,6 +166,8 @@
         background-size: contain;
     }
 
+    th:after,
+    td:after,
     table.dataTable thead > tr > th.sorting:after,
     table.dataTable thead > tr > th.sorting_asc:after,
     table.dataTable thead > tr > th.sorting_desc:after,
@@ -179,6 +185,7 @@
         background-size: contain;
     }
 
+    td,
     table.dataTable.table-striped>tbody>tr.odd>*,
     table.dataTable.table-striped>tbody>tr.even>* {
         vertical-align: middle;
@@ -251,6 +258,29 @@
         margin-left: 5px;
         font-size: 12px;
         padding: 4px 8px;
+    }
+
+    @media (max-width: 1241px) {
+        div#blogsTable_wrapper .col-sm-12.col-md-6 {
+            width: 100%;
+            justify-items: center;
+            margin-top: 10px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        div#blogsTable_wrapper div.dataTables_filter label::after {
+            top: 73% !important;
+        }
+        .card-title {
+            text-align: center; 
+        }
+        }
+
+    @media (max-width: 879px) {
+        div#blogsTable_wrapper div.dataTables_filter label::after {
+            top: 73% !important;
+        }
     }
 </style>
 @section('content')

@@ -240,6 +240,8 @@ table.table tbody td form #delete::after{
 
     .card-header:first-child {
         border: 0;
+        gap: 20px;
+        flex-wrap: wrap;
         background: #fafbff !important;
         padding: 30px 0px !important;
     }
@@ -337,7 +339,7 @@ table#usersTable {
   @media (max-width: 879px) {
 
     .card_header_flex{
-      justify-content: center !important;
+      justify-content: space-between !important;
     }
     div.dataTables_wrapper div.dataTables_filter input {
       width: 100%;
@@ -502,6 +504,7 @@ table#usersTable {
   @media (max-width: 411px) {
     .card_header_flex{
       justify-content: center !important;
+      flex-direction: column;
       gap: 10px;
     }
   }
