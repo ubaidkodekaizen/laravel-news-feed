@@ -399,7 +399,7 @@ class FeedController extends Controller
         $request->validate([
             'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
-            'reaction_type' => 'required|string|in:like,love,celebrate,support,insightful', // LinkedIn-style reactions
+            'reaction_type' => 'required|string|in:appreciate,cheers,support,insight,curious,smile', // Original reaction types
         ]);
 
         $userId = Auth::id();
@@ -643,11 +643,11 @@ class FeedController extends Controller
                         ->orderBy('created_at', 'asc');
                 },
                 'reactions' => function ($r) use ($userId) {
-                    $r->where('user_id', $userId)->where('reaction_type', 'like');
+                    $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
                 }
             ])
             ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
-                $r->where('user_id', $userId)->where('reaction_type', 'like');
+                $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
             }])
             ->orderBy('created_at', 'asc')
             ->paginate($perPage);
@@ -822,11 +822,11 @@ class FeedController extends Controller
                         ->with([
                             'user:id,first_name,last_name,slug,photo',
                             'reactions' => function ($r) use ($userId) {
-                                $r->where('user_id', $userId)->where('reaction_type', 'like');
+                                $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
                             }
                         ])
                         ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
-                            $r->where('user_id', $userId)->where('reaction_type', 'like');
+                            $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
                         }])
                         ->orderBy('created_at', 'asc')
                         ->limit(3);
@@ -1095,8 +1095,8 @@ class FeedController extends Controller
             ->pluck('count', 'reaction_type')
             ->toArray();
 
-        // Return as array with all LinkedIn reaction types
-        $reactionTypes = ['like', 'love', 'celebrate', 'support', 'insightful'];
+        // Return as array with all original reaction types
+        $reactionTypes = ['appreciate', 'cheers', 'support', 'insight', 'curious', 'smile'];
         $result = [];
         
         foreach ($reactionTypes as $type) {

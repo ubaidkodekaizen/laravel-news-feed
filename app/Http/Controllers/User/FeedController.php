@@ -224,9 +224,9 @@ class FeedController extends Controller
                     'replies' => fn($q) => $q->where('status', 'active')
                         ->with('user:id,first_name,last_name,slug,photo')
                         ->orderBy('created_at', 'asc'),
-                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
+                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')
                 ])
-                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
+                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')])
                 ->orderBy('created_at', 'asc'),
             'originalPost.user:id,first_name,last_name,slug,photo,user_position',
             'originalPost.media'
@@ -274,9 +274,9 @@ class FeedController extends Controller
                 ->whereNull('parent_id')
                 ->with([
                     'user:id,first_name,last_name,slug,photo',
-                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
+                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')
                 ])
-                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
+                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')])
                 ->orderBy('created_at', 'asc')
                 ->limit(2),
             'originalPost.user:id,first_name,last_name,slug,photo,user_position',
@@ -439,9 +439,9 @@ class FeedController extends Controller
                         'replies' => fn($q) => $q->where('status', 'active')
                             ->with('user:id,first_name,last_name,slug,photo')
                             ->orderBy('created_at', 'asc'),
-                        'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
+                        'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')
                     ])
-                    ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
+                    ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')])
                     ->orderBy('created_at', 'asc'),
                 'originalPost.user:id,first_name,last_name,slug,photo',
                 'originalPost.media'
@@ -776,7 +776,7 @@ class FeedController extends Controller
         $request->validate([
             'reactionable_type' => 'required|string|in:Post,PostComment,App\Models\Feed\Post,App\Models\Feed\PostComment',
             'reactionable_id' => 'required|integer',
-            'reaction_type' => 'required|string|in:like,love,celebrate,support,insightful', // LinkedIn-style reactions
+            'reaction_type' => 'required|string|in:appreciate,cheers,support,insight,curious,smile', // Original reaction types
         ]);
 
         try {
@@ -1130,9 +1130,9 @@ class FeedController extends Controller
                     'replies' => fn($q) => $q->where('status', 'active')
                         ->with('user:id,first_name,last_name,slug,photo')
                         ->orderBy('created_at', 'asc'),
-                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')
+                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')
                 ])
-                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'like')])
+                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')])
                 ->orderBy('created_at', 'asc')
                 ->paginate($perPage);
 

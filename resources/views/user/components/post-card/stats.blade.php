@@ -4,15 +4,13 @@
         <div class="reactions-preview">
             @foreach(array_slice($post['reactions'], 0, 3) as $reaction)
                 @php
-                    $emoji = match($reaction['type'] ?? 'like') {
-                        'like' => '👍',
-                        'love' => '💖',
-                        'celebrate' => '👏',
-                        'insightful' => '💡',
-                        'funny', 'haha' => '😂',
-                        'wow' => '😲',
-                        'sad' => '😢',
-                        'angry' => '😠',
+                    $emoji = match($reaction['type'] ?? 'appreciate') {
+                        'appreciate' => '👍',
+                        'cheers' => '🎉',
+                        'support' => '❤️',
+                        'insight' => '💡',
+                        'curious' => '🤔',
+                        'smile' => '😊',
                         default => '👍'
                     };
                 @endphp
