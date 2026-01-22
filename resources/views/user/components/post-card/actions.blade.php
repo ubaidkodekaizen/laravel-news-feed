@@ -11,12 +11,12 @@
                 @if(isset($post['user_reaction']['type']) && $post['user_reaction']['type'])
                     @php
                         $reactionEmojis = [
-                            'like' => '👍',
-                            'love' => '❤️',
-                            'haha' => '😂',
-                            'wow' => '😮',
-                            'sad' => '😢',
-                            'angry' => '😠'
+                            'appreciate' => '👍',
+                            'cheers' => '🎉',
+                            'support' => '❤️',
+                            'insight' => '💡',
+                            'curious' => '🤔',
+                            'smile' => '😊'
                         ];
                         $emoji = $reactionEmojis[$post['user_reaction']['type']] ?? '👍';
                     @endphp
@@ -25,16 +25,16 @@
                     <i class="fa-regular fa-thumbs-up"></i>
                 @endif
             </span>
-            <span class="reaction-label">{{ $post['user_reaction']['type'] ? ucfirst($post['user_reaction']['type']) : 'Like' }}</span>
+            <span class="reaction-label">{{ $post['user_reaction']['type'] ? ucfirst($post['user_reaction']['type']) : 'Appreciate' }}</span>
         </button>
 
         <div class="reaction-panel d-none" onmouseenter="cancelHide()" onmouseleave="hideReactions(this.parentElement)">
-            <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Like', 'like')" title="Like">👍</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '❤️', 'Love', 'love')" title="Love">❤️</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '😂', 'Haha', 'haha')" title="Haha">😂</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '😮', 'Wow', 'wow')" title="Wow">😮</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '😢', 'Sad', 'sad')" title="Sad">😢</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '😠', 'Angry', 'angry')" title="Angry">😠</span>
+            <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Appreciate', 'appreciate')" title="Appreciate">👍</span>
+            <span class="reaction-emoji" onclick="applyReaction(this, '🎉', 'Cheers', 'cheers')" title="Cheers">🎉</span>
+            <span class="reaction-emoji" onclick="applyReaction(this, '❤️', 'Support', 'support')" title="Support">❤️</span>
+            <span class="reaction-emoji" onclick="applyReaction(this, '💡', 'Insight', 'insight')" title="Insight">💡</span>
+            <span class="reaction-emoji" onclick="applyReaction(this, '🤔', 'Curious', 'curious')" title="Curious">🤔</span>
+            <span class="reaction-emoji" onclick="applyReaction(this, '😊', 'Smile', 'smile')" title="Smile">😊</span>
         </div>
     </div>
 

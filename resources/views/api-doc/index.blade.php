@@ -1359,15 +1359,15 @@
       ],
       "reactions": [
         {
-          "type": "like",
+          "type": "appreciate",
           "count": 5
         },
         {
-          "type": "love",
+          "type": "support",
           "count": 3
         },
         {
-          "type": "celebrate",
+          "type": "cheers",
           "count": 1
         },
         {
@@ -1375,12 +1375,12 @@
           "count": 0
         },
         {
-          "type": "insightful",
+          "type": "insight",
           "count": 1
         }
       ],
       "user_reaction": {
-        "type": "like",
+        "type": "appreciate",
         "created_at": "2024-01-15T14:35:00.000000Z"
       },
       // Comments removed from feed response - fetch separately via GET /feed/posts/{postId}/comments
@@ -1454,15 +1454,15 @@
     ],
     "reactions": [
       {
-        "type": "like",
+        "type": "appreciate",
         "count": 5
       },
       {
-        "type": "love",
+        "type": "support",
         "count": 3
       },
       {
-        "type": "celebrate",
+        "type": "cheers",
         "count": 1
       },
       {
@@ -1470,12 +1470,12 @@
         "count": 0
       },
       {
-        "type": "insightful",
+        "type": "insight",
         "count": 1
       }
     ],
     "user_reaction": {
-      "type": "like",
+      "type": "appreciate",
       "created_at": "2024-01-15T14:35:00.000000Z"
     },
     // Comments removed - fetch via GET /feed/posts/{postId}/comments
@@ -1490,7 +1490,7 @@
   },
   "user_reaction": {
     "id": 1,
-    "reaction_type": "like",
+    "reaction_type": "appreciate",
     ...
   }
 }</pre>
@@ -1728,7 +1728,7 @@
                             <td>reaction_type</td>
                             <td>string</td>
                             <td><span class="required">Yes</span></td>
-                            <td>Reaction type (LinkedIn-style): "like", "love", "celebrate", "support", or "insightful"</td>
+                            <td>Reaction type: "appreciate", "cheers", "support", "insight", "curious", or "smile"</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1738,7 +1738,7 @@
                     <pre>{
   "reactionable_type": "Post",
   "reactionable_id": 1,
-  "reaction_type": "celebrate"
+  "reaction_type": "cheers"
 }</pre>
                 </div>
 
@@ -1749,7 +1749,7 @@
   "message": "Reaction added",
   "reaction": {
     "id": 1,
-    "reaction_type": "like",
+    "reaction_type": "appreciate",
     ...
   }
 }</pre>
@@ -1826,7 +1826,7 @@
   "reactions": [
     {
       "id": 1,
-      "type": "like",
+      "type": "appreciate",
       "created_at": "2024-01-15T10:30:00.000000Z",
       "user": {
         "id": 1,
@@ -1859,7 +1859,7 @@
   "count": 10,
   "reactions": [
     {
-      "type": "like",
+      "type": "appreciate",
       "user_id": 1,
       "user_name": "John Doe"
     }
@@ -2242,7 +2242,7 @@
       },
       "media": [...],
       "user_reaction": {
-        "type": "like",
+        "type": "appreciate",
         "created_at": "2024-01-15T14:35:00.000000Z"
       },
       "comments": [...]
