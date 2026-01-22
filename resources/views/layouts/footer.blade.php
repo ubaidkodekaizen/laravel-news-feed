@@ -35,11 +35,12 @@
         return "{{ url('api/messages') }}/" + messageId;
     };
 
-      // Auth user data for feed
+    // Auth user data for feed
     @auth
-    window.authUserId = {{ auth()->id() }};
-    window.authUserAvatar = "{{ auth()->user()->photo ? (filter_var(auth()->user()->photo, FILTER_VALIDATE_URL) ? auth()->user()->photo : Storage::url(auth()->user()->photo)) : '' }}";
-    window.authUserInitials = "{{ strtoupper(substr(auth()->user()->first_name, 0, 1) . substr(auth()->user()->last_name, 0, 1)) }}";
+    window.authUserId = {{ Auth::id() }};
+    window.authUserAvatar = @json($authUserData['photo'] ?? '');
+    window.authUserInitials = @json($authUserData['user_initials'] ?? 'U');
+    window.authUserHasPhoto = {{ $authUserData['user_has_photo'] ?? false ? 'true' : 'false' }};
     @endauth
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>

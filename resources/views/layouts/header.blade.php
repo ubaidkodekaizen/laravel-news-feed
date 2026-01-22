@@ -156,131 +156,130 @@
 
     <div class="header position-relative">
 
-            <div class="header_flex">
-                <!-- Mobile Toggle Button -->
-                <div class="mobile_toggle">
-                    <i class="fas fa-bars" id="toggleDrawerBtn"></i>
-                </div>
-                <div class="header_left">
-                    <div class="logo">
-                        <a href="{{ route('home') }}">
-                            <img src="{{ asset('assets/images/greenAndWhiteLogo.png') }}" alt=""
-                                class="img-fluid">
-                        </a>
-                    </div>
-
-                    <div class="header-mid mobile_hide">
-                        <form method="GET" action="{{ route('search') }}" class="mb-0" id="search_form">
-                            <div class="search_area">
-
-
-                                {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
-
-                                <div class="suggestion_search">
-                                    <input type="text" id="header_search" autocomplete="off"
-                                        placeholder="Product, Service or Industry" class="form-control">
-                                    <div id="suggestion_box" class="suggestion-box" style="display: none;"></div>
-                                </div>
-
-                                <input type="hidden" name="name" id="first_name1">
-                                <input type="hidden" name="product" id="product1">
-                                <input type="hidden" name="service" id="service1">
-                                <input type="hidden" name="company_industry" id="company_industry1">
-
-                                <button class="btn btn-primary search_btn">
-                                    <img src="{{ asset('assets/images/fe_search.svg') }}" alt="Search">
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-
+        <div class="header_flex">
+            <!-- Mobile Toggle Button -->
+            <div class="mobile_toggle">
+                <i class="fas fa-bars" id="toggleDrawerBtn"></i>
+            </div>
+            <div class="header_left">
+                <div class="logo">
+                    <a href="{{ route('home') }}">
+                        <img src="{{ asset('assets/images/greenAndWhiteLogo.png') }}" alt="" class="img-fluid">
+                    </a>
                 </div>
 
-                <div class="header_right">
-                    <div class="top_header_links mobile_hide">
-                        <ul>
-                            <li>
-                                <a href="{{ route('our.community') }}" class="btn btn-primary" data-toggle="tooltip"
-                                    data-placement="bottom" title="Our Community">
-                                    <img src="{{ asset('assets/images/Vector.svg') }}" alt="community">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('smart.suggestion') }}" class="btn btn-primary" data-toggle="tooltip"
-                                    data-placement="bottom" title="Smart Suggestions">
+                <div class="header-mid mobile_hide">
+                    <form method="GET" action="{{ route('search') }}" class="mb-0" id="search_form">
+                        <div class="search_area">
 
-                                    <img src="{{ asset('assets/images/suggestion.svg') }}" alt="Suggestions">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('inbox') }}" class="btn btn-primary position-relative"
-                                    data-toggle="tooltip" data-placement="bottom" title="Inbox">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
-                                        viewBox="0 0 24 24"
-                                        style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;">
-                                        <circle cx="9.5" cy="9.5" r="1.5"></circle>
-                                        <circle cx="14.5" cy="9.5" r="1.5"></circle>
-                                        <path
-                                            d="M12 2C6.486 2 2 5.589 2 10c0 2.908 1.897 5.515 5 6.934V22l5.34-4.004C17.697 17.852 22 14.32 22 10c0-4.411-4.486-8-10-8zm0 14h-.333L9 18v-2.417l-.641-.247C5.671 14.301 4 12.256 4 10c0-3.309 3.589-6 8-6s8 2.691 8 6-3.589 6-8 6z">
-                                        </path>
-                                    </svg>
-                                    <div id="inbox-unread-badge"></div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('news-feed') }}" class="btn btn-primary" data-toggle="tooltip"
-                                    data-placement="bottom" title="News Feed">
 
-                                   <i class="fa-solid fa-newspaper"></i>
-                                </a>
-                            </li>
+                            {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
 
-                        </ul>
-                    </div>
-                    <div class="profile">
-                        @php
-                            $currentUser = Auth::user();
-                            $photoPath = $currentUser->photo ?? null;
-                            // Check if photo exists - handle both S3 URLs and local storage
-                            $hasPhoto = false;
-                            if ($photoPath) {
-                                if (str_starts_with($photoPath, 'http')) {
-                                    // S3 URL - assume it exists
-                                    $hasPhoto = true;
-                                } else {
-                                    // Local storage - check file existence
-                                    $hasPhoto = \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
-                                }
-                            }
-                            $initials = strtoupper(
-                                substr($currentUser->first_name ?? '', 0, 1) .
-                                    substr($currentUser->last_name ?? '', 0, 1),
-                            );
-                        @endphp
-
-                        @if ($hasPhoto)
-                            <img src="{{ getImageUrl($currentUser->photo) }}" alt="{{ $currentUser->first_name }}">
-                        @else
-                            <div class="avatar-initials-header">
-                                {{ $initials }}
+                            <div class="suggestion_search">
+                                <input type="text" id="header_search" autocomplete="off"
+                                    placeholder="Product, Service or Industry" class="form-control">
+                                <div id="suggestion_box" class="suggestion-box" style="display: none;"></div>
                             </div>
-                        @endif
-                        <div class="dropdown">
-                            <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="user_profile_name_h"> {{ Auth::user()->first_name }} </span>
-                                <img id="userProfileDropdown" src="{{ asset('assets/images/whiteChevron.svg') }}"
-                                    alt="DropDown">
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
-                                <li><a class="dropdown-item logoutBtn" href="{{ route('logout') }}">Logout</a></li>
-                            </ul>
+
+                            <input type="hidden" name="name" id="first_name1">
+                            <input type="hidden" name="product" id="product1">
+                            <input type="hidden" name="service" id="service1">
+                            <input type="hidden" name="company_industry" id="company_industry1">
+
+                            <button class="btn btn-primary search_btn">
+                                <img src="{{ asset('assets/images/fe_search.svg') }}" alt="Search">
+                            </button>
                         </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+            <div class="header_right">
+                <div class="top_header_links mobile_hide">
+                    <ul>
+                        <li>
+                            <a href="{{ route('news-feed') }}" class="btn btn-primary" data-toggle="tooltip"
+                                data-placement="bottom" title="News Feed">
+
+                                <i class="fa-solid fa-newspaper"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('smart.suggestion') }}" class="btn btn-primary" data-toggle="tooltip"
+                                data-placement="bottom" title="Smart Suggestions">
+
+                                <img src="{{ asset('assets/images/suggestion.svg') }}" alt="Suggestions">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('our.community') }}" class="btn btn-primary" data-toggle="tooltip"
+                                data-placement="bottom" title="Our Community">
+                                <img src="{{ asset('assets/images/Vector.svg') }}" alt="community">
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('inbox') }}" class="btn btn-primary position-relative"
+                                data-toggle="tooltip" data-placement="bottom" title="Inbox">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                    viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);transform: ;msFilter:;">
+                                    <circle cx="9.5" cy="9.5" r="1.5"></circle>
+                                    <circle cx="14.5" cy="9.5" r="1.5"></circle>
+                                    <path
+                                        d="M12 2C6.486 2 2 5.589 2 10c0 2.908 1.897 5.515 5 6.934V22l5.34-4.004C17.697 17.852 22 14.32 22 10c0-4.411-4.486-8-10-8zm0 14h-.333L9 18v-2.417l-.641-.247C5.671 14.301 4 12.256 4 10c0-3.309 3.589-6 8-6s8 2.691 8 6-3.589 6-8 6z">
+                                    </path>
+                                </svg>
+                                <div id="inbox-unread-badge"></div>
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+                <div class="profile">
+                    @php
+                        $currentUser = Auth::user();
+                        $photoPath = $currentUser->photo ?? null;
+                        // Check if photo exists - handle both S3 URLs and local storage
+                        $hasPhoto = false;
+                        if ($photoPath) {
+                            if (str_starts_with($photoPath, 'http')) {
+                                // S3 URL - assume it exists
+                                $hasPhoto = true;
+                            } else {
+                                // Local storage - check file existence
+                                $hasPhoto = \Illuminate\Support\Facades\Storage::disk('public')->exists($photoPath);
+                            }
+                        }
+                        $initials = strtoupper(
+                            substr($currentUser->first_name ?? '', 0, 1) . substr($currentUser->last_name ?? '', 0, 1),
+                        );
+                    @endphp
+
+                    @if ($hasPhoto)
+                        <img src="{{ getImageUrl($currentUser->photo) }}" alt="{{ $currentUser->first_name }}">
+                    @else
+                        <div class="avatar-initials-header">
+                            {{ $initials }}
+                        </div>
+                    @endif
+                    <div class="dropdown">
+                        <a href="javascript:void(0);" class="profile_name_dd dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="user_profile_name_h"> {{ Auth::user()->first_name }} </span>
+                            <img id="userProfileDropdown" src="{{ asset('assets/images/whiteChevron.svg') }}"
+                                alt="DropDown">
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+                            <li><a class="dropdown-item logoutBtn" href="{{ route('logout') }}">Logout</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </div>
 
 
         <!-- Mobile Side Drawer -->
@@ -307,10 +306,11 @@
                     </div>
                 </form>
 
-                <a href="{{ route('our.community') }}" class="btn btn-primary mt-4 w-100">Our Community</a>
-                <a href="{{ route('smart.suggestion') }}" class="btn btn-primary mt-2 w-100">Smart Suggestion</a>
-                <a href="{{ route('inbox') }}" class="btn btn-primary mt-2 w-100">Inbox</a>
                 <a href="{{ route('news-feed') }}" class="btn btn-primary mt-2 w-100">News Feed</a>
+                <a href="{{ route('smart.suggestion') }}" class="btn btn-primary mt-2 w-100">Smart Suggestion</a>
+                <a href="{{ route('our.community') }}" class="btn btn-primary mt-4 w-100">Our Community</a>
+                <a href="{{ route('inbox') }}" class="btn btn-primary mt-2 w-100">Inbox</a>
+
 
 
             </div>

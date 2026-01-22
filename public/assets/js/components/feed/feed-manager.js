@@ -716,7 +716,7 @@ function getReactionEmoji(type) {
     const emojiMap = {
         appreciate: "👍",
         cheers: "🎉",
-        support: "💪",
+        support: "🤝",
         insight: "💡",
         curious: "🤔",
         smile: "😊"

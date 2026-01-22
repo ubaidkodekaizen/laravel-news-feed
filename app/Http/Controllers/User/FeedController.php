@@ -213,6 +213,9 @@ class FeedController extends Controller
     {
         $userId = Auth::id();
 
+        $authUser = Auth::user();
+        $authUserData = $this->formatUserData($authUser);
+
         $post = Post::with([
             'user:id,first_name,last_name,slug,photo,user_position',
             'media',
@@ -247,7 +250,8 @@ class FeedController extends Controller
         $transformedPost = $this->transformPost($post, $userId);
 
         return view('pages.post-detail', [
-            'post' => $transformedPost
+            'post' => $transformedPost,
+            'authUserData' => $authUserData
         ]);
     }
 

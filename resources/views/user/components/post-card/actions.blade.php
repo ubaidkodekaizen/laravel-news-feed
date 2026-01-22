@@ -1,19 +1,17 @@
-{{-- @dd($post) --}}
 <div class="post-actions">
-    <div class="reaction-wrapper" data-post-id="{{ $post['id'] ?? '' }}"
-         onmouseenter="showReactions(this)"
-         onmouseleave="hideReactions(this)">
-
-        <button class="action-btn"
-                data-current-reaction="{{ $post['user_reaction']['type'] ?? '' }}"
-                onclick="handleReactionClick('{{ $post['id'] ?? '' }}', '{{ $post['user_reaction']['type'] ?? '' }}')">
+    <div class="reaction-wrapper" data-post-id="{{ $post['id'] ?? '' }}">
+        <div class="action-btn"
+             data-linkedin-reactions
+             data-post-id="{{ $post['id'] ?? '' }}"
+             onclick="handleReactionClick('{{ $post['id'] ?? '' }}', '{{ $post['user_reaction']['type'] ?? '' }}')"
+             data-current-reaction="{{ $post['user_reaction']['type'] ?? '' }}">
             <span class="reaction-icon">
                 @if(isset($post['user_reaction']['type']) && $post['user_reaction']['type'])
                     @php
                         $reactionEmojis = [
                             'appreciate' => '👍',
                             'cheers' => '🎉',
-                            'support' => '❤️',
+                            'support' => '💪',
                             'insight' => '💡',
                             'curious' => '🤔',
                             'smile' => '😊'
@@ -25,35 +23,27 @@
                     <i class="fa-regular fa-thumbs-up"></i>
                 @endif
             </span>
-            <span class="reaction-label">{{ $post['user_reaction']['type'] ? ucfirst($post['user_reaction']['type']) : 'Appreciate' }}</span>
-        </button>
-
-        <div class="reaction-panel d-none" onmouseenter="cancelHide()" onmouseleave="hideReactions(this.parentElement)">
-            <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Appreciate', 'appreciate')" title="Appreciate">👍</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '🎉', 'Cheers', 'cheers')" title="Cheers">🎉</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '❤️', 'Support', 'support')" title="Support">❤️</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '💡', 'Insight', 'insight')" title="Insight">💡</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '🤔', 'Curious', 'curious')" title="Curious">🤔</span>
-            <span class="reaction-emoji" onclick="applyReaction(this, '😊', 'Smile', 'smile')" title="Smile">😊</span>
+            <span class="reaction-label action-btn-text">
+                {{ $post['user_reaction']['type'] ? ucfirst($post['user_reaction']['type']) : 'Like' }}
+            </span>
         </div>
     </div>
 
-    <button class="action-btn" onclick="toggleComments('{{ $post['id'] ?? '' }}')">
-        <i class="fa-regular fa-comment"></i>
-        <span>Comment</span>
-    </button>
+    <div class="action-btn comment-trigger" onclick="toggleComments('{{ $post['id'] ?? '' }}')">
+        <i class="fa-regular fa-comment-dots"></i>
+        <span class="action-btn-text">Comment</span>
+    </div>
 
-    <button class="action-btn" onclick="sharePost('{{ $post['id'] ?? '' }}')">
-        <i class="fa-solid fa-share"></i>
-        <span>Repost</span>
-    </button>
+    <div class="action-btn" onclick="sharePost('{{ $post['id'] ?? '' }}')">
+        <i class="fa-solid fa-retweet"></i>
+        <span class="action-btn-text">Repost</span>
+    </div>
 
-    <button class="action-btn" onclick="sendPost('{{ $post['id'] ?? '' }}')">
+    <div class="action-btn" onclick="sendPost('{{ $post['id'] ?? '' }}')">
         <i class="fa-regular fa-paper-plane"></i>
-        <span>Send</span>
-    </button>
+        <span class="action-btn-text">Send</span>
+    </div>
 </div>
-
 <style>
 .post-actions {
     display: flex;

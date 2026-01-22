@@ -6,7 +6,7 @@
 
 export const EMOJIS = {
     // Reaction emojis - matching your reactions modal
-    reactions: ['😊', '😂', '❤️', '👍', '🎉', '🔥', '💯', '🙏', '👏', '✨', '💪', '🤔', '😍', '🥰', '😎'],
+    reactions: ['😊', '😂', '❤️', '👍', '🎉', '🔥', '💯', '🙏', '👏', '✨', '🤝', '🤔', '😍', '🥰', '😎'],
 };
 
 // Default emoji set used across the app (for emoji picker buttons)

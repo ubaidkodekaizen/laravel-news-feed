@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#supportReactions" type="button" role="tab">
-                        💪 <span id="supportCount" class="badge bg-secondary ms-1">0</span>
+                        🤝 <span id="supportCount" class="badge bg-secondary ms-1">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">

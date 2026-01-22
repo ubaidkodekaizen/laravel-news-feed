@@ -19,7 +19,7 @@ class EmojiPickerManager {
         this.linkedInReactions = [
             { emoji: "👍", label: "Appreciate", type: "appreciate" },
             { emoji: "🎉", label: "Cheers", type: "cheers" },
-            { emoji: "💪", label: "Support", type: "support" },
+            { emoji: "🤝", label: "Support", type: "support" },
             { emoji: "💡", label: "Insight", type: "insight" },
             { emoji: "🤔", label: "Curious", type: "curious" },
             { emoji: "😊", label: "Smile", type: "smile" }

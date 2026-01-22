@@ -578,7 +578,7 @@ export async function likeComment(commentId) {
             body: JSON.stringify({
                 reactionable_type: "PostComment",
                 reactionable_id: commentId,
-                reaction_type: "appreciate", // Changed from "like" to "appreciate"
+                reaction_type: "appreciate",
             }),
         });
 
@@ -607,12 +607,18 @@ export async function likeComment(commentId) {
 
 function createCommentHTML(comment, postId) {
     const isOwner = window.authUserId === comment.user_id;
+
+    // Use consistent avatar pattern with proper fallback
     const avatarHTML =
         comment.user.has_photo && comment.user.avatar
             ? `<img src="${comment.user.avatar}" class="user-img" alt="${escapeHtml(comment.user.name)}"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-         <div class="user-initials-avatar comment-avatar" style="display: none;">${comment.user.initials}</div>`
-            : `<div class="user-initials-avatar comment-avatar">${comment.user.initials}</div>`;
+                    onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+               <div class="user-initials-avatar comment-avatar" style="display: none;">
+                   ${comment.user.initials}
+               </div>`
+            : `<div class="user-initials-avatar comment-avatar">
+                   ${comment.user.initials}
+               </div>`;
 
     const ownerActions = isOwner
         ? `
@@ -656,12 +662,18 @@ function createCommentHTML(comment, postId) {
 
 function createReplyHTML(reply, postId) {
     const isOwner = window.authUserId === reply.user_id;
+
+    // Use consistent avatar pattern with proper fallback
     const avatarHTML =
         reply.user.has_photo && reply.user.avatar
             ? `<img src="${reply.user.avatar}" class="user-img reply-avatar-img" alt="${escapeHtml(reply.user.name)}"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-         <div class="user-initials-avatar reply-avatar" style="display: none;">${reply.user.initials}</div>`
-            : `<div class="user-initials-avatar reply-avatar">${reply.user.initials}</div>`;
+                    onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+               <div class="user-initials-avatar reply-avatar" style="display: none;">
+                   ${reply.user.initials}
+               </div>`
+            : `<div class="user-initials-avatar reply-avatar">
+                   ${reply.user.initials}
+               </div>`;
 
     const ownerActions = isOwner
         ? `
@@ -696,19 +708,24 @@ function createReplyInputHTML(commentId, postId) {
     const userInitials = window.authUserInitials || "U";
     const hasPhoto = window.authUserHasPhoto || false;
 
+    // Use consistent avatar pattern with proper fallback
     const avatarHTML =
         hasPhoto && userAvatar
             ? `<img src="${userAvatar}" class="user-img reply-avatar-img" alt="You"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-         <div class="user-initials-avatar reply-avatar" style="display: none;">${userInitials}</div>`
-            : `<div class="user-initials-avatar reply-avatar">${userInitials}</div>`;
+                    onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+               <div class="user-initials-avatar reply-avatar" style="display: none;">
+                   ${userInitials}
+               </div>`
+            : `<div class="user-initials-avatar reply-avatar">
+                   ${userInitials}
+               </div>`;
 
     return `
         <div class="reply-input-wrapper" id="replyInput-${commentId}" style="display: none;">
             ${avatarHTML}
             <div class="comment-input-container">
-                <button class="emoji-picker-btn" type="button" data-emoji-trigger="#replyInputEmoji-${commentId}" ><i class="fa-regular fa-face-smile"></i></button>
-                <input type="text" placeholder="Reply..." id="replyInputEmoji-${commentId}"  class="reply-input" oninput="toggleReplyButton(this)">
+                <button class="emoji-picker-btn" type="button" data-emoji-trigger="#replyInputEmoji-${commentId}"><i class="fa-regular fa-face-smile"></i></button>
+                <input type="text" placeholder="Reply..." id="replyInputEmoji-${commentId}" class="reply-input" oninput="toggleReplyButton(this)">
                 <button class="post-reply-btn" disabled onclick="postReply('${commentId}', '${postId}')"><i class="fa-regular fa-paper-plane"></i></button>
             </div>
         </div>

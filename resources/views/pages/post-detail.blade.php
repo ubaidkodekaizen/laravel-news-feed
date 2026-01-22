@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/components/post-actions.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/share-repost.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/stats-layout.css') }}">
-
 @endsection
 
 <section class="newFeedSec">
@@ -60,6 +59,14 @@
 @endsection
 
 @section('scripts')
+<!-- Set authenticated user data globally -->
+<script>
+    window.authUserId = {{ Auth::id() }};
+    window.authUserAvatar = @json($authUserData['photo'] ?? '');
+    window.authUserInitials = @json($authUserData['user_initials'] ?? 'U');
+    window.authUserHasPhoto = {{ ($authUserData['user_has_photo'] ?? false) ? 'true' : 'false' }};
+</script>
+<script src="{{ asset('assets/js/components/emoji-picker.js') }}" type="module"></script>
 <script type="module">
     import {
         togglePostText
