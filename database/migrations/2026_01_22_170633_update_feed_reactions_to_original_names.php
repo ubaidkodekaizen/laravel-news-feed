@@ -11,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Map old LinkedIn-style reactions to new original names
+        // Step 1: First, alter the enum to include both old and new values temporarily
+        DB::statement("ALTER TABLE feed_reactions MODIFY COLUMN reaction_type ENUM('like', 'love', 'celebrate', 'support', 'insightful', 'appreciate', 'cheers', 'insight', 'curious', 'smile') DEFAULT 'like'");
+        
+        // Step 2: Map old LinkedIn-style reactions to new original names
         // Like → Appreciate
         // Celebrate → Cheers
         // Love → Support
@@ -34,7 +37,7 @@ return new class extends Migration
             ->where('reaction_type', 'insightful')
             ->update(['reaction_type' => 'insight']);
 
-        // Alter the enum column to support original reaction types
+        // Step 3: Now alter the enum to only include the new original reaction types
         DB::statement("ALTER TABLE feed_reactions MODIFY COLUMN reaction_type ENUM('appreciate', 'cheers', 'support', 'insight', 'curious', 'smile') DEFAULT 'appreciate'");
     }
 
@@ -43,7 +46,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Convert back to LinkedIn-style reactions
+        // Step 1: First, alter the enum to include both old and new values temporarily
+        DB::statement("ALTER TABLE feed_reactions MODIFY COLUMN reaction_type ENUM('like', 'love', 'celebrate', 'support', 'insightful', 'appreciate', 'cheers', 'insight', 'curious', 'smile') DEFAULT 'appreciate'");
+        
+        // Step 2: Convert back to LinkedIn-style reactions
         DB::table('feed_reactions')
             ->where('reaction_type', 'appreciate')
             ->update(['reaction_type' => 'like']);
@@ -60,7 +66,7 @@ return new class extends Migration
             ->where('reaction_type', 'insight')
             ->update(['reaction_type' => 'insightful']);
 
-        // Revert to LinkedIn-style enum
+        // Step 3: Revert to LinkedIn-style enum (remove new values)
         DB::statement("ALTER TABLE feed_reactions MODIFY COLUMN reaction_type ENUM('like', 'love', 'celebrate', 'support', 'insightful') DEFAULT 'like'");
     }
 };
