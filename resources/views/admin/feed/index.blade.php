@@ -145,6 +145,7 @@
         pointer-events: none;
     }
 
+    th,
     th.sorting, th.sorting_disabled {
         color: #333333;
         font-family: "Inter";
@@ -157,6 +158,8 @@
         padding-right: 44px !important;
     }
 
+    th:before,
+    td:before,
     table.dataTable thead > tr > th.sorting:before,
     table.dataTable thead > tr > th.sorting_asc:before,
     table.dataTable thead > tr > th.sorting_desc:before,
@@ -174,6 +177,8 @@
         background-size: contain;
     }
 
+    th:after,
+    td:after,
     table.dataTable thead > tr > th.sorting:after,
     table.dataTable thead > tr > th.sorting_asc:after,
     table.dataTable thead > tr > th.sorting_desc:after,
@@ -191,6 +196,7 @@
         background-size: contain;
     }
 
+    td,
     table.dataTable.table-striped>tbody>tr.odd>*,
     table.dataTable.table-striped>tbody>tr.even>* {
         vertical-align: middle;
@@ -292,6 +298,51 @@
     table.dataTable td {
         vertical-align: middle !important;
     }
+
+    table.table tbody td #delete {
+        padding: 20px !important;
+        background: transparent !important;
+        border: none !important;
+        position: relative;
+    } 
+
+    table.table tbody td #delete::after{
+        content: "";
+        position: absolute;
+        left: 35%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        background: url("/assets/images/dashboard/productTableDeleteIcon.svg") no-repeat center;
+        background-size: contain;
+    }
+
+    @media (max-width: 1241px) {
+        div#feedTable_wrapper .col-sm-12.col-md-6 {
+            width: 100%;
+            justify-items: center;
+            margin-top: 10px;
+        }
+    }
+
+    @media (max-width: 768px) {
+            div#feedTable_wrapper div.dataTables_filter label::after {
+                top: 73% !important;
+            }
+        }
+
+    @media (max-width: 879px) {
+        div#feedTable_wrapper div.dataTables_filter label::after {
+            top: 60% !important;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+    button.btn.btn-danger {
+        margin-top: 0px !important;
+    }
+}
 </style>
 @section('content')
     <main class="main-content">
@@ -338,6 +389,21 @@
                                 .nav-tabs .nav-link:hover:not(.active) {
                                     border-bottom-color: #37488E !important;
                                     color: #37488E !important;
+                                }
+
+                                 @media (max-width: 768px) {
+                                    ul#feedTabs {
+                                        justify-content: center;
+                                    }
+
+                                    .nav-tabs .nav-link {
+                                        font-size: 12px;
+                                        padding: 5px 12px !important;
+                                    }
+
+                                    .nav-tabs .badge {
+                                        font-size: 12px;
+                                    }
                                 }
                             </style>
                             <table id="feedTable" class="table table-striped table-hover">
@@ -407,7 +473,7 @@
                                             <td>
                                                 @if($canView)
                                                 <a href="{{ route('admin.feed.show', $post->id) }}" class="btn btn-warning btn-sm" title="View">
-                                                    <svg width="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg width="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <title>View</title>
                                                         <path d="M20.188 10.9343C20.5762 11.4056 20.7703 11.6412 20.7703 12C20.7703 12.3588 20.5762 12.5944 20.188 13.0657C18.7679 14.7899 15.6357 18 12 18C8.36427 18 5.23206 14.7899 3.81197 13.0657C3.42381 12.5944 3.22973 12.3588 3.22973 12C3.22973 11.6412 3.42381 11.4056 3.81197 10.9343C5.23206 9.21014 8.36427 6 12 6C15.6357 6 18.7679 9.21014 20.188 10.9343Z" fill="#213bae" fill-opacity="0.14"/>
                                                         <circle cx="12" cy="12" r="3" fill="#273572"/>
@@ -416,18 +482,21 @@
                                                 @endif
                                                 @if($filter !== 'deleted')
                                                     @if($canDelete)
-                                                    <button type="button" class="btn btn-danger btn-sm delete-post-btn" data-post-id="{{ $post->id }}" title="Delete">
-                                                        <svg width="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <button id="delete" type="button" class="btn btn-danger btn-sm delete-post-btn" data-post-id="{{ $post->id }}" title="Delete">
+                                                        <!-- <svg width="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="#fff"/>
-                                                        </svg>
+                                                        </svg> -->
                                                     </button>
                                                     @endif
                                                 @else
                                                     @if($canRestore)
-                                                    <button type="button" class="btn btn-success btn-sm restore-post-btn" data-post-id="{{ $post->id }}" title="Restore">
-                                                        <svg width="20px" height="20px" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M10 16.682l5.69 5.685 1.408-1.407-3.283-3.28h10.131c1.147 0 2.19.467 2.943 1.222a4.157 4.157 0 011.225 2.946 4.18 4.18 0 01-4.168 4.168h-5.628V28h5.522c3.387 0 6.16-2.77 6.16-6.157a6.117 6.117 0 00-1.81-4.343 6.143 6.143 0 00-4.35-1.805H13.815l3.283-3.285L15.69 11 10 16.682z" fill="#273572" fill-rule="nonzero"></path>
-                                                        </svg>
+                                                    <button id="restoreBtn" type="button" class="btn btn-sm restore-post-btn" data-post-id="{{ $post->id }}" title="Restore">
+                                                        <svg width="30px" height="30px" viewBox="0 0 40 40"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="M10 16.682l5.69 5.685 1.408-1.407-3.283-3.28h10.131c1.147 0 2.19.467 2.943 1.222a4.157 4.157 0 011.225 2.946 4.18 4.18 0 01-4.168 4.168h-5.628V28h5.522c3.387 0 6.16-2.77 6.16-6.157a6.117 6.117 0 00-1.81-4.343 6.143 6.143 0 00-4.35-1.805H13.815l3.283-3.285L15.69 11 10 16.682z"
+                                                                    fill="#273572" fill-rule="nonzero" />
+                                                            </svg>
                                                     </button>
                                                     @endif
                                                 @endif

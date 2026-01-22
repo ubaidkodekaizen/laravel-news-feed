@@ -104,6 +104,7 @@
         pointer-events: none;
     }
 
+    th, 
     th.sorting, th.sorting_disabled {
         color: #333333;
         font-family: "Inter";
@@ -116,6 +117,8 @@
         padding-right: 44px !important;
     }
 
+    th:before, 
+    td:before, 
     table.dataTable thead > tr > th.sorting:before, 
     table.dataTable thead > tr > th.sorting_asc:before, 
     table.dataTable thead > tr > th.sorting_desc:before, 
@@ -133,6 +136,8 @@
         background-size: contain;
     }
 
+    th:after,
+    td:after,
     table.dataTable thead > tr > th.sorting:after, 
     table.dataTable thead > tr > th.sorting_asc:after, 
     table.dataTable thead > tr > th.sorting_desc:after, 
@@ -150,6 +155,7 @@
         background-size: contain;
     }
 
+    td,
     table.dataTable.table-striped>tbody>tr.odd>*,
     table.dataTable.table-striped>tbody>tr.even>* {
         vertical-align: middle;

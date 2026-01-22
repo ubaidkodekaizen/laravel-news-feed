@@ -35,6 +35,15 @@
         border-left: 2px solid #F2F2F2;
     }
 
+    table#adsTable{
+        overflow: hidden;
+        border-radius: 10px 10px 0 0;
+        border-top: 2px solid #F2F2F2;
+        border-right: 2px solid #F2F2F2;
+        border-bottom: 1px solid #F2F2F2 !important;
+        border-left: 2px solid #F2F2F2;
+    }
+
     .row.dt-row .col-sm-12::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -161,7 +170,9 @@
         pointer-events: none;
     }
 
-    th.sorting, th.sorting_disabled {
+    th, 
+    th.sorting, 
+    th.sorting_disabled {
         color: #333333;
         font-family: "Inter";
         font-size: 18.65px;
@@ -172,7 +183,8 @@
         text-wrap-mode: nowrap;
         padding-right: 44px !important;
     }
-
+    
+    th:before,
     table.dataTable thead > tr > th.sorting:before, 
     table.dataTable thead > tr > th.sorting_asc:before, 
     table.dataTable thead > tr > th.sorting_desc:before, 
@@ -190,6 +202,8 @@
         background-size: contain;
     }
 
+    th:after,
+    td:after,
     table.dataTable thead > tr > th.sorting:after, 
     table.dataTable thead > tr > th.sorting_asc:after, 
     table.dataTable thead > tr > th.sorting_desc:after, 
@@ -207,6 +221,7 @@
         background-size: contain;
     }
 
+    td,
     table.dataTable.table-striped>tbody>tr.odd>*,
     table.dataTable.table-striped>tbody>tr.even>* {
         vertical-align: middle;
@@ -310,6 +325,34 @@
         max-width: 150px;
         max-height: 80px;
         border-radius: 8px;
+    }
+
+    .toggle__label::after {
+        height: 26px !important;
+    }
+
+    @media (max-width: 1241px) {
+        div#adsTable_wrapper .col-sm-12.col-md-6 {
+            width: 100%;
+            justify-items: center;
+            margin-top: 10px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        div#adsTable_wrapper div.dataTables_filter label::after {
+            top: 73% !important;
+        }
+        .toggle__label::after {
+            height: 26px !important;
+            top: 1.5px !important;  
+        }
+        }
+
+    @media (max-width: 879px) {
+        div#adsTable_wrapper div.dataTables_filter label::after {
+            top: 73% !important;
+        }
     }
 </style>
 @section('content')

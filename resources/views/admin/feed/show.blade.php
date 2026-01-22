@@ -432,6 +432,8 @@
         background: rgba(0, 0, 0, 0.75);
     }
 
+    
+
     @media (max-width: 768px) {
         .row .col-12.mt-4 {
             display: flex;
