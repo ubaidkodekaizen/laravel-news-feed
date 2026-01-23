@@ -260,6 +260,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/feed/posts', [FeedController::class, 'createPost'])->name('api.feed.post.create');
     Route::put('/feed/posts/{slug}', [FeedController::class, 'updatePost'])->name('api.feed.post.update');
     Route::delete('/feed/posts/{slug}', [FeedController::class, 'deletePost'])->name('api.feed.post.delete');
+    Route::get('/feed/reactions/types', [FeedController::class, 'getReactionTypes'])->name('api.feed.reactions.types');
     Route::post('/feed/reactions', [FeedController::class, 'addReaction'])->name('api.feed.reaction.add');
     Route::delete('/feed/reactions', [FeedController::class, 'removeReaction'])->name('api.feed.reaction.remove');
     Route::get('/feed/posts/{postId}/reactions-count', [FeedController::class, 'getReactionCount'])->name('api.feed.post.reactions.count');

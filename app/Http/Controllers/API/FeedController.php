@@ -166,32 +166,32 @@ class FeedController extends Controller
             $post->comments_enabled = $request->get('comments_enabled', true);
             $post->visibility = $request->get('visibility', 'public');
             $post->status = 'active';
-            
+
             // Generate slug from content (title) with date and time in d-m-Y format
             $dateStr = now()->format('d-m-Y');
             $timeStr = now()->format('His'); // Hours, minutes, seconds in 24-hour format (e.g., 143052)
             $slugBase = 'post';
-            
+
             if ($request->content) {
                 // Extract first 50 characters from content as title
                 $contentText = strip_tags($request->content);
                 $title = Str::limit($contentText, 50, '');
                 $slugBase = Str::slug($title);
-                
+
                 if (empty($slugBase)) {
                     $slugBase = 'post';
                 }
             }
-            
+
             // Append date and time to slug for uniqueness
             $slug = $slugBase . '-' . $dateStr . '-' . $timeStr;
-            
+
             // If still exists (very unlikely with time), append microseconds
             if (Post::where('slug', $slug)->exists()) {
                 $microseconds = now()->format('u');
                 $slug = $slugBase . '-' . $dateStr . '-' . $timeStr . '-' . $microseconds;
             }
-            
+
             $post->slug = $slug;
             $post->save();
 
@@ -201,7 +201,7 @@ class FeedController extends Controller
                 $order = 0;
                 foreach ($request->file('media') as $file) {
                     $uploadResult = $s3Service->uploadMedia($file, 'posts');
-                    
+
                     $postMedia = new PostMedia();
                     $postMedia->post_id = $post->id;
                     $postMedia->media_type = $uploadResult['type'];
@@ -243,7 +243,7 @@ class FeedController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating post: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create post. Please try again.'
@@ -287,8 +287,8 @@ class FeedController extends Controller
 
         // Update content and settings
         $post->content = $request->content ?? $post->content;
-        $post->comments_enabled = $request->has('comments_enabled') 
-            ? $request->comments_enabled 
+        $post->comments_enabled = $request->has('comments_enabled')
+            ? $request->comments_enabled
             : $post->comments_enabled;
         $post->visibility = $request->get('visibility', $post->visibility);
         $post->save();
@@ -321,14 +321,14 @@ class FeedController extends Controller
             $s3Service = app(S3Service::class);
             $existingMediaCount = $post->media()->count();
             $maxMedia = 10;
-            
+
             foreach ($request->file('media') as $file) {
                 if ($existingMediaCount >= $maxMedia) {
                     break; // Don't exceed max media limit
                 }
-                
+
                 $uploadResult = $s3Service->uploadMedia($file, 'posts');
-                
+
                 $postMedia = new PostMedia();
                 $postMedia->post_id = $post->id;
                 $postMedia->media_type = $uploadResult['type'];
@@ -337,16 +337,16 @@ class FeedController extends Controller
                 $postMedia->file_name = $uploadResult['file_name'];
                 $postMedia->file_size = $uploadResult['file_size'];
                 $postMedia->mime_type = $uploadResult['mime_type'];
-                
+
                 // For videos, generate/upload thumbnail if not already done
                 if ($uploadResult['type'] === 'video' && isset($uploadResult['thumbnail_path'])) {
                     $postMedia->thumbnail_path = $uploadResult['thumbnail_path'];
                 }
-                
+
                 if (isset($uploadResult['duration'])) {
                     $postMedia->duration = $uploadResult['duration'];
                 }
-                
+
                 $postMedia->order = $existingMediaCount;
                 $postMedia->save();
                 $existingMediaCount++;
@@ -403,7 +403,7 @@ class FeedController extends Controller
         ]);
 
         $userId = Auth::id();
-        
+
         // Normalize reactionable_type to full namespace
         $reactionableType = $request->reactionable_type;
         if ($reactionableType === 'Post') {
@@ -411,7 +411,7 @@ class FeedController extends Controller
         } elseif ($reactionableType === 'PostComment') {
             $reactionableType = 'App\Models\Feed\PostComment';
         }
-        
+
         $reactionableId = $request->reactionable_id;
 
         // Check if reaction already exists
@@ -468,7 +468,7 @@ class FeedController extends Controller
         ]);
 
         $userId = Auth::id();
-        
+
         // Normalize reactionable_type to full namespace
         $reactionableType = $request->reactionable_type;
         if ($reactionableType === 'Post') {
@@ -476,7 +476,7 @@ class FeedController extends Controller
         } elseif ($reactionableType === 'PostComment') {
             $reactionableType = 'App\Models\Feed\PostComment';
         }
-        
+
         $reactionableId = $request->reactionable_id;
 
         $reaction = Reaction::where('reactionable_type', $reactionableType)
@@ -735,32 +735,32 @@ class FeedController extends Controller
                 $sharedPost->content = $request->shared_content;
                 $sharedPost->comments_enabled = true;
                 $sharedPost->status = 'active';
-                
+
                 // Generate slug for shared post with date and time in d-m-Y format
                 $dateStr = now()->format('d-m-Y');
                 $timeStr = now()->format('His'); // Hours, minutes, seconds in 24-hour format
                 $slugBase = 'shared-post';
-                
+
                 if ($request->shared_content) {
                     // Extract first 50 characters from shared content as title
                     $contentText = strip_tags($request->shared_content);
                     $title = Str::limit($contentText, 50, '');
                     $slugBase = Str::slug($title);
-                    
+
                     if (empty($slugBase)) {
                         $slugBase = 'shared-post';
                     }
                 }
-                
+
                 // Append date and time to slug for uniqueness
                 $slug = $slugBase . '-' . $dateStr . '-' . $timeStr;
-                
+
                 // If still exists (very unlikely with time), append microseconds
                 if (Post::where('slug', $slug)->exists()) {
                     $microseconds = now()->format('u');
                     $slug = $slugBase . '-' . $dateStr . '-' . $timeStr . '-' . $microseconds;
                 }
-                
+
                 $sharedPost->slug = $slug;
                 $sharedPost->save();
             }
@@ -790,7 +790,7 @@ class FeedController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error sharing post: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to share post. Please try again.'
@@ -851,6 +851,71 @@ class FeedController extends Controller
         ]);
     }
 
+    /**
+     * Get all available reaction types with their metadata
+     * This provides a single source of truth for reaction types across the application
+     */
+    public function getReactionTypes()
+    {
+        try {
+            $reactionTypes = [
+                [
+                    'type' => 'appreciate',
+                    'emoji' => '👍',
+                    'label' => 'Appreciate',
+                    'description' => 'Show appreciation',
+                    'color' => '#0a66c2', // LinkedIn blue
+                ],
+                [
+                    'type' => 'cheers',
+                    'emoji' => '🎉',
+                    'label' => 'Cheers',
+                    'description' => 'Celebrate an achievement',
+                    'color' => '#6dae4f', // Green
+                ],
+                [
+                    'type' => 'support',
+                    'emoji' => '🤝',
+                    'label' => 'Support',
+                    'description' => 'Show support',
+                    'color' => '#df704d', // Orange
+                ],
+                [
+                    'type' => 'insight',
+                    'emoji' => '💡',
+                    'label' => 'Insight',
+                    'description' => 'Acknowledge a great idea',
+                    'color' => '#f5c344', // Yellow
+                ],
+                [
+                    'type' => 'curious',
+                    'emoji' => '🤔',
+                    'label' => 'Curious',
+                    'description' => 'Express interest',
+                    'color' => '#8a3ffc', // Purple
+                ],
+                [
+                    'type' => 'smile',
+                    'emoji' => '😊',
+                    'label' => 'Smile',
+                    'description' => 'Share positivity',
+                    'color' => '#df704d', // Orange
+                ],
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $reactionTypes,
+                'count' => count($reactionTypes),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching reaction types: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load reaction types.'
+            ], 500);
+        }
+    }
     /**
      * Get reactions for a post with user details.
      */
@@ -991,7 +1056,7 @@ class FeedController extends Controller
         if (!$post->user) {
             throw new \Exception('Post user not found');
         }
-        
+
         $userData = $this->formatUserData($post->user);
 
         $userReaction = null;
@@ -1022,14 +1087,14 @@ class FeedController extends Controller
                 'has_photo' => $userData['user_has_photo'],
                 'slug' => $post->user->slug ?? '',
             ],
-            'media' => $post->relationLoaded('media') && $post->media 
+            'media' => $post->relationLoaded('media') && $post->media
                 ? $post->media->map(fn($m) => [
                     'id' => $m->id,
                     'media_type' => $m->media_type,
                     'media_url' => $m->media_url,
                     // Ensure video thumbnails are always included - use thumbnail_path if exists, otherwise generate/use video URL
-                    'thumbnail_url' => $m->media_type === 'video' 
-                        ? ($m->thumbnail_path ?? $m->media_url) 
+                    'thumbnail_url' => $m->media_type === 'video'
+                        ? ($m->thumbnail_path ?? $m->media_url)
                         : ($m->thumbnail_path ?? $m->media_url),
                     'mime_type' => $m->mime_type,
                     'file_name' => $m->file_name,
@@ -1068,8 +1133,8 @@ class FeedController extends Controller
                         'media_type' => $m->media_type,
                         'media_url' => $m->media_url,
                         // Include thumbnail for reposted original post media
-                        'thumbnail_url' => $m->media_type === 'video' 
-                            ? ($m->thumbnail_path ?? $m->media_url) 
+                        'thumbnail_url' => $m->media_type === 'video'
+                            ? ($m->thumbnail_path ?? $m->media_url)
                             : ($m->thumbnail_path ?? $m->media_url),
                         'mime_type' => $m->mime_type,
                         'file_name' => $m->file_name,
@@ -1098,7 +1163,7 @@ class FeedController extends Controller
         // Return as array with all original reaction types
         $reactionTypes = ['appreciate', 'cheers', 'support', 'insight', 'curious', 'smile'];
         $result = [];
-        
+
         foreach ($reactionTypes as $type) {
             $result[] = [
                 'type' => $type,
