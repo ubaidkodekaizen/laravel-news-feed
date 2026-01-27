@@ -239,7 +239,6 @@ class FeedController extends Controller
                 'message' => 'Post created successfully!',
                 'data' => $this->transformPost($post, Auth::id())
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating post: ' . $e->getMessage());
@@ -637,9 +636,17 @@ class FeedController extends Controller
             ->whereNull('parent_id')
             ->with([
                 'user:id,first_name,last_name,slug,photo',
-                'replies' => function ($query) {
+                'replies' => function ($query) use ($userId) {
                     $query->where('status', 'active')
-                        ->with('user:id,first_name,last_name,slug,photo')
+                        ->with([
+                            'user:id,first_name,last_name,slug,photo',
+                            'reactions' => function ($r) use ($userId) {
+                                $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
+                            }
+                        ])
+                        ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
+                            $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
+                        }])
                         ->orderBy('created_at', 'asc');
                 },
                 'reactions' => function ($r) use ($userId) {
@@ -668,6 +675,7 @@ class FeedController extends Controller
                     'id' => $reply->id,
                     'content' => $reply->content,
                     'created_at' => $reply->created_at,
+                    'user_has_reacted' => isset($reply->user_has_reacted) && $reply->user_has_reacted > 0,
                     'user' => [
                         'id' => $replyUserData['id'],
                         'name' => trim($replyUserData['first_name'] . ' ' . $replyUserData['last_name']),
@@ -786,7 +794,6 @@ class FeedController extends Controller
                 'message' => 'Post shared successfully!',
                 'data' => $share
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error sharing post: ' . $e->getMessage());
@@ -1174,4 +1181,3 @@ class FeedController extends Controller
         return $result;
     }
 }
-
