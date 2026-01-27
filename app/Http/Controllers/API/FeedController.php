@@ -653,9 +653,11 @@ class FeedController extends Controller
                     $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
                 }
             ])
-            ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
-                $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
-            }])
+            ->withCount([
+                'reactions as user_has_reacted' => function ($r) use ($userId) {
+                    $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
+                }
+            ])
             ->orderBy('created_at', 'asc')
             ->paginate($perPage);
 
@@ -832,9 +834,11 @@ class FeedController extends Controller
                                 $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
                             }
                         ])
-                        ->withCount(['reactions as user_has_reacted' => function ($r) use ($userId) {
-                            $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
-                        }])
+                        ->withCount([
+                            'reactions as user_has_reacted' => function ($r) use ($userId) {
+                                $r->where('user_id', $userId)->where('reaction_type', 'appreciate');
+                            }
+                        ])
                         ->orderBy('created_at', 'asc')
                         ->limit(3);
                 },
@@ -1099,7 +1103,6 @@ class FeedController extends Controller
                     'id' => $m->id,
                     'media_type' => $m->media_type,
                     'media_url' => $m->media_url,
-                    // Ensure video thumbnails are always included - use thumbnail_path if exists, otherwise generate/use video URL
                     'thumbnail_url' => $m->media_type === 'video'
                         ? ($m->thumbnail_path ?? $m->media_url)
                         : ($m->thumbnail_path ?? $m->media_url),
@@ -1108,19 +1111,22 @@ class FeedController extends Controller
                     'duration' => $m->duration,
                 ])->toArray()
                 : [],
-            // Reactions as array format (aggregate by type)
             'reactions' => $this->getReactionsArray($post),
             'user_reaction' => $userReaction ? [
                 'type' => $userReaction->reaction_type,
                 'created_at' => $userReaction->created_at,
             ] : null,
-            // Remove comments from response to reduce payload size
-            // Comments should be fetched separately via GET /feed/posts/{postId}/comments
         ];
 
-        // Add original post data if this is a shared post
-        if ($post->original_post_id && $post->relationLoaded('originalPost') && $post->originalPost && $post->originalPost->user) {
+        // ✅ FIX: include slug for original post user
+        if (
+            $post->original_post_id &&
+            $post->relationLoaded('originalPost') &&
+            $post->originalPost &&
+            $post->originalPost->user
+        ) {
             $originalUserData = $this->formatUserData($post->originalPost->user);
+
             $transformed['original_post'] = [
                 'id' => $post->originalPost->id,
                 'slug' => $post->originalPost->slug,
@@ -1133,13 +1139,13 @@ class FeedController extends Controller
                     'avatar' => $originalUserData['photo'],
                     'initials' => $originalUserData['user_initials'],
                     'has_photo' => $originalUserData['user_has_photo'],
+                    'slug' => $post->originalPost->user->slug ?? '', // ✅ added
                 ],
                 'media' => ($post->originalPost->relationLoaded('media') && $post->originalPost->media)
                     ? $post->originalPost->media->map(fn($m) => [
                         'id' => $m->id,
                         'media_type' => $m->media_type,
                         'media_url' => $m->media_url,
-                        // Include thumbnail for reposted original post media
                         'thumbnail_url' => $m->media_type === 'video'
                             ? ($m->thumbnail_path ?? $m->media_url)
                             : ($m->thumbnail_path ?? $m->media_url),
@@ -1153,6 +1159,7 @@ class FeedController extends Controller
 
         return $transformed;
     }
+
 
     /**
      * Get reactions as array format (aggregated by type)
@@ -1174,7 +1181,7 @@ class FeedController extends Controller
         foreach ($reactionTypes as $type) {
             $result[] = [
                 'type' => $type,
-                'count' => isset($reactionCounts[$type]) ? (int)$reactionCounts[$type] : 0
+                'count' => isset($reactionCounts[$type]) ? (int) $reactionCounts[$type] : 0
             ];
         }
 
