@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
+use Illuminate\Support\Facades\Log;
 
 class S3Service
 {
@@ -44,7 +45,7 @@ class S3Service
         // Build the URL using custom URL if set, otherwise construct from bucket/region
         $url = $this->getUrl($path);
 
-        return [
+        $result = [
             'path' => $path,
             'url' => $url,
             'type' => $isImage ? 'image' : 'video',
@@ -54,6 +55,23 @@ class S3Service
             'file_name' => $file->getClientOriginalName(),
             'file_size' => $file->getSize(),
         ];
+
+        // Generate thumbnail for videos
+        if ($isVideo) {
+            try {
+                $thumbnailResult = $this->generateVideoThumbnail($file, $category);
+                if ($thumbnailResult) {
+                    $result['thumbnail_path'] = $thumbnailResult['path'];
+                    $result['thumbnail_url'] = $thumbnailResult['url'];
+                    $result['duration'] = $thumbnailResult['duration'] ?? null;
+                }
+            } catch (\Exception $e) {
+                // Log error but don't fail the upload
+                Log::warning('Failed to generate video thumbnail: ' . $e->getMessage());
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -224,6 +242,193 @@ class S3Service
         } catch (AwsException $e) {
             throw new \Exception('AWS S3 upload failed: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Generate thumbnail from video file
+     *
+     * @param UploadedFile $videoFile
+     * @param string|null $category
+     * @return array|null Returns array with 'path', 'url', and 'duration' or null on failure
+     */
+    private function generateVideoThumbnail(UploadedFile $videoFile, ?string $category = null): ?array
+    {
+        $tempVideoPath = $videoFile->getRealPath();
+        $tempThumbnailPath = sys_get_temp_dir() . '/' . 'thumb_' . time() . '_' . Str::random(10) . '.jpg';
+
+        try {
+            // Try to extract frame using ffmpeg
+            $ffmpegPath = $this->getFfmpegPath();
+            
+            if ($ffmpegPath) {
+                // Extract frame at 1 second (or 10% of video if duration is known)
+                $command = sprintf(
+                    '%s -i %s -ss 00:00:01 -vframes 1 -q:v 2 -y %s 2>&1',
+                    escapeshellarg($ffmpegPath),
+                    escapeshellarg($tempVideoPath),
+                    escapeshellarg($tempThumbnailPath)
+                );
+
+                exec($command, $output, $returnCode);
+
+                if ($returnCode !== 0 || !file_exists($tempThumbnailPath)) {
+                    // Try extracting at 0.5 seconds as fallback
+                    $command = sprintf(
+                        '%s -i %s -ss 00:00:00.5 -vframes 1 -q:v 2 -y %s 2>&1',
+                        escapeshellarg($ffmpegPath),
+                        escapeshellarg($tempVideoPath),
+                        escapeshellarg($tempThumbnailPath)
+                    );
+                    exec($command, $output, $returnCode);
+                }
+
+                if ($returnCode === 0 && file_exists($tempThumbnailPath) && filesize($tempThumbnailPath) > 0) {
+                    // Get video duration
+                    $duration = $this->getVideoDuration($ffmpegPath, $tempVideoPath);
+
+                    // Upload thumbnail to S3
+                    $thumbnailFileName = 'thumb_' . time() . '_' . Str::random(10) . '.jpg';
+                    $thumbnailPath = $category 
+                        ? "media/images/{$category}/thumbnails/{$thumbnailFileName}"
+                        : "media/images/thumbnails/{$thumbnailFileName}";
+
+                    // Read thumbnail file and upload
+                    $thumbnailContent = file_get_contents($tempThumbnailPath);
+                    $s3Client = $this->getS3Client();
+                    $s3Client->putObject([
+                        'Bucket' => config('filesystems.disks.s3.bucket'),
+                        'Key' => $thumbnailPath,
+                        'Body' => $thumbnailContent,
+                        'ContentType' => 'image/jpeg',
+                    ]);
+
+                    // Clean up temp file
+                    @unlink($tempThumbnailPath);
+
+                    return [
+                        'path' => $thumbnailPath,
+                        'url' => $this->getUrl($thumbnailPath),
+                        'duration' => $duration,
+                    ];
+                }
+            }
+
+            // Fallback: If ffmpeg is not available, return null
+            // The upload will still succeed, just without thumbnail
+            Log::warning('FFmpeg not available or failed to generate thumbnail');
+            return null;
+
+        } catch (\Exception $e) {
+            Log::error('Error generating video thumbnail: ' . $e->getMessage());
+            @unlink($tempThumbnailPath);
+            return null;
+        }
+    }
+
+    /**
+     * Get FFmpeg executable path
+     *
+     * @return string|null
+     */
+    private function getFfmpegPath(): ?string
+    {
+        // First, check if custom path is set in environment variable
+        $customPath = env('FFMPEG_PATH');
+        if ($customPath && $this->commandExists($customPath)) {
+            return $customPath;
+        }
+
+        // Check common ffmpeg locations
+        $possiblePaths = [
+            'ffmpeg', // In PATH (most common)
+            '/usr/bin/ffmpeg', // Linux
+            '/usr/local/bin/ffmpeg', // macOS/Linux
+            'C:\\ffmpeg\\bin\\ffmpeg.exe', // Windows common location
+            'C:\\xampp\\ffmpeg\\bin\\ffmpeg.exe', // XAMPP Windows
+            base_path('ffmpeg/bin/ffmpeg.exe'), // Project directory
+        ];
+
+        foreach ($possiblePaths as $path) {
+            if ($this->commandExists($path)) {
+                return $path;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if a command exists and is executable
+     *
+     * @param string $command
+     * @return bool
+     */
+    private function commandExists(string $command): bool
+    {
+        $whereIsCommand = (PHP_OS === 'WINNT') ? 'where' : 'which';
+        
+        $process = proc_open(
+            "$whereIsCommand $command",
+            [
+                0 => ['pipe', 'r'],
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w'],
+            ],
+            $pipes
+        );
+
+        if ($process !== false) {
+            $stdout = stream_get_contents($pipes[1]);
+            $returnCode = proc_close($process);
+            return $returnCode === 0 && !empty(trim($stdout));
+        }
+
+        return false;
+    }
+
+    /**
+     * Get video duration in seconds
+     *
+     * @param string $ffmpegPath
+     * @param string $videoPath
+     * @return int|null
+     */
+    private function getVideoDuration(string $ffmpegPath, string $videoPath): ?int
+    {
+        try {
+            $command = sprintf(
+                '%s -i %s 2>&1 | grep "Duration" | cut -d \' \' -f 4 | sed s/,//',
+                escapeshellarg($ffmpegPath),
+                escapeshellarg($videoPath)
+            );
+
+            $output = shell_exec($command);
+            
+            if ($output && preg_match('/(\d+):(\d+):(\d+)/', trim($output), $matches)) {
+                $hours = (int)$matches[1];
+                $minutes = (int)$matches[2];
+                $seconds = (int)$matches[3];
+                return ($hours * 3600) + ($minutes * 60) + $seconds;
+            }
+
+            // Alternative method using ffprobe if available
+            $ffprobePath = str_replace('ffmpeg', 'ffprobe', $ffmpegPath);
+            if ($this->commandExists($ffprobePath)) {
+                $command = sprintf(
+                    '%s -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 %s',
+                    escapeshellarg($ffprobePath),
+                    escapeshellarg($videoPath)
+                );
+                $duration = shell_exec($command);
+                if ($duration && is_numeric(trim($duration))) {
+                    return (int)round((float)trim($duration));
+                }
+            }
+        } catch (\Exception $e) {
+            Log::warning('Failed to get video duration: ' . $e->getMessage());
+        }
+
+        return null;
     }
 }
 
