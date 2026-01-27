@@ -37,7 +37,7 @@
                 <p>{{ $profileViews ?? 0 }}</p>
             </div> --}}
             <div class="profile_card_details_inner_box">
-                <h4>Post impressions</h4>
+                <h4>Post Engagements</h4>
                 <p>{{ $postImpressions ?? 0 }}</p>
             </div>
         </div>
