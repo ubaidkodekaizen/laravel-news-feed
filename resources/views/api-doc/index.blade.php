@@ -354,7 +354,9 @@
         "profile_pic": "https://...",
         "designation": "CEO",
         "company": "Example Inc",
-        "phone_number": "+1234567890"
+        "phone_number": "+1234567890",
+        "city": "New York",
+        "state": "NY"
       }
     ],
     "per_page": 10,

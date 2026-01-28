@@ -1057,6 +1057,8 @@ class UserController extends Controller
                 'last_name',
                 'photo',
                 'phone',
+                'city',
+                'state',
             ])
             ->paginate($perPage);
 
@@ -1070,6 +1072,8 @@ class UserController extends Controller
                 'designation' => $user->company->company_position ?? null,
                 'company' => $user->company->company_name ?? null,
                 'phone_number' => $user->phone,
+                'city' => $user->city,
+                'state' => $user->state,
             ];
         });
 
