@@ -554,6 +554,7 @@ class FeedController extends Controller
                     'avatar' => $userData['photo'],
                     'initials' => $userData['user_initials'],
                     'has_photo' => $userData['user_has_photo'],
+                    'slug' => $comment->user->slug ?? '',
                 ],
                 'replies' => [],
             ]
@@ -604,6 +605,7 @@ class FeedController extends Controller
                     'avatar' => $userData['photo'],
                     'initials' => $userData['user_initials'],
                     'has_photo' => $userData['user_has_photo'],
+                    'slug' => $comment->user->slug ?? '',
                 ],
             ]
         ]);
@@ -695,6 +697,7 @@ class FeedController extends Controller
                         'avatar' => $replyUserData['photo'],
                         'initials' => $replyUserData['user_initials'],
                         'has_photo' => $replyUserData['user_has_photo'],
+                        'slug' => $reply->user->slug ?? '',
                     ],
                 ];
             })->filter()->values(); // Filter out null replies
@@ -710,6 +713,7 @@ class FeedController extends Controller
                     'avatar' => $commentUserData['photo'],
                     'initials' => $commentUserData['user_initials'],
                     'has_photo' => $commentUserData['user_has_photo'],
+                    'slug' => $comment->user->slug ?? '',
                 ],
                 'replies' => $repliesData,
             ];
