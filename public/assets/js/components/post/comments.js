@@ -641,7 +641,9 @@ function createCommentHTML(comment, postId) {
             ${avatarHTML}
             <div class="comment-body">
                 <div class="comment-header">
-                    <strong>${escapeHtml(comment.user.name)}</strong>
+                    <a href="/user/profile/${comment.user.slug || '#'}" class="comment-username">
+                        <strong>${escapeHtml(comment.user.name)}</strong>
+                    </a>
                     <span class="comment-time">${formatTimeAgo(comment.created_at)}</span>
                 </div>
                 <div class="comment-content" id="commentContent-${comment.id}">${escapeHtml(comment.content)}</div>
@@ -687,7 +689,9 @@ function createReplyHTML(reply, postId) {
             ${avatarHTML}
             <div class="comment-body">
                 <div class="comment-header">
-                    <strong>${escapeHtml(reply.user.name)}</strong>
+                    <a href="/user/profile/${reply.user.slug || '#'}" class="comment-username">
+                        <strong>${escapeHtml(reply.user.name)}</strong>
+                    </a>
                     <span class="comment-time">${formatTimeAgo(reply.created_at)}</span>
                 </div>
                 <div class="comment-content" id="commentContent-${reply.id}">${escapeHtml(reply.content)}</div>

@@ -26,7 +26,9 @@
 
     <div class="comment-body">
         <div class="comment-header">
-            <strong>{{ $commentUser['name'] ?? (($commentUser['first_name'] ?? '') . ' ' . ($commentUser['last_name'] ?? '')) }}</strong>
+            <a href="{{ route('user.profile', ['slug' => $commentUser['slug'] ?? '#']) }}" class="comment-username">
+                <strong>{{ $commentUser['name'] ?? (($commentUser['first_name'] ?? '') . ' ' . ($commentUser['last_name'] ?? '')) }}</strong>
+            </a>
             <span class="comment-time">
                 @if(isset($comment['created_at']) && $comment['created_at'] instanceof \Carbon\Carbon)
                     {{ $comment['created_at']->diffForHumans() }}
@@ -187,5 +189,20 @@
 
 .comment-edit-cancel:hover {
     background-color: #d0d0d0;
+}
+
+.comment-username {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.comment-username:hover {
+    color: #0a66c2;
+    text-decoration: underline;
+}
+
+.comment-username strong {
+    font-weight: 600;
 }
 </style>

@@ -536,7 +536,7 @@ function createSharedPostDisplay(post) {
                 <div class="user-info">
                     ${opAvatar}
                     <div class="user_post_name">
-                        <p class="username">${escapeHtml(op.user.name)}</p>
+                        <a href="/user/profile/${op.user.slug || '#'}" class="username">${escapeHtml(op.user.name)}</a>
                         ${op.user.position ? `<p class="user-position">${escapeHtml(op.user.position)}</p>` : ''}
                         <span class="post-time">${formatTimeAgo(op.created_at)}</span>
                     </div>

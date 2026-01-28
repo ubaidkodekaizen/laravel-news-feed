@@ -3,7 +3,11 @@
 @if(isset($post['original_post_id']) && $post['original_post_id'] && isset($post['original_post']))
     <div class="post-shared-badge">
         <i class="fa-solid fa-retweet"></i>
-        <span><strong>{{ $post['user']['name'] ?? 'User' }}</strong> reposted</span>
+        <span>
+            <a href="{{ route('user.profile', ['slug' => $post['user']['slug'] ?? '#']) }}" class="reposted-username">
+                <strong>{{ $post['user']['name'] ?? 'User' }}</strong>
+            </a> reposted
+        </span>
     </div>
 
     @if(!empty($post['content']))
@@ -39,7 +43,9 @@
                 @endif
 
                 <div class="user_post_name">
-                    <p class="username">{{ $originalPost['user']['name'] ?? 'Unknown User' }}</p>
+                    <a href="{{ route('user.profile', ['slug' => $originalPost['user']['slug'] ?? '#']) }}" class="username">
+                        {{ $originalPost['user']['name'] ?? 'Unknown User' }}
+                    </a>
                     @if(!empty($originalPost['user']['position']))
                         <p class="user-position">{{ $originalPost['user']['position'] }}</p>
                     @endif
@@ -178,6 +184,21 @@
     padding: 4px 12px;
     border-radius: 16px;
     font-size: 12px;
+    font-weight: 600;
+}
+
+.reposted-username {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.reposted-username:hover {
+    color: #0a66c2;
+    text-decoration: underline;
+}
+
+.reposted-username strong {
     font-weight: 600;
 }
 </style>

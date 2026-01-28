@@ -26,7 +26,9 @@
 
     <div class="comment-body">
         <div class="comment-header">
-            <strong>{{ $replyUser['name'] ?? (($replyUser['first_name'] ?? '') . ' ' . ($replyUser['last_name'] ?? '')) }}</strong>
+            <a href="{{ route('user.profile', ['slug' => $replyUser['slug'] ?? '#']) }}" class="comment-username">
+                <strong>{{ $replyUser['name'] ?? (($replyUser['first_name'] ?? '') . ' ' . ($replyUser['last_name'] ?? '')) }}</strong>
+            </a>
             <span class="comment-time">
                 @if(isset($reply['created_at']) && $reply['created_at'] instanceof \Carbon\Carbon)
                     {{ $reply['created_at']->diffForHumans() }}
@@ -84,5 +86,20 @@
 
 .replies-container .comment.reply:first-child {
     margin-top: 0;
+}
+
+.comment-username {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.comment-username:hover {
+    color: #0a66c2;
+    text-decoration: underline;
+}
+
+.comment-username strong {
+    font-weight: 600;
 }
 </style>
