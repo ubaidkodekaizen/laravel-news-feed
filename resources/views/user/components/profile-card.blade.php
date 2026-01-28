@@ -32,10 +32,10 @@
         </p>
 
         <div class="profile_card_details_inner">
-            {{-- <div class="profile_card_details_inner_box">
+            <div class="profile_card_details_inner_box">
                 <h4>Profile views</h4>
                 <p>{{ $profileViews ?? 0 }}</p>
-            </div> --}}
+            </div>
             <div class="profile_card_details_inner_box">
                 <h4>Post Engagements</h4>
                 <p>{{ $postImpressions ?? 0 }}</p>

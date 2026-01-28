@@ -1063,6 +1063,10 @@ $companyLogo =
                                                         <h3 class="profileInfoInnerInfoHead">Age Group</h3>
                                                         <p class="profileInfoInnerInfoAns">{{ $user->age_group }}</p>
                                                     </div>
+                                                    <div class="col-lg-3">
+                                                        <h3 class="profileInfoInnerInfoHead">Profile Views</h3>
+                                                        <p class="profileInfoInnerInfoAns">{{ $profileViewsCount ?? $user->profile_views_count ?? 0 }}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

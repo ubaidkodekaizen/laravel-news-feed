@@ -37,7 +37,14 @@ class FeedController extends Controller
         }
 
         $userId = Auth::id();
-        $profileViews = 0;
+        // Get profile views count (safe if table doesn't exist)
+        try {
+            $profileViews = \Illuminate\Support\Facades\Schema::hasTable('profile_views') 
+                ? (Auth::user()->profile_views_count ?? 0) 
+                : 0;
+        } catch (\Exception $e) {
+            $profileViews = 0;
+        }
 
         $authUser = Auth::user()->load('company');
         $authUserData = $this->formatUserData($authUser);

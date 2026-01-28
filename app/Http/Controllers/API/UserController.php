@@ -6,12 +6,14 @@ use App\Models\Business\Company;
 use App\Models\Chat\Conversation;
 use App\Models\Business\Subscription;
 use App\Models\User;
+use App\Models\ProfileView;
 use App\Services\GooglePlayService;
 use App\Services\S3Service;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Schema;
 use App\Models\UserEducation;
 use Str;
 use App\Http\Controllers\Controller;
@@ -670,6 +672,9 @@ class UserController extends Controller
             ], 404);
         }
 
+        // Track profile view
+        $this->trackProfileView($user);
+
         $planMapping = [
             'Premium_Monthly' => ['id' => 1, 'type' => 'Monthly'],
             'Premium_Yearly' => ['id' => 2, 'type' => 'Yearly'],
@@ -687,11 +692,82 @@ class UserController extends Controller
             }
         }
 
+        // Get profile views count (safe if table doesn't exist)
+        try {
+            $profileViewsCount = Schema::hasTable('profile_views') ? ($user->profile_views_count ?? 0) : 0;
+        } catch (\Exception $e) {
+            $profileViewsCount = 0;
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'User profile fetched successfully.',
             'user' => $user,
+            'profile_views_count' => $profileViewsCount,
         ]);
+    }
+
+    /**
+     * Track a profile view
+     */
+    protected function trackProfileView(User $viewedUser)
+    {
+        try {
+            // Check if profile_views table exists
+            if (!Schema::hasTable('profile_views')) {
+                return;
+            }
+
+            // Don't track if user is viewing their own profile
+            if (Auth::check() && Auth::id() === $viewedUser->id) {
+                return;
+            }
+
+            // Get viewer ID (null if not authenticated)
+            $viewerId = Auth::check() ? Auth::id() : null;
+
+            // Check if we should track this view (avoid duplicate tracking within same session/day)
+            $shouldTrack = true;
+
+            if ($viewerId) {
+                // For authenticated users, check if they've viewed this profile today
+                $todayView = ProfileView::where('viewed_user_id', $viewedUser->id)
+                    ->where('viewer_id', $viewerId)
+                    ->whereDate('created_at', today())
+                    ->exists();
+
+                if ($todayView) {
+                    $shouldTrack = false;
+                }
+            } else {
+                // For anonymous users, check IP address within last hour
+                $ipAddress = request()->ip();
+                $recentView = ProfileView::where('viewed_user_id', $viewedUser->id)
+                    ->where('viewer_id', null)
+                    ->where('ip_address', $ipAddress)
+                    ->where('created_at', '>=', now()->subHour())
+                    ->exists();
+
+                if ($recentView) {
+                    $shouldTrack = false;
+                }
+            }
+
+            if ($shouldTrack) {
+                ProfileView::create([
+                    'viewed_user_id' => $viewedUser->id,
+                    'viewer_id' => $viewerId,
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Silently fail if tracking fails (table doesn't exist, etc.)
+            // Log error in development
+            if (config('app.debug')) {
+                Log::warning('Profile view tracking failed: ' . $e->getMessage());
+            }
+        }
     }
 
 

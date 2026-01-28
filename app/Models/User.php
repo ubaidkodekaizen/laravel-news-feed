@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Chat\Conversation;
 use App\Models\Feed\Reaction;
+use App\Models\ProfileView;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -102,6 +103,29 @@ class User extends Authenticatable
     public function userIcp()
     {
         return $this->hasOne(UserIcp::class);
+    }
+
+    /**
+     * Get all profile views for this user
+     */
+    public function profileViews()
+    {
+        return $this->hasMany(ProfileView::class, 'viewed_user_id');
+    }
+
+    /**
+     * Get profile views count
+     */
+    public function getProfileViewsCountAttribute()
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('profile_views')) {
+                return 0;
+            }
+            return $this->profileViews()->count();
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     public function reactions()
