@@ -26,7 +26,10 @@
 
 
     <div class="profile_card_details">
-        <h6>{{ auth()->user()->name ?? (auth()->user()->first_name ?? '') . ' ' . (auth()->user()->last_name ?? '') }}
+        <h6>
+            <a href="{{ route('user.profile', ['slug' => auth()->user()->slug ?? '#']) }}" class="profile-card-name">
+                {{ auth()->user()->name ?? (auth()->user()->first_name ?? '') . ' ' . (auth()->user()->last_name ?? '') }}
+            </a>
         </h6>
         <p>{{ auth()->user()->bio ?? (auth()->user()->headline ?? 'Welcome to MuslimLynk - your gateway to empowerment, collaboration, and success within the Muslim community.') }}
         </p>

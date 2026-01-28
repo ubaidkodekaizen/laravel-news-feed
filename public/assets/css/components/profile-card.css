@@ -158,6 +158,18 @@
     font-size: 18px;
     line-height: 100%;
 }
+
+.profile-card-name {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: inline-block;
+}
+
+.profile-card-name:hover {
+    color: #0a66c2;
+    text-decoration: underline;
+}
 .profile_card_details p {
     font-family: "Inter", sans-serif;
     font-weight: 400;
