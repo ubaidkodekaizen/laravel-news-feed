@@ -170,8 +170,8 @@ Route::middleware('auth:sanctum')->group(function () {
     | Report Routes (User-generated content compliance e.g. Apple UGC guidelines)
     |--------------------------------------------------------------------------
     */
-    Route::post('/report/user', [ReportController::class, 'reportUser'])->name('report.user');
-    Route::post('/report/post', [ReportController::class, 'reportPost'])->name('report.post');
+    Route::post('/report/user', [ReportController::class, 'reportUser'])->name('api.report.user');
+    Route::post('/report/post', [ReportController::class, 'reportPost'])->name('api.report.post');
 
     /*
     |--------------------------------------------------------------------------
