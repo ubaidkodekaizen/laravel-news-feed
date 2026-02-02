@@ -214,7 +214,7 @@ $(document).ready(function () {
 
         // Submit form
         $.ajax({
-            url: "/feed/posts",
+            url: "/news-feed/posts",
             type: "POST",
             data: formData,
             processData: false,

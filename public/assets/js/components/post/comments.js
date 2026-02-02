@@ -75,7 +75,7 @@ export async function postComment(postId) {
     input.disabled = true;
 
     try {
-        const response = await fetch(`/feed/posts/${postId}/comments`, {
+        const response = await fetch(`/news-feed/posts/${postId}/comments`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -176,7 +176,7 @@ export async function postReply(commentId, postId) {
     input.disabled = true;
 
     try {
-        const response = await fetch(`/feed/posts/${postId}/comments`, {
+        const response = await fetch(`/news-feed/posts/${postId}/comments`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -253,7 +253,7 @@ export async function loadMoreComments(postId) {
 
     try {
         const response = await fetch(
-            `/feed/posts/${postId}/comments?per_page=20`,
+            `/news-feed/posts/${postId}/comments?per_page=20`,
             {
                 method: "GET",
                 headers: {
@@ -303,7 +303,7 @@ async function loadComments(postId) {
 
     try {
         const response = await fetch(
-            `/feed/posts/${postId}/comments?per_page=20`,
+            `/news-feed/posts/${postId}/comments?per_page=20`,
             {
                 method: "GET",
                 headers: {
@@ -434,7 +434,7 @@ window.saveEditComment = async function (commentId) {
     }
 
     try {
-        const response = await fetch(`/feed/comments/${commentId}`, {
+        const response = await fetch(`/news-feed/comments/${commentId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -498,7 +498,7 @@ export async function deleteComment(commentId, postId) {
     commentElement.style.pointerEvents = "none";
 
     try {
-        const response = await fetch(`/feed/comments/${commentId}`, {
+        const response = await fetch(`/news-feed/comments/${commentId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -566,7 +566,7 @@ export async function likeComment(commentId) {
     likeBtn.textContent = isLiked ? "Like" : "Liked";
 
     try {
-        const response = await fetch("/feed/reactions", {
+        const response = await fetch("/news-feed/reactions", {
             method: method,
             headers: {
                 "Content-Type": "application/json",

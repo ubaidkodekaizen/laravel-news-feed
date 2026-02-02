@@ -66,7 +66,7 @@ async function loadPosts(isFirstLoad = false) {
 
     try {
         const response = await fetch(
-            `/feed/posts?page=${currentPage}&per_page=10&sort=${currentSort}`,
+            `/news-feed/posts?page=${currentPage}&per_page=10&sort=${currentSort}`,
             {
                 method: "GET",
                 headers: {
@@ -531,7 +531,7 @@ function createSharedPostDisplay(post) {
     }
 
     return `
-        <div class="shared-post-wrapper" onclick="window.location.href='/feed/posts/${op.slug}'">
+        <div class="shared-post-wrapper" onclick="window.location.href='/news-feed/posts/${op.slug}'">
             <div class="post-header">
                 <div class="user-info">
                     ${opAvatar}

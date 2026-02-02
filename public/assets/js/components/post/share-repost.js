@@ -94,7 +94,7 @@ export async function instantRepost() {
     showNotification("Reposting...", "info");
 
     try {
-        const response = await fetch(`/feed/posts/${postId}/share`, {
+        const response = await fetch(`/news-feed/posts/${postId}/share`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -328,7 +328,7 @@ window.submitRepostWithThoughts = async function () {
     }
 
     try {
-        const response = await fetch(`/feed/posts/${postId}/share`, {
+        const response = await fetch(`/news-feed/posts/${postId}/share`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -394,8 +394,8 @@ export function sendPost(postId) {
     );
     const postSlug = postContainer?.dataset.postSlug;
     const postUrl = postSlug
-        ? `${window.location.origin}/feed/posts/${postSlug}`
-        : `${window.location.origin}/feed/posts/${postId}`;
+        ? `${window.location.origin}/news-feed/posts/${postSlug}`
+        : `${window.location.origin}/news-feed/posts/${postId}`;
 
     // Show social share options
     showSocialShareModal(postUrl, postId);
@@ -519,7 +519,7 @@ export function copyPostLink(postId) {
     }
 
     // Create post URL
-    const postUrl = `${window.location.origin}/feed/posts/${postSlug}`;
+    const postUrl = `${window.location.origin}/news-feed/posts/${postSlug}`;
 
     // Copy to clipboard
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -591,7 +591,7 @@ export async function showSharesList(postId) {
     document.getElementById("sharesList").innerHTML = "";
 
     try {
-        const response = await fetch(`/feed/posts/${postId}/shares-list`, {
+        const response = await fetch(`/news-feed/posts/${postId}/shares-list`, {
             method: "GET",
             headers: {
                 "X-Requested-With": "XMLHttpRequest",

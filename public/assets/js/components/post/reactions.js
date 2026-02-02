@@ -82,7 +82,7 @@ export async function applyReaction(button, emoji, label, type) {
     if (actionBtn) actionBtn.setAttribute("data-current-reaction", type);
 
     try {
-        const response = await fetch("/feed/reactions", {
+        const response = await fetch("/news-feed/reactions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -177,7 +177,7 @@ async function removeReaction(postId, actionBtn) {
     if (actionBtn) actionBtn.setAttribute("data-current-reaction", "");
 
     try {
-        const response = await fetch("/feed/reactions", {
+        const response = await fetch("/news-feed/reactions", {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -265,7 +265,7 @@ async function updateReactionDisplay(postId, reaction) {
 
     try {
         // Fetch updated reaction count from server
-        const response = await fetch(`/feed/posts/${postId}/reactions-count`, {
+        const response = await fetch(`/news-feed/posts/${postId}/reactions-count`, {
             method: "GET",
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
@@ -355,7 +355,7 @@ export async function showReactionsList(postId) {
     if (emptyEl) emptyEl.classList.add("d-none");
 
     try {
-        const response = await fetch(`/feed/posts/${postId}/reactions-list`, {
+        const response = await fetch(`/news-feed/posts/${postId}/reactions-list`, {
             method: "GET",
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
@@ -478,7 +478,7 @@ export async function likeComment(commentId) {
     button.textContent = button.classList.contains("liked") ? "Liked" : "Like";
 
     try {
-        const response = await fetch("/feed/reactions", {
+        const response = await fetch("/news-feed/reactions", {
             method: wasLiked ? "DELETE" : "POST",
             headers: {
                 "Content-Type": "application/json",

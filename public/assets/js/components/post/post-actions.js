@@ -29,7 +29,7 @@ export function deletePost(postId) {
     postContainer.style.pointerEvents = 'none';
 
     $.ajax({
-        url: `/feed/posts/${postId}`,
+        url: `/news-feed/posts/${postId}`,
         method: 'DELETE',
         data: {
             _token: $('meta[name="csrf-token"]').attr('content')
@@ -85,7 +85,7 @@ export function editPost(postId) {
 
     // Fetch post data - FIXED URL
     $.ajax({
-        url: `/feed/posts/${postId}/data`, // Changed from /feed/posts/${postId}
+        url: `/news-feed/posts/${postId}/data`, // Changed from /news-feed/posts/${postId}
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -249,7 +249,7 @@ $(document).ready(function() {
         const originalHtml = submitBtn.html();
         submitBtn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> ' + (isEditing ? 'Updating...' : 'Posting...'));
 
-        const url = isEditing ? `/feed/posts/${postId}` : '/feed/posts';
+        const url = isEditing ? `/news-feed/posts/${postId}` : '/news-feed/posts';
         const method = isEditing ? 'POST' : 'POST'; // We'll use _method for PUT
 
         if (isEditing) {
