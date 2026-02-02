@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities Feature - UI/UX Design Specification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #e74c3c;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+        h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        h4 {
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #e74c3c;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .flow-box {
+            background: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .screen {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            background: white;
+        }
+        .field-list {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Opportunities Feature - UI/UX Design Specification</h1>
+        <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
+            User flows, screens, and fields required for Web and Mobile App
+        </p>
+
+        <div class="note">
+            <p><strong>Note:</strong> Use existing app design system. This document only describes the feature structure, flows, fields, and screens needed.</p>
+        </div>
+
+        <div class="section">
+            <h2>1. User Flows</h2>
+
+            <h3>1.1. Flow: Post an Opportunity</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>User clicks "Post Opportunity" button (visible only to role_id = 4)</li>
+                    <li>System checks: Has user posted in last 24 hours?</li>
+                    <li>If yes → Show error message: "You can only post 1 opportunity per 24 hours"</li>
+                    <li>If no → Show create opportunity form</li>
+                    <li>User fills form and submits</li>
+                    <li>Opportunity created → Redirect to opportunity detail page</li>
+                </ol>
+            </div>
+
+            <h3>1.2. Flow: Browse Opportunities</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>User navigates to "Opportunities" page</li>
+                    <li>System shows list of open opportunities</li>
+                    <li>User can apply filters (industry, category, budget, location, skills)</li>
+                    <li>User can search by title/description</li>
+                    <li>User can sort (newest, deadline, proposals count)</li>
+                    <li>System shows skills-matched opportunities at top (if user has matching skills)</li>
+                    <li>User clicks on opportunity card → View opportunity details</li>
+                </ol>
+            </div>
+
+            <h3>1.3. Flow: View Opportunity Details</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>User clicks on opportunity</li>
+                    <li>System shows full opportunity details</li>
+                    <li>If user is owner:
+                        <ul>
+                            <li>Show "Edit" and "Delete" buttons</li>
+                            <li>Show "View Proposals" button</li>
+                        </ul>
+                    </li>
+                    <li>If user is not owner:
+                        <ul>
+                            <li>Check if already submitted proposal → Show "View My Proposal"</li>
+                            <li>Check if can submit (3 proposals in 24h limit) → Show "Submit Proposal" or error</li>
+                            <li>Show "Save" button</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <h3>1.4. Flow: Submit Proposal</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>User clicks "Submit Proposal" on opportunity detail page</li>
+                    <li>System checks:
+                        <ul>
+                            <li>Already submitted? → Show error</li>
+                            <li>Submitted 3 proposals in last 24 hours? → Show error with countdown</li>
+                            <li>Opportunity still open? → Show error if closed</li>
+                        </ul>
+                    </li>
+                    <li>If all checks pass → Show proposal form</li>
+                    <li>User fills form and submits</li>
+                    <li>Proposal created → Notification sent to owner → Redirect to "My Applications"</li>
+                </ol>
+            </div>
+
+            <h3>1.5. Flow: Manage Proposals (Opportunity Owner)</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>Owner navigates to "My Opportunities" → Selects opportunity → "View Proposals"</li>
+                    <li>System shows list of all proposals</li>
+                    <li>Owner can:
+                        <ul>
+                            <li>Click "Shortlist" → Status changes to shortlisted → Notification sent</li>
+                            <li>Click "Accept" → Status changes to accepted → Opportunity status changes to awarded → Notification sent</li>
+                            <li>Click "Reject" → Status changes to rejected → Notification sent</li>
+                            <li>Click "Contact" → Opens chat with proposer</li>
+                        </ul>
+                    </li>
+                    <li>Owner can filter proposals by status</li>
+                </ol>
+            </div>
+
+            <h3>1.6. Flow: View My Applications</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>User navigates to "My Applications"</li>
+                    <li>System shows list of user's submitted proposals</li>
+                    <li>Each item shows: Opportunity title, Status, Submitted date</li>
+                    <li>User can filter by status</li>
+                    <li>User can click "Withdraw" if status is pending</li>
+                </ol>
+            </div>
+
+            <h3>1.7. Flow: Save/Unsave Opportunity</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>User clicks save/bookmark icon on opportunity card or detail page</li>
+                    <li>System saves opportunity to user's saved list</li>
+                    <li>Icon changes to filled/bookmarked state</li>
+                    <li>User can view all saved opportunities in "Saved Opportunities" page</li>
+                </ol>
+            </div>
+
+            <h3>1.8. Flow: Skills Matching</h3>
+            <div class="flow-box">
+                <ol>
+                    <li>System extracts user's skills from profile/services/products</li>
+                    <li>System matches against opportunity required_skills</li>
+                    <li>Shows matched opportunities at top with "Recommended" badge</li>
+                    <li>Shows match percentage (e.g., "80% match")</li>
+                    <li>Highlights matched skills in skills tags</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. Screens Required</h2>
+
+            <h3>2.1. Web Screens</h3>
+            <table>
+                <tr>
+                    <th>Screen Name</th>
+                    <th>Purpose</th>
+                    <th>Key Elements</th>
+                </tr>
+                <tr>
+                    <td>Browse Opportunities</td>
+                    <td>List all open opportunities with filters</td>
+                    <td>Search bar, Filter sidebar, Opportunity cards grid, Sort options, Pagination</td>
+                </tr>
+                <tr>
+                    <td>Opportunity Detail</td>
+                    <td>Show full opportunity information</td>
+                    <td>Title, Description, Details, Poster info, Action buttons, Related opportunities</td>
+                </tr>
+                <tr>
+                    <td>Create Opportunity</td>
+                    <td>Form to post new opportunity</td>
+                    <td>All form fields (see section 3), Validation messages, 24-hour limit warning</td>
+                </tr>
+                <tr>
+                    <td>Edit Opportunity</td>
+                    <td>Edit existing opportunity (owner only)</td>
+                    <td>Pre-filled form, Same fields as create, Update button</td>
+                </tr>
+                <tr>
+                    <td>My Opportunities</td>
+                    <td>User's posted opportunities dashboard</td>
+                    <td>Stats cards, Filter tabs, Opportunity list, Actions (View, Edit, Close, View Proposals)</td>
+                </tr>
+                <tr>
+                    <td>Proposals Management</td>
+                    <td>View and manage proposals for an opportunity (owner only)</td>
+                    <td>Opportunity header, Filter tabs, Proposal cards, Action buttons (Shortlist, Accept, Reject, Contact)</td>
+                </tr>
+                <tr>
+                    <td>My Applications</td>
+                    <td>User's submitted proposals</td>
+                    <td>Filter tabs, Application cards, Status badges, Actions (View, Withdraw)</td>
+                </tr>
+                <tr>
+                    <td>Submit Proposal</td>
+                    <td>Form to submit proposal (modal or full page)</td>
+                    <td>Proposal text, Budget, Timeline, Portfolio section, Submit button</td>
+                </tr>
+                <tr>
+                    <td>Saved Opportunities</td>
+                    <td>List of bookmarked opportunities</td>
+                    <td>Opportunity cards, Unsave button</td>
+                </tr>
+                <tr>
+                    <td>Rate Opportunity</td>
+                    <td>Form to rate after completion</td>
+                    <td>Rating stars (1-5), Comment field, Submit button</td>
+                </tr>
+            </table>
+
+            <h3>2.2. Mobile App Screens</h3>
+            <table>
+                <tr>
+                    <th>Screen Name</th>
+                    <th>Purpose</th>
+                    <th>Key Elements</th>
+                </tr>
+                <tr>
+                    <td>Browse Opportunities</td>
+                    <td>List all open opportunities</td>
+                    <td>Search bar, Filter button, Opportunity cards (full width), Sort button, Bottom navigation</td>
+                </tr>
+                <tr>
+                    <td>Opportunity Detail</td>
+                    <td>Show full opportunity information</td>
+                    <td>Scrollable content, Sticky bottom bar with action button, Back button</td>
+                </tr>
+                <tr>
+                    <td>Create Opportunity</td>
+                    <td>Form to post new opportunity</td>
+                    <td>Single column form, All fields stacked, Save Draft, Publish button</td>
+                </tr>
+                <tr>
+                    <td>My Opportunities</td>
+                    <td>User's posted opportunities</td>
+                    <td>Stats cards, Filter tabs, Opportunity list, Swipe actions</td>
+                </tr>
+                <tr>
+                    <td>Proposals List</td>
+                    <td>View proposals for an opportunity</td>
+                    <td>Filter tabs, Proposal cards, Swipe actions (Accept, Reject)</td>
+                </tr>
+                <tr>
+                    <td>My Applications</td>
+                    <td>User's submitted proposals</td>
+                    <td>Filter tabs, Application cards, Status badges</td>
+                </tr>
+                <tr>
+                    <td>Submit Proposal</td>
+                    <td>Form to submit proposal</td>
+                    <td>Full screen form, All fields, Portfolio section, Submit button</td>
+                </tr>
+                <tr>
+                    <td>Filter Bottom Sheet</td>
+                    <td>Mobile filter panel</td>
+                    <td>All filter options, Apply button, Clear button</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>3. Form Fields & Inputs</h2>
+
+            <h3>3.1. Create/Edit Opportunity Form</h3>
+            <div class="field-list">
+                <table>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>Text Input</td>
+                        <td>Yes</td>
+                        <td>Opportunity title (max 200 characters)</td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td>Textarea</td>
+                        <td>Yes</td>
+                        <td>Detailed description (min 100 characters)</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>Dropdown/Radio</td>
+                        <td>Yes</td>
+                        <td>Options: Looking for Partner, Need Consultant, Project Work, Full-time Contract</td>
+                    </tr>
+                    <tr>
+                        <td>Industry</td>
+                        <td>Dropdown (Searchable)</td>
+                        <td>Yes</td>
+                        <td>Select from industries table</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Minimum</td>
+                        <td>Number Input</td>
+                        <td>No</td>
+                        <td>Minimum budget amount</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Maximum</td>
+                        <td>Number Input</td>
+                        <td>No</td>
+                        <td>Maximum budget amount</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Type</td>
+                        <td>Dropdown</td>
+                        <td>Yes</td>
+                        <td>Options: Fixed, Hourly, Project, Negotiable</td>
+                    </tr>
+                    <tr>
+                        <td>Timeline</td>
+                        <td>Text Input</td>
+                        <td>No</td>
+                        <td>e.g., "2 weeks", "1 month", "3 months"</td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                        <td>Text Input</td>
+                        <td>No</td>
+                        <td>Location preference (optional)</td>
+                    </tr>
+                    <tr>
+                        <td>Required Skills</td>
+                        <td>Tags Input</td>
+                        <td>No</td>
+                        <td>Add/remove skills as tags (max 10 skills)</td>
+                    </tr>
+                    <tr>
+                        <td>Preferred Experience</td>
+                        <td>Text Input</td>
+                        <td>No</td>
+                        <td>Experience level preference</td>
+                    </tr>
+                    <tr>
+                        <td>Deadline</td>
+                        <td>Date Picker</td>
+                        <td>No</td>
+                        <td>Application deadline (optional)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>3.2. Submit Proposal Form</h3>
+            <div class="field-list">
+                <table>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Proposal Text</td>
+                        <td>Textarea</td>
+                        <td>Yes</td>
+                        <td>Proposal description (min 100 characters)</td>
+                    </tr>
+                    <tr>
+                        <td>Proposed Budget</td>
+                        <td>Number Input</td>
+                        <td>No</td>
+                        <td>Proposed budget amount</td>
+                    </tr>
+                    <tr>
+                        <td>Estimated Timeline</td>
+                        <td>Text Input</td>
+                        <td>No</td>
+                        <td>Estimated completion time</td>
+                    </tr>
+                    <tr>
+                        <td>Link to Services</td>
+                        <td>Multi-select Dropdown</td>
+                        <td>No</td>
+                        <td>Select from user's existing services (searchable)</td>
+                    </tr>
+                    <tr>
+                        <td>Link to Products</td>
+                        <td>Multi-select Dropdown</td>
+                        <td>No</td>
+                        <td>Select from user's existing products (searchable)</td>
+                    </tr>
+                    <tr>
+                        <td>Custom Portfolio Links</td>
+                        <td>Repeating Fields</td>
+                        <td>No</td>
+                        <td>Add custom portfolio items (URL + Title), can add multiple</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>3.3. Filter Fields (Browse Page)</h3>
+            <div class="field-list">
+                <table>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Search</td>
+                        <td>Text Input</td>
+                        <td>Search by title/description</td>
+                    </tr>
+                    <tr>
+                        <td>Industry</td>
+                        <td>Multi-select Dropdown</td>
+                        <td>Filter by industry (can select multiple)</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>Checkboxes</td>
+                        <td>Filter by category (can select multiple)</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Range</td>
+                        <td>Range Slider + Number Inputs</td>
+                        <td>Filter by budget range (min and max)</td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                        <td>Text Input</td>
+                        <td>Filter by location</td>
+                    </tr>
+                    <tr>
+                        <td>Skills</td>
+                        <td>Tags Input</td>
+                        <td>Filter by required skills</td>
+                    </tr>
+                    <tr>
+                        <td>Sort By</td>
+                        <td>Dropdown</td>
+                        <td>Options: Newest, Deadline, Proposals Count</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>3.4. Rating Form</h3>
+            <div class="field-list">
+                <table>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Rating</td>
+                        <td>Star Rating (1-5)</td>
+                        <td>Yes</td>
+                        <td>Rate from 1 to 5 stars</td>
+                    </tr>
+                    <tr>
+                        <td>Comment</td>
+                        <td>Textarea</td>
+                        <td>No</td>
+                        <td>Optional rating comment</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Screen Layouts & Structure</h2>
+
+            <h3>4.1. Browse Opportunities Page (Web)</h3>
+            <div class="screen">
+                <h4>Layout:</h4>
+                <ul>
+                    <li><strong>Header Section:</strong>
+                        <ul>
+                            <li>Search bar (full width)</li>
+                            <li>Filter toggle button</li>
+                        </ul>
+                    </li>
+                    <li><strong>Left Sidebar (280px):</strong>
+                        <ul>
+                            <li>Filter panel (collapsible sections):
+                                <ul>
+                                    <li>Industry multi-select</li>
+                                    <li>Category checkboxes</li>
+                                    <li>Budget range slider</li>
+                                    <li>Location input</li>
+                                    <li>Skills tags input</li>
+                                    <li>Clear filters button</li>
+                                    <li>Apply filters button</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>Main Content Area:</strong>
+                        <ul>
+                            <li>Sort dropdown (Newest, Deadline, Proposals)</li>
+                            <li>View toggle (Grid/List view)</li>
+                            <li>Opportunity cards grid (3 columns desktop, 2 tablet, 1 mobile)</li>
+                            <li>Pagination at bottom</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>4.2. Opportunity Card (Grid View)</h3>
+            <div class="screen">
+                <h4>Elements to Display:</h4>
+                <ul>
+                    <li>Title (clickable, links to detail)</li>
+                    <li>Category badge</li>
+                    <li>Industry label</li>
+                    <li>Budget range</li>
+                    <li>Timeline</li>
+                    <li>Skills tags (max 3 visible, "+X more" if more)</li>
+                    <li>Stats: Proposals count, Views count</li>
+                    <li>"Recommended" badge (if skills matched)</li>
+                    <li>Save/Unsave icon button</li>
+                    <li>"View Details" button</li>
+                </ul>
+            </div>
+
+            <h3>4.3. Opportunity Detail Page (Web)</h3>
+            <div class="screen">
+                <h4>Layout:</h4>
+                <ul>
+                    <li><strong>Breadcrumb:</strong> Home > Opportunities > [Title]</li>
+                    <li><strong>Main Content (Left 70%):</strong>
+                        <ul>
+                            <li>Title with status badge</li>
+                            <li>Poster profile card (avatar, name, company, location)</li>
+                            <li>Description section</li>
+                            <li>Details grid:
+                                <ul>
+                                    <li>Category, Industry, Budget, Timeline, Location</li>
+                                    <li>Required Skills (tags)</li>
+                                    <li>Preferred Experience</li>
+                                    <li>Deadline countdown</li>
+                                </ul>
+                            </li>
+                            <li>Action buttons: Submit Proposal, Save, Share</li>
+                        </ul>
+                    </li>
+                    <li><strong>Right Sidebar (30%):</strong>
+                        <ul>
+                            <li>Quick stats card (views, proposals)</li>
+                            <li>Related opportunities (3-5 cards)</li>
+                            <li>Poster info card</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>4.4. My Opportunities Dashboard (Web)</h3>
+            <div class="screen">
+                <h4>Layout:</h4>
+                <ul>
+                    <li><strong>Stats Cards Row (Top):</strong>
+                        <ul>
+                            <li>Total Posted</li>
+                            <li>Active Opportunities</li>
+                            <li>Proposals Received</li>
+                            <li>Total Views</li>
+                        </ul>
+                    </li>
+                    <li><strong>Filter Tabs:</strong> All, Open, In Review, Awarded, Closed</li>
+                    <li><strong>Opportunity List:</strong>
+                        <ul>
+                            <li>Table or card view</li>
+                            <li>Columns: Title, Status, Proposals, Views, Created Date, Actions</li>
+                            <li>Actions: View, Edit, Close, View Proposals</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>4.5. Proposals Management Page (Web)</h3>
+            <div class="screen">
+                <h4>Layout:</h4>
+                <ul>
+                    <li><strong>Opportunity Header:</strong> Title, Status, Back button</li>
+                    <li><strong>Filter Tabs:</strong> All, Pending, Shortlisted, Accepted, Rejected</li>
+                    <li><strong>Proposal Cards:</strong>
+                        <ul>
+                            <li>Proposer profile (avatar, name, rating)</li>
+                            <li>Proposal text (truncated, "Read more" link)</li>
+                            <li>Proposed budget and timeline</li>
+                            <li>Portfolio items (links/thumbnails)</li>
+                            <li>Status badge</li>
+                            <li>Submitted date</li>
+                            <li>Action buttons: Shortlist, Accept, Reject, Contact</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>4.6. Browse Opportunities (Mobile)</h3>
+            <div class="screen">
+                <h4>Layout:</h4>
+                <ul>
+                    <li><strong>Header:</strong> Back button, "Opportunities" title, Filter icon</li>
+                    <li><strong>Search Bar:</strong> Full width, sticky on scroll</li>
+                    <li><strong>Filter Chips:</strong> Horizontal scrollable chips (Industry, Category, Budget)</li>
+                    <li><strong>Sort Button:</strong> Top bar or floating action</li>
+                    <li><strong>Opportunity Cards:</strong>
+                        <ul>
+                            <li>Full width cards</li>
+                            <li>Stack vertically</li>
+                            <li>Swipe actions: Save, Quick View</li>
+                        </ul>
+                    </li>
+                    <li><strong>Bottom Navigation:</strong> Home, Opportunities, Saved, Profile</li>
+                </ul>
+            </div>
+
+            <h3>4.7. Opportunity Detail (Mobile)</h3>
+            <div class="screen">
+                <h4>Layout:</h4>
+                <ul>
+                    <li><strong>Header:</strong> Back button, Title, Share/Save icons</li>
+                    <li><strong>Content (Scrollable):</strong>
+                        <ul>
+                            <li>Status badge</li>
+                            <li>Poster profile card</li>
+                            <li>Description (expandable if long)</li>
+                            <li>Details accordion sections</li>
+                            <li>Skills tags</li>
+                            <li>Deadline countdown</li>
+                        </ul>
+                    </li>
+                    <li><strong>Sticky Bottom Bar:</strong> Submit Proposal button (full width)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5. Status Badges Required</h2>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>Usage</th>
+                </tr>
+                <tr>
+                    <td>Open</td>
+                    <td>For open opportunities</td>
+                </tr>
+                <tr>
+                    <td>In Review</td>
+                    <td>For opportunities being reviewed</td>
+                </tr>
+                <tr>
+                    <td>Shortlisted</td>
+                    <td>For shortlisted proposals</td>
+                </tr>
+                <tr>
+                    <td>Awarded</td>
+                    <td>For awarded opportunities</td>
+                </tr>
+                <tr>
+                    <td>Completed</td>
+                    <td>For completed opportunities</td>
+                </tr>
+                <tr>
+                    <td>Closed</td>
+                    <td>For closed opportunities</td>
+                </tr>
+                <tr>
+                    <td>Pending</td>
+                    <td>For pending proposals</td>
+                </tr>
+                <tr>
+                    <td>Accepted</td>
+                    <td>For accepted proposals</td>
+                </tr>
+                <tr>
+                    <td>Rejected</td>
+                    <td>For rejected proposals</td>
+                </tr>
+                <tr>
+                    <td>Withdrawn</td>
+                    <td>For withdrawn proposals</td>
+                </tr>
+                <tr>
+                    <td>Recommended</td>
+                    <td>For skills-matched opportunities (should be visually distinct)</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>6. Error Messages & Alerts</h2>
+            <table>
+                <tr>
+                    <th>Error Type</th>
+                    <th>Message</th>
+                    <th>When to Show</th>
+                </tr>
+                <tr>
+                    <td>24-hour posting limit</td>
+                    <td>"You can only post 1 opportunity per 24 hours. Next post available in [X hours]"</td>
+                    <td>When user tries to post and has posted in last 24 hours</td>
+                </tr>
+                <tr>
+                    <td>Already submitted</td>
+                    <td>"You have already submitted a proposal for this opportunity"</td>
+                    <td>When user tries to submit duplicate proposal</td>
+                </tr>
+                <tr>
+                    <td>3 proposals limit</td>
+                    <td>"You can only submit 3 proposals per 24 hours. Next submission available in [X hours]"</td>
+                    <td>When user tries to submit 4th proposal in 24 hours</td>
+                </tr>
+                <tr>
+                    <td>Opportunity closed</td>
+                    <td>"This opportunity is no longer accepting proposals"</td>
+                    <td>When user tries to submit proposal on closed opportunity</td>
+                </tr>
+                <tr>
+                    <td>Role restriction</td>
+                    <td>"Only members can post opportunities"</td>
+                    <td>When non-member tries to post</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>7. Navigation Structure</h2>
+
+            <h3>7.1. Web Navigation</h3>
+            <ul>
+                <li><strong>Main Menu:</strong>
+                    <ul>
+                        <li>Home</li>
+                        <li>Opportunities (dropdown):
+                            <ul>
+                                <li>Browse Opportunities</li>
+                                <li>Post New Opportunity (only for role_id = 4)</li>
+                                <li>My Opportunities</li>
+                                <li>My Applications</li>
+                                <li>Saved Opportunities</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>User Dashboard:</strong>
+                    <ul>
+                        <li>My Opportunities section (with stats)</li>
+                        <li>My Applications section (with stats)</li>
+                        <li>Recommended Opportunities section (top 5 matched)</li>
+                        <li>Saved Opportunities section (recent 5)</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>7.2. Mobile Navigation</h3>
+            <ul>
+                <li><strong>Bottom Tab Bar:</strong>
+                    <ul>
+                        <li>Home</li>
+                        <li>Opportunities</li>
+                        <li>Saved</li>
+                        <li>Applications</li>
+                        <li>Profile</li>
+                    </ul>
+                </li>
+                <li><strong>Floating Action Button:</strong> Post Opportunity (visible only to role_id = 4)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>8. Empty States</h2>
+            <table>
+                <tr>
+                    <th>Screen</th>
+                    <th>Empty State Message</th>
+                </tr>
+                <tr>
+                    <td>Browse Opportunities</td>
+                    <td>"No opportunities found. Try adjusting your filters."</td>
+                </tr>
+                <tr>
+                    <td>My Opportunities</td>
+                    <td>"You haven't posted any opportunities yet. Post your first opportunity!"</td>
+                </tr>
+                <tr>
+                    <td>Proposals Management</td>
+                    <td>"No proposals yet. Share this opportunity to get more proposals."</td>
+                </tr>
+                <tr>
+                    <td>My Applications</td>
+                    <td>"You haven't applied to any opportunities yet. Browse opportunities to get started!"</td>
+                </tr>
+                <tr>
+                    <td>Saved Opportunities</td>
+                    <td>"You haven't saved any opportunities yet. Save opportunities to view them later."</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>9. Mobile-Specific Features</h2>
+            <ul>
+                <li><strong>Swipe Gestures:</strong>
+                    <ul>
+                        <li>Swipe right on opportunity card: Save/Unsave</li>
+                        <li>Swipe left on proposal card: Quick actions (Accept/Reject)</li>
+                    </ul>
+                </li>
+                <li><strong>Pull to Refresh:</strong> On browse and list pages</li>
+                <li><strong>Bottom Sheet:</strong> For filters panel</li>
+                <li><strong>Sticky Elements:</strong> Search bar, action buttons</li>
+                <li><strong>Touch Targets:</strong> Minimum 44x44px for all buttons</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>10. Design Checklist</h2>
+            <h3>Web Screens:</h3>
+            <ul>
+                <li>✅ Browse Opportunities (with filters sidebar)</li>
+                <li>✅ Opportunity Detail Page</li>
+                <li>✅ Create Opportunity Form</li>
+                <li>✅ Edit Opportunity Form</li>
+                <li>✅ My Opportunities Dashboard</li>
+                <li>✅ Proposals Management Page</li>
+                <li>✅ My Applications Page</li>
+                <li>✅ Submit Proposal Modal/Form</li>
+                <li>✅ Saved Opportunities Page</li>
+                <li>✅ Rating Form</li>
+            </ul>
+
+            <h3>Mobile Screens:</h3>
+            <ul>
+                <li>✅ Browse Opportunities (list view)</li>
+                <li>✅ Opportunity Detail (scrollable)</li>
+                <li>✅ Create Opportunity Form</li>
+                <li>✅ My Opportunities</li>
+                <li>✅ Proposals List</li>
+                <li>✅ My Applications</li>
+                <li>✅ Submit Proposal Screen</li>
+                <li>✅ Filter Bottom Sheet</li>
+                <li>✅ Bottom Navigation</li>
+            </ul>
+
+            <h3>Components:</h3>
+            <ul>
+                <li>✅ Opportunity Card (web & mobile)</li>
+                <li>✅ Proposal Card</li>
+                <li>✅ Status Badges (all variants)</li>
+                <li>✅ Filter Panel</li>
+                <li>✅ Skills Tags Input</li>
+                <li>✅ Portfolio Integration Component</li>
+                <li>✅ Deadline Countdown</li>
+                <li>✅ Empty States</li>
+                <li>✅ Error Messages</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
