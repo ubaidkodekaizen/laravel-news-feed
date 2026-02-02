@@ -146,6 +146,11 @@
     font-weight: 600;
     font-size: 20px;
 }
+#postCreateSec .postCreateBtn .profile-initials-avatar {
+    height: 56px;
+    width: 56px;
+    border-radius: 50%;
+}
 .profile_card_details {
     padding: 10px 23px 18px 23px;
     text-align: left;
