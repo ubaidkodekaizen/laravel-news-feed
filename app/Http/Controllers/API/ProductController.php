@@ -4,13 +4,21 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Business\Product;
 use App\Services\S3Service;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     public function apiIndex()
     {
         $products = Product::where('user_id', Auth::id())
@@ -79,6 +87,19 @@ class ProductController extends Controller
         $product->unit_of_quantity = $request->unit_of_quantity;
         $product->product_image = $imagePath;
         $product->save();
+
+        // Send notification if this is a new product (not an update)
+        if (!$id) {
+            try {
+                $productOwner = Auth::user();
+                $this->notificationService->sendNewProductNotification($productOwner, $product);
+            } catch (\Exception $e) {
+                Log::error('Failed to send new product notification', [
+                    'error' => $e->getMessage()
+                ]);
+                // Don't fail the request if notification fails
+            }
+        }
 
         return response()->json([
             'success' => true,

@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, onChildAdded, onChildChanged, onChildRemoved, set, remove, query, orderByChild, limitToLast, onDisconnect } from 'firebase/database';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import axios from 'axios';
 
 const firebaseConfig = {
@@ -148,9 +149,119 @@ export const cleanupPresence = async (userId) => {
   }
 };
 
+// Initialize Firebase Messaging
+let messaging = null;
+try {
+  messaging = getMessaging(app);
+} catch (error) {
+  console.warn('Firebase Messaging not available:', error);
+}
+
+/**
+ * Request notification permission and register FCM token
+ */
+export const requestNotificationPermission = async () => {
+  if (!messaging) {
+    console.warn('Firebase Messaging is not available');
+    return null;
+  }
+
+  try {
+    // Request permission
+    const permission = await Notification.requestPermission();
+    
+    if (permission !== 'granted') {
+      console.warn('Notification permission denied');
+      return null;
+    }
+
+    // Get FCM token
+    const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
+    if (!vapidKey) {
+      console.error('VAPID key is not configured');
+      return null;
+    }
+
+    const token = await getToken(messaging, { vapidKey });
+    
+    if (token) {
+      console.log('FCM token obtained:', token);
+      
+      // Register token with backend
+      await registerFCMToken(token);
+      
+      return token;
+    } else {
+      console.warn('No FCM token available');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error requesting notification permission:', error);
+    return null;
+  }
+};
+
+/**
+ * Register FCM token with backend API
+ */
+export const registerFCMToken = async (fcmToken) => {
+  try {
+    const token = localStorage.getItem("sanctum-token");
+    if (!token) {
+      console.warn('No auth token found, skipping FCM registration');
+      return;
+    }
+
+    const response = await axios.post('/api/device-token/register', {
+      fcm_token: fcmToken,
+      device_type: 'web',
+      device_name: navigator.userAgent,
+    }, {
+      headers: { 
+        Authorization: token,
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+      }
+    });
+
+    console.log('FCM token registered successfully');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to register FCM token:', error);
+    throw error;
+  }
+};
+
+/**
+ * Listen for foreground messages
+ */
+export const setupForegroundMessageListener = () => {
+  if (!messaging) {
+    return;
+  }
+
+  onMessage(messaging, (payload) => {
+    console.log('Message received in foreground:', payload);
+    
+    // Show notification manually (browser will handle background)
+    if (Notification.permission === 'granted') {
+      const notificationTitle = payload.notification?.title || 'New Notification';
+      const notificationOptions = {
+        body: payload.notification?.body || '',
+        icon: payload.notification?.icon || '/favicon.ico',
+        badge: '/favicon.ico',
+        data: payload.data || {},
+        tag: payload.data?.type || 'notification',
+      };
+
+      new Notification(notificationTitle, notificationOptions);
+    }
+  });
+};
+
 export {
   database,
   auth,
+  messaging,
   ref,
   onValue,
   onChildAdded,

@@ -5,11 +5,13 @@ namespace App\Services;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Database;
 use Kreait\Firebase\Auth;
+use Kreait\Firebase\Messaging;
 
 class FirebaseService
 {
     protected $database;
     protected $auth;
+    protected $messaging;
 
     public function __construct()
     {
@@ -40,6 +42,7 @@ class FirebaseService
 
             $this->database = $factory->createDatabase();
             $this->auth = $factory->createAuth();
+            $this->messaging = $factory->createMessaging();
 
             \Log::info('Firebase service initialized successfully');
         } catch (\Exception $e) {
@@ -339,5 +342,64 @@ class FirebaseService
     public function clearUnreadCount($userId, $conversationId)
     {
         $this->updateUnreadCount($userId, $conversationId, false);
+    }
+
+    /**
+     * Send FCM push notification to a device token
+     */
+    public function sendFCMNotification($fcmToken, $title, $body, $data = [])
+    {
+        try {
+            $message = \Kreait\Firebase\Messaging\CloudMessage::withTarget('token', $fcmToken)
+                ->withNotification(\Kreait\Firebase\Messaging\Notification::create($title, $body))
+                ->withData($data);
+
+            $result = $this->messaging->send($message);
+
+            \Log::info('FCM notification sent successfully', [
+                'fcm_token' => substr($fcmToken, 0, 20) . '...',
+                'title' => $title,
+                'message_id' => $result
+            ]);
+
+            return $result;
+        } catch (\Kreait\Firebase\Exception\Messaging\InvalidArgument $e) {
+            \Log::error('FCM notification failed - Invalid argument', [
+                'error' => $e->getMessage(),
+                'fcm_token' => substr($fcmToken, 0, 20) . '...'
+            ]);
+            return false;
+        } catch (\Kreait\Firebase\Exception\Messaging\NotFound $e) {
+            // Token is invalid or expired, remove it
+            \Log::warning('FCM token not found or invalid', [
+                'fcm_token' => substr($fcmToken, 0, 20) . '...'
+            ]);
+            return false;
+        } catch (\Exception $e) {
+            \Log::error('FCM notification failed', [
+                'error' => $e->getMessage(),
+                'fcm_token' => substr($fcmToken, 0, 20) . '...',
+                'trace' => $e->getTraceAsString()
+            ]);
+            return false;
+        }
+    }
+
+    /**
+     * Send FCM notification to multiple tokens
+     */
+    public function sendFCMNotificationToMultiple($fcmTokens, $title, $body, $data = [])
+    {
+        if (empty($fcmTokens)) {
+            return [];
+        }
+
+        $results = [];
+        foreach ($fcmTokens as $token) {
+            $result = $this->sendFCMNotification($token, $title, $body, $data);
+            $results[$token] = $result;
+        }
+
+        return $results;
     }
 }

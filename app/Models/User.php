@@ -10,6 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Chat\Conversation;
 use App\Models\Feed\Reaction;
 use App\Models\ProfileView;
+use App\Models\DeviceToken;
+use App\Models\Notification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -166,6 +168,21 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Feed\PostShare::class);
     }
 
+    /**
+     * Get all device tokens for this user
+     */
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
+
+    /**
+     * Get all notifications for this user
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 
     public function blockedUsers()
     {

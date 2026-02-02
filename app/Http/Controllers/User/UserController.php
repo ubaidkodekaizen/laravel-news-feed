@@ -7,11 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Business\Company;
 use App\Models\User;
 use App\Models\ProfileView;
+use App\Models\DeviceToken;
 use App\Services\S3Service;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 use Str;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HasUserPhotoData;
@@ -76,6 +78,10 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:8',
+            'fcm_token' => 'nullable|string', // FCM token from web browser
+            'device_type' => 'nullable|string|in:ios,android,web',
+            'device_id' => 'nullable|string',
+            'device_name' => 'nullable|string',
         ]);
 
         if (Auth::attempt($request->only('email', 'password'))) {
@@ -94,6 +100,29 @@ class UserController extends Controller
             $token = $user->createToken('chat_app')->plainTextToken;
 
             session(['sanctum_token' => $token]);
+
+            // Register FCM token if provided
+            if ($request->filled('fcm_token')) {
+                try {
+                    DeviceToken::registerToken(
+                        $user->id,
+                        $request->fcm_token,
+                        $request->device_type ?? 'web',
+                        $request->device_id,
+                        $request->device_name ?? (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Web Browser')
+                    );
+                    Log::info('FCM token registered on web login', [
+                        'user_id' => $user->id,
+                        'device_type' => $request->device_type ?? 'web'
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Failed to register FCM token on web login', [
+                        'user_id' => $user->id,
+                        'error' => $e->getMessage()
+                    ]);
+                    // Don't fail login if token registration fails
+                }
+            }
 
             // Optimize: Eager load company to avoid N+1 query
             if ($user->role_id === 4) {

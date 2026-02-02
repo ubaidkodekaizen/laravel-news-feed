@@ -7,14 +7,21 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Business\Service;
 use App\Services\S3Service;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
+    protected $notificationService;
 
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
 
     public function index()
     {
@@ -68,6 +75,19 @@ class ServiceController extends Controller
         $service->service_image = $imagePath;
 
         $service->save();
+
+        // Send notification if this is a new service (not an update)
+        if (!$id) {
+            try {
+                $serviceOwner = Auth::user();
+                $this->notificationService->sendNewServiceNotification($serviceOwner, $service);
+            } catch (\Exception $e) {
+                Log::error('Failed to send new service notification', [
+                    'error' => $e->getMessage()
+                ]);
+                // Don't fail the request if notification fails
+            }
+        }
 
         $message = $id ? 'Service updated successfully!' : 'Service created successfully!';
         return redirect()->route('user.services')->with('success', $message);

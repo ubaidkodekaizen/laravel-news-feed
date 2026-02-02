@@ -7,6 +7,8 @@ use App\Models\Chat\Conversation;
 use App\Models\Business\Subscription;
 use App\Models\User;
 use App\Models\ProfileView;
+use App\Models\DeviceToken;
+use App\Models\Notification;
 use App\Services\GooglePlayService;
 use App\Services\S3Service;
 use Auth;
@@ -434,6 +436,10 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string|min:8',
+            'fcm_token' => 'nullable|string', // FCM token from mobile app
+            'device_type' => 'nullable|string|in:ios,android,web',
+            'device_id' => 'nullable|string',
+            'device_name' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -468,6 +474,29 @@ class UserController extends Controller
         }
 
         $token = $user->createToken('api_token')->plainTextToken;
+
+        // Register FCM token if provided
+        if ($request->filled('fcm_token')) {
+            try {
+                DeviceToken::registerToken(
+                    $user->id,
+                    $request->fcm_token,
+                    $request->device_type,
+                    $request->device_id,
+                    $request->device_name
+                );
+                \Log::info('FCM token registered on login', [
+                    'user_id' => $user->id,
+                    'device_type' => $request->device_type
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Failed to register FCM token on login', [
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage()
+                ]);
+                // Don't fail login if token registration fails
+            }
+        }
 
         return response()->json([
             'status' => true,
@@ -1190,6 +1219,193 @@ class UserController extends Controller
             'message' => 'Users fetched successfully.',
             'users' => $users,
         ]);
+    }
+
+    /**
+     * Register or update FCM device token
+     */
+    public function registerDeviceToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required|string',
+            'device_type' => 'nullable|string|in:ios,android,web',
+            'device_id' => 'nullable|string',
+            'device_name' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $userId = Auth::id();
+            
+            DeviceToken::registerToken(
+                $userId,
+                $request->fcm_token,
+                $request->device_type,
+                $request->device_id,
+                $request->device_name
+            );
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Device token registered successfully.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to register device token', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to register device token.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove FCM device token
+     */
+    public function removeDeviceToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $userId = Auth::id();
+            
+            DeviceToken::removeToken($userId, $request->fcm_token);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Device token removed successfully.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to remove device token', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to remove device token.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Get user notifications
+     */
+    public function getNotifications(Request $request)
+    {
+        try {
+            $userId = Auth::id();
+            $perPage = $request->get('per_page', 20);
+            // Convert string "false" to boolean false
+            $unreadOnly = filter_var($request->get('unread_only', false), FILTER_VALIDATE_BOOLEAN);
+
+            $query = Notification::where('user_id', $userId)
+                ->orderBy('created_at', 'desc');
+
+            // Only filter unread if explicitly set to true
+            if ($unreadOnly === true) {
+                $query->unread();
+            }
+            // Otherwise, show all notifications (both read and unread)
+
+            $notifications = $query->paginate($perPage);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Notifications fetched successfully.',
+                'notifications' => $notifications,
+                'unread_count' => Notification::where('user_id', $userId)->unread()->count(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch notifications', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to fetch notifications.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Mark notification as read
+     */
+    public function markNotificationAsRead($id)
+    {
+        try {
+            $userId = Auth::id();
+            
+            $notification = Notification::where('id', $id)
+                ->where('user_id', $userId)
+                ->firstOrFail();
+
+            $notification->markAsRead();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Notification marked as read.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to mark notification as read', [
+                'user_id' => Auth::id(),
+                'notification_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to mark notification as read.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Mark all notifications as read
+     */
+    public function markAllNotificationsAsRead()
+    {
+        try {
+            $userId = Auth::id();
+            
+            Notification::where('user_id', $userId)
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'All notifications marked as read.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to mark all notifications as read', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to mark all notifications as read.',
+            ], 500);
+        }
     }
 
 

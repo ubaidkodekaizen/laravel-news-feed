@@ -274,6 +274,12 @@
                 </div>
 
                 <div class="nav-group">
+                    <div class="nav-group-title">Notifications</div>
+                    <a href="#device-tokens" class="nav-link">📱 Device Tokens (FCM)</a>
+                    <a href="#notifications" class="nav-link">🔔 Notifications</a>
+                </div>
+
+                <div class="nav-group">
                     <div class="nav-group-title">System</div>
                     <a href="#firebase" class="nav-link">🔥 Firebase</a>
                     <a href="#subscriptions" class="nav-link">💳 Subscriptions</a>
@@ -480,6 +486,30 @@
                             <td><span class="required">Yes</span></td>
                             <td>User's password</td>
                         </tr>
+                        <tr>
+                            <td>fcm_token</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>FCM token for push notifications (mobile/web)</td>
+                        </tr>
+                        <tr>
+                            <td>device_type</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Device type: 'ios', 'android', or 'web'</td>
+                        </tr>
+                        <tr>
+                            <td>device_id</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Unique device identifier</td>
+                        </tr>
+                        <tr>
+                            <td>device_name</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Device name/model</td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -487,7 +517,11 @@
                 <div class="code-block">
                     <pre>{
   "email": "user@example.com",
-  "password": "password123"
+  "password": "password123",
+  "fcm_token": "f9z8fQiPGt-e35HJciB18K:APA91b...",
+  "device_type": "android",
+  "device_id": "device_123",
+  "device_name": "Samsung Galaxy S21"
 }</pre>
                 </div>
 
@@ -3381,6 +3415,266 @@
                 <div class="code-block">
                     <pre>{
   "firebase_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Token Routes (FCM) -->
+        <div id="device-tokens" class="api-section">
+            <h2>📱 Device Tokens (FCM)</h2>
+            <p>Manage FCM (Firebase Cloud Messaging) device tokens for push notifications. Works for Android, iOS, and web browsers.</p>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Register Device Token
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/device-token/register</div>
+                <p>Register or update FCM device token for push notifications. This endpoint is automatically called during login if FCM token is provided, but can also be called separately to update the token.</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>fcm_token</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>FCM token from device/browser</td>
+                        </tr>
+                        <tr>
+                            <td>device_type</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Device type: 'ios', 'android', or 'web'</td>
+                        </tr>
+                        <tr>
+                            <td>device_id</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Unique device identifier</td>
+                        </tr>
+                        <tr>
+                            <td>device_name</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Device name/model</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "fcm_token": "f9z8fQiPGt-e35HJciB18K:APA91bF51fH-LVxzTD8U3Q7MYlc0CKayyqxKiBxyFs8H6dpujlsVUFV4sOPK357p_gFg2MWdVZsFjlFctK_2_beP8_GeELkqon-u6vmQE_qWKIRYKosChNE",
+  "device_type": "web",
+  "device_id": "browser_123",
+  "device_name": "Chrome Browser"
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Device token registered successfully."
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Remove Device Token
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/device-token/remove</div>
+                <p>Remove FCM device token (e.g., when user logs out or uninstalls app)</p>
+                
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>fcm_token</td>
+                            <td>string</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>FCM token to remove</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "fcm_token": "f9z8fQiPGt-e35HJciB18K:APA91b..."
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Device token removed successfully."
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Routes -->
+        <div id="notifications" class="api-section">
+            <h2>🔔 Notifications</h2>
+            <p>Manage user notifications. Notifications are automatically created when users interact with your content (reactions, comments, shares, messages, etc.)</p>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Notifications
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications?per_page=20&unread_only=false</div>
+                <p>Get user's notifications with pagination</p>
+                
+                <h5>Query Parameters:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>per_page</td>
+                            <td>integer</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Number of notifications per page (default: 20)</td>
+                        </tr>
+                        <tr>
+                            <td>unread_only</td>
+                            <td>boolean</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>If true, only return unread notifications (default: false)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Notifications fetched successfully.",
+  "notifications": {
+    "data": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "type": "post_reaction",
+        "title": "New Reaction",
+        "message": "John Doe reacted to your post",
+        "data": {
+          "post_id": 123,
+          "post_slug": "my-awesome-post-29-01-2026-123456",
+          "reactor_id": 2,
+          "reactor_name": "John Doe",
+          "reaction_type": "appreciate"
+        },
+        "read_at": null,
+        "created_at": "2026-01-29T10:00:00.000000Z",
+        "updated_at": "2026-01-29T10:00:00.000000Z"
+      }
+    ],
+    "current_page": 1,
+    "last_page": 5,
+    "per_page": 20,
+    "total": 100
+  },
+  "unread_count": 15
+}</pre>
+                </div>
+
+                <h5>Notification Types:</h5>
+                <ul>
+                    <li><code>post_reaction</code> - Someone reacted to your post</li>
+                    <li><code>post_comment</code> - Someone commented on your post</li>
+                    <li><code>comment_reply</code> - Someone replied to your comment</li>
+                    <li><code>post_share</code> - Someone shared/reposted your post</li>
+                    <li><code>new_message</code> - You received a new message</li>
+                    <li><code>new_service</code> - A new service was posted</li>
+                    <li><code>new_product</code> - A new product was posted</li>
+                </ul>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Mark Notification as Read
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/{id}/read</div>
+                <p>Mark a specific notification as read</p>
+                
+                <h5>URL Parameters:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Notification ID</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Notification marked as read."
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Mark All Notifications as Read
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/read-all</div>
+                <p>Mark all user's notifications as read</p>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "All notifications marked as read."
 }</pre>
                 </div>
             </div>

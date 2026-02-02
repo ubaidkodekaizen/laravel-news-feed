@@ -9,6 +9,7 @@ use App\Models\Feed\PostComment;
 use App\Models\Feed\Reaction;
 use App\Models\Feed\PostShare;
 use App\Services\S3Service;
+use App\Services\NotificationService;
 use App\Traits\FormatsUserData;
 use App\Traits\HasUserPhotoData;
 use Illuminate\Http\Request;
@@ -459,6 +460,27 @@ class FeedController extends Controller
             $reaction->reaction_type = $request->reaction_type;
             $reaction->save();
 
+            // Send notification if reaction is on a post (not comment)
+            if ($reactionableType === 'App\Models\Feed\Post') {
+                try {
+                    $post = Post::find($reactionableId);
+                    if ($post && $post->user_id !== $userId) {
+                        $reactor = Auth::user();
+                        $this->notificationService->sendPostReactionNotification(
+                            $post->user_id,
+                            $reactor,
+                            $post,
+                            $request->reaction_type
+                        );
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Failed to send post reaction notification', [
+                        'error' => $e->getMessage()
+                    ]);
+                    // Don't fail the request if notification fails
+                }
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Reaction added',
@@ -531,6 +553,46 @@ class FeedController extends Controller
         $comment->content = $request->content;
         $comment->status = 'active';
         $comment->save();
+
+        // Send notification if comment is on someone else's post (not a reply)
+        if ($post->user_id !== Auth::id() && !$request->parent_id) {
+            try {
+                $commenter = Auth::user();
+                $this->notificationService->sendPostCommentNotification(
+                    $post->user_id,
+                    $commenter,
+                    $post,
+                    $comment
+                );
+            } catch (\Exception $e) {
+                Log::error('Failed to send post comment notification', [
+                    'error' => $e->getMessage()
+                ]);
+                // Don't fail the request if notification fails
+            }
+        }
+
+        // Send notification if this is a reply to a comment
+        if ($request->parent_id) {
+            try {
+                $parentComment = PostComment::with('user')->find($request->parent_id);
+                if ($parentComment && $parentComment->user_id !== Auth::id()) {
+                    $replier = Auth::user();
+                    $this->notificationService->sendCommentReplyNotification(
+                        $parentComment->user_id,
+                        $replier,
+                        $post,
+                        $comment,
+                        $parentComment
+                    );
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to send comment reply notification', [
+                    'error' => $e->getMessage()
+                ]);
+                // Don't fail the request if notification fails
+            }
+        }
 
         $comment->load([
             'user:id,first_name,last_name,slug,photo',
@@ -798,6 +860,23 @@ class FeedController extends Controller
             $share->shared_content = $request->shared_content;
             $share->share_type = $shareType;
             $share->save();
+
+            // Send notification if sharing someone else's post
+            if ($originalPost->user_id !== Auth::id()) {
+                try {
+                    $sharer = Auth::user();
+                    $this->notificationService->sendPostShareNotification(
+                        $originalPost->user_id,
+                        $sharer,
+                        $originalPost
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Failed to send post share notification', [
+                        'error' => $e->getMessage()
+                    ]);
+                    // Don't fail the request if notification fails
+                }
+            }
 
             DB::commit();
 

@@ -28,6 +28,7 @@ use App\Http\Controllers\User\AuthorizeNetController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\User\SubscriptionController;
 use App\Http\Controllers\User\SupportController;
+use App\Http\Controllers\User\FirebaseController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Response;
 
@@ -423,6 +424,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':1'])->group(function () {
 | Logout Routes
 |--------------------------------------------------------------------------
 */
+
+// Firebase Messaging Service Worker (must be in public root)
+Route::get('/firebase-messaging-sw.js', [FirebaseController::class, 'serviceWorker'])->name('firebase.messaging.sw');
 
 Route::get('/logout', function () {
     Auth::logout();

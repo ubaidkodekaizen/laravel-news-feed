@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\UserOnlineService;
+use App\Services\NotificationService;
 use App\Jobs\SendOfflineMessageNotification;
 use App\Models\Chat\BlockedUser;
 use App\Traits\FormatsUserData;
@@ -21,14 +22,17 @@ class ChatController extends Controller
     use AuthorizesRequests, FormatsUserData;
 
     protected $userOnlineService;
-    protected $firebaseService; // ✅ ADD THIS
+    protected $firebaseService;
+    protected $notificationService;
 
     public function __construct(
         UserOnlineService $userOnlineService,
-        FirebaseService $firebaseService // ✅ ADD THIS
+        FirebaseService $firebaseService,
+        NotificationService $notificationService
     ) {
         $this->userOnlineService = $userOnlineService;
-        $this->firebaseService = $firebaseService; // ✅ ADD THIS
+        $this->firebaseService = $firebaseService;
+        $this->notificationService = $notificationService;
     }
 
     public function createConversation(Request $request)
@@ -419,6 +423,22 @@ class ChatController extends Controller
 
                 $this->firebaseService->sendMessage($conversation->id, $message);
                 \Log::info('Message broadcasted:', ['message' => $message]);
+
+                // Send push notification via FCM
+                try {
+                    $sender = auth()->user();
+                    $this->notificationService->sendNewMessageNotification(
+                        $receiverId,
+                        $sender,
+                        $message,
+                        $conversation->id
+                    );
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send message notification', [
+                        'error' => $e->getMessage()
+                    ]);
+                    // Don't fail the request if notification fails
+                }
 
                 // Check if receiver is offline
                 if (!$this->userOnlineService->isUserOnline($receiverId)) {

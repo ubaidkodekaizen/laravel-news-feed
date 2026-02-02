@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import ChatBox from './components/ChatBox.jsx';
 import UnreadCountBadge from './components/UnreadCountBadge.jsx';
-import { authenticateFirebase, setupPresence } from './firebase.js';
+import { authenticateFirebase, setupPresence, requestNotificationPermission, setupForegroundMessageListener } from './firebase.js';
 
 const App = () => {
   const [isTokenAvailable, setIsTokenAvailable] = useState(false);
@@ -48,6 +48,22 @@ const App = () => {
         const authenticated = await authenticateFirebase();
         if (authenticated) {
           await setupPresence(window.userId);
+          
+          // Register service worker for FCM
+          if ('serviceWorker' in navigator) {
+            try {
+              const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+              console.log('Service Worker registered:', registration);
+              
+              // Request notification permission and register FCM token
+              await requestNotificationPermission();
+              
+              // Setup foreground message listener
+              setupForegroundMessageListener();
+            } catch (error) {
+              console.error('Service Worker registration failed:', error);
+            }
+          }
           console.log('✅ Firebase initialized and presence setup complete');
         }
       } catch (error) {

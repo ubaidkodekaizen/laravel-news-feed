@@ -212,6 +212,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | Device Token Routes (FCM)
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/device-token/register', [UserController::class, 'registerDeviceToken'])->name('api.device.token.register');
+    Route::post('/device-token/remove', [UserController::class, 'removeDeviceToken'])->name('api.device.token.remove');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notification Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/notifications', [UserController::class, 'getNotifications'])->name('api.notifications');
+    Route::post('/notifications/{id}/read', [UserController::class, 'markNotificationAsRead'])->name('api.notification.read');
+    Route::post('/notifications/read-all', [UserController::class, 'markAllNotificationsAsRead'])->name('api.notifications.read.all');
+
+    /*
+    |--------------------------------------------------------------------------
     | User Profile Routes
     |--------------------------------------------------------------------------
     */

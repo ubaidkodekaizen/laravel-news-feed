@@ -6,12 +6,21 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Business\Product;
 use App\Services\S3Service;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index()
     {
         $products = Product::where('user_id', Auth::id())->get();
@@ -65,6 +74,19 @@ class ProductController extends Controller
         $product->product_image = $imagePath;
 
         $product->save();
+
+        // Send notification if this is a new product (not an update)
+        if (!$id) {
+            try {
+                $productOwner = Auth::user();
+                $this->notificationService->sendNewProductNotification($productOwner, $product);
+            } catch (\Exception $e) {
+                Log::error('Failed to send new product notification', [
+                    'error' => $e->getMessage()
+                ]);
+                // Don't fail the request if notification fails
+            }
+        }
 
         $message = $id ? 'Product updated successfully!' : 'Product created successfully!';
         return redirect()->route('user.products')->with('success', $message);
