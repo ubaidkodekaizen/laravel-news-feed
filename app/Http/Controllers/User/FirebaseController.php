@@ -70,6 +70,8 @@ self.addEventListener('notificationclick', (event) => {
 
   if (data.type === 'new_message' && data.conversation_id) {
     urlToOpen = `/inbox?conversation=${data.conversation_id}`;
+  } else if (data.type === 'message_reaction' && data.conversation_id) {
+    urlToOpen = `/inbox?conversation=${data.conversation_id}`;
   } else if (data.type === 'post_reaction' || data.type === 'post_comment' || data.type === 'post_share' || data.type === 'comment_reply') {
     if (data.post_slug) {
       urlToOpen = `/news-feed/posts/${data.post_slug}`;

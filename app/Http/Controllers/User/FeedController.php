@@ -886,6 +886,27 @@ class FeedController extends Controller
                 $reaction->reaction_type = $request->reaction_type;
                 $reaction->save();
 
+                // Send notification if reaction is on a post (not comment)
+                if ($reactionableType === 'App\Models\Feed\Post') {
+                    try {
+                        $post = Post::find($reactionableId);
+                        if ($post && $post->user_id !== $userId) {
+                            $reactor = Auth::user();
+                            $this->notificationService->sendPostReactionNotification(
+                                $post->user_id,
+                                $reactor,
+                                $post,
+                                $request->reaction_type
+                            );
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('Failed to send post reaction notification', [
+                            'error' => $e->getMessage()
+                        ]);
+                        // Don't fail the request if notification fails
+                    }
+                }
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Reaction added',

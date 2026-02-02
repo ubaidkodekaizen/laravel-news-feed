@@ -926,6 +926,7 @@
 
                 switch (notification.type) {
                     case 'new_message':
+                    case 'message_reaction':
                         if (data.conversation_id) {
                             return `/inbox?conversation=${data.conversation_id}`;
                         }
