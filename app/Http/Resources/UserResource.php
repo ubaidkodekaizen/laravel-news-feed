@@ -198,6 +198,141 @@ class UserResource extends JsonResource
                     ];
                 });
             }, []),
+
+            'profile_views_count' => $this->when(isset($this->profile_views_count), function () {
+                return $this->profile_views_count;
+            }, 0),
+
+            'profile_views' => $this->whenLoaded('profileViews', function () {
+                return $this->profileViews->map(function ($view) {
+                    return [
+                        'id' => $view->id,
+                        'viewed_user_id' => $view->viewed_user_id,
+                        'viewer_id' => $view->viewer_id,
+                        'viewed_at' => $view->created_at ? $view->created_at->toIso8601String() : null,
+                        'viewer' => $view->relationLoaded('viewer') && $view->viewer ? [
+                            'id' => $view->viewer->id,
+                            'first_name' => $view->viewer->first_name,
+                            'last_name' => $view->viewer->last_name,
+                            'slug' => $view->viewer->slug,
+                            'photo' => $view->viewer->photo,
+                        ] : null,
+                    ];
+                });
+            }, []),
+
+            'viewed_profiles' => $this->whenLoaded('viewedProfiles', function () {
+                return $this->viewedProfiles->map(function ($view) {
+                    return [
+                        'id' => $view->id,
+                        'viewed_user_id' => $view->viewed_user_id,
+                        'viewer_id' => $view->viewer_id,
+                        'viewed_at' => $view->created_at ? $view->created_at->toIso8601String() : null,
+                        'viewed_user' => $view->relationLoaded('viewedUser') && $view->viewedUser ? [
+                            'id' => $view->viewedUser->id,
+                            'first_name' => $view->viewedUser->first_name,
+                            'last_name' => $view->viewedUser->last_name,
+                            'slug' => $view->viewedUser->slug,
+                            'photo' => $view->viewedUser->photo,
+                        ] : null,
+                    ];
+                });
+            }, []),
+
+            'posts' => $this->whenLoaded('posts', function () {
+                return $this->posts->map(function ($post) {
+                    return [
+                        'id' => $post->id,
+                        'user_id' => $post->user_id,
+                        'original_post_id' => $post->original_post_id,
+                        'content' => $post->content,
+                        'slug' => $post->slug,
+                        'comments_enabled' => $post->comments_enabled,
+                        'visibility' => $post->visibility,
+                        'status' => $post->status,
+                        'reactions_count' => $post->reactions_count,
+                        'comments_count' => $post->comments_count,
+                        'shares_count' => $post->shares_count,
+                        'created_at' => $post->created_at ? $post->created_at->toIso8601String() : null,
+                        'updated_at' => $post->updated_at ? $post->updated_at->toIso8601String() : null,
+                        
+                        // Media
+                        'media' => $post->relationLoaded('media') ? $post->media->map(function ($media) {
+                            return [
+                                'id' => $media->id,
+                                'post_id' => $media->post_id,
+                                'media_type' => $media->media_type,
+                                'media_path' => $media->media_path,
+                                'media_url' => $media->media_url,
+                                'thumbnail_path' => $media->thumbnail_path,
+                                'file_name' => $media->file_name,
+                                'file_size' => $media->file_size,
+                                'mime_type' => $media->mime_type,
+                                'duration' => $media->duration,
+                                'order' => $media->order,
+                            ];
+                        }) : [],
+                        
+                        // Original Post (if this is a shared post)
+                        'original_post' => $post->relationLoaded('originalPost') && $post->originalPost ? [
+                            'id' => $post->originalPost->id,
+                            'user_id' => $post->originalPost->user_id,
+                            'content' => $post->originalPost->content,
+                            'slug' => $post->originalPost->slug,
+                            'user' => $post->originalPost->relationLoaded('user') && $post->originalPost->user ? [
+                                'id' => $post->originalPost->user->id,
+                                'first_name' => $post->originalPost->user->first_name,
+                                'last_name' => $post->originalPost->user->last_name,
+                                'slug' => $post->originalPost->user->slug,
+                                'photo' => $post->originalPost->user->photo,
+                            ] : null,
+                            'media' => $post->originalPost->relationLoaded('media') ? $post->originalPost->media->map(function ($media) {
+                                return [
+                                    'id' => $media->id,
+                                    'media_type' => $media->media_type,
+                                    'media_url' => $media->media_url,
+                                    'thumbnail_path' => $media->thumbnail_path,
+                                ];
+                            }) : [],
+                        ] : null,
+                    ];
+                });
+            }, []),
+
+            'post_reactions' => $this->whenLoaded('postReactions', function () {
+                return $this->postReactions->map(function ($reaction) {
+                    return [
+                        'id' => $reaction->id,
+                        'user_id' => $reaction->user_id,
+                        'reactionable_type' => $reaction->reactionable_type,
+                        'reactionable_id' => $reaction->reactionable_id,
+                        'reaction_type' => $reaction->reaction_type,
+                        'created_at' => $reaction->created_at ? $reaction->created_at->toIso8601String() : null,
+                    ];
+                });
+            }, []),
+
+            'post_comments' => $this->whenLoaded('postComments', function () {
+                return $this->postComments->map(function ($comment) {
+                    return [
+                        'id' => $comment->id,
+                        'post_id' => $comment->post_id,
+                        'user_id' => $comment->user_id,
+                        'parent_id' => $comment->parent_id,
+                        'content' => $comment->content,
+                        'status' => $comment->status,
+                        'is_reply' => !is_null($comment->parent_id),
+                        'created_at' => $comment->created_at ? $comment->created_at->toIso8601String() : null,
+                        'updated_at' => $comment->updated_at ? $comment->updated_at->toIso8601String() : null,
+                        'post' => $comment->relationLoaded('post') && $comment->post ? [
+                            'id' => $comment->post->id,
+                            'content' => $comment->post->content,
+                            'slug' => $comment->post->slug,
+                            'user_id' => $comment->post->user_id,
+                        ] : null,
+                    ];
+                });
+            }, []),
         ];
     }
 }

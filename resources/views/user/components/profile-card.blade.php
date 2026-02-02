@@ -35,7 +35,7 @@
         </p>
 
         <div class="profile_card_details_inner">
-            <div class="profile_card_details_inner_box">
+            <div class="profile_card_details_inner_box" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#profileViewsModal">
                 <h4>Profile views</h4>
                 <p>{{ $profileViews ?? 0 }}</p>
             </div>

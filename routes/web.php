@@ -191,6 +191,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
         // User posts
         Route::get('/user/{userId?}/posts', [FeedController::class, 'getUserPosts'])->name('feed.user.posts');
 
+        // Profile views
+        Route::get('/profile-views', [FeedController::class, 'getProfileViews'])->name('feed.profile.views');
+
         // Single post detail page (must be LAST to avoid conflicts)
         Route::get('/posts/{slug}', [FeedController::class, 'showPostPage'])
             ->where('slug', '[a-z0-9\-]+')

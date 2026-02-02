@@ -106,11 +106,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all profile views for this user
+     * Get all profile views for this user (who viewed this user's profile)
      */
     public function profileViews()
     {
         return $this->hasMany(ProfileView::class, 'viewed_user_id');
+    }
+
+    /**
+     * Get all profiles this user has viewed
+     */
+    public function viewedProfiles()
+    {
+        return $this->hasMany(ProfileView::class, 'viewer_id');
     }
 
     /**

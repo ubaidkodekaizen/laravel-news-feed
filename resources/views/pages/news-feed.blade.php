@@ -82,6 +82,7 @@
 @include('user.components.image-edit-modal')
 @include('user.components.reactions-modal')
 @include('user.components.shares-modal')
+@include('user.components.profile-views-modal')
 @endsection
 
 @section('scripts')

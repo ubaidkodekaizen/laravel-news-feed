@@ -44,6 +44,30 @@ class UserController extends Controller
             'userEducations',
             'userIcp',
             'reactions',
+            'postReactions',
+            'postComments' => function ($query) {
+                $query->with('post:id,content,slug,user_id');
+            },
+            'profileViews' => function ($query) {
+                $query->whereNotNull('viewer_id')
+                      ->with('viewer:id,first_name,last_name,slug,photo')
+                      ->orderBy('created_at', 'desc');
+            },
+            'viewedProfiles' => function ($query) {
+                $query->whereNotNull('viewed_user_id')
+                      ->with('viewedUser:id,first_name,last_name,slug,photo')
+                      ->orderBy('created_at', 'desc');
+            },
+            'posts' => function ($query) {
+                $query->where('status', 'active')
+                      ->whereNull('deleted_at')
+                      ->with([
+                          'media',
+                          'originalPost.user:id,first_name,last_name,slug,photo',
+                          'originalPost.media',
+                      ])
+                      ->orderBy('created_at', 'desc');
+            },
         ])
             ->whereNull('deleted_at')
             ->get();
@@ -72,6 +96,14 @@ class UserController extends Controller
                     ];
                 });
             $user->setRelation('userMosques', $userMosques);
+
+            // Load profile views count (safe if table doesn't exist)
+            try {
+                $profileViewsCount = Schema::hasTable('profile_views') ? $user->profileViews()->count() : 0;
+                $user->setAttribute('profile_views_count', $profileViewsCount);
+            } catch (\Exception $e) {
+                $user->setAttribute('profile_views_count', 0);
+            }
         }
 
         return response()->json([

@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 use App\Traits\FormatsUserData;
 use App\Models\Reference\Industry as IndustryModel;
 use App\Models\User;
+use App\Models\ProfileView;
 use App\Traits\HasUserPhotoData;
 use Illuminate\Support\Arr;
 
@@ -1407,6 +1408,59 @@ class FeedController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to load comment count.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get profile views for the authenticated user.
+     */
+    public function getProfileViews(Request $request)
+    {
+        try {
+            $userId = Auth::id();
+
+            // Check if profile_views table exists
+            if (!Schema::hasTable('profile_views')) {
+                return response()->json([
+                    'success' => true,
+                    'count' => 0,
+                    'views' => []
+                ]);
+            }
+
+            $profileViews = ProfileView::where('viewed_user_id', $userId)
+                ->whereNotNull('viewer_id')
+                ->with('viewer:id,first_name,last_name,photo,user_position,slug')
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function ($view) {
+                    $userData = $this->formatUserData($view->viewer);
+                    return [
+                        'id' => $view->id,
+                        'viewed_at' => $view->created_at,
+                        'user' => [
+                            'id' => $userData['id'],
+                            'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
+                            'avatar' => $userData['photo'],
+                            'initials' => $userData['user_initials'],
+                            'has_photo' => $userData['user_has_photo'],
+                            'position' => $view->viewer->user_position ?? '',
+                            'slug' => $view->viewer->slug ?? '',
+                        ]
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'count' => $profileViews->count(),
+                'views' => $profileViews
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching profile views: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load profile views.'
             ], 500);
         }
     }
