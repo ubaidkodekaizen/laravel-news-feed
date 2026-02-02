@@ -102,6 +102,7 @@
             font-weight: 400;
             font-size: 16px;
             color: #273572;
+            border-radius: 10px 0 0 10px;
         }
 
         input#header_search::placeholder {
@@ -394,11 +395,11 @@
                         <div class="search_area">
 
 
-                            {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
+                            {{-- {!! \App\Helpers\DropDownHelper::countryDropdown() !!} --}}
 
                             <div class="suggestion_search">
                                 <input type="text" id="header_search" autocomplete="off"
-                                    placeholder="Product, Service or Industry" class="form-control">
+                                    placeholder="Search People, Product, Service or Industry" class="form-control">
                                 <div id="suggestion_box" class="suggestion-box" style="display: none;"></div>
                             </div>
 
@@ -559,10 +560,10 @@
                     <div class="search_area flex-column">
                         <div class="suggestion_search w-100">
                             <input type="text" id="mobile_header_search" autocomplete="off"
-                                placeholder="Product, Service or Industry" class="form-control">
+                                placeholder="Search People, Product, Service or Industry" class="form-control">
                         </div>
 
-                        {!! \App\Helpers\DropDownHelper::countryDropdown() !!}
+                        {{-- {!! \App\Helpers\DropDownHelper::countryDropdown() !!} --}}
 
                         <input type="hidden" name="name" id="mobile_first_name1">
                         <input type="hidden" name="product" id="mobile_product1">
