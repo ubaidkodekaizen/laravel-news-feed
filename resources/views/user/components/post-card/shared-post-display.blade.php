@@ -25,7 +25,7 @@
         $opUserInitials = $originalPost['user']['initials'] ?? 'U';
     @endphp
 
-    <div class="shared-post-wrapper" onclick="if('{{ $originalPost['slug'] ?? '' }}') window.location.href='/feed/posts/{{ $originalPost['slug'] }}'">
+    <div class="shared-post-wrapper" onclick="if('{{ $originalPost['slug'] ?? '' }}') window.location.href='/news-feed/posts/{{ $originalPost['slug'] }}'">
         <div class="post-header">
             <div class="user-info">
                 @if($opUserHasPhoto && $opUserAvatar)

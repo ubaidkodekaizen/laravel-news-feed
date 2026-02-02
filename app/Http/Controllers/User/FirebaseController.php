@@ -66,13 +66,18 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   const data = event.notification.data || {};
-  let urlToOpen = '/feed';
+  let urlToOpen = '/news-feed';
 
   if (data.type === 'new_message' && data.conversation_id) {
     urlToOpen = `/inbox?conversation=${data.conversation_id}`;
-  } else if (data.type === 'post_reaction' || data.type === 'post_comment' || data.type === 'post_share') {
+  } else if (data.type === 'post_reaction' || data.type === 'post_comment' || data.type === 'post_share' || data.type === 'comment_reply') {
     if (data.post_slug) {
-      urlToOpen = `/feed/post/${data.post_slug}`;
+      urlToOpen = `/news-feed/posts/${data.post_slug}`;
+      if (data.comment_id) {
+        urlToOpen += `#comment-${data.comment_id}`;
+      } else if (data.parent_comment_id) {
+        urlToOpen += `#comment-${data.parent_comment_id}`;
+      }
     }
   }
 
