@@ -172,6 +172,28 @@ class NotificationService
     }
 
     /**
+     * Send message reaction notification
+     */
+    public function sendMessageReactionNotification($messageSenderId, $reactor, $message, $emoji)
+    {
+        $reactorName = trim($reactor->first_name . ' ' . $reactor->last_name);
+        
+        return $this->send(
+            $messageSenderId,
+            Notification::TYPE_MESSAGE_REACTION,
+            'Message Reaction',
+            "{$reactorName} reacted to your message",
+            [
+                'conversation_id' => $message->conversation_id,
+                'message_id' => $message->id,
+                'reactor_id' => $reactor->id,
+                'reactor_name' => $reactorName,
+                'emoji' => $emoji,
+            ]
+        );
+    }
+
+    /**
      * Send comment reply notification (when someone replies to a comment)
      */
     public function sendCommentReplyNotification($originalCommenterId, $replier, $post, $comment, $parentComment)

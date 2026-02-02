@@ -101,6 +101,33 @@ const InboxPage = () => {
         fetchConversations();
     }, []);
 
+    // Auto-open conversation from URL parameter
+    useEffect(() => {
+        // Check if conversations are loaded and we have a conversation ID in URL
+        if (conversations.length === 0 || loading || activeConversation) return;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const conversationId = urlParams.get('conversation');
+
+        if (conversationId) {
+            // Find the conversation in the list
+            const conversation = conversations.find(
+                (conv) => conv.id === parseInt(conversationId)
+            );
+
+            if (conversation) {
+                console.log('Auto-opening conversation from URL:', conversationId);
+                handleConversationClick(conversation);
+                // Clean up URL parameter after opening
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, '', newUrl);
+            } else {
+                console.warn('Conversation not found in list:', conversationId);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversations, loading, activeConversation]);
+
     // ✅ FIREBASE: Listen to new messages with validation
     useEffect(() => {
         if (!activeConversation) return;

@@ -525,6 +525,23 @@ class ChatController extends Controller
             $reaction
         );
 
+        // Send notification if reaction is on someone else's message
+        if ($message->user_id !== $user->id) {
+            try {
+                $this->notificationService->sendMessageReactionNotification(
+                    $message->user_id,
+                    $user,
+                    $message,
+                    $request->emoji
+                );
+            } catch (\Exception $e) {
+                \Log::error('Failed to send message reaction notification', [
+                    'error' => $e->getMessage()
+                ]);
+                // Don't fail the request if notification fails
+            }
+        }
+
         return response()->json($reaction);
     }
 

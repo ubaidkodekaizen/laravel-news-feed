@@ -31,6 +31,7 @@ class Notification extends Model
     const TYPE_COMMENT_REPLY = 'comment_reply';
     const TYPE_POST_SHARE = 'post_share';
     const TYPE_NEW_MESSAGE = 'new_message';
+    const TYPE_MESSAGE_REACTION = 'message_reaction';
     const TYPE_NEW_SERVICE = 'new_service';
     const TYPE_NEW_PRODUCT = 'new_product';
     const TYPE_PROFILE_VIEW = 'profile_view';

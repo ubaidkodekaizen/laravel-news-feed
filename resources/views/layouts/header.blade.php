@@ -927,6 +927,7 @@
 
                 switch (notification.type) {
                     case 'new_message':
+                    case 'message_reaction':
                         if (data.conversation_id) {
                             return `/inbox?conversation=${data.conversation_id}`;
                         }
@@ -935,14 +936,14 @@
                     case 'post_reaction':
                     case 'post_share':
                         if (data.post_slug) {
-                            return `/feed/post/${data.post_slug}`;
+                            return `/news-feed/posts/${data.post_slug}`;
                         }
                         return '/news-feed';
 
                     case 'post_comment':
                         if (data.post_slug) {
                             // Redirect to post with comment ID if available
-                            let url = `/feed/post/${data.post_slug}`;
+                            let url = `/news-feed/posts/${data.post_slug}`;
                             if (data.comment_id) {
                                 url += `#comment-${data.comment_id}`;
                             }
@@ -953,7 +954,7 @@
                     case 'comment_reply':
                         if (data.post_slug) {
                             // Redirect to post with parent comment ID if available
-                            let url = `/feed/post/${data.post_slug}`;
+                            let url = `/news-feed/posts/${data.post_slug}`;
                             if (data.parent_comment_id) {
                                 url += `#comment-${data.parent_comment_id}`;
                             } else if (data.comment_id) {

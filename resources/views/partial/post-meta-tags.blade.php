@@ -7,7 +7,7 @@
 @if(isset($post))
     {{-- Open Graph Meta Tags for Facebook/LinkedIn --}}
     <meta property="og:type" content="article">
-    <meta property="og:url" content="{{ url('/feed/posts/' . ($post['slug'] ?? '')) }}">
+    <meta property="og:url" content="{{ url('/news-feed/posts/' . ($post['slug'] ?? '')) }}">
     <meta property="og:title" content="{{ $post['user']['name'] ?? 'MuslimLynk' }} shared a post">
     <meta property="og:description" content="{{ Str::limit(strip_tags($post['content'] ?? ''), 200) }}">
 
@@ -52,7 +52,7 @@
     <title>{{ $post['user']['name'] ?? 'Post' }} on MuslimLynk</title>
 
     {{-- Canonical URL --}}
-    <link rel="canonical" href="{{ url('/feed/posts/' . ($post['slug'] ?? '')) }}">
+    <link rel="canonical" href="{{ url('/news-feed/posts/' . ($post['slug'] ?? '')) }}">
 @else
     {{-- Default meta tags --}}
     <meta property="og:title" content="MuslimLynk - Professional Muslim Networking">

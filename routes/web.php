@@ -161,7 +161,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/news-feed', [FeedController::class, 'index'])->name('news-feed');
 
     // News Feed API Routes (for AJAX calls)
-    Route::prefix('feed')->group(function () {
+    Route::prefix('news-feed')->group(function () {
         // Post CRUD
         Route::get('/posts', [FeedController::class, 'getFeed'])->name('feed.posts');
 
