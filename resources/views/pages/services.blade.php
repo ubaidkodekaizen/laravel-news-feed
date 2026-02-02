@@ -527,79 +527,16 @@
             gap: 12px;
         }
 
-        #categoriesContainer .category-card {
+         #categoriesContainer .category-card {
             flex: 0 0 auto;
-            min-width: 140px;
-            max-width: 180px;
+            max-width: max-content;
+            width: 100%;
         }
     </style>
 
     @include('layouts.home-footer')
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Display categories from server
-            const categories = @json($categories ?? []);
-            displayCategories(categories);
 
-            function displayCategories(categories) {
-                const container = document.getElementById('categoriesContainer');
-                container.innerHTML = '';
-
-                categories.forEach(category => {
-                    const card = document.createElement('div');
-                    card.className = 'category-card';
-                    card.textContent = category;
-                    card.dataset.category = category;
-
-                    card.addEventListener('click', function() {
-                        // Remove active class from all cards
-                        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
-                        // Add active class to clicked card
-                        card.classList.add('active');
-                        // Load services for this category
-                        loadServicesByCategory(category);
-                    });
-
-                    container.appendChild(card);
-                });
-            }
-
-            function loadServicesByCategory(category) {
-                const servicesContainer = document.getElementById('servicesContainer');
-                servicesContainer.classList.add('loading');
-                servicesContainer.innerHTML = '<div class="col-12"><div class="loading-spinner"><p>Loading services...</p></div></div>';
-
-                // Use jQuery AJAX to match existing code style
-                jQuery.ajax({
-                    url: "{{ route('services') }}",
-                    method: "GET",
-                    data: {
-                        category: category
-                    },
-                    success: function(response) {
-                        servicesContainer.classList.remove('loading');
-                        if (response.html) {
-                            servicesContainer.innerHTML = response.html;
-                            // Re-attach event listeners for service modals
-                            attachEventListeners();
-                        } else {
-                            servicesContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>No services found in this category.</p></div></div>';
-                        }
-                    },
-                    error: function() {
-                        servicesContainer.classList.remove('loading');
-                        servicesContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>Error loading services. Please try again.</p></div></div>';
-                    }
-                });
-            }
-
-            function attachEventListeners() {
-                // Event listeners are already attached via existing scripts
-                // This is a placeholder if we need to reattach any specific listeners
-            }
-        });
-    </script>
 
     <!-- Main Modal -->
     <div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="mainModalLabel">
@@ -675,99 +612,142 @@
     </div>
 @endsection
 
-
-@section('scripts')
+ @section('scripts')
     <script>
+        // Global variables
+        window.AUTH_USER_ID = {{ Auth::id() ?? 'null' }};
+
+        // Global function to attach event listeners to direct message buttons
+        function attachEventListeners() {
+            let directMessageBtn = document.querySelectorAll('.direct-message-btn');
+            directMessageBtn.forEach(element => {
+                element.removeEventListener("click", handleDirectMessage);
+                element.addEventListener("click", handleDirectMessage);
+            });
+        }
+
+        // Global handler for direct message button clicks
+        function handleDirectMessage() {
+            let receiverId = $(this).data('receiver-id');
+            $('#receiver_id').val(receiverId);
+
+            $.ajax({
+                url: '/api/check-conversation',
+                method: 'GET',
+                data: { receiver_id: receiverId },
+                headers: { "Authorization": localStorage.getItem("sanctum-token") },
+                success: function(response) {
+                    if (response.conversation_exists) {
+                        if (window.openChatWithUser) {
+                            window.openChatWithUser(receiverId);
+                        }
+                    } else {
+                        $('#receiver_id').val(receiverId);
+                        $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
+I came across your profile and was really impressed by your work. I'd love to connect and exchange ideas.
+Looking forward to connecting!
+Best Regards,
+{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
+                        var myModal = new bootstrap.Modal(document.getElementById('mainModal'));
+                        myModal.show();
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error checking conversation:', xhr);
+                }
+            });
+        }
+
+        // Categories and Services functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const categories = @json($categories ?? []);
+            displayCategories(categories);
+            attachEventListeners();
+
+            function displayCategories(categories) {
+                const container = document.getElementById('categoriesContainer');
+                container.innerHTML = '';
+
+                categories.forEach(category => {
+                    const card = document.createElement('div');
+                    card.className = 'category-card';
+                    card.textContent = category;
+                    card.dataset.category = category;
+
+                    card.addEventListener('click', function() {
+                        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                        loadServicesByCategory(category);
+                    });
+
+                    container.appendChild(card);
+                });
+            }
+
+            function loadServicesByCategory(category) {
+                const servicesContainer = document.getElementById('servicesContainer');
+                servicesContainer.classList.add('loading');
+                servicesContainer.innerHTML = '<div class="col-12"><div class="loading-spinner"><p>Loading services...</p></div></div>';
+
+                jQuery.ajax({
+                    url: "{{ route('services') }}",
+                    method: "GET",
+                    data: { category: category },
+                    success: function(response) {
+                        servicesContainer.classList.remove('loading');
+                        if (response.html) {
+                            servicesContainer.innerHTML = response.html;
+                            attachEventListeners();
+                        } else {
+                            servicesContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>No services found in this category.</p></div></div>';
+                        }
+                    },
+                    error: function() {
+                        servicesContainer.classList.remove('loading');
+                        servicesContainer.innerHTML = '<div class="col-12"><div class="text-center"><p>Error loading services. Please try again.</p></div></div>';
+                    }
+                });
+            }
+        });
+
+        // Search functionality (if search is enabled in the future)
         jQuery(document).ready(function() {
             const searchInput = jQuery('input[type="search"]');
             const resultsContainer = jQuery('.articles .row');
 
-            jQuery('form').on('submit', function(e) {
-                e.preventDefault();
-                fetchServices(searchInput.val());
-            });
+            if (searchInput.length) {
+                jQuery('form').on('submit', function(e) {
+                    e.preventDefault();
+                    fetchServices(searchInput.val());
+                });
 
-            searchInput.on('input', function() {
-                const value = jQuery(this).val();
-                clearTimeout(jQuery.data(this, 'timer'));
-                const wait = setTimeout(() => fetchServices(value), 500);
-                jQuery(this).data('timer', wait);
-            });
+                searchInput.on('input', function() {
+                    const value = jQuery(this).val();
+                    clearTimeout(jQuery.data(this, 'timer'));
+                    const wait = setTimeout(() => fetchServices(value), 500);
+                    jQuery(this).data('timer', wait);
+                });
+            }
 
             function fetchServices(searchTerm) {
-                // Get selected category
                 const activeCategory = document.querySelector('.category-card.active');
                 const category = activeCategory ? activeCategory.dataset.category : '';
-                
+
                 jQuery.ajax({
                     url: "{{ route('services') }}",
                     method: "GET",
-                    data: {
-                        search: searchTerm,
-                        category: category
-                    },
+                    data: { search: searchTerm, category: category },
                     success: function(response) {
                         resultsContainer.html(response.html);
                         attachEventListeners();
                     },
                     error: function() {
-                        resultsContainer.html(
-                            '<div class="col-12"><p>Error loading services.</p></div>');
+                        resultsContainer.html('<div class="col-12"><p>Error loading services.</p></div>');
                     }
                 });
             }
-        });
-    </script>
-    <script>
-        jQuery(document).ready(function($) {
 
-            let directMessageBtn = document.querySelectorAll('.direct-message-btn');
-            // console.log("directMessageBtn", directMessageBtn);
-            directMessageBtn.forEach(element => {
-
-                element.addEventListener("click", function() {
-                    let receiverId = $(this).data('receiver-id');
-                    $('#receiver_id').val(receiverId);
-                    console.log("receiverId", receiverId);
-                    $.ajax({
-                        url: '/api/check-conversation',
-                        method: 'GET',
-                        data: {
-                            receiver_id: receiverId
-                        },
-                        headers: {
-                            "Authorization": localStorage.getItem("sanctum-token")
-                        },
-                        success: function(response) {
-                            if (response.conversation_exists) {
-                                // If conversation exists, open chat directly
-                                if (window.openChatWithUser) {
-                                    window.openChatWithUser(receiverId);
-                                }
-                            } else {
-                                // If no conversation, open the modal
-                                console.log(response.receiver);
-                                $('#receiver_id').val(receiverId);
-                                $("#messageContent").val(`Hi ${response.receiver.first_name ?? ''} ${response.receiver.last_name ?? ''},
-I came across your profile and was really impressed by your work. I’d love to connect and exchange ideas.
-Looking forward to connecting!
-Best Regards,
-{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}`);
-
-                                var myModal = new bootstrap.Modal(document
-                                    .getElementById('mainModal'));
-                                myModal.show();
-                            }
-                        },
-                        error: function(xhr) {
-                            console.error('Error checking conversation:', xhr);
-                        }
-                    });
-                });
-
-
-            });
-
+            // Direct message form submission
             $('#directMessageForm').on('submit', function(e) {
                 e.preventDefault();
 
@@ -781,32 +761,22 @@ Best Regards,
                     url: "{{ route('sendMessage') }}",
                     method: 'POST',
                     data: formData,
-                    headers: {
-                        "Authorization": localStorage.getItem("sanctum-token")
-                    },
+                    headers: { "Authorization": localStorage.getItem("sanctum-token") },
                     success: function(response) {
-                        // Close the modal
                         $('#mainModal').modal('hide');
-
-                        // Trigger opening the chat box and specific conversation
                         if (window.openChatWithUser) {
                             window.openChatWithUser(formData.receiver_id);
                         }
                     },
                     error: function(xhr) {
-                        const errorMsg = xhr.responseJSON?.error ||
-                            'An error occurred. Please try again.';
-                        $('#messageStatus').html(
-                            `<div class="alert alert-danger">${errorMsg}</div>`);
+                        const errorMsg = xhr.responseJSON?.error || 'An error occurred. Please try again.';
+                        $('#messageStatus').html(`<div class="alert alert-danger">${errorMsg}</div>`);
                     }
                 });
             });
         });
-    </script>
-    <script>
-        window.AUTH_USER_ID = {{ Auth::id() ?? 'null' }};
-    </script>
-    <script>
+
+        // Service Modal functionality
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('productModal');
             const bsModal = new bootstrap.Modal(modal);
@@ -825,23 +795,22 @@ Best Regards,
                 modal.querySelector('#productModalQuantity').textContent = wrapper.dataset.quantity;
                 modal.querySelector('#productModalUserName').textContent = wrapper.dataset.userName;
                 modal.querySelector('#productModalDate').textContent = "Posted on " + wrapper.dataset.date;
-                modal.querySelector('.direct-message-btn').setAttribute('data-receiver-id', wrapper.dataset
-                    .id);
+                modal.querySelector('.direct-message-btn').setAttribute('data-receiver-id', wrapper.dataset.id);
+
                 const receiverId = wrapper.dataset.id;
-                // hide button if it's the same user
+
+                // Hide message button if it's the same user
                 if (window.AUTH_USER_ID && parseInt(window.AUTH_USER_ID) === parseInt(receiverId)) {
-                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
-                        .display = 'none';
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style.display = 'none';
                 } else {
-                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style
-                        .display = 'inline-flex'; // or 'block' based on your CSS
+                    modal.querySelector('.direct-message-btn').closest('.productModalUserProfileBox').style.display = 'inline-flex';
                 }
+
                 // Handle user photo or initials
                 const userPhotoElement = modal.querySelector('#productModalUserPhoto');
                 const userPhoto = wrapper.dataset.userPhoto;
 
                 if (userPhoto) {
-                    // Show photo - replace with img if initials div exists
                     if (userPhotoElement.tagName !== 'IMG') {
                         const img = document.createElement('img');
                         img.id = 'productModalUserPhoto';
@@ -856,7 +825,6 @@ Best Regards,
                         userPhotoElement.alt = wrapper.dataset.userName;
                     }
                 } else {
-                    // Show initials - replace img with div if needed
                     if (userPhotoElement.tagName === 'IMG') {
                         const initialsDiv = document.createElement('div');
                         initialsDiv.id = 'productModalUserPhoto';

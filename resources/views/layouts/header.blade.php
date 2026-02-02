@@ -407,7 +407,7 @@
                             <input type="hidden" name="service" id="service1">
                             <input type="hidden" name="company_industry" id="company_industry1">
 
-                            <button class="btn btn-primary search_btn">
+                            <button type="submit" class="btn btn-primary search_btn">
                                 <img src="{{ asset('assets/images/fe_search.svg') }}" alt="Search">
                             </button>
                         </div>
@@ -569,7 +569,7 @@
                         <input type="hidden" name="service" id="mobile_service1">
                         <input type="hidden" name="company_industry" id="mobile_company_industry1">
 
-                        <button class="btn btn-primary search_btn mt-2">Search</button>
+                        <button type="submit" class="btn btn-primary search_btn mt-2">Search</button>
                     </div>
                 </form>
 
