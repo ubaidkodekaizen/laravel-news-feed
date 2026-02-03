@@ -12,6 +12,9 @@ use App\Models\Feed\Reaction;
 use App\Models\ProfileView;
 use App\Models\DeviceToken;
 use App\Models\Notification;
+use App\Models\Opportunity;
+use App\Models\OpportunityProposal;
+use App\Models\OpportunityRating;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -210,6 +213,47 @@ class User extends Authenticatable
     public function isBlockedBy($userId): bool
     {
         return $this->blockedByUsers()->where('blocker_id', $userId)->exists();
+    }
+
+    /**
+     * Get all opportunities created by this user.
+     */
+    public function opportunities()
+    {
+        return $this->hasMany(Opportunity::class);
+    }
+
+    /**
+     * Get all proposals submitted by this user.
+     */
+    public function opportunityProposals()
+    {
+        return $this->hasMany(OpportunityProposal::class);
+    }
+
+    /**
+     * Get all ratings given by this user.
+     */
+    public function opportunityRatingsGiven()
+    {
+        return $this->hasMany(OpportunityRating::class, 'rated_by_user_id');
+    }
+
+    /**
+     * Get all ratings received by this user.
+     */
+    public function opportunityRatingsReceived()
+    {
+        return $this->hasMany(OpportunityRating::class, 'rated_user_id');
+    }
+
+    /**
+     * Get all opportunities saved by this user.
+     */
+    public function savedOpportunities()
+    {
+        return $this->belongsToMany(Opportunity::class, 'saved_opportunities')
+            ->withTimestamps();
     }
 
     /**

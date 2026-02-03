@@ -22,4 +22,12 @@ class Industry extends Model
         // If you have industry_to_connect (which stores industry name)
         return $this->hasMany(User::class, 'industry_to_connect', 'name');
     }
+
+    /**
+     * Get all opportunities in this industry
+     */
+    public function opportunities()
+    {
+        return $this->hasMany(\App\Models\Opportunity::class);
+    }
 }
