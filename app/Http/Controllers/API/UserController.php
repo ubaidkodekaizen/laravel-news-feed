@@ -761,6 +761,7 @@ class UserController extends Controller
         }
 
         // Get active subscription for the user
+        // Only check if status is 'active' - no date validations
         $activeSubscription = Subscription::where('user_id', $user->id)
             ->where('status', 'active')
             ->latest()
@@ -771,64 +772,17 @@ class UserController extends Controller
         $subscriptionData = null;
 
         if ($activeSubscription) {
-            // Check expiration using expires_at first, then renewal_date as fallback
-            $expirationDate = $activeSubscription->expires_at ?? $activeSubscription->renewal_date;
-            
-            // Convert to Carbon instance if it's a string or not already Carbon
-            if ($expirationDate) {
-                if (is_string($expirationDate)) {
-                    try {
-                        $expirationDate = \Carbon\Carbon::parse($expirationDate);
-                    } catch (\Exception $e) {
-                        \Log::warning('Failed to parse expiration date in profile', [
-                            'user_id' => $user->id,
-                            'expiration_date' => $expirationDate,
-                            'error' => $e->getMessage(),
-                        ]);
-                        $expirationDate = null;
-                    }
-                } elseif (!$expirationDate instanceof \Carbon\Carbon) {
-                    try {
-                        $expirationDate = \Carbon\Carbon::parse($expirationDate);
-                    } catch (\Exception $e) {
-                        \Log::warning('Failed to convert expiration date to Carbon in profile', [
-                            'user_id' => $user->id,
-                            'expiration_date' => $expirationDate,
-                            'type' => gettype($expirationDate),
-                            'error' => $e->getMessage(),
-                        ]);
-                        $expirationDate = null;
-                    }
-                }
-            }
-            
-            // Subscription is valid if:
-            // 1. No expiration date set (null), OR
-            // 2. Expiration date is today or in the future
-            if ($expirationDate instanceof \Carbon\Carbon) {
-                $now = \Carbon\Carbon::now();
-                // Check if expiration date is today or in the future
-                // Use copy()->startOfDay() to avoid mutating the original Carbon instance
-                $expirationDateStart = $expirationDate->copy()->startOfDay();
-                $nowStart = $now->copy()->startOfDay();
-                $isValid = $expirationDateStart->greaterThanOrEqualTo($nowStart);
-            } else {
-                // If no expiration date, subscription is valid (null means no expiration)
-                $isValid = true;
-            }
-            
-            if ($isValid) {
-                $hasValidSubscription = true;
-                $subscriptionData = [
-                    'id' => $activeSubscription->id,
-                    'subscription_type' => $activeSubscription->subscription_type,
-                    'status' => $activeSubscription->status,
-                    'renewal_date' => $activeSubscription->renewal_date?->toDateString(),
-                    'expires_at' => $activeSubscription->expires_at?->toDateString(),
-                    'platform' => $activeSubscription->platform,
-                    'start_date' => $activeSubscription->start_date?->toDateString(),
-                ];
-            }
+            // If subscription exists and status is 'active', it's valid
+            $hasValidSubscription = true;
+            $subscriptionData = [
+                'id' => $activeSubscription->id,
+                'subscription_type' => $activeSubscription->subscription_type,
+                'status' => $activeSubscription->status,
+                'renewal_date' => $activeSubscription->renewal_date?->toDateString(),
+                'expires_at' => $activeSubscription->expires_at?->toDateString(),
+                'platform' => $activeSubscription->platform,
+                'start_date' => $activeSubscription->start_date?->toDateString(),
+            ];
         }
 
         return response()->json([

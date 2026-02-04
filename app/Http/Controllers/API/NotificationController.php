@@ -102,12 +102,11 @@ class NotificationController extends Controller
             // Eager load all users at once
             $users = User::whereIn('id', array_unique($userIds))->get()->keyBy('id');
             
-            // Format notifications with user photos
-            $formattedNotifications = $notifications->getCollection()->map(function ($notification) use ($users) {
-                $formatted = $this->formatNotification($notification, $users);
-                // Ensure it's an array, not an object
-                return is_array($formatted) ? $formatted : (array) $formatted;
-            });
+            // Format notifications with user photos - SIMPLIFIED
+            $formattedArray = [];
+            foreach ($notifications->getCollection() as $notification) {
+                $formattedArray[] = $this->formatNotification($notification, $users);
+            }
 
             // For mobile apps, always return the standard format
             // Check if legacy format is explicitly requested (for web backward compatibility)
@@ -115,9 +114,7 @@ class NotificationController extends Controller
                               $request->get('legacy_format') === 'true' ||
                               $request->get('legacy_format') === '1';
             
-            // Always include user photos in both formats
-            // Convert formatted notifications to array to ensure all fields are included
-            $formattedArray = $formattedNotifications->values()->all();
+            // Formatted array is already prepared above
             
             if ($useLegacyFormat) {
                 // Legacy format (for web backward compatibility)
@@ -270,21 +267,21 @@ class NotificationController extends Controller
             }
         }
 
-        // Convert notification to array and add user photo
-        // Build array manually to ensure data is properly formatted
+        // Build notification array with all fields including user photo
         $notificationArray = [
             'id' => $notification->id,
-            'user_id' => $notification->user_id, // ID of the user who receives the notification
+            'user_id' => $notification->user_id,
             'type' => $notification->type,
             'title' => $notification->title,
             'message' => $notification->message,
-            'data' => $data, // Use the decoded data
+            'data' => $data,
             'read_at' => $notification->read_at?->toIso8601String(),
             'created_at' => $notification->created_at?->toIso8601String(),
             'updated_at' => $notification->updated_at?->toIso8601String(),
-            'user_photo' => $userPhoto, // Photo of the user who triggered the notification
-            'user_name' => $userName, // Name of the user who triggered the notification
-            'trigger_user_id' => $userId, // ID of the user who triggered the notification
+            // User photo fields - ALWAYS included
+            'user_photo' => $userPhoto,
+            'user_name' => $userName,
+            'trigger_user_id' => $userId,
         ];
 
         return $notificationArray;
