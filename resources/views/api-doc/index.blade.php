@@ -529,11 +529,19 @@
                 <div class="code-block">
                     <pre>{
   "status": true,
-  "message": "Login successful",
+  "message": "Login successful.",
   "token": "1|xxxxxxxxxxxxx",
-  "user": { ... }
+  "user": {
+    "id": 1,
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    ...
+  },
+  "redirect_to": "feed"
 }</pre>
                 </div>
+                <p><strong>Note:</strong> Subscription information is no longer included in the login response. Use the <code>/user/profile/{slug}</code> endpoint to check subscription status.</p>
             </div>
 
             <div class="api-endpoint">
@@ -2492,13 +2500,14 @@
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
                 <div class="endpoint-url">/user/profile/{slug}</div>
-                <p>Get user profile information by slug</p>
+                <p>Get user profile information by slug. This endpoint includes subscription information for mobile app developers to check subscription status.</p>
                 <p><strong>URL Parameters:</strong> Replace {slug} with the user's slug (e.g., "john-doe")</p>
                 
                 <h5>Response:</h5>
                 <div class="code-block">
                     <pre>{
   "status": true,
+  "message": "User profile fetched successfully.",
   "user": {
     "id": 1,
     "first_name": "John",
@@ -2511,10 +2520,31 @@
       "company_logo": "https://...",
       ...
     },
+    "products": [...],
+    "services": [...],
+    "user_educations": [...],
+    "user_icp": {...},
     ...
-  }
+  },
+  "profile_views_count": 42,
+  "subscription": {
+    "id": 630,
+    "subscription_type": "Free",
+    "status": "active",
+    "renewal_date": "2026-04-27",
+    "expires_at": "2026-04-27",
+    "platform": "Admin",
+    "start_date": "2026-01-27"
+  },
+  "has_subscription": true
 }</pre>
                 </div>
+                <p><strong>Subscription Fields:</strong></p>
+                <ul>
+                    <li><code>subscription</code> - Object containing active subscription details (or <code>null</code> if no active subscription)</li>
+                    <li><code>has_subscription</code> - Boolean indicating if user has an active subscription (<code>true</code> if status is 'active', <code>false</code> otherwise)</li>
+                </ul>
+                <p><strong>Note:</strong> Subscription validation only checks if <code>status = 'active'</code>. No date validations are performed.</p>
             </div>
 
             <div class="api-endpoint">
@@ -3542,7 +3572,7 @@
             <h2>🔔 Notifications</h2>
             <p>Comprehensive notification management APIs. Notifications are automatically created when users interact with your content (reactions, comments, shares, messages, opportunities, etc.)</p>
             <div class="alert alert-info" style="margin: 20px 0; padding: 15px; background: #e7f3ff; border-left: 4px solid #007bff; border-radius: 5px;">
-                <strong>📸 User Photo in Notifications:</strong> All notification responses include <code>user_photo</code> (full URL), <code>user_name</code> (full name), and <code>user_id</code> (ID of the user who triggered the notification) fields. These fields are automatically populated from the notification data and are ready to display in your UI.
+                <strong>📸 User Photo in Notifications:</strong> All notification responses include <code>user_photo</code> (full URL), <code>user_name</code> (full name), and <code>trigger_user_id</code> (ID of the user who triggered the notification) fields. These fields are automatically populated from the notification data and are ready to display in your UI. Note: <code>user_id</code> in the notification object refers to the user who receives the notification, while <code>trigger_user_id</code> refers to the user who triggered it.
             </div>
 
             <div class="api-endpoint">
@@ -3613,7 +3643,7 @@
         "message": "John Doe reacted to your post",
         "user_photo": "https://s3.amazonaws.com/bucket/photos/user-2.jpg",
         "user_name": "John Doe",
-        "user_id": 2,
+        "trigger_user_id": 2,
         "data": {
           "post_id": 123,
           "post_slug": "my-awesome-post-29-01-2026-123456",
@@ -3688,7 +3718,7 @@
       "message": "Jane Smith commented on your post",
       "user_photo": "https://s3.amazonaws.com/bucket/photos/user-789.jpg",
       "user_name": "Jane Smith",
-      "user_id": 789,
+      "trigger_user_id": 789,
       "data": {
         "post_id": 456,
         "post_slug": "example-post",

@@ -156,7 +156,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/messages/send', [ChatController::class, 'sendMessage'])->name('sendMessage');
     Route::put('/messages/{message}', [ChatController::class, 'updateMessage'])->name('update.message'); // ✅ Add
     Route::delete('/messages/{message}', [ChatController::class, 'destroyMessage'])->name('destroy.message'); // ✅ Add
-    Route::get('conversations/{conversation}/user', [ChatController::class, 'getUserForConversation'])->name('get.user.conversation');
+    Route::get('/conversations/{conversation}/user', [ChatController::class, 'getUserForConversation'])->name('get.user.conversation');
     Route::post('/typing', [ChatController::class, 'userIsTyping'])->name('user.is.typing');
     Route::get('/check-conversation', [ChatController::class, 'checkConversation'])->name('check.conversation');
     Route::post('/messages/{message}/react', [ChatController::class, 'addReaction'])->name('add.reaction');
@@ -257,10 +257,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('api.notifications.destroy');
     });
     
-    // Web routes (original implementation - keep as is for web)
-    Route::get('/notifications', [UserController::class, 'getNotifications'])->name('api.notifications');
-    Route::post('/notifications/{id}/read', [UserController::class, 'markNotificationAsRead'])->name('api.notification.read');
-    Route::post('/notifications/read-all', [UserController::class, 'markAllNotificationsAsRead'])->name('api.notifications.read.all');
+    // Web routes (original implementation - keep as is for web backward compatibility)
+    // Note: These routes are placed AFTER the /notifications prefix group to avoid conflicts
+    // The prefix group routes take precedence, so web should use /notifications with legacy_format=true
+    // Keeping these for backward compatibility but they may not be accessible due to route conflict
+    Route::get('/notifications-web', [UserController::class, 'getNotifications'])->name('api.notifications.web');
+    Route::post('/notifications-web/{id}/read', [UserController::class, 'markNotificationAsRead'])->name('api.notification.read.web');
+    Route::post('/notifications-web/read-all', [UserController::class, 'markAllNotificationsAsRead'])->name('api.notifications.read.all.web');
 
     /*
     |--------------------------------------------------------------------------
@@ -347,72 +350,11 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::post('/subscribe/iap', [UserController::class, 'handleIapSubscription']);
-    Route::get('/subscribe/iap/google-ping', function () {
-        try {
-            app(GooglePlayService::class);
-            return response()->json([
-                'status' => true,
-                'message' => 'Google Play service instantiated successfully. Credentials and configuration look good.',
-            ]);
-        } catch (\Throwable $exception) {
-            Log::error('Google Play ping failed: ' . $exception->getMessage());
-            return response()->json([
-                'status' => false,
-                'message' => 'Unable to instantiate Google Play service. Check configuration and credentials.',
-            ], 500);
-        }
-    });
-
-    Route::get('/subscribe/iap/google-test', function (Request $request) {
-        $validated = $request->validate([
-            'product' => 'required|string',
-            'purchaseToken' => 'required|string',
-            'packageName' => 'nullable|string',
-        ]);
-
-        $productId = config('services.google_play.products.' . $validated['product']) ?? $validated['product'];
-        $packageName = $validated['packageName'] ?? config('services.google_play.package_name');
-
-        if (empty($productId)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Google Play product id is not configured.',
-            ], 422);
-        }
-
-        if (empty($packageName)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Google Play package name is not configured.',
-            ], 422);
-        }
-
-        try {
-            $googlePlay = app(GooglePlayService::class);
-            $purchase = $googlePlay->getSubscriptionPurchase($productId, $validated['purchaseToken'], $packageName);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Google Play connection successful.',
-                'data' => [
-                    'acknowledgementState' => (int) $purchase->getAcknowledgementState(),
-                    'paymentState' => (int) $purchase->getPaymentState(),
-                    'expiryTimeMillis' => $purchase->getExpiryTimeMillis(),
-                    'startTimeMillis' => $purchase->getStartTimeMillis(),
-                ],
-            ]);
-        } catch (\Throwable $exception) {
-            Log::error('Google Play connection test failed: ' . $exception->getMessage(), [
-                'product_id' => $productId,
-                'package_name' => $packageName,
-            ]);
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Unable to confirm Google Play connection. See logs for details.',
-            ], 502);
-        }
-    });
+    // Note: Google Play test routes are defined in public section above (lines 61-126)
+    // These authenticated versions are duplicates and should be removed
+    // Keeping them commented out to avoid conflicts
+    // Route::get('/subscribe/iap/google-ping', ...) - DUPLICATE, use public route
+    // Route::get('/subscribe/iap/google-test', ...) - DUPLICATE, use public route
 });
 
 /*

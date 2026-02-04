@@ -720,9 +720,7 @@ class UserController extends Controller
                 'services',
                 'userEducations',
                 'userIcp',
-                'subscriptions' => function ($query) {
-                    $query->where('status', 'active');
-                }
+                // Removed subscriptions from eager loading - we provide it separately below
             ])
             ->first();
 
@@ -735,23 +733,6 @@ class UserController extends Controller
 
         // Track profile view
         $this->trackProfileView($user);
-
-        $planMapping = [
-            'Premium_Monthly' => ['id' => 1, 'type' => 'Monthly'],
-            'Premium_Yearly' => ['id' => 2, 'type' => 'Yearly'],
-        ];
-
-        foreach ($user->subscriptions as $subscription) {
-            foreach ($planMapping as $planName => $planDetails) {
-                if (
-                    $subscription->plan_id == $planDetails['id'] &&
-                    $subscription->subscription_type == $planDetails['type']
-                ) {
-                    $subscription->subscription_type = $planName;
-                    break;
-                }
-            }
-        }
 
         // Get profile views count (safe if table doesn't exist)
         try {
