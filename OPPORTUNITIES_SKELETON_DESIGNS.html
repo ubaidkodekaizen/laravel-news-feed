@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities Feature - Skeleton UI Designs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .nav-tab {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .nav-tab:hover {
+            background: #e0e0e0;
+        }
+        .nav-tab.active {
+            background: #e74c3c;
+            color: white;
+        }
+        .screen-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .screen-section.active {
+            display: block;
+        }
+        .screen-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e74c3c;
+        }
+        .screen-label {
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .screen-label.mobile {
+            background: #27ae60;
+        }
+        
+        /* Common Components */
+        .placeholder {
+            background: #e8e8e8;
+            border: 2px dashed #999;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 4px;
+            color: #666;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .placeholder.small {
+            min-height: 30px;
+            padding: 10px;
+        }
+        .placeholder.medium {
+            min-height: 80px;
+        }
+        .placeholder.large {
+            min-height: 150px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 2px;
+        }
+        .badge.open { background: #2ecc71; color: white; }
+        .badge.closed { background: #95a5a6; color: white; }
+        .badge.pending { background: #f39c12; color: white; }
+        .badge.recommended { background: #e74c3c; color: white; }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        .btn-primary {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+        }
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .flex {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar {
+            width: 280px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 120px;
+            font-family: inherit;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stats-card h3 {
+            font-size: 32px;
+            margin: 10px 0;
+        }
+        .stats-card p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .tab.active {
+            border-bottom-color: #e74c3c;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .opportunity-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: box-shadow 0.3s;
+        }
+        .opportunity-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .skill-tag {
+            background: #ecf0f1;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #34495e;
+        }
+        .mobile-frame {
+            max-width: 375px;
+            margin: 0 auto;
+            background: white;
+            border: 8px solid #333;
+            border-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+        }
+        .mobile-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mobile-content {
+            padding: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .mobile-bottom-nav {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .mobile-bottom-nav-item {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .mobile-bottom-nav-item.active {
+            color: #e74c3c;
+        }
+        .sticky-bottom-bar {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .breadcrumb {
+            padding: 10px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .breadcrumb a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Opportunities Feature - Skeleton UI Designs</h1>
+            <p>Interactive skeleton designs for all screens. Click tabs to navigate between screens.</p>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showScreen('web-browse')">Web: Browse</button>
+                <button class="nav-tab" onclick="showScreen('web-detail')">Web: Detail</button>
+                <button class="nav-tab" onclick="showScreen('web-create')">Web: Create</button>
+                <button class="nav-tab" onclick="showScreen('web-my-opps')">Web: My Opportunities</button>
+                <button class="nav-tab" onclick="showScreen('web-proposals')">Web: Proposals</button>
+                <button class="nav-tab" onclick="showScreen('web-applications')">Web: Applications</button>
+                <button class="nav-tab" onclick="showScreen('web-saved')">Web: Saved</button>
+                <button class="nav-tab" onclick="showScreen('mobile-browse')">Mobile: Browse</button>
+                <button class="nav-tab" onclick="showScreen('mobile-detail')">Mobile: Detail</button>
+                <button class="nav-tab" onclick="showScreen('mobile-create')">Mobile: Create</button>
+                <button class="nav-tab" onclick="showScreen('mobile-filter')">Mobile: Filter</button>
+            </div>
+        </div>
+
+        <!-- WEB: Browse Opportunities -->
+        <div id="web-browse" class="screen-section active">
+            <span class="screen-label">WEB</span>
+            <h2 class="screen-title">Browse Opportunities Page</h2>
+            
+            <div class="flex">
+                <!-- Left Sidebar - Filters -->
+                <div class="sidebar">
+                    <h3 style="margin-bottom: 15px;">Filters</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Industry</label>
+                        <div class="placeholder small">Multi-select Dropdown</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <div class="placeholder small">Checkboxes</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Budget Range</label>
+                        <div class="placeholder small">Range Slider</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" placeholder="Enter location">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Skills</label>
+                        <div class="placeholder small">Tags Input</div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;">Clear Filters</button>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 10px;">Apply Filters</button>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Search Bar -->
+                    <div class="placeholder medium" style="margin-bottom: 20px;">
+                        <input type="text" class="form-input" placeholder="Search opportunities by title or description..." style="width: 100%;">
+                    </div>
+                    
+                    <!-- Sort & View Toggle -->
+                    <div class="flex-between" style="margin-bottom: 20px;">
+                        <div class="flex">
+                            <select class="form-input" style="width: 200px;">
+                                <option>Sort: Newest</option>
+                                <option>Sort: Deadline</option>
+                                <option>Sort: Proposals Count</option>
+                            </select>
+                        </div>
+                        <div class="flex">
+                            <button class="btn btn-outline">Grid</button>
+                            <button class="btn btn-outline">List</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Opportunity Cards Grid -->
+                    <div class="grid grid-3">
+                        <!-- Opportunity Card 1 -->
+                        <div class="opportunity-card">
+                            <div class="flex-between">
+                                <h3 style="margin-bottom: 10px;">Opportunity Title Here</h3>
+                                <span class="badge recommended">Recommended</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <span class="badge open">Project Work</span>
+                                <span style="color: #666; font-size: 14px;">Technology</span>
+                            </div>
+                            <div style="margin-bottom: 10px; color: #666;">
+                                <p><strong>Budget:</strong> $5,000 - $10,000 (Fixed)</p>
+                                <p><strong>Timeline:</strong> 2 months</p>
+                            </div>
+                            <div class="skills-tags">
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">+2 more</span>
+                            </div>
+                            <div class="flex-between" style="margin-top: 15px; font-size: 12px; color: #666;">
+                                <span>📊 12 Proposals</span>
+                                <span>👁️ 245 Views</span>
+                            </div>
+                            <div class="flex-between" style="margin-top: 15px;">
+                                <button class="btn btn-outline" style="flex: 1;">💾 Save</button>
+                                <button class="btn btn-primary" style="flex: 1;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Opportunity Card 2 -->
+                        <div class="opportunity-card">
+                            <div class="flex-between">
+                                <h3 style="margin-bottom: 10px;">Another Opportunity Title</h3>
+                                <span>🔖</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <span class="badge open">Need Consultant</span>
+                                <span style="color: #666; font-size: 14px;">Finance</span>
+                            </div>
+                            <div style="margin-bottom: 10px; color: #666;">
+                                <p><strong>Budget:</strong> Negotiable</p>
+                                <p><strong>Timeline:</strong> 1 month</p>
+                            </div>
+                            <div class="skills-tags">
+                                <span class="skill-tag">Accounting</span>
+                                <span class="skill-tag">Tax</span>
+                            </div>
+                            <div class="flex-between" style="margin-top: 15px; font-size: 12px; color: #666;">
+                                <span>📊 5 Proposals</span>
+                                <span>👁️ 89 Views</span>
+                            </div>
+                            <div class="flex-between" style="margin-top: 15px;">
+                                <button class="btn btn-outline" style="flex: 1;">💾 Save</button>
+                                <button class="btn btn-primary" style="flex: 1;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Opportunity Card 3 -->
+                        <div class="opportunity-card">
+                            <div class="flex-between">
+                                <h3 style="margin-bottom: 10px;">Third Opportunity Example</h3>
+                                <span>🔖</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <span class="badge open">Looking for Partner</span>
+                                <span style="color: #666; font-size: 14px;">Healthcare</span>
+                            </div>
+                            <div style="margin-bottom: 10px; color: #666;">
+                                <p><strong>Budget:</strong> $20,000 - $50,000</p>
+                                <p><strong>Timeline:</strong> 6 months</p>
+                            </div>
+                            <div class="skills-tags">
+                                <span class="skill-tag">Medical</span>
+                                <span class="skill-tag">Compliance</span>
+                                <span class="skill-tag">+1 more</span>
+                            </div>
+                            <div class="flex-between" style="margin-top: 15px; font-size: 12px; color: #666;">
+                                <span>📊 8 Proposals</span>
+                                <span>👁️ 156 Views</span>
+                            </div>
+                            <div class="flex-between" style="margin-top: 15px;">
+                                <button class="btn btn-outline" style="flex: 1;">💾 Save</button>
+                                <button class="btn btn-primary" style="flex: 1;">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="placeholder small" style="margin-top: 30px; text-align: center;">
+                        Pagination: 1 2 3 4 5 ... Next
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEB: Opportunity Detail -->
+        <div id="web-detail" class="screen-section">
+            <span class="screen-label">WEB</span>
+            <h2 class="screen-title">Opportunity Detail Page</h2>
+            
+            <div class="breadcrumb">
+                <a href="#">Home</a> > <a href="#">Opportunities</a> > Opportunity Title Here
+            </div>
+            
+            <div class="flex">
+                <!-- Main Content (70%) -->
+                <div style="flex: 0 0 70%; padding-right: 20px;">
+                    <!-- Title & Status -->
+                    <div class="flex-between" style="margin-bottom: 20px;">
+                        <h1>Opportunity Title Here</h1>
+                        <span class="badge open">Open</span>
+                    </div>
+                    
+                    <!-- Poster Profile Card -->
+                    <div class="profile-card" style="margin-bottom: 20px;">
+                        <div class="avatar"></div>
+                        <div>
+                            <h4>John Doe</h4>
+                            <p style="color: #666; font-size: 14px;">ABC Company • New York, USA</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">Description</h3>
+                        <div class="placeholder medium">
+                            Detailed opportunity description goes here. This should be a comprehensive explanation of what the opportunity entails, requirements, expectations, and any other relevant information...
+                        </div>
+                    </div>
+                    
+                    <!-- Details Grid -->
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">Details</h3>
+                        <div class="grid grid-2">
+                            <div>
+                                <p><strong>Category:</strong> Project Work</p>
+                                <p><strong>Industry:</strong> Technology</p>
+                                <p><strong>Budget:</strong> $5,000 - $10,000 (Fixed)</p>
+                            </div>
+                            <div>
+                                <p><strong>Timeline:</strong> 2 months</p>
+                                <p><strong>Location:</strong> Remote / New York</p>
+                                <p><strong>Deadline:</strong> <span style="color: #e74c3c;">⏰ 5 days remaining</span></p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <p><strong>Required Skills:</strong></p>
+                            <div class="skills-tags">
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">MongoDB</span>
+                                <span class="skill-tag">AWS</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <p><strong>Preferred Experience:</strong> 3+ years in full-stack development</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex" style="margin-bottom: 20px;">
+                        <button class="btn btn-primary">Submit Proposal</button>
+                        <button class="btn btn-outline">💾 Save</button>
+                        <button class="btn btn-outline">📤 Share</button>
+                    </div>
+                </div>
+                
+                <!-- Right Sidebar (30%) -->
+                <div style="flex: 0 0 30%;">
+                    <!-- Quick Stats -->
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">Quick Stats</h3>
+                        <div class="flex-between" style="margin-bottom: 10px;">
+                            <span>Views:</span>
+                            <strong>245</strong>
+                        </div>
+                        <div class="flex-between">
+                            <span>Proposals:</span>
+                            <strong>12</strong>
+                        </div>
+                    </div>
+                    
+                    <!-- Related Opportunities -->
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">Related Opportunities</h3>
+                        <div class="opportunity-card" style="margin-bottom: 10px;">
+                            <h4 style="font-size: 14px; margin-bottom: 5px;">Related Opportunity 1</h4>
+                            <p style="font-size: 12px; color: #666;">Technology • $3,000 - $5,000</p>
+                        </div>
+                        <div class="opportunity-card" style="margin-bottom: 10px;">
+                            <h4 style="font-size: 14px; margin-bottom: 5px;">Related Opportunity 2</h4>
+                            <p style="font-size: 12px; color: #666;">Technology • Negotiable</p>
+                        </div>
+                        <div class="opportunity-card">
+                            <h4 style="font-size: 14px; margin-bottom: 5px;">Related Opportunity 3</h4>
+                            <p style="font-size: 12px; color: #666;">Technology • $8,000</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Poster Info -->
+                    <div class="card">
+                        <h3 style="margin-bottom: 15px;">About Poster</h3>
+                        <div class="profile-card">
+                            <div class="avatar"></div>
+                            <div>
+                                <h4>John Doe</h4>
+                                <p style="color: #666; font-size: 12px;">Member since 2023</p>
+                                <p style="color: #666; font-size: 12px;">⭐ 4.8 Rating</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 15px;">View Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEB: Create Opportunity -->
+        <div id="web-create" class="screen-section">
+            <span class="screen-label">WEB</span>
+            <h2 class="screen-title">Create Opportunity Form</h2>
+            
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="note" style="background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin-bottom: 20px;">
+                    <strong>Note:</strong> You can only post 1 opportunity per 24 hours.
+                </div>
+                
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">Title <span style="color: red;">*</span></label>
+                        <input type="text" class="form-input" placeholder="Enter opportunity title (max 200 characters)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description <span style="color: red;">*</span></label>
+                        <textarea class="form-textarea" placeholder="Enter detailed description (min 100 characters)"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Category <span style="color: red;">*</span></label>
+                            <select class="form-input">
+                                <option>Select category</option>
+                                <option>Looking for Partner</option>
+                                <option>Need Consultant</option>
+                                <option>Project Work</option>
+                                <option>Full-time Contract</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Industry <span style="color: red;">*</span></label>
+                            <div class="placeholder small">Searchable Dropdown</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Budget Minimum</label>
+                            <input type="number" class="form-input" placeholder="Min amount">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Budget Maximum</label>
+                            <input type="number" class="form-input" placeholder="Max amount">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Budget Type <span style="color: red;">*</span></label>
+                            <select class="form-input">
+                                <option>Fixed</option>
+                                <option>Hourly</option>
+                                <option>Project</option>
+                                <option>Negotiable</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Timeline</label>
+                            <input type="text" class="form-input" placeholder="e.g., 2 weeks, 1 month">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-input" placeholder="Enter location">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Required Skills</label>
+                        <div class="placeholder small">Tags Input (max 10 skills)</div>
+                        <div class="skills-tags" style="margin-top: 10px;">
+                            <span class="skill-tag">React ✕</span>
+                            <span class="skill-tag">Node.js ✕</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preferred Experience</label>
+                        <input type="text" class="form-input" placeholder="e.g., 3+ years in web development">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    
+                    <div class="flex" style="margin-top: 30px;">
+                        <button type="button" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Publish Opportunity</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- WEB: My Opportunities -->
+        <div id="web-my-opps" class="screen-section">
+            <span class="screen-label">WEB</span>
+            <h2 class="screen-title">My Opportunities Dashboard</h2>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-4" style="margin-bottom: 30px;">
+                <div class="stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <p>Total Posted</p>
+                    <h3>24</h3>
+                </div>
+                <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <p>Active Opportunities</p>
+                    <h3>8</h3>
+                </div>
+                <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <p>Proposals Received</p>
+                    <h3>156</h3>
+                </div>
+                <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <p>Total Views</p>
+                    <h3>2,458</h3>
+                </div>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="tabs">
+                <button class="tab active">All</button>
+                <button class="tab">Open</button>
+                <button class="tab">In Review</button>
+                <button class="tab">Awarded</button>
+                <button class="tab">Closed</button>
+            </div>
+            
+            <!-- Opportunities List -->
+            <div class="card">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f5f5f5;">
+                            <th style="padding: 12px; text-align: left;">Title</th>
+                            <th style="padding: 12px; text-align: left;">Status</th>
+                            <th style="padding: 12px; text-align: left;">Proposals</th>
+                            <th style="padding: 12px; text-align: left;">Views</th>
+                            <th style="padding: 12px; text-align: left;">Created</th>
+                            <th style="padding: 12px; text-align: left;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 12px;">Opportunity Title 1</td>
+                            <td style="padding: 12px;"><span class="badge open">Open</span></td>
+                            <td style="padding: 12px;">12</td>
+                            <td style="padding: 12px;">245</td>
+                            <td style="padding: 12px;">2024-01-15</td>
+                            <td style="padding: 12px;">
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">View</button>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Edit</button>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Proposals</button>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 12px;">Opportunity Title 2</td>
+                            <td style="padding: 12px;"><span class="badge" style="background: #3498db; color: white;">In Review</span></td>
+                            <td style="padding: 12px;">8</td>
+                            <td style="padding: 12px;">189</td>
+                            <td style="padding: 12px;">2024-01-10</td>
+                            <td style="padding: 12px;">
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">View</button>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Edit</button>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Proposals</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px;">Opportunity Title 3</td>
+                            <td style="padding: 12px;"><span class="badge closed">Closed</span></td>
+                            <td style="padding: 12px;">5</td>
+                            <td style="padding: 12px;">98</td>
+                            <td style="padding: 12px;">2023-12-20</td>
+                            <td style="padding: 12px;">
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">View</button>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Edit</button>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Proposals</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- WEB: Proposals Management -->
+        <div id="web-proposals" class="screen-section">
+            <span class="screen-label">WEB</span>
+            <h2 class="screen-title">Proposals Management Page</h2>
+            
+            <!-- Opportunity Header -->
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="flex-between">
+                    <div>
+                        <h2>Opportunity Title Here</h2>
+                        <span class="badge open">Open</span>
+                    </div>
+                    <button class="btn btn-secondary">← Back</button>
+                </div>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="tabs">
+                <button class="tab active">All (12)</button>
+                <button class="tab">Pending (8)</button>
+                <button class="tab">Shortlisted (2)</button>
+                <button class="tab">Accepted (1)</button>
+                <button class="tab">Rejected (1)</button>
+            </div>
+            
+            <!-- Proposal Cards -->
+            <div class="card" style="margin-bottom: 15px;">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                    <div class="profile-card" style="padding: 0;">
+                        <div class="avatar"></div>
+                        <div>
+                            <h4>Jane Smith</h4>
+                            <p style="color: #666; font-size: 12px;">⭐ 4.9 Rating • 15 Projects</p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="badge pending">Pending</span>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">Submitted: 2 days ago</p>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <p><strong>Proposal:</strong></p>
+                    <div class="placeholder small" style="text-align: left;">
+                        This is a sample proposal text. It should be comprehensive and explain why the proposer is a good fit for this opportunity...
+                    </div>
+                    <a href="#" style="color: #e74c3c; font-size: 14px;">Read more</a>
+                </div>
+                
+                <div class="grid grid-2" style="margin-bottom: 15px;">
+                    <div>
+                        <p><strong>Proposed Budget:</strong> $8,000</p>
+                        <p><strong>Estimated Timeline:</strong> 6 weeks</p>
+                    </div>
+                    <div>
+                        <p><strong>Portfolio Links:</strong></p>
+                        <div class="placeholder small" style="text-align: left;">Portfolio items here</div>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <button class="btn btn-primary">Shortlist</button>
+                    <button class="btn" style="background: #2ecc71; color: white;">Accept</button>
+                    <button class="btn" style="background: #e74c3c; color: white;">Reject</button>
+                    <button class="btn btn-outline">Contact</button>
+                </div>
+            </div>
+            
+            <!-- Proposal Card 2 -->
+            <div class="card" style="margin-bottom: 15px;">
+                <div class="flex-between" style="margin-bottom: 15px;">
+                    <div class="profile-card" style="padding: 0;">
+                        <div class="avatar"></div>
+                        <div>
+                            <h4>Mike Johnson</h4>
+                            <p style="color: #666; font-size: 12px;">⭐ 4.7 Rating • 8 Projects</p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="badge" style="background: #3498db; color: white;">Shortlisted</span>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">Submitted: 3 days ago</p>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <p><strong>Proposal:</strong></p>
+                    <div class="placeholder small" style="text-align: left;">
+                        Another proposal text example...
+                    </div>
+                </div>
+                
+                <div class="grid grid-2" style="margin-bottom: 15px;">
+                    <div>
+                        <p><strong>Proposed Budget:</strong> $7,500</p>
+                        <p><strong>Estimated Timeline:</strong> 5 weeks</p>
+                    </div>
+                    <div>
+                        <p><strong>Portfolio Links:</strong></p>
+                        <div class="placeholder small" style="text-align: left;">Portfolio items here</div>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <button class="btn btn-primary">Shortlist</button>
+                    <button class="btn" style="background: #2ecc71; color: white;">Accept</button>
+                    <button class="btn" style="background: #e74c3c; color: white;">Reject</button>
+                    <button class="btn btn-outline">Contact</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEB: My Applications -->
+        <div id="web-applications" class="screen-section">
+            <span class="screen-label">WEB</span>
+            <h2 class="screen-title">My Applications Page</h2>
+            
+            <!-- Filter Tabs -->
+            <div class="tabs">
+                <button class="tab active">All</button>
+                <button class="tab">Pending</button>
+                <button class="tab">Shortlisted</button>
+                <button class="tab">Accepted</button>
+                <button class="tab">Rejected</button>
+            </div>
+            
+            <!-- Application Cards -->
+            <div class="card" style="margin-bottom: 15px;">
+                <div class="flex-between">
+                    <div style="flex: 1;">
+                        <h3 style="margin-bottom: 10px;">Opportunity Title Here</h3>
+                        <p style="color: #666; margin-bottom: 10px;">Submitted: January 15, 2024</p>
+                        <div class="skills-tags">
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="badge pending">Pending</span>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-outline">View</button>
+                            <button class="btn btn-secondary">Withdraw</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 15px;">
+                <div class="flex-between">
+                    <div style="flex: 1;">
+                        <h3 style="margin-bottom: 10px;">Another Opportunity Title</h3>
+                        <p style="color: #666; margin-bottom: 10px;">Submitted: January 10, 2024</p>
+                        <div class="skills-tags">
+                            <span class="skill-tag">Design</span>
+                            <span class="skill-tag">UI/UX</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="badge" style="background: #3498db; color: white;">Shortlisted</span>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-outline">View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="flex-between">
+                    <div style="flex: 1;">
+                        <h3 style="margin-bottom: 10px;">Third Opportunity</h3>
+                        <p style="color: #666; margin-bottom: 10px;">Submitted: December 20, 2023</p>
+                        <div class="skills-tags">
+                            <span class="skill-tag">Marketing</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="badge" style="background: #2ecc71; color: white;">Accepted</span>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-outline">View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEB: Saved Opportunities -->
+        <div id="web-saved" class="screen-section">
+            <span class="screen-label">WEB</span>
+            <h2 class="screen-title">Saved Opportunities Page</h2>
+            
+            <div class="grid grid-3">
+                <!-- Saved Opportunity Card 1 -->
+                <div class="opportunity-card">
+                    <div class="flex-between">
+                        <h3 style="margin-bottom: 10px;">Saved Opportunity 1</h3>
+                        <button class="btn btn-outline" style="padding: 5px 10px;">🔖 Unsave</button>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span class="badge open">Project Work</span>
+                        <span style="color: #666; font-size: 14px;">Technology</span>
+                    </div>
+                    <div style="margin-bottom: 10px; color: #666;">
+                        <p><strong>Budget:</strong> $5,000 - $10,000</p>
+                        <p><strong>Timeline:</strong> 2 months</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">View Details</button>
+                </div>
+                
+                <!-- Saved Opportunity Card 2 -->
+                <div class="opportunity-card">
+                    <div class="flex-between">
+                        <h3 style="margin-bottom: 10px;">Saved Opportunity 2</h3>
+                        <button class="btn btn-outline" style="padding: 5px 10px;">🔖 Unsave</button>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span class="badge open">Need Consultant</span>
+                        <span style="color: #666; font-size: 14px;">Finance</span>
+                    </div>
+                    <div style="margin-bottom: 10px; color: #666;">
+                        <p><strong>Budget:</strong> Negotiable</p>
+                        <p><strong>Timeline:</strong> 1 month</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">View Details</button>
+                </div>
+                
+                <!-- Saved Opportunity Card 3 -->
+                <div class="opportunity-card">
+                    <div class="flex-between">
+                        <h3 style="margin-bottom: 10px;">Saved Opportunity 3</h3>
+                        <button class="btn btn-outline" style="padding: 5px 10px;">🔖 Unsave</button>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span class="badge closed">Closed</span>
+                        <span style="color: #666; font-size: 14px;">Healthcare</span>
+                    </div>
+                    <div style="margin-bottom: 10px; color: #666;">
+                        <p><strong>Budget:</strong> $20,000 - $50,000</p>
+                        <p><strong>Timeline:</strong> 6 months</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE: Browse Opportunities -->
+        <div id="mobile-browse" class="screen-section">
+            <span class="screen-label mobile">MOBILE</span>
+            <h2 class="screen-title">Browse Opportunities (Mobile)</h2>
+            
+            <div class="mobile-frame">
+                <!-- Mobile Header -->
+                <div class="mobile-header">
+                    <button style="background: none; border: none; color: white; font-size: 20px;">←</button>
+                    <h3 style="flex: 1; text-align: center; color: white;">Opportunities</h3>
+                    <button style="background: none; border: none; color: white; font-size: 20px;">🔍</button>
+                </div>
+                
+                <!-- Search Bar -->
+                <div style="padding: 15px; background: white; border-bottom: 1px solid #ddd;">
+                    <input type="text" class="form-input" placeholder="Search opportunities..." style="width: 100%;">
+                </div>
+                
+                <!-- Filter Chips -->
+                <div style="padding: 10px 15px; background: white; border-bottom: 1px solid #ddd; overflow-x: auto; white-space: nowrap;">
+                    <span class="badge" style="margin-right: 8px;">Technology</span>
+                    <span class="badge" style="margin-right: 8px;">Project Work</span>
+                    <span class="badge" style="margin-right: 8px;">$5k-$10k</span>
+                    <button class="btn btn-outline" style="padding: 5px 15px; display: inline-block;">Filter</button>
+                </div>
+                
+                <!-- Sort Button -->
+                <div style="padding: 10px 15px; background: white; border-bottom: 1px solid #ddd;">
+                    <button class="btn btn-outline" style="width: 100%;">Sort: Newest</button>
+                </div>
+                
+                <!-- Opportunity Cards -->
+                <div class="mobile-content">
+                    <!-- Card 1 -->
+                    <div class="opportunity-card">
+                        <div class="flex-between">
+                            <h3 style="font-size: 16px; margin-bottom: 10px;">Opportunity Title Here</h3>
+                            <span class="badge recommended">Recommended</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <span class="badge open">Project Work</span>
+                            <span style="color: #666; font-size: 12px;">Technology</span>
+                        </div>
+                        <div style="margin-bottom: 10px; color: #666; font-size: 14px;">
+                            <p><strong>Budget:</strong> $5,000 - $10,000</p>
+                            <p><strong>Timeline:</strong> 2 months</p>
+                        </div>
+                        <div class="skills-tags">
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">+2 more</span>
+                        </div>
+                        <div class="flex-between" style="margin-top: 15px; font-size: 12px; color: #666;">
+                            <span>📊 12 Proposals</span>
+                            <span>👁️ 245 Views</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Details</button>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="opportunity-card">
+                        <div class="flex-between">
+                            <h3 style="font-size: 16px; margin-bottom: 10px;">Another Opportunity</h3>
+                            <span>🔖</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <span class="badge open">Need Consultant</span>
+                            <span style="color: #666; font-size: 12px;">Finance</span>
+                        </div>
+                        <div style="margin-bottom: 10px; color: #666; font-size: 14px;">
+                            <p><strong>Budget:</strong> Negotiable</p>
+                            <p><strong>Timeline:</strong> 1 month</p>
+                        </div>
+                        <div class="skills-tags">
+                            <span class="skill-tag">Accounting</span>
+                            <span class="skill-tag">Tax</span>
+                        </div>
+                        <div class="flex-between" style="margin-top: 15px; font-size: 12px; color: #666;">
+                            <span>📊 5 Proposals</span>
+                            <span>👁️ 89 Views</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Details</button>
+                    </div>
+                </div>
+                
+                <!-- Bottom Navigation -->
+                <div class="mobile-bottom-nav">
+                    <div class="mobile-bottom-nav-item">
+                        <div style="font-size: 20px;">🏠</div>
+                        <div>Home</div>
+                    </div>
+                    <div class="mobile-bottom-nav-item active">
+                        <div style="font-size: 20px;">💼</div>
+                        <div>Opportunities</div>
+                    </div>
+                    <div class="mobile-bottom-nav-item">
+                        <div style="font-size: 20px;">🔖</div>
+                        <div>Saved</div>
+                    </div>
+                    <div class="mobile-bottom-nav-item">
+                        <div style="font-size: 20px;">📋</div>
+                        <div>Applications</div>
+                    </div>
+                    <div class="mobile-bottom-nav-item">
+                        <div style="font-size: 20px;">👤</div>
+                        <div>Profile</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Floating Action Button -->
+            <div style="position: fixed; bottom: 80px; right: 20px; width: 56px; height: 56px; background: #e74c3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                +
+            </div>
+        </div>
+
+        <!-- MOBILE: Opportunity Detail -->
+        <div id="mobile-detail" class="screen-section">
+            <span class="screen-label mobile">MOBILE</span>
+            <h2 class="screen-title">Opportunity Detail (Mobile)</h2>
+            
+            <div class="mobile-frame">
+                <!-- Mobile Header -->
+                <div class="mobile-header">
+                    <button style="background: none; border: none; color: white; font-size: 20px;">←</button>
+                    <h3 style="flex: 1; text-align: center; color: white; font-size: 14px; overflow: hidden; text-overflow: ellipsis;">Opportunity Title</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button style="background: none; border: none; color: white; font-size: 18px;">📤</button>
+                        <button style="background: none; border: none; color: white; font-size: 18px;">🔖</button>
+                    </div>
+                </div>
+                
+                <!-- Scrollable Content -->
+                <div class="mobile-content">
+                    <!-- Status Badge -->
+                    <div style="padding: 15px;">
+                        <span class="badge open">Open</span>
+                    </div>
+                    
+                    <!-- Poster Profile -->
+                    <div class="profile-card" style="margin: 15px;">
+                        <div class="avatar"></div>
+                        <div>
+                            <h4>John Doe</h4>
+                            <p style="color: #666; font-size: 12px;">ABC Company • New York</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div style="padding: 15px;">
+                        <h3 style="margin-bottom: 10px;">Description</h3>
+                        <div class="placeholder medium" style="text-align: left;">
+                            Detailed opportunity description goes here. This should be comprehensive...
+                        </div>
+                    </div>
+                    
+                    <!-- Details Accordion -->
+                    <div style="padding: 15px; border-top: 1px solid #ddd;">
+                        <h3 style="margin-bottom: 15px;">Details</h3>
+                        <div style="margin-bottom: 15px;">
+                            <p><strong>Category:</strong> Project Work</p>
+                            <p><strong>Industry:</strong> Technology</p>
+                            <p><strong>Budget:</strong> $5,000 - $10,000 (Fixed)</p>
+                            <p><strong>Timeline:</strong> 2 months</p>
+                            <p><strong>Location:</strong> Remote / New York</p>
+                            <p><strong>Deadline:</strong> <span style="color: #e74c3c;">⏰ 5 days remaining</span></p>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <p><strong>Required Skills:</strong></p>
+                            <div class="skills-tags">
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">MongoDB</span>
+                                <span class="skill-tag">AWS</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <p><strong>Preferred Experience:</strong> 3+ years in full-stack development</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sticky Bottom Bar -->
+                <div class="sticky-bottom-bar">
+                    <button class="btn btn-primary" style="width: 100%;">Submit Proposal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE: Create Opportunity -->
+        <div id="mobile-create" class="screen-section">
+            <span class="screen-label mobile">MOBILE</span>
+            <h2 class="screen-title">Create Opportunity (Mobile)</h2>
+            
+            <div class="mobile-frame">
+                <!-- Mobile Header -->
+                <div class="mobile-header">
+                    <button style="background: none; border: none; color: white; font-size: 20px;">←</button>
+                    <h3 style="flex: 1; text-align: center; color: white;">Post Opportunity</h3>
+                    <button style="background: none; border: none; color: white;">Save Draft</button>
+                </div>
+                
+                <!-- Form Content -->
+                <div class="mobile-content">
+                    <div class="note" style="background: #fff3cd; padding: 15px; margin: 15px; border-left: 4px solid #ffc107;">
+                        <strong>Note:</strong> You can only post 1 opportunity per 24 hours.
+                    </div>
+                    
+                    <div style="padding: 15px;">
+                        <div class="form-group">
+                            <label class="form-label">Title <span style="color: red;">*</span></label>
+                            <input type="text" class="form-input" placeholder="Enter title">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Description <span style="color: red;">*</span></label>
+                            <textarea class="form-textarea" placeholder="Enter description"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Category <span style="color: red;">*</span></label>
+                            <select class="form-input">
+                                <option>Select category</option>
+                                <option>Looking for Partner</option>
+                                <option>Need Consultant</option>
+                                <option>Project Work</option>
+                                <option>Full-time Contract</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Industry <span style="color: red;">*</span></label>
+                            <div class="placeholder small">Searchable Dropdown</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Budget Minimum</label>
+                            <input type="number" class="form-input" placeholder="Min amount">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Budget Maximum</label>
+                            <input type="number" class="form-input" placeholder="Max amount">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Budget Type <span style="color: red;">*</span></label>
+                            <select class="form-input">
+                                <option>Fixed</option>
+                                <option>Hourly</option>
+                                <option>Project</option>
+                                <option>Negotiable</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Timeline</label>
+                            <input type="text" class="form-input" placeholder="e.g., 2 weeks">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-input" placeholder="Enter location">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Required Skills</label>
+                            <div class="placeholder small">Tags Input</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Preferred Experience</label>
+                            <input type="text" class="form-input" placeholder="Experience level">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Deadline</label>
+                            <input type="date" class="form-input">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sticky Bottom Bar -->
+                <div class="sticky-bottom-bar">
+                    <button class="btn btn-primary" style="width: 100%;">Publish Opportunity</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE: Filter Bottom Sheet -->
+        <div id="mobile-filter" class="screen-section">
+            <span class="screen-label mobile">MOBILE</span>
+            <h2 class="screen-title">Filter Bottom Sheet (Mobile)</h2>
+            
+            <div style="position: relative; height: 600px; background: #f5f5f5;">
+                <div class="bottom-sheet">
+                    <!-- Handle -->
+                    <div style="width: 40px; height: 4px; background: #ccc; border-radius: 2px; margin: 0 auto 20px;"></div>
+                    
+                    <h3 style="margin-bottom: 20px;">Filters</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Industry</label>
+                        <div class="placeholder small">Multi-select Dropdown</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <div class="placeholder small">Checkboxes</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Budget Range</label>
+                        <div class="placeholder small">Range Slider</div>
+                        <div class="flex" style="margin-top: 10px;">
+                            <input type="number" class="form-input" placeholder="Min" style="flex: 1;">
+                            <input type="number" class="form-input" placeholder="Max" style="flex: 1;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" placeholder="Enter location">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Skills</label>
+                        <div class="placeholder small">Tags Input</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Sort By</label>
+                        <select class="form-input">
+                            <option>Newest</option>
+                            <option>Deadline</option>
+                            <option>Proposals Count</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex" style="margin-top: 30px;">
+                        <button class="btn btn-secondary" style="flex: 1;">Clear All</button>
+                        <button class="btn btn-primary" style="flex: 1;">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

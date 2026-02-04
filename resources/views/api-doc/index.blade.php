@@ -3540,16 +3540,16 @@
         <!-- Notification Routes -->
         <div id="notifications" class="api-section">
             <h2>🔔 Notifications</h2>
-            <p>Manage user notifications. Notifications are automatically created when users interact with your content (reactions, comments, shares, messages, etc.)</p>
+            <p>Comprehensive notification management APIs. Notifications are automatically created when users interact with your content (reactions, comments, shares, messages, opportunities, etc.)</p>
 
             <div class="api-endpoint">
                 <h3>
                     <span class="method-badge method-get">GET</span>
-                    Get Notifications
+                    List Notifications
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications?per_page=20&unread_only=false</div>
-                <p>Get user's notifications with pagination</p>
+                <div class="endpoint-url">/notifications?per_page=20&page=1&unread_only=false&type=new_message&sort=latest</div>
+                <p>Get user's notifications with advanced filtering and pagination</p>
                 
                 <h5>Query Parameters:</h5>
                 <table class="param-table">
@@ -3566,13 +3566,31 @@
                             <td>per_page</td>
                             <td>integer</td>
                             <td><span class="optional">Optional</span></td>
-                            <td>Number of notifications per page (default: 20)</td>
+                            <td>Number of notifications per page (default: 20, max: 100)</td>
+                        </tr>
+                        <tr>
+                            <td>page</td>
+                            <td>integer</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Page number (default: 1)</td>
                         </tr>
                         <tr>
                             <td>unread_only</td>
                             <td>boolean</td>
                             <td><span class="optional">Optional</span></td>
                             <td>If true, only return unread notifications (default: false)</td>
+                        </tr>
+                        <tr>
+                            <td>type</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Filter by notification type (e.g., post_reaction, new_message, opportunity_new_proposal)</td>
+                        </tr>
+                        <tr>
+                            <td>sort</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Sort order: 'latest' or 'oldest' (default: latest)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -3582,8 +3600,8 @@
                     <pre>{
   "status": true,
   "message": "Notifications fetched successfully.",
-  "notifications": {
-    "data": [
+  "data": {
+    "notifications": [
       {
         "id": 1,
         "user_id": 1,
@@ -3602,25 +3620,135 @@
         "updated_at": "2026-01-29T10:00:00.000000Z"
       }
     ],
-    "current_page": 1,
-    "last_page": 5,
-    "per_page": 20,
-    "total": 100
-  },
-  "unread_count": 15
+    "pagination": {
+      "current_page": 1,
+      "last_page": 5,
+      "per_page": 20,
+      "total": 100,
+      "from": 1,
+      "to": 20
+    },
+    "unread_count": 15,
+    "filters": {
+      "unread_only": false,
+      "type": "new_message",
+      "sort": "latest"
+    }
+  }
 }</pre>
                 </div>
+            </div>
 
-                <h5>Notification Types:</h5>
-                <ul>
-                    <li><code>post_reaction</code> - Someone reacted to your post</li>
-                    <li><code>post_comment</code> - Someone commented on your post</li>
-                    <li><code>comment_reply</code> - Someone replied to your comment</li>
-                    <li><code>post_share</code> - Someone shared/reposted your post</li>
-                    <li><code>new_message</code> - You received a new message</li>
-                    <li><code>new_service</code> - A new service was posted</li>
-                    <li><code>new_product</code> - A new product was posted</li>
-                </ul>
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Single Notification
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/{id}</div>
+                <p>Get details of a specific notification</p>
+                
+                <h5>URL Parameters:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Notification ID</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Notification fetched successfully.",
+  "data": {
+    "notification": {
+      "id": 123,
+      "user_id": 456,
+      "type": "post_comment",
+      "title": "New Comment",
+      "message": "Jane Smith commented on your post",
+      "data": { ... },
+      "read_at": "2024-01-15T11:00:00.000000Z",
+      "created_at": "2024-01-15T10:30:00.000000Z",
+      "updated_at": "2024-01-15T11:00:00.000000Z"
+    }
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Unread Count
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/unread-count</div>
+                <p>Get the count of unread notifications</p>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Unread count fetched successfully.",
+  "data": {
+    "unread_count": 15
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-get">GET</span>
+                    Get Notification Types
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/types</div>
+                <p>Get a list of all available notification types</p>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Notification types fetched successfully.",
+  "data": {
+    "types": {
+      "post_reaction": "Post Reaction",
+      "post_comment": "Post Comment",
+      "comment_reply": "Comment Reply",
+      "post_share": "Post Share",
+      "new_message": "New Message",
+      "new_service": "New Service",
+      "new_product": "New Product",
+      "profile_view": "Profile View",
+      "new_follower": "New Follower",
+      "subscription_event": "Subscription Event",
+      "admin_notification": "Admin Notification",
+      "opportunity_new_proposal": "New Proposal",
+      "proposal_shortlisted": "Proposal Shortlisted",
+      "proposal_accepted": "Proposal Accepted",
+      "proposal_rejected": "Proposal Rejected",
+      "proposal_withdrawn": "Proposal Withdrawn",
+      "opportunity_expired": "Opportunity Expired",
+      "opportunity_deadline_reminder": "Deadline Reminder"
+    }
+  }
+}</pre>
+                </div>
             </div>
 
             <div class="api-endpoint">
@@ -3656,7 +3784,60 @@
                 <div class="code-block">
                     <pre>{
   "status": true,
-  "message": "Notification marked as read."
+  "message": "Notification marked as read.",
+  "data": {
+    "notification": { ... },
+    "unread_count": 14
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
+                    Mark Multiple Notifications as Read
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/read-multiple</div>
+                <p>Mark multiple notifications as read at once</p>
+
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ids</td>
+                            <td>array</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>Array of notification IDs. If empty or not provided, marks all as read</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "ids": [123, 124, 125]
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "3 notification(s) marked as read.",
+  "data": {
+    "marked_count": 3,
+    "unread_count": 12
+  }
 }</pre>
                 </div>
             </div>
@@ -3668,15 +3849,185 @@
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
                 <div class="endpoint-url">/notifications/read-all</div>
-                <p>Mark all user's notifications as read</p>
+                <p>Mark all user's unread notifications as read</p>
 
                 <h5>Response:</h5>
                 <div class="code-block">
                     <pre>{
   "status": true,
-  "message": "All notifications marked as read."
+  "message": "All notifications marked as read.",
+  "data": {
+    "marked_count": 15,
+    "unread_count": 0
+  }
 }</pre>
                 </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Notification
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/{id}</div>
+                <p>Delete a specific notification</p>
+                
+                <h5>URL Parameters:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>integer</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Notification ID</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Notification deleted successfully.",
+  "data": {
+    "unread_count": 14
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete Multiple Notifications
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/delete/multiple</div>
+                <p>Delete multiple notifications at once</p>
+
+                <h5>Request Body:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ids</td>
+                            <td>array</td>
+                            <td><span class="required">Yes</span></td>
+                            <td>Array of notification IDs to delete</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "ids": [123, 124, 125]
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "3 notification(s) deleted successfully.",
+  "data": {
+    "deleted_count": 3,
+    "unread_count": 12
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-delete">DELETE</span>
+                    Delete All Notifications
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/notifications/delete/all?read_only=false</div>
+                <p>Delete all notifications (with optional filter for read-only)</p>
+
+                <h5>Query Parameters:</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>read_only</td>
+                            <td>boolean</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>If true, only delete read notifications (default: false)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "50 notification(s) deleted successfully.",
+  "data": {
+    "deleted_count": 50,
+    "unread_count": 5
+  }
+}</pre>
+                </div>
+            </div>
+
+            <h4 style="margin-top: 30px; color: #273572;">Notification Types</h4>
+            <p>Available notification types in the system:</p>
+            <div class="code-block">
+                <pre><strong>Content & Social:</strong>
+- post_reaction - Someone reacted to your post
+- post_comment - Someone commented on your post
+- comment_reply - Someone replied to your comment
+- post_share - Someone shared/reposted your post
+
+<strong>Communication:</strong>
+- new_message - You received a new message
+
+<strong>Business:</strong>
+- new_service - A new service was posted
+- new_product - A new product was posted
+
+<strong>Profile:</strong>
+- profile_view - Someone viewed your profile
+- new_follower - Someone followed you
+
+<strong>Opportunities:</strong>
+- opportunity_new_proposal - New proposal submitted to your opportunity
+- proposal_shortlisted - Your proposal was shortlisted
+- proposal_accepted - Your proposal was accepted
+- proposal_rejected - Your proposal was rejected
+- proposal_withdrawn - A proposal was withdrawn
+- opportunity_expired - An opportunity has expired
+- opportunity_deadline_reminder - Opportunity deadline approaching
+
+<strong>System:</strong>
+- subscription_event - Subscription-related events
+- admin_notification - Admin notifications</pre>
             </div>
         </div>
 

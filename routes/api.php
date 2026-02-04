@@ -12,6 +12,7 @@ use App\Http\Controllers\API\EducationController;
 use App\Http\Controllers\API\FeedController;
 use App\Http\Controllers\User\BlockController;
 use App\Http\Controllers\API\ReportController;
+use App\Http\Controllers\API\NotificationController;
 use App\Services\GooglePlayService;
 use App\Services\S3Service;
 use Illuminate\Support\Facades\Log;
@@ -223,9 +224,43 @@ Route::middleware('auth:sanctum')->group(function () {
     | Notification Routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/notifications', [UserController::class, 'getNotifications'])->name('api.notifications');
-    Route::post('/notifications/{id}/read', [UserController::class, 'markNotificationAsRead'])->name('api.notification.read');
-    Route::post('/notifications/read-all', [UserController::class, 'markAllNotificationsAsRead'])->name('api.notifications.read.all');
+    // New comprehensive notification APIs
+    Route::prefix('notifications')->group(function () {
+        // Get unread count (must be before /{id} route)
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('api.notifications.unread-count');
+        
+        // Get notification types
+        Route::get('/types', [NotificationController::class, 'getTypes'])->name('api.notifications.types');
+        
+        // Mark multiple as read
+        Route::post('/read-multiple', [NotificationController::class, 'markMultipleAsRead'])->name('api.notifications.read-multiple');
+        
+        // Mark all as read
+        Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('api.notifications.read-all');
+        
+        // Delete multiple notifications
+        Route::delete('/delete/multiple', [NotificationController::class, 'destroyMultiple'])->name('api.notifications.destroy-multiple');
+        
+        // Delete all notifications
+        Route::delete('/delete/all', [NotificationController::class, 'destroyAll'])->name('api.notifications.destroy-all');
+        
+        // List notifications with filters
+        Route::get('/', [NotificationController::class, 'index'])->name('api.notifications.index');
+        
+        // Get single notification
+        Route::get('/{id}', [NotificationController::class, 'show'])->name('api.notifications.show');
+        
+        // Mark as read
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('api.notifications.read');
+        
+        // Delete notification
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('api.notifications.destroy');
+    });
+    
+    // Legacy routes (for backward compatibility - redirects to new controller)
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('api.notifications');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('api.notification.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('api.notifications.read.all');
 
     /*
     |--------------------------------------------------------------------------
