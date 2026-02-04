@@ -82,8 +82,29 @@ class NotificationController extends Controller
             $unreadCount = Notification::where('user_id', $userId)->unread()->count();
 
             // Format notifications with user photos
-            $formattedNotifications = $notifications->getCollection()->map(function ($notification) {
-                return $this->formatNotification($notification);
+            // Eager load users to avoid N+1 queries
+            $userIds = [];
+            foreach ($notifications->getCollection() as $notification) {
+                $data = $notification->data ?? [];
+                if (is_string($data)) {
+                    $data = json_decode($data, true) ?? [];
+                }
+                
+                // Collect all possible user IDs from notification data
+                $userKeyMap = ['reactor_id', 'commenter_id', 'sharer_id', 'sender_id', 'replier_id', 'owner_id', 'follower_id', 'viewer_id'];
+                foreach ($userKeyMap as $key) {
+                    if (isset($data[$key]) && !empty($data[$key])) {
+                        $userIds[] = (int) $data[$key];
+                    }
+                }
+            }
+            
+            // Eager load all users at once
+            $users = User::whereIn('id', array_unique($userIds))->get()->keyBy('id');
+            
+            // Format notifications with user photos
+            $formattedNotifications = $notifications->getCollection()->map(function ($notification) use ($users) {
+                return $this->formatNotification($notification, $users);
             });
 
             // For mobile apps, always return the standard format
@@ -144,11 +165,19 @@ class NotificationController extends Controller
      * Format notification with user photo
      * 
      * @param Notification $notification
+     * @param \Illuminate\Support\Collection|null $users Pre-loaded users collection (optional, for performance)
      * @return array
      */
-    private function formatNotification($notification)
+    private function formatNotification($notification, $users = null)
     {
+        // Get data - it's already cast to array by the model
         $data = $notification->data ?? [];
+        
+        // If data is a string (JSON), decode it
+        if (is_string($data)) {
+            $data = json_decode($data, true) ?? [];
+        }
+        
         $userPhoto = null;
         $userName = null;
         $userId = null;
@@ -167,34 +196,66 @@ class NotificationController extends Controller
         ];
 
         foreach ($userKeyMap as $key) {
-            if (isset($data[$key])) {
-                $userId = $data[$key];
+            if (isset($data[$key]) && !empty($data[$key])) {
+                $userId = (int) $data[$key];
                 break;
             }
         }
 
-        // Load user and get photo if user ID found
+        // Get user photo and name if user ID found
         if ($userId) {
             try {
-                $user = User::find($userId);
+                // Use pre-loaded users if available, otherwise load from database
+                if ($users && $users->has($userId)) {
+                    $user = $users->get($userId);
+                } else {
+                    $user = User::find($userId);
+                }
+                
                 if ($user) {
                     $userPhoto = getImageUrl($user->photo);
                     $userName = trim($user->first_name . ' ' . $user->last_name);
+                    
+                    // Log for debugging
+                    Log::debug('User photo loaded for notification', [
+                        'notification_id' => $notification->id,
+                        'user_id' => $userId,
+                        'user_photo' => $userPhoto,
+                        'has_photo_field' => !empty($user->photo),
+                    ]);
+                } else {
+                    Log::debug('User not found for notification', [
+                        'notification_id' => $notification->id,
+                        'user_id' => $userId,
+                        'notification_type' => $notification->type,
+                    ]);
                 }
             } catch (\Exception $e) {
                 Log::warning('Failed to load user for notification', [
                     'notification_id' => $notification->id,
                     'user_id' => $userId,
+                    'data' => $data,
                     'error' => $e->getMessage(),
                 ]);
             }
         }
 
         // Convert notification to array and add user photo
-        $notificationArray = $notification->toArray();
-        $notificationArray['user_photo'] = $userPhoto;
-        $notificationArray['user_name'] = $userName;
-        $notificationArray['user_id'] = $userId;
+        // Build array manually to ensure data is properly formatted
+        $notificationArray = [
+            'id' => $notification->id,
+            'user_id' => $notification->user_id, // ID of the user who receives the notification
+            'type' => $notification->type,
+            'title' => $notification->title,
+            'message' => $notification->message,
+            'data' => $data, // Use the decoded data
+            'read_at' => $notification->read_at?->toIso8601String(),
+            'created_at' => $notification->created_at?->toIso8601String(),
+            'updated_at' => $notification->updated_at?->toIso8601String(),
+            'user_photo' => $userPhoto, // Photo of the user who triggered the notification
+            'user_name' => $userName, // Name of the user who triggered the notification
+            'trigger_user_id' => $userId, // ID of the user who triggered the notification
+        ];
 
         return $notificationArray;
     }
@@ -222,7 +283,7 @@ class NotificationController extends Controller
             }
 
             // Format notification with user photo
-            $formattedNotification = $this->formatNotification($notification);
+            $formattedNotification = $this->formatNotification($notification, null);
 
             return response()->json([
                 'status' => true,

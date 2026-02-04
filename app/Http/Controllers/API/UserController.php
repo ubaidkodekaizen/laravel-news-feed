@@ -514,12 +514,26 @@ class UserController extends Controller
             // Check expiration using expires_at first, then renewal_date as fallback
             $expirationDate = $activeSubscription->expires_at ?? $activeSubscription->renewal_date;
             
+            // Convert to Carbon instance if it's a string
+            if ($expirationDate && is_string($expirationDate)) {
+                try {
+                    $expirationDate = \Carbon\Carbon::parse($expirationDate);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to parse expiration date', [
+                        'user_id' => $user->id,
+                        'expiration_date' => $expirationDate,
+                        'error' => $e->getMessage(),
+                    ]);
+                    $expirationDate = null;
+                }
+            }
+            
             // Subscription is valid if:
             // 1. No expiration date set (null), OR
             // 2. Expiration date is in the future, OR
             // 3. Expiration date is today (still valid today)
             $isValid = !$expirationDate || 
-                      ($expirationDate && ($expirationDate->isFuture() || $expirationDate->isToday()));
+                      ($expirationDate instanceof \Carbon\Carbon && ($expirationDate->isFuture() || $expirationDate->isToday()));
             
             if ($isValid) {
                 $hasValidSubscription = true;

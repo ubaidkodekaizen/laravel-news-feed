@@ -54,6 +54,23 @@ class Subscription extends Model
     }
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'start_date' => 'datetime',
+        'renewal_date' => 'datetime',
+        'expires_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'last_renewed_at' => 'datetime',
+        'last_checked_at' => 'datetime',
+        'grace_period_ends_at' => 'datetime',
+        'renewal_reminder_sent_at' => 'datetime',
+        'auto_renewing' => 'boolean',
+    ];
+
+    /**
      * Get total amount paid across all billings
      */
     public function getTotalPaidAttribute(): float
