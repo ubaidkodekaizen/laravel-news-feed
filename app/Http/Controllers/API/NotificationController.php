@@ -29,11 +29,11 @@ class NotificationController extends Controller
         try {
             $userId = Auth::id();
             
-            // Validate query parameters
+            // Validate query parameters (lenient for mobile apps)
             $validator = Validator::make($request->all(), [
                 'per_page' => 'sometimes|integer|min:1|max:100',
                 'page' => 'sometimes|integer|min:1',
-                'unread_only' => 'sometimes|boolean',
+                'unread_only' => 'sometimes', // Accept any value, we'll parse it
                 'type' => 'sometimes|string',
                 'sort' => 'sometimes|in:latest,oldest',
             ]);
@@ -46,8 +46,14 @@ class NotificationController extends Controller
                 ], 422);
             }
 
-            $perPage = $request->get('per_page', 20);
-            $unreadOnly = filter_var($request->get('unread_only', false), FILTER_VALIDATE_BOOLEAN);
+            $perPage = (int) $request->get('per_page', 20);
+            // Handle string booleans from mobile/query params: "false", "true", "0", "1", etc.
+            $unreadOnlyValue = $request->get('unread_only', false);
+            $unreadOnly = filter_var($unreadOnlyValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            if ($unreadOnly === null) {
+                // If filter_var returns null, try string comparison
+                $unreadOnly = in_array(strtolower((string)$unreadOnlyValue), ['true', '1', 'yes'], true);
+            }
             $type = $request->get('type');
             $sort = $request->get('sort', 'latest');
 
@@ -74,45 +80,43 @@ class NotificationController extends Controller
             // Get unread count
             $unreadCount = Notification::where('user_id', $userId)->unread()->count();
 
-            // Check if new format is requested (defaults to legacy for backward compatibility)
-            // Legacy format: { status, message, notifications: Paginator, unread_count }
-            // New format: { status, message, data: { notifications: [], pagination: {}, unread_count, filters } }
-            $useNewFormat = $request->get('new_format', false) || 
-                          $request->has('type') || 
-                          $request->has('sort') ||
-                          $request->routeIs('api.notifications.index');
+            // For mobile apps, always return the standard format
+            // Check if legacy format is explicitly requested (for web backward compatibility)
+            $useLegacyFormat = $request->get('legacy_format', false) === true || 
+                              $request->get('legacy_format') === 'true' ||
+                              $request->get('legacy_format') === '1';
             
-            if ($useNewFormat) {
-                // New format (with enhanced data structure)
+            if ($useLegacyFormat) {
+                // Legacy format (for web backward compatibility)
                 return response()->json([
                     'status' => true,
                     'message' => 'Notifications fetched successfully.',
-                    'data' => [
-                        'notifications' => $notifications->items(),
-                        'pagination' => [
-                            'current_page' => $notifications->currentPage(),
-                            'last_page' => $notifications->lastPage(),
-                            'per_page' => $notifications->perPage(),
-                            'total' => $notifications->total(),
-                            'from' => $notifications->firstItem(),
-                            'to' => $notifications->lastItem(),
-                        ],
-                        'unread_count' => $unreadCount,
-                        'filters' => [
-                            'unread_only' => $unreadOnly,
-                            'type' => $type,
-                            'sort' => $sort,
-                        ],
-                    ],
+                    'notifications' => $notifications,
+                    'unread_count' => $unreadCount,
                 ]);
             }
             
-            // Legacy format (for backward compatibility with existing frontend)
+            // Standard format (for mobile apps - default)
             return response()->json([
                 'status' => true,
                 'message' => 'Notifications fetched successfully.',
-                'notifications' => $notifications,
-                'unread_count' => $unreadCount,
+                'data' => [
+                    'notifications' => $notifications->items(),
+                    'pagination' => [
+                        'current_page' => $notifications->currentPage(),
+                        'last_page' => $notifications->lastPage(),
+                        'per_page' => $notifications->perPage(),
+                        'total' => $notifications->total(),
+                        'from' => $notifications->firstItem(),
+                        'to' => $notifications->lastItem(),
+                    ],
+                    'unread_count' => $unreadCount,
+                    'filters' => [
+                        'unread_only' => $unreadOnly,
+                        'type' => $type,
+                        'sort' => $sort,
+                    ],
+                ],
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch notifications', [

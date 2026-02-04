@@ -257,10 +257,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('api.notifications.destroy');
     });
     
-    // Legacy routes (for backward compatibility - redirects to new controller)
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('api.notifications');
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('api.notification.read');
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('api.notifications.read.all');
+    // Web routes (original implementation - keep as is for web)
+    Route::get('/notifications', [UserController::class, 'getNotifications'])->name('api.notifications');
+    Route::post('/notifications/{id}/read', [UserController::class, 'markNotificationAsRead'])->name('api.notification.read');
+    Route::post('/notifications/read-all', [UserController::class, 'markAllNotificationsAsRead'])->name('api.notifications.read.all');
 
     /*
     |--------------------------------------------------------------------------

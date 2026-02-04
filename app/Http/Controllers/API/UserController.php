@@ -1313,9 +1313,14 @@ class UserController extends Controller
     {
         try {
             $userId = Auth::id();
-            $perPage = $request->get('per_page', 20);
-            // Convert string "false" to boolean false
-            $unreadOnly = filter_var($request->get('unread_only', false), FILTER_VALIDATE_BOOLEAN);
+            $perPage = (int) $request->get('per_page', 20);
+            // Convert string "false" to boolean false (handles query string booleans)
+            $unreadOnlyValue = $request->get('unread_only', false);
+            $unreadOnly = filter_var($unreadOnlyValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            if ($unreadOnly === null) {
+                // If filter_var returns null, try string comparison
+                $unreadOnly = in_array(strtolower((string)$unreadOnlyValue), ['true', '1', 'yes'], true);
+            }
 
             $query = Notification::where('user_id', $userId)
                 ->orderBy('created_at', 'desc');
