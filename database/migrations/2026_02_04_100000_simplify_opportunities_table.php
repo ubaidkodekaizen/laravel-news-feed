@@ -11,12 +11,40 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Drop indexes safely using raw SQL
+        $connection = Schema::getConnection();
+        
+        // Try to drop priority index if it exists
+        try {
+            $connection->statement("ALTER TABLE `opportunities` DROP INDEX IF EXISTS `opportunities_priority_index`");
+        } catch (\Exception $e) {
+            // Index doesn't exist or already dropped, continue
+        }
+        
+        // Try to drop start_date index if it exists
+        try {
+            $connection->statement("ALTER TABLE `opportunities` DROP INDEX IF EXISTS `opportunities_start_date_index`");
+        } catch (\Exception $e) {
+            // Index doesn't exist or already dropped, continue
+        }
+        
+        // Drop columns
         Schema::table('opportunities', function (Blueprint $table) {
-            // Remove budget fields (will be replaced with single budget field)
-            $table->dropColumn(['budget_min', 'budget_max', 'budget_type']);
+            $columnsToDrop = [];
             
-            // Remove unnecessary fields (keep timeline, tags, contact_preference)
-            $table->dropColumn([
+            // Budget fields to remove
+            if (Schema::hasColumn('opportunities', 'budget_min')) {
+                $columnsToDrop[] = 'budget_min';
+            }
+            if (Schema::hasColumn('opportunities', 'budget_max')) {
+                $columnsToDrop[] = 'budget_max';
+            }
+            if (Schema::hasColumn('opportunities', 'budget_type')) {
+                $columnsToDrop[] = 'budget_type';
+            }
+            
+            // Other fields to remove (keep timeline, tags, contact_preference)
+            $otherColumns = [
                 'payment_terms',
                 'start_date',
                 'required_skills',
@@ -26,27 +54,23 @@ return new class extends Migration
                 'nda_required',
                 'reference_required',
                 'priority',
-            ]);
+            ];
             
-            // Remove indexes for dropped columns
-            if (Schema::hasColumn('opportunities', 'priority')) {
-                $table->dropIndex(['priority']);
+            foreach ($otherColumns as $column) {
+                if (Schema::hasColumn('opportunities', $column)) {
+                    $columnsToDrop[] = $column;
+                }
             }
-            if (Schema::hasColumn('opportunities', 'start_date')) {
-                $table->dropIndex(['start_date']);
+            
+            if (!empty($columnsToDrop)) {
+                $table->dropColumn($columnsToDrop);
             }
         });
         
-        // Add single budget field
+        // Add single budget field if it doesn't exist
         Schema::table('opportunities', function (Blueprint $table) {
-            $table->decimal('budget', 15, 2)->nullable()->after('industry_id');
-        });
-        
-        // Update contact_preference enum if it exists (remove 'chat' option)
-        Schema::table('opportunities', function (Blueprint $table) {
-            if (Schema::hasColumn('opportunities', 'contact_preference')) {
-                // Note: Laravel doesn't support modifying enum directly, so we'll keep it as is
-                // The application will handle the validation
+            if (!Schema::hasColumn('opportunities', 'budget')) {
+                $table->decimal('budget', 15, 2)->nullable()->after('industry_id');
             }
         });
     }
