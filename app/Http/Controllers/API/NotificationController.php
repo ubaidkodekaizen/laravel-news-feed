@@ -104,7 +104,9 @@ class NotificationController extends Controller
             
             // Format notifications with user photos
             $formattedNotifications = $notifications->getCollection()->map(function ($notification) use ($users) {
-                return $this->formatNotification($notification, $users);
+                $formatted = $this->formatNotification($notification, $users);
+                // Ensure it's an array, not an object
+                return is_array($formatted) ? $formatted : (array) $formatted;
             });
 
             // For mobile apps, always return the standard format
@@ -113,13 +115,31 @@ class NotificationController extends Controller
                               $request->get('legacy_format') === 'true' ||
                               $request->get('legacy_format') === '1';
             
+            // Always include user photos in both formats
+            // Convert formatted notifications to array to ensure all fields are included
+            $formattedArray = $formattedNotifications->values()->all();
+            
             if ($useLegacyFormat) {
                 // Legacy format (for web backward compatibility)
-                $notifications->setCollection($formattedNotifications);
+                // Manually build pagination response to ensure custom fields are included
                 return response()->json([
                     'status' => true,
                     'message' => 'Notifications fetched successfully.',
-                    'notifications' => $notifications,
+                    'notifications' => [
+                        'current_page' => $notifications->currentPage(),
+                        'data' => $formattedArray,
+                        'first_page_url' => $notifications->url(1),
+                        'from' => $notifications->firstItem(),
+                        'last_page' => $notifications->lastPage(),
+                        'last_page_url' => $notifications->url($notifications->lastPage()),
+                        'links' => $notifications->linkCollection()->toArray(),
+                        'next_page_url' => $notifications->nextPageUrl(),
+                        'path' => $notifications->path(),
+                        'per_page' => $notifications->perPage(),
+                        'prev_page_url' => $notifications->previousPageUrl(),
+                        'to' => $notifications->lastItem(),
+                        'total' => $notifications->total(),
+                    ],
                     'unread_count' => $unreadCount,
                 ]);
             }
@@ -129,7 +149,7 @@ class NotificationController extends Controller
                 'status' => true,
                 'message' => 'Notifications fetched successfully.',
                 'data' => [
-                    'notifications' => $formattedNotifications->values()->all(),
+                    'notifications' => $formattedArray,
                     'pagination' => [
                         'current_page' => $notifications->currentPage(),
                         'last_page' => $notifications->lastPage(),
@@ -200,6 +220,16 @@ class NotificationController extends Controller
                 $userId = (int) $data[$key];
                 break;
             }
+        }
+
+        // Log for debugging if no user ID found
+        if (!$userId) {
+            Log::debug('No user ID found in notification data', [
+                'notification_id' => $notification->id,
+                'notification_type' => $notification->type,
+                'data' => $data,
+                'data_keys' => is_array($data) ? array_keys($data) : 'not_array',
+            ]);
         }
 
         // Get user photo and name if user ID found
