@@ -117,17 +117,20 @@ class AdminUserController extends Controller
 
         // Create subscription for all admin-created users with 90 days free trial
         $isAmcob = ($request->amcob_member ?? 'No') === 'Yes';
+        $renewalDate = now()->addDays(90); // 90 days free trial
         Subscription::create([
             'user_id' => $user->id,
             'plan_id' => 1,
             'subscription_type' => 'Free',
             'subscription_amount' => 0.00,
             'start_date' => now(),
-            'renewal_date' => now()->addDays(90), // 90 days free trial
+            'renewal_date' => $renewalDate,
+            'expires_at' => $renewalDate, // Also set expires_at for mobile app compatibility
             'status' => 'active',
             'transaction_id' => null,
             'receipt_data' => null,
             'platform' => $isAmcob ? 'Amcob' : 'Admin',
+            'auto_renewing' => false, // Free subscriptions don't auto-renew
         ]);
 
         // Create password reset token for password setup

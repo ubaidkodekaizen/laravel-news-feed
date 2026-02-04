@@ -498,12 +498,51 @@ class UserController extends Controller
             }
         }
 
+        // Load active subscription for mobile app
+        // Include Free subscriptions as they are valid subscriptions
+        $activeSubscription = Subscription::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->latest()
+            ->first();
+
+        // Check if user has valid subscription
+        // Valid if: status is active AND (renewal_date/expires_at is in future OR null)
+        $hasValidSubscription = false;
+        $subscriptionData = null;
+
+        if ($activeSubscription) {
+            // Check expiration using expires_at first, then renewal_date as fallback
+            $expirationDate = $activeSubscription->expires_at ?? $activeSubscription->renewal_date;
+            
+            // Subscription is valid if:
+            // 1. No expiration date set (null), OR
+            // 2. Expiration date is in the future, OR
+            // 3. Expiration date is today (still valid today)
+            $isValid = !$expirationDate || 
+                      ($expirationDate && ($expirationDate->isFuture() || $expirationDate->isToday()));
+            
+            if ($isValid) {
+                $hasValidSubscription = true;
+                $subscriptionData = [
+                    'id' => $activeSubscription->id,
+                    'subscription_type' => $activeSubscription->subscription_type,
+                    'status' => $activeSubscription->status,
+                    'renewal_date' => $activeSubscription->renewal_date?->toDateString(),
+                    'expires_at' => $activeSubscription->expires_at?->toDateString(),
+                    'platform' => $activeSubscription->platform,
+                    'start_date' => $activeSubscription->start_date?->toDateString(),
+                ];
+            }
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'Login successful.',
             'token' => $token,
             'user' => $user,
-            'redirect_to' => 'feed'
+            'subscription' => $subscriptionData,
+            'has_subscription' => $hasValidSubscription,
+            'redirect_to' => $hasValidSubscription ? 'feed' : 'subscription'
         ]);
     }
 
