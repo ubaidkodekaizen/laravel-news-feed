@@ -3541,6 +3541,9 @@
         <div id="notifications" class="api-section">
             <h2>🔔 Notifications</h2>
             <p>Comprehensive notification management APIs. Notifications are automatically created when users interact with your content (reactions, comments, shares, messages, opportunities, etc.)</p>
+            <div class="alert alert-info" style="margin: 20px 0; padding: 15px; background: #e7f3ff; border-left: 4px solid #007bff; border-radius: 5px;">
+                <strong>📸 User Photo in Notifications:</strong> All notification responses include <code>user_photo</code> (full URL), <code>user_name</code> (full name), and <code>user_id</code> (ID of the user who triggered the notification) fields. These fields are automatically populated from the notification data and are ready to display in your UI.
+            </div>
 
             <div class="api-endpoint">
                 <h3>
@@ -3608,6 +3611,9 @@
         "type": "post_reaction",
         "title": "New Reaction",
         "message": "John Doe reacted to your post",
+        "user_photo": "https://s3.amazonaws.com/bucket/photos/user-2.jpg",
+        "user_name": "John Doe",
+        "user_id": 2,
         "data": {
           "post_id": 123,
           "post_slug": "my-awesome-post-29-01-2026-123456",
@@ -3680,7 +3686,16 @@
       "type": "post_comment",
       "title": "New Comment",
       "message": "Jane Smith commented on your post",
-      "data": { ... },
+      "user_photo": "https://s3.amazonaws.com/bucket/photos/user-789.jpg",
+      "user_name": "Jane Smith",
+      "user_id": 789,
+      "data": {
+        "post_id": 456,
+        "post_slug": "example-post",
+        "comment_id": 789,
+        "commenter_id": 789,
+        "commenter_name": "Jane Smith"
+      },
       "read_at": "2024-01-15T11:00:00.000000Z",
       "created_at": "2024-01-15T10:30:00.000000Z",
       "updated_at": "2024-01-15T11:00:00.000000Z"
@@ -3800,43 +3815,20 @@
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
                 <div class="endpoint-url">/notifications/read-multiple</div>
-                <p>Mark multiple notifications as read at once</p>
+                <p>Mark all unread notifications as read. No request body needed - simply hit this endpoint to mark all unread notifications as read.</p>
+                <p><strong>Note:</strong> This endpoint automatically marks all unread notifications as read. You don't need to send notification IDs, avoiding unnecessary looping on the client side.</p>
 
                 <h5>Request Body:</h5>
-                <table class="param-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Required</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>ids</td>
-                            <td>array</td>
-                            <td><span class="optional">Optional</span></td>
-                            <td>Array of notification IDs. If empty or not provided, marks all as read</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h5>Request Body Example:</h5>
-                <div class="code-block">
-                    <pre>{
-  "ids": [123, 124, 125]
-}</pre>
-                </div>
+                <p><em>No request body required. Simply make a POST request to this endpoint.</em></p>
 
                 <h5>Response:</h5>
                 <div class="code-block">
                     <pre>{
   "status": true,
-  "message": "3 notification(s) marked as read.",
+  "message": "All notifications marked as read.",
   "data": {
-    "marked_count": 3,
-    "unread_count": 12
+    "marked_count": 15,
+    "unread_count": 0
   }
 }</pre>
                 </div>

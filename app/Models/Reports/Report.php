@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Reports;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Models\Users\User;
 
 class Report extends Model
 {

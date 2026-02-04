@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Business\Subscription;
-use App\Models\SchedulerLog;
-use App\Models\User;
+use App\Models\System\SchedulerLog;
+use App\Models\Users\User;
 use App\Services\GooglePlayService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;

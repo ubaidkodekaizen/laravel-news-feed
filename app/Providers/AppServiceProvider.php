@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Map old User namespace to new one for backward compatibility with polymorphic relationships
+        Relation::enforceMorphMap([
+            'App\Models\User' => 'App\Models\Users\User',
+            'App\Models\Users\User' => 'App\Models\Users\User',
+        ]);
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Mail\PasswordReset;
-use App\Models\User;
+use App\Models\Users\User;
 
 class PasswordResetController extends Controller
 {

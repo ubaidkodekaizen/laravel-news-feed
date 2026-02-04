@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Subscription;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use net\authorize\api\contract\v1 as AnetAPI;

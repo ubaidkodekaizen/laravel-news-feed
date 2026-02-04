@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Chat\Conversation;
 use App\Models\Chat\Message;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Services\UserOnlineService;

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Opportunities;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Opportunities\Opportunity;
+use App\Models\Users\User;
 
 class SavedOpportunity extends Model
 {

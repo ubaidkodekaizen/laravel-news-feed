@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\UserEducation;
+use App\Models\Users\UserEducation;
 
 class EducationController extends Controller
 {

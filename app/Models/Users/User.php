@@ -1,20 +1,31 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Users;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Business\Company;
+use App\Models\Business\Product;
+use App\Models\Business\Service;
+use App\Models\Business\Subscription;
 use App\Models\Chat\Conversation;
+use App\Models\Feed\Post;
+use App\Models\Feed\PostComment;
+use App\Models\Feed\PostShare;
 use App\Models\Feed\Reaction;
-use App\Models\ProfileView;
-use App\Models\DeviceToken;
-use App\Models\Notification;
-use App\Models\Opportunity;
-use App\Models\OpportunityProposal;
-use App\Models\OpportunityRating;
+use App\Models\Notifications\Notification;
+use App\Models\Opportunities\Opportunity;
+use App\Models\Opportunities\OpportunityProposal;
+use App\Models\Opportunities\OpportunityRating;
+use App\Models\System\DeviceToken;
+use App\Models\System\Permission;
+use App\Models\System\Role;
+use App\Models\Users\ProfileView;
+use App\Models\Users\UserEducation;
+use App\Models\Users\UserIcp;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -64,21 +75,21 @@ class User extends Authenticatable
 
     public function company()
     {
-        return $this->hasOne(\App\Models\Business\Company::class)->whereHas('user', function ($query) {
+        return $this->hasOne(Company::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
 
     public function products()
     {
-        return $this->hasMany(\App\Models\Business\Product::class)->whereHas('user', function ($query) {
+        return $this->hasMany(Product::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
 
     public function services()
     {
-        return $this->hasMany(\App\Models\Business\Service::class)->whereHas('user', function ($query) {
+        return $this->hasMany(Service::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
@@ -86,7 +97,7 @@ class User extends Authenticatable
 
     public function subscriptions()
     {
-        return $this->hasMany(\App\Models\Business\Subscription::class)->whereHas('user', function ($query) {
+        return $this->hasMany(Subscription::class)->whereHas('user', function ($query) {
             $query->whereNull('deleted_at');
         });
     }
@@ -148,27 +159,27 @@ class User extends Authenticatable
 
     public function posts()
     {
-        return $this->hasMany(\App\Models\Feed\Post::class);
+        return $this->hasMany(Post::class);
     }
 
     public function postReactions()
     {
-        return $this->hasMany(\App\Models\Feed\Reaction::class)->where('reactionable_type', \App\Models\Feed\Post::class);
+        return $this->hasMany(Reaction::class)->where('reactionable_type', Post::class);
     }
 
     public function postComments()
     {
-        return $this->hasMany(\App\Models\Feed\PostComment::class);
+        return $this->hasMany(PostComment::class);
     }
 
     public function commentReactions()
     {
-        return $this->hasMany(\App\Models\Feed\Reaction::class)->where('reactionable_type', \App\Models\Feed\PostComment::class);
+        return $this->hasMany(Reaction::class)->where('reactionable_type', PostComment::class);
     }
 
     public function postShares()
     {
-        return $this->hasMany(\App\Models\Feed\PostShare::class);
+        return $this->hasMany(PostShare::class);
     }
 
     /**
@@ -189,13 +200,13 @@ class User extends Authenticatable
 
     public function blockedUsers()
     {
-        return $this->belongsToMany(User::class, 'blocked_users', 'blocker_id', 'blocked_id')
+        return $this->belongsToMany(self::class, 'blocked_users', 'blocker_id', 'blocked_id')
             ->withTimestamps();
     }
 
     public function blockedByUsers()
     {
-        return $this->belongsToMany(User::class, 'blocked_users', 'blocked_id', 'blocker_id')
+        return $this->belongsToMany(self::class, 'blocked_users', 'blocked_id', 'blocker_id')
             ->withTimestamps();
     }
 

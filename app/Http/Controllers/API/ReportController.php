@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Report;
-use App\Models\User;
+use App\Models\Reports\Report;
+use App\Models\Users\User;
 use App\Models\Feed\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

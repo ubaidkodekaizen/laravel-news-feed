@@ -17,7 +17,7 @@ class AdminNotification extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      *
-     * @param \App\Models\User $user
+     * @param \App\Models\Users\User $user
      * @param \App\Models\Business\Subscription $subscription
      * @return void
      */

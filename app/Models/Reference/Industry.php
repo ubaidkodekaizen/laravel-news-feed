@@ -2,7 +2,8 @@
 
 namespace App\Models\Reference;
 
-use App\Models\User;
+use App\Models\Opportunities\Opportunity;
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Industry extends Model
@@ -28,6 +29,6 @@ class Industry extends Model
      */
     public function opportunities()
     {
-        return $this->hasMany(\App\Models\Opportunity::class);
+        return $this->hasMany(Opportunity::class);
     }
 }

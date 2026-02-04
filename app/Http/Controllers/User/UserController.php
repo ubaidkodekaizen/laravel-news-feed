@@ -5,9 +5,9 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 
 use App\Models\Business\Company;
-use App\Models\User;
-use App\Models\ProfileView;
-use App\Models\DeviceToken;
+use App\Models\Users\User;
+use App\Models\Users\ProfileView;
+use App\Models\System\DeviceToken;
 use App\Services\S3Service;
 use Auth;
 use Illuminate\Http\Request;

@@ -5,7 +5,7 @@ namespace App\Models\Chat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Models\Chat\Message;
 
 class Conversation extends Model

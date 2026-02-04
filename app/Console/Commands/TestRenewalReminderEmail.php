@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
+use App\Models\Users\User;
 use App\Models\Business\Subscription;
 use App\Mail\SubscriptionRenewalReminder;
 use Illuminate\Console\Command;

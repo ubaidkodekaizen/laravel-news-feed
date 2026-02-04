@@ -5,9 +5,9 @@ namespace App\Models\Business;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\User;
 use App\Models\Business\Plan;
-use App\Models\SubscriptionBilling;
+use App\Models\System\SubscriptionBilling;
+use App\Models\Users\User;
 
 class Subscription extends Model
 {

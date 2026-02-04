@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SchedulerLog;
+use App\Models\System\SchedulerLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

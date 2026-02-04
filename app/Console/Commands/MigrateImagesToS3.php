@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Services\S3Service;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Models\Business\Product;
 use App\Models\Business\Service;
 use App\Models\Business\Company;

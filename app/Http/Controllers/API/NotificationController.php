@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notification;
+use App\Models\Notifications\Notification;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -80,6 +81,11 @@ class NotificationController extends Controller
             // Get unread count
             $unreadCount = Notification::where('user_id', $userId)->unread()->count();
 
+            // Format notifications with user photos
+            $formattedNotifications = $notifications->getCollection()->map(function ($notification) {
+                return $this->formatNotification($notification);
+            });
+
             // For mobile apps, always return the standard format
             // Check if legacy format is explicitly requested (for web backward compatibility)
             $useLegacyFormat = $request->get('legacy_format', false) === true || 
@@ -88,6 +94,7 @@ class NotificationController extends Controller
             
             if ($useLegacyFormat) {
                 // Legacy format (for web backward compatibility)
+                $notifications->setCollection($formattedNotifications);
                 return response()->json([
                     'status' => true,
                     'message' => 'Notifications fetched successfully.',
@@ -101,7 +108,7 @@ class NotificationController extends Controller
                 'status' => true,
                 'message' => 'Notifications fetched successfully.',
                 'data' => [
-                    'notifications' => $notifications->items(),
+                    'notifications' => $formattedNotifications->values()->all(),
                     'pagination' => [
                         'current_page' => $notifications->currentPage(),
                         'last_page' => $notifications->lastPage(),
@@ -134,6 +141,65 @@ class NotificationController extends Controller
     }
 
     /**
+     * Format notification with user photo
+     * 
+     * @param Notification $notification
+     * @return array
+     */
+    private function formatNotification($notification)
+    {
+        $data = $notification->data ?? [];
+        $userPhoto = null;
+        $userName = null;
+        $userId = null;
+
+        // Extract user ID from notification data based on type
+        // Different notification types store user ID in different keys
+        $userKeyMap = [
+            'reactor_id',      // post_reaction, message_reaction
+            'commenter_id',    // post_comment
+            'sharer_id',       // post_share
+            'sender_id',       // new_message
+            'replier_id',      // comment_reply
+            'owner_id',        // new_service, new_product
+            'follower_id',     // new_follower
+            'viewer_id',       // profile_view
+        ];
+
+        foreach ($userKeyMap as $key) {
+            if (isset($data[$key])) {
+                $userId = $data[$key];
+                break;
+            }
+        }
+
+        // Load user and get photo if user ID found
+        if ($userId) {
+            try {
+                $user = User::find($userId);
+                if ($user) {
+                    $userPhoto = getImageUrl($user->photo);
+                    $userName = trim($user->first_name . ' ' . $user->last_name);
+                }
+            } catch (\Exception $e) {
+                Log::warning('Failed to load user for notification', [
+                    'notification_id' => $notification->id,
+                    'user_id' => $userId,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        // Convert notification to array and add user photo
+        $notificationArray = $notification->toArray();
+        $notificationArray['user_photo'] = $userPhoto;
+        $notificationArray['user_name'] = $userName;
+        $notificationArray['user_id'] = $userId;
+
+        return $notificationArray;
+    }
+
+    /**
      * Get a single notification by ID
      * 
      * @param int $id
@@ -155,11 +221,14 @@ class NotificationController extends Controller
                 ], 404);
             }
 
+            // Format notification with user photo
+            $formattedNotification = $this->formatNotification($notification);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Notification fetched successfully.',
                 'data' => [
-                    'notification' => $notification,
+                    'notification' => $formattedNotification,
                 ],
             ]);
         } catch (\Exception $e) {
@@ -276,78 +345,16 @@ class NotificationController extends Controller
     /**
      * Mark multiple notifications as read
      * 
-     * Request Body:
-     * - ids: Array of notification IDs (optional, if not provided, marks all as read)
+     * This endpoint marks all unread notifications as read for the authenticated user.
+     * No IDs need to be sent - it automatically marks all unread notifications.
      * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function markMultipleAsRead(Request $request)
     {
-        try {
-            $userId = Auth::id();
-
-            $validator = Validator::make($request->all(), [
-                'ids' => 'sometimes|array',
-                'ids.*' => 'required|integer|exists:notifications,id',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validation failed.',
-                    'errors' => $validator->errors(),
-                ], 422);
-            }
-
-            $ids = $request->get('ids', []);
-
-            if (empty($ids)) {
-                // Mark all as read if no IDs provided
-                return $this->markAllAsRead();
-            }
-
-            // Verify all notifications belong to the user
-            $notifications = Notification::where('user_id', $userId)
-                ->whereIn('id', $ids)
-                ->get();
-
-            if ($notifications->isEmpty()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'No valid notifications found.',
-                ], 404);
-            }
-
-            // Mark as read
-            $updated = Notification::where('user_id', $userId)
-                ->whereIn('id', $ids)
-                ->whereNull('read_at')
-                ->update(['read_at' => now()]);
-
-            // Get updated unread count
-            $unreadCount = Notification::where('user_id', $userId)->unread()->count();
-
-            return response()->json([
-                'status' => true,
-                'message' => "{$updated} notification(s) marked as read.",
-                'data' => [
-                    'marked_count' => $updated,
-                    'unread_count' => $unreadCount,
-                ],
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Failed to mark multiple notifications as read', [
-                'user_id' => Auth::id(),
-                'error' => $e->getMessage(),
-            ]);
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to mark notifications as read.',
-                'error' => config('app.debug') ? $e->getMessage() : null,
-            ], 500);
-        }
+        // Simply mark all unread notifications as read
+        return $this->markAllAsRead();
     }
 
     /**

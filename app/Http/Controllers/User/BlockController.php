@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Chat\BlockedUser;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Http\JsonResponse;
 
 class BlockController extends Controller

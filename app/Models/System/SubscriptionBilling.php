@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\System;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Business\Subscription;
+use App\Models\Users\User;
 
 class SubscriptionBilling extends Model
 {
@@ -99,7 +101,7 @@ class SubscriptionBilling extends Model
      */
     public function subscription(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Business\Subscription::class);
+        return $this->belongsTo(Subscription::class);
     }
 
     /**

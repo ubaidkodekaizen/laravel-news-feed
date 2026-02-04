@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Models\Chat\Message;
 
 class NewMessageNotification extends Mailable
@@ -19,7 +19,7 @@ class NewMessageNotification extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param User $sender
+     * @param \App\Models\Users\User $sender
      * @param Message $message
      * @return void
      */

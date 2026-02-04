@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Business\Subscription;
-use App\Models\SubscriptionBilling;
-use App\Models\SchedulerLog;
+use App\Models\System\SubscriptionBilling;
+use App\Models\System\SchedulerLog;
 use App\Services\GooglePlayService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -162,7 +162,7 @@ class SyncSubscriptionBillingHistory extends Command
         foreach ($subscriptions as $subscription) {
             try {
                 // Check if user exists (handle soft-deleted users)
-                if (!$subscription->user_id || !\App\Models\User::where('id', $subscription->user_id)->exists()) {
+                if (!$subscription->user_id || !\App\Models\Users\User::where('id', $subscription->user_id)->exists()) {
                     $this->warn("Subscription ID {$subscription->id} - User ID {$subscription->user_id} does not exist (likely soft-deleted), skipping");
                     $errorCount++;
                     continue;
@@ -257,7 +257,7 @@ class SyncSubscriptionBillingHistory extends Command
         foreach ($subscriptions as $subscription) {
             try {
                 // Check if user exists (handle soft-deleted users)
-                if (!$subscription->user_id || !\App\Models\User::where('id', $subscription->user_id)->exists()) {
+                if (!$subscription->user_id || !\App\Models\Users\User::where('id', $subscription->user_id)->exists()) {
                     $this->warn("Subscription ID {$subscription->id} - User ID {$subscription->user_id} does not exist (likely soft-deleted), skipping");
                     $errorCount++;
                     continue;
@@ -489,7 +489,7 @@ class SyncSubscriptionBillingHistory extends Command
         foreach ($subscriptions as $subscription) {
             try {
                 // Check if user exists (handle soft-deleted users)
-                if (!$subscription->user_id || !\App\Models\User::where('id', $subscription->user_id)->exists()) {
+                if (!$subscription->user_id || !\App\Models\Users\User::where('id', $subscription->user_id)->exists()) {
                     $this->warn("Subscription ID {$subscription->id} - User ID {$subscription->user_id} does not exist (likely soft-deleted), skipping");
                     $errorCount++;
                     continue;

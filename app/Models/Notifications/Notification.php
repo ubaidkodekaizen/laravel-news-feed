@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Notifications;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Users\User;
 
 class Notification extends Model
 {

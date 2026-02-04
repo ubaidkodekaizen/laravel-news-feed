@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Traits\FormatsUserData;
 use App\Models\Reference\Industry as IndustryModel;
-use App\Models\User;
-use App\Models\ProfileView;
+use App\Models\Users\User;
+use App\Models\Users\ProfileView;
 use App\Traits\HasUserPhotoData;
 use Illuminate\Support\Arr;
 
@@ -160,7 +160,7 @@ class FeedController extends Controller
         $suggestedConnections = collect();
         try {
             if (Schema::hasTable('connections')) {
-                $suggestedConnections = \App\Models\User::where('id', '!=', Auth::id())
+                $suggestedConnections = \App\Models\Users\User::where('id', '!=', Auth::id())
                     ->where('status', 'active')
                     ->whereNull('deleted_at')
                     ->whereNotIn('id', fn($q) => $q->select('connected_user_id')
@@ -175,7 +175,7 @@ class FeedController extends Controller
                     ->limit(2)
                     ->get();
             } else {
-                $suggestedConnections = \App\Models\User::where('id', '!=', Auth::id())
+                $suggestedConnections = \App\Models\Users\User::where('id', '!=', Auth::id())
                     ->where('status', 'active')
                     ->whereNull('deleted_at')
                     ->inRandomOrder()
@@ -186,7 +186,7 @@ class FeedController extends Controller
             Log::warning('Error fetching suggested connections: ' . $e->getMessage());
         }
 
-        $ads = \App\Models\Ad::where('status', 'active')
+        $ads = \App\Models\Ads\Ad::where('status', 'active')
             ->orderBy('featured', 'desc')
             ->orderBy('created_at', 'desc')
             ->limit(5)

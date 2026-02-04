@@ -8,7 +8,7 @@ use App\Models\Business\Company;
 use App\Models\Business\Product;
 use App\Models\Business\ProductService;
 use App\Models\Business\Service;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 
 

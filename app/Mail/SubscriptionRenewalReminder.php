@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Business\Subscription;
-use App\Models\User;
+use App\Models\Users\User;
 
 class SubscriptionRenewalReminder extends Mailable
 {

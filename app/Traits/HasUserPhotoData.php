@@ -10,8 +10,8 @@ trait HasUserPhotoData
     /**
      * Add photo and initials data to a user instance
      *
-     * @param \App\Models\User $user
-     * @return \App\Models\User
+     * @param \App\Models\Users\User $user
+     * @return \App\Models\Users\User
      */
     public function addPhotoData($user)
     {

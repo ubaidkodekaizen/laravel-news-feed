@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Business\Company;
 use App\Models\Business\Subscription;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Models\Reference\Designation;
 use App\Models\Reference\BusinessType;
 use App\Models\Reference\Industry;

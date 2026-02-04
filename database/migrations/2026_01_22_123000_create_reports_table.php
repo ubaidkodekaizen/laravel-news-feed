@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reporter_id')->constrained('users')->onDelete('cascade');
-            $table->string('reportable_type'); // App\Models\User, App\Models\Feed\Post, etc.
+            $table->string('reportable_type'); // App\Models\Users\User, App\Models\Feed\Post, etc.
             $table->unsignedBigInteger('reportable_id');
             $table->string('reason', 50); // spam, harassment, inappropriate_content, fake_account, violence, hate_speech, other
             $table->text('description')->nullable();

@@ -5,7 +5,7 @@ namespace App\Helpers;
 use App\Models\Business\Company;
 use App\Models\Business\Product;
 use App\Models\Business\Service;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Models\Business\Plan;
 use App\Models\Business\ProductService;
 use DB;
@@ -375,10 +375,10 @@ class DropDownHelper
         $service = Service::pluck('title')->unique()->sort();
 
         // ICP Data from user_icps table
-        $business_locations = \App\Models\UserIcp::whereNotNull('business_location')
+        $business_locations = \App\Models\Users\UserIcp::whereNotNull('business_location')
             ->pluck('business_location')->unique()->sort()->values();
         
-        $business_challenges = \App\Models\UserIcp::whereNotNull('company_current_business_challenges')
+        $business_challenges = \App\Models\Users\UserIcp::whereNotNull('company_current_business_challenges')
             ->pluck('company_current_business_challenges')
             ->flatMap(function ($item) {
                 return array_map('trim', explode(',', $item));
@@ -387,7 +387,7 @@ class DropDownHelper
             ->sort()
             ->values();
         
-        $business_goals = \App\Models\UserIcp::whereNotNull('company_business_goals')
+        $business_goals = \App\Models\Users\UserIcp::whereNotNull('company_business_goals')
             ->pluck('company_business_goals')
             ->flatMap(function ($item) {
                 return array_map('trim', explode(',', $item));
@@ -396,7 +396,7 @@ class DropDownHelper
             ->sort()
             ->values();
         
-        $company_attributes = \App\Models\UserIcp::whereNotNull('company_attributes')
+        $company_attributes = \App\Models\Users\UserIcp::whereNotNull('company_attributes')
             ->pluck('company_attributes')
             ->flatMap(function ($item) {
                 return array_map('trim', explode(',', $item));
@@ -529,10 +529,10 @@ class DropDownHelper
         $service = Service::pluck('title')->unique()->sort();
 
         // ICP Data from user_icps table
-        $business_locations = \App\Models\UserIcp::whereNotNull('business_location')
+        $business_locations = \App\Models\Users\UserIcp::whereNotNull('business_location')
             ->pluck('business_location')->unique()->sort()->values();
         
-        $business_challenges = \App\Models\UserIcp::whereNotNull('company_current_business_challenges')
+        $business_challenges = \App\Models\Users\UserIcp::whereNotNull('company_current_business_challenges')
             ->pluck('company_current_business_challenges')
             ->flatMap(function ($item) {
                 return array_map('trim', explode(',', $item));
@@ -541,7 +541,7 @@ class DropDownHelper
             ->sort()
             ->values();
         
-        $business_goals = \App\Models\UserIcp::whereNotNull('company_business_goals')
+        $business_goals = \App\Models\Users\UserIcp::whereNotNull('company_business_goals')
             ->pluck('company_business_goals')
             ->flatMap(function ($item) {
                 return array_map('trim', explode(',', $item));
@@ -550,7 +550,7 @@ class DropDownHelper
             ->sort()
             ->values();
         
-        $company_attributes = \App\Models\UserIcp::whereNotNull('company_attributes')
+        $company_attributes = \App\Models\Users\UserIcp::whereNotNull('company_attributes')
             ->pluck('company_attributes')
             ->flatMap(function ($item) {
                 return array_map('trim', explode(',', $item));

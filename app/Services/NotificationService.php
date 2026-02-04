@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\DeviceToken;
-use App\Models\Notification;
-use App\Models\User;
+use App\Models\System\DeviceToken;
+use App\Models\Notifications\Notification;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Log;
 
 class NotificationService

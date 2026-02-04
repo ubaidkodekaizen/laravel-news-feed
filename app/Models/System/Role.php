@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\System;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\System\Permission;
+use App\Models\Users\User;
 
 class Role extends Model
 {

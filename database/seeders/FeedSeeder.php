@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Models\Feed\Post;
 use App\Models\Feed\PostMedia;
 use App\Models\Feed\PostComment;

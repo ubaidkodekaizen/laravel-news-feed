@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Business\Company;
 use App\Models\Business\Product;
 use App\Models\Business\Service;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;

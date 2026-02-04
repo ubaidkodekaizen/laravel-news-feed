@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Business\Product;
 use App\Models\Business\Service;
 use App\Models\Business\Subscription;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

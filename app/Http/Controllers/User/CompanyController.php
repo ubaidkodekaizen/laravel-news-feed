@@ -8,7 +8,7 @@ use App\Models\Business\Company;
 use App\Models\Reference\Designation;
 use App\Models\Reference\Industry;
 use App\Models\Reference\BusinessType;
-use App\Models\UserIcp;
+use App\Models\Users\UserIcp;
 use App\Services\S3Service;
 use Auth;
 use Illuminate\Http\Request;

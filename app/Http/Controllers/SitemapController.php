@@ -7,7 +7,7 @@ use App\Models\Business\Company;
 use App\Models\Content\Event;
 use App\Models\Business\Product;
 use App\Models\Business\Service;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
