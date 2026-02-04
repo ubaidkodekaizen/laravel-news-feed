@@ -38,6 +38,15 @@ class Notification extends Model
     const TYPE_NEW_FOLLOWER = 'new_follower';
     const TYPE_SUBSCRIPTION_EVENT = 'subscription_event';
     const TYPE_ADMIN_NOTIFICATION = 'admin_notification';
+    
+    // Opportunity notification types
+    const TYPE_OPPORTUNITY_NEW_PROPOSAL = 'opportunity_new_proposal';
+    const TYPE_PROPOSAL_SHORTLISTED = 'proposal_shortlisted';
+    const TYPE_PROPOSAL_ACCEPTED = 'proposal_accepted';
+    const TYPE_PROPOSAL_REJECTED = 'proposal_rejected';
+    const TYPE_PROPOSAL_WITHDRAWN = 'proposal_withdrawn';
+    const TYPE_OPPORTUNITY_EXPIRED = 'opportunity_expired';
+    const TYPE_OPPORTUNITY_DEADLINE_REMINDER = 'opportunity_deadline_reminder';
 
     /**
      * Get the user that owns the notification.
