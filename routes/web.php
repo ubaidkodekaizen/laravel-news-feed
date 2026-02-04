@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\API\UserController as APIUserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\ManagersController;
@@ -263,6 +264,11 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('user/get-token', function () {
         return response()->json(['token' => session('sanctum_token')]);
     })->name("user.token");
+
+    // Web Notification Routes (JSON endpoints for web frontend)
+    Route::get('/notifications', [APIUserController::class, 'getNotifications'])->name('notifications');
+    Route::post('/notifications/{id}/read', [APIUserController::class, 'markNotificationAsRead'])->name('notification.read');
+    Route::post('/notifications/read-all', [APIUserController::class, 'markAllNotificationsAsRead'])->name('notifications.read.all');
 });
 
 /*

@@ -713,7 +713,7 @@
                 );
 
                 $.ajax({
-                    url: '/api/notifications?per_page=5&unread_only=false',
+                    url: '/notifications?per_page=5&unread_only=false',
                     method: 'GET',
                     headers: {
                         'Authorization': token,
@@ -771,7 +771,7 @@
                 );
 
                 $.ajax({
-                    url: `/api/notifications?per_page=20&page=${page}&unread_only=false`,
+                    url: `/notifications?per_page=20&page=${page}&unread_only=false`,
                     method: 'GET',
                     headers: {
                         'Authorization': token,
@@ -1020,7 +1020,7 @@
                 if (!token) return;
 
                 $.ajax({
-                    url: `/api/notifications/${notificationId}/read`,
+                    url: `/notifications/${notificationId}/read`,
                     method: 'POST',
                     headers: {
                         'Authorization': token,
@@ -1046,7 +1046,7 @@
                 if (!token) return;
 
                 $.ajax({
-                    url: '/api/notifications/read-all',
+                    url: '/notifications/read-all',
                     method: 'POST',
                     headers: {
                         'Authorization': token,
@@ -1197,7 +1197,7 @@
                     const token = localStorage.getItem('sanctum-token');
                     if (token) {
                         $.ajax({
-                            url: '/api/notifications?per_page=1&unread_only=true',
+                            url: '/notifications?per_page=1&unread_only=true',
                             method: 'GET',
                             headers: {
                                 'Authorization': token,

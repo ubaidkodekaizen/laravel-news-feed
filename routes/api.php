@@ -221,10 +221,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Notification Routes
+    | Notification Routes (Mobile App APIs)
     |--------------------------------------------------------------------------
     */
-    // New comprehensive notification APIs
+    // Note: Web notification routes have been moved to routes/web.php
+    // These routes are for mobile apps only
     Route::prefix('notifications')->group(function () {
         // Get unread count (must be before /{id} route)
         Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('api.notifications.unread-count');
@@ -244,8 +245,10 @@ Route::middleware('auth:sanctum')->group(function () {
         // Delete all notifications
         Route::delete('/delete/all', [NotificationController::class, 'destroyAll'])->name('api.notifications.destroy-all');
         
-        // List notifications with filters
-        Route::get('/', [NotificationController::class, 'index'])->name('api.notifications.index');
+        // List notifications with filters (mobile app format)
+        // Note: This conflicts with web route above, but web route takes precedence
+        // Mobile apps should use this with proper format or use /notifications with legacy_format=false
+        Route::get('/list', [NotificationController::class, 'index'])->name('api.notifications.index');
         
         // Get single notification
         Route::get('/{id}', [NotificationController::class, 'show'])->name('api.notifications.show');
@@ -256,14 +259,6 @@ Route::middleware('auth:sanctum')->group(function () {
         // Delete notification
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('api.notifications.destroy');
     });
-    
-    // Web routes (original implementation - keep as is for web backward compatibility)
-    // Note: These routes are placed AFTER the /notifications prefix group to avoid conflicts
-    // The prefix group routes take precedence, so web should use /notifications with legacy_format=true
-    // Keeping these for backward compatibility but they may not be accessible due to route conflict
-    Route::get('/notifications-web', [UserController::class, 'getNotifications'])->name('api.notifications.web');
-    Route::post('/notifications-web/{id}/read', [UserController::class, 'markNotificationAsRead'])->name('api.notification.read.web');
-    Route::post('/notifications-web/read-all', [UserController::class, 'markAllNotificationsAsRead'])->name('api.notifications.read.all.web');
 
     /*
     |--------------------------------------------------------------------------
