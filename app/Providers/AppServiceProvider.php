@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Map old User namespace to new one for backward compatibility with polymorphic relationships
-        Relation::enforceMorphMap([
+        // Using morphMap (not enforceMorphMap) so other models can still use their class names
+        Relation::morphMap([
             'App\Models\User' => 'App\Models\Users\User',
-            'App\Models\Users\User' => 'App\Models\Users\User',
         ]);
     }
 }
