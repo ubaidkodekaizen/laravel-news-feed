@@ -25,28 +25,17 @@ class Opportunity extends Model
         'description',
         'category',
         'industry_id',
-        'budget_min',
-        'budget_max',
-        'budget_type',
-        'payment_terms',
+        'budget',
         'timeline',
-        'start_date',
         'deadline',
         'expires_at',
         'location',
         'work_type',
-        'required_skills',
-        'preferred_experience',
-        'team_size',
         'tags',
-        'deliverables',
         'contact_email',
         'contact_phone',
         'contact_preference',
-        'nda_required',
-        'reference_required',
         'attachment_urls',
-        'priority',
         'is_featured',
         'status',
         'views_count',
@@ -55,22 +44,15 @@ class Opportunity extends Model
     ];
 
     protected $casts = [
-        'budget_min' => 'decimal:2',
-        'budget_max' => 'decimal:2',
-        'required_skills' => 'array',
+        'budget' => 'decimal:2',
         'tags' => 'array',
-        'deliverables' => 'array',
         'attachment_urls' => 'array',
-        'nda_required' => 'boolean',
-        'reference_required' => 'boolean',
         'is_featured' => 'boolean',
-        'start_date' => 'datetime',
         'deadline' => 'datetime',
         'expires_at' => 'datetime',
         'views_count' => 'integer',
         'proposals_count' => 'integer',
         'saves_count' => 'integer',
-        'team_size' => 'integer',
     ];
 
     /**
@@ -308,45 +290,14 @@ class Opportunity extends Model
     public function scopeByBudgetRange($query, ?float $min = null, ?float $max = null)
     {
         if ($min !== null) {
-            $query->where(function ($q) use ($min) {
-                $q->where('budget_max', '>=', $min)
-                    ->orWhereNull('budget_max');
-            });
+            $query->where('budget', '>=', $min);
         }
 
         if ($max !== null) {
-            $query->where(function ($q) use ($max) {
-                $q->where('budget_min', '<=', $max)
-                    ->orWhereNull('budget_min');
-            });
+            $query->where('budget', '<=', $max);
         }
 
         return $query;
-    }
-
-    /**
-     * Scope: Filter by required skills.
-     */
-    public function scopeBySkills($query, array $skills)
-    {
-        return $query->whereJsonContains('required_skills', $skills);
-    }
-
-    /**
-     * Scope: Order by priority and created date.
-     */
-    public function scopeOrderByPriority($query)
-    {
-        $priorityOrder = ['urgent' => 4, 'high' => 3, 'medium' => 2, 'low' => 1];
-        
-        return $query->orderByRaw('CASE priority 
-            WHEN "urgent" THEN 4
-            WHEN "high" THEN 3
-            WHEN "medium" THEN 2
-            WHEN "low" THEN 1
-            ELSE 0
-        END DESC')
-        ->orderBy('created_at', 'desc');
     }
 
     /**
