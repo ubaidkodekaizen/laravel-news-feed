@@ -3571,6 +3571,13 @@
         <div id="notifications" class="api-section">
             <h2>🔔 Notifications</h2>
             <p>Comprehensive notification management APIs. Notifications are automatically created when users interact with your content (reactions, comments, shares, messages, opportunities, etc.)</p>
+            <div class="alert alert-warning" style="margin: 20px 0; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                <strong>🌐 Web vs Mobile Endpoints:</strong> 
+                <ul style="margin: 10px 0 0 20px; padding: 0;">
+                    <li><strong>Web Endpoints:</strong> Use <code>/notifications</code> (no /api prefix) - Returns legacy format with pagination in <code>notifications</code> key</li>
+                    <li><strong>Mobile API Endpoints:</strong> Use <code>/api/notifications</code> or <code>/api/notifications/list</code> - Returns standard format with pagination in <code>data.pagination</code> key</li>
+                </ul>
+            </div>
             <div class="alert alert-info" style="margin: 20px 0; padding: 15px; background: #e7f3ff; border-left: 4px solid #007bff; border-radius: 5px;">
                 <strong>📸 User Photo in Notifications:</strong> All notification responses include <code>user_photo</code> (full URL), <code>user_name</code> (full name), and <code>trigger_user_id</code> (ID of the user who triggered the notification) fields. These fields are automatically populated from the notification data and are ready to display in your UI. Note: <code>user_id</code> in the notification object refers to the user who receives the notification, while <code>trigger_user_id</code> refers to the user who triggered it.
             </div>
@@ -3578,11 +3585,11 @@
             <div class="api-endpoint">
                 <h3>
                     <span class="method-badge method-get">GET</span>
-                    List Notifications
+                    List Notifications (Mobile API)
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications?per_page=20&page=1&unread_only=false&type=new_message&sort=latest</div>
-                <p>Get user's notifications with advanced filtering and pagination</p>
+                <div class="endpoint-url">/api/notifications?per_page=20&page=1&unread_only=false&type=new_message&sort=latest</div>
+                <p><strong>Mobile API Endpoint:</strong> Get user's notifications with advanced filtering and pagination. Also available at <code>/api/notifications/list</code></p>
                 
                 <h5>Query Parameters:</h5>
                 <table class="param-table">
@@ -3681,8 +3688,8 @@
                     Get Single Notification
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/{id}</div>
-                <p>Get details of a specific notification</p>
+                <div class="endpoint-url">/api/notifications/{id}</div>
+                <p><strong>Mobile API Endpoint:</strong> Get details of a specific notification</p>
                 
                 <h5>URL Parameters:</h5>
                 <table class="param-table">
@@ -3741,8 +3748,8 @@
                     Get Unread Count
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/unread-count</div>
-                <p>Get the count of unread notifications</p>
+                <div class="endpoint-url">/api/notifications/unread-count</div>
+                <p><strong>Mobile API Endpoint:</strong> Get the count of unread notifications</p>
 
                 <h5>Response:</h5>
                 <div class="code-block">
@@ -3762,8 +3769,8 @@
                     Get Notification Types
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/types</div>
-                <p>Get a list of all available notification types</p>
+                <div class="endpoint-url">/api/notifications/types</div>
+                <p><strong>Mobile API Endpoint:</strong> Get a list of all available notification types</p>
 
                 <h5>Response:</h5>
                 <div class="code-block">
@@ -3802,8 +3809,8 @@
                     Mark Notification as Read
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/{id}/read</div>
-                <p>Mark a specific notification as read</p>
+                <div class="endpoint-url">/api/notifications/{id}/read</div>
+                <p><strong>Mobile API Endpoint:</strong> Mark a specific notification as read</p>
                 
                 <h5>URL Parameters:</h5>
                 <table class="param-table">
@@ -3844,8 +3851,8 @@
                     Mark Multiple Notifications as Read
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/read-multiple</div>
-                <p>Mark all unread notifications as read. No request body needed - simply hit this endpoint to mark all unread notifications as read.</p>
+                <div class="endpoint-url">/api/notifications/read-multiple</div>
+                <p><strong>Mobile API Endpoint:</strong> Mark multiple notifications as read. Send an array of notification IDs in the request body.</p>
                 <p><strong>Note:</strong> This endpoint automatically marks all unread notifications as read. You don't need to send notification IDs, avoiding unnecessary looping on the client side.</p>
 
                 <h5>Request Body:</h5>
@@ -3870,8 +3877,8 @@
                     Mark All Notifications as Read
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/read-all</div>
-                <p>Mark all user's unread notifications as read</p>
+                <div class="endpoint-url">/api/notifications/read-all</div>
+                <p><strong>Mobile API Endpoint:</strong> Mark all user's unread notifications as read</p>
 
                 <h5>Response:</h5>
                 <div class="code-block">
@@ -3892,8 +3899,8 @@
                     Delete Notification
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/{id}</div>
-                <p>Delete a specific notification</p>
+                <div class="endpoint-url">/api/notifications/{id}</div>
+                <p><strong>Mobile API Endpoint:</strong> Delete a specific notification</p>
                 
                 <h5>URL Parameters:</h5>
                 <table class="param-table">
@@ -3933,8 +3940,8 @@
                     Delete Multiple Notifications
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/delete/multiple</div>
-                <p>Delete multiple notifications at once</p>
+                <div class="endpoint-url">/api/notifications/delete/multiple</div>
+                <p><strong>Mobile API Endpoint:</strong> Delete multiple notifications at once</p>
 
                 <h5>Request Body:</h5>
                 <table class="param-table">
@@ -3982,8 +3989,8 @@
                     Delete All Notifications
                     <span class="auth-badge auth-required">AUTH REQUIRED</span>
                 </h3>
-                <div class="endpoint-url">/notifications/delete/all?read_only=false</div>
-                <p>Delete all notifications (with optional filter for read-only)</p>
+                <div class="endpoint-url">/api/notifications/delete/all?read_only=false</div>
+                <p><strong>Mobile API Endpoint:</strong> Delete all notifications (with optional filter for read-only)</p>
 
                 <h5>Query Parameters:</h5>
                 <table class="param-table">

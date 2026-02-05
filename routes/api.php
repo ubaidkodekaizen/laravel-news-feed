@@ -227,11 +227,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // Note: Web notification routes have been moved to routes/web.php
     // These routes are for mobile apps only
     Route::prefix('notifications')->group(function () {
+        // IMPORTANT: Specific routes must be defined BEFORE wildcard routes ({id})
+        // to ensure proper route matching
+        
         // Get unread count (must be before /{id} route)
         Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('api.notifications.unread-count');
         
         // Get notification types
         Route::get('/types', [NotificationController::class, 'getTypes'])->name('api.notifications.types');
+        
+        // List notifications - explicit /list endpoint (must be before root /)
+        Route::get('/list', [NotificationController::class, 'index'])->name('api.notifications.list');
+        
+        // Root endpoint for /api/notifications (mobile app format)
+        Route::get('/', [NotificationController::class, 'index'])->name('api.notifications.index');
         
         // Mark multiple as read
         Route::post('/read-multiple', [NotificationController::class, 'markMultipleAsRead'])->name('api.notifications.read-multiple');
@@ -245,11 +254,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Delete all notifications
         Route::delete('/delete/all', [NotificationController::class, 'destroyAll'])->name('api.notifications.destroy-all');
         
-        // List notifications with filters (mobile app format)
-        // Note: This conflicts with web route above, but web route takes precedence
-        // Mobile apps should use this with proper format or use /notifications with legacy_format=false
-        Route::get('/list', [NotificationController::class, 'index'])->name('api.notifications.index');
-        
+        // WILDCARD ROUTES - Must be LAST to avoid conflicts
         // Get single notification
         Route::get('/{id}', [NotificationController::class, 'show'])->name('api.notifications.show');
         
