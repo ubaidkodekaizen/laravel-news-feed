@@ -720,7 +720,7 @@ class UserController extends Controller
                 'services',
                 'userEducations',
                 'userIcp',
-                // Removed subscriptions from eager loading - we provide it separately below
+                'subscriptions', // Eager load subscriptions as array
             ])
             ->first();
 
@@ -741,38 +741,26 @@ class UserController extends Controller
             $profileViewsCount = 0;
         }
 
-        // Get active subscription for the user
-        // Only check if status is 'active' - no date validations
-        $activeSubscription = Subscription::where('user_id', $user->id)
-            ->where('status', 'active')
-            ->latest()
-            ->first();
-
-        // Check if user has valid subscription
-        $hasValidSubscription = false;
-        $subscriptionData = null;
-
-        if ($activeSubscription) {
-            // If subscription exists and status is 'active', it's valid
-            $hasValidSubscription = true;
-            $subscriptionData = [
-                'id' => $activeSubscription->id,
-                'subscription_type' => $activeSubscription->subscription_type,
-                'status' => $activeSubscription->status,
-                'renewal_date' => $activeSubscription->renewal_date?->toDateString(),
-                'expires_at' => $activeSubscription->expires_at?->toDateString(),
-                'platform' => $activeSubscription->platform,
-                'start_date' => $activeSubscription->start_date?->toDateString(),
+        // Format subscriptions and attach to user object (like company, products, etc.)
+        $user->subscriptions = $user->subscriptions->map(function ($subscription) {
+            return [
+                'id' => $subscription->id,
+                'subscription_type' => $subscription->subscription_type,
+                'status' => $subscription->status,
+                'renewal_date' => $subscription->renewal_date?->toDateString(),
+                'expires_at' => $subscription->expires_at?->toDateString(),
+                'platform' => $subscription->platform,
+                'start_date' => $subscription->start_date?->toDateString(),
+                'subscription_amount' => $subscription->subscription_amount,
+                'auto_renewing' => $subscription->auto_renewing,
             ];
-        }
+        });
 
         return response()->json([
             'status' => true,
             'message' => 'User profile fetched successfully.',
             'user' => $user,
             'profile_views_count' => $profileViewsCount,
-            'subscription' => $subscriptionData,
-            'has_subscription' => $hasValidSubscription,
         ]);
     }
 
