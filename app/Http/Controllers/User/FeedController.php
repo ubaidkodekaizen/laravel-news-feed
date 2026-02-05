@@ -362,7 +362,7 @@ class FeedController extends Controller
             'created_at' => $post->created_at,
             'updated_at' => $post->updated_at,
             'likes_count' => $post->reactions_count ?? 0,
-            'comments_count' => $post->comments_count ?? 0,
+            'comments_count' => $post->comments_count ?? 0, // Cached count (includes replies)
             'shares_count' => $post->shares_count ?? 0,
             'original_post_id' => $post->original_post_id,
             'comments_enabled' => (bool) $post->comments_enabled,
@@ -930,6 +930,15 @@ class FeedController extends Controller
         try {
             $post = Post::findOrFail($postId);
 
+            // Get actual count from database (not cached)
+            $actualCount = $post->reactions()->count();
+            
+            // Update cached count if it's different (sync it)
+            if ($post->reactions_count != $actualCount) {
+                $post->reactions_count = $actualCount;
+                $post->save();
+            }
+
             $reactions = $post->reactions()
                 ->with('user:id,first_name,last_name,photo,user_position')
                 ->get()
@@ -952,7 +961,7 @@ class FeedController extends Controller
 
             return response()->json([
                 'success' => true,
-                'count' => $reactions->count(),
+                'count' => $actualCount,
                 'reactions' => $reactions
             ]);
         } catch (\Exception $e) {
@@ -1246,6 +1255,13 @@ class FeedController extends Controller
                 ->whereNull('deleted_at')
                 ->firstOrFail();
 
+            // Sync comment count (includes replies) if needed
+            $actualCount = $post->allComments()->where('status', 'active')->count();
+            if ($post->comments_count != $actualCount) {
+                $post->comments_count = $actualCount;
+                $post->save();
+            }
+
             $comments = PostComment::where('post_id', $postId)
                 ->where('status', 'active')
                 ->whereNull('parent_id')
@@ -1448,6 +1464,15 @@ class FeedController extends Controller
         try {
             $post = Post::findOrFail($postId);
 
+            // Get actual count from database (not cached)
+            $actualCount = $post->reactions()->count();
+            
+            // Update cached count if it's different (sync it)
+            if ($post->reactions_count != $actualCount) {
+                $post->reactions_count = $actualCount;
+                $post->save();
+            }
+
             $reactions = $post->reactions()
                 ->with('user:id,first_name,last_name,photo')
                 ->get()
@@ -1461,7 +1486,7 @@ class FeedController extends Controller
 
             return response()->json([
                 'success' => true,
-                'count' => $reactions->count(),
+                'count' => $actualCount,
                 'reactions' => $reactions
             ]);
         } catch (\Exception $e) {
@@ -1480,11 +1505,19 @@ class FeedController extends Controller
     {
         try {
             $post = Post::findOrFail($postId);
-            $count = $post->comments()->where('status', 'active')->count();
+            
+            // Count all comments including replies (not just top-level)
+            $actualCount = $post->allComments()->where('status', 'active')->count();
+            
+            // Update cached count if it's different (sync it)
+            if ($post->comments_count != $actualCount) {
+                $post->comments_count = $actualCount;
+                $post->save();
+            }
 
             return response()->json([
                 'success' => true,
-                'count' => $count
+                'count' => $actualCount
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching comment count: ' . $e->getMessage());
