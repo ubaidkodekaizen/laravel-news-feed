@@ -81,6 +81,14 @@ self.addEventListener('notificationclick', (event) => {
         urlToOpen += `#comment-${data.parent_comment_id}`;
       }
     }
+  } else if (data.type === 'profile_view' && data.viewer_id) {
+    urlToOpen = `/user/profile/${data.viewer_slug || data.viewer_id}`;
+  } else if (data.type === 'new_follower' && data.follower_id) {
+    urlToOpen = `/user/profile/${data.follower_slug || data.follower_id}`;
+  } else if (data.type === 'new_service' && data.service_id) {
+    urlToOpen = `/services#service-${data.service_id}`;
+  } else if (data.type === 'new_product' && data.product_id) {
+    urlToOpen = `/products#product-${data.product_id}`;
   }
 
   event.waitUntil(

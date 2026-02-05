@@ -9,6 +9,7 @@ use App\Models\Users\User;
 use App\Models\Users\ProfileView;
 use App\Models\System\DeviceToken;
 use App\Services\S3Service;
+use App\Services\NotificationService;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -332,6 +333,22 @@ class UserController extends Controller
                     'ip_address' => request()->ip(),
                     'user_agent' => request()->userAgent(),
                 ]);
+
+                // Send notification to profile owner if viewer is authenticated
+                if ($viewerId) {
+                    try {
+                        $viewer = User::find($viewerId);
+                        if ($viewer) {
+                            $notificationService = app(NotificationService::class);
+                            $notificationService->sendProfileViewNotification($viewedUser->id, $viewer);
+                        }
+                    } catch (\Exception $e) {
+                        // Log but don't fail if notification fails
+                        if (config('app.debug')) {
+                            \Log::warning('Profile view notification failed: ' . $e->getMessage());
+                        }
+                    }
+                }
             }
         } catch (\Exception $e) {
             // Silently fail if tracking fails (table doesn't exist, etc.)

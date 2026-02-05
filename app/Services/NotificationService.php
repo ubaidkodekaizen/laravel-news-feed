@@ -311,4 +311,31 @@ class NotificationService
 
         return $results;
     }
+
+    /**
+     * Send profile view notification (when someone views a user's profile)
+     */
+    public function sendProfileViewNotification($profileOwnerId, $viewer)
+    {
+        // Don't send notification if viewer is viewing their own profile
+        if ($profileOwnerId === $viewer->id) {
+            return false;
+        }
+
+        $viewerName = trim($viewer->first_name . ' ' . $viewer->last_name);
+        $viewerPhoto = getImageUrl($viewer->photo);
+        
+        return $this->send(
+            $profileOwnerId,
+            Notification::TYPE_PROFILE_VIEW,
+            'Profile View',
+            "{$viewerName} viewed your profile",
+            [
+                'viewer_id' => $viewer->id,
+                'viewer_name' => $viewerName,
+                'viewer_slug' => $viewer->slug,
+                'viewer_photo' => $viewerPhoto,
+            ]
+        );
+    }
 }
