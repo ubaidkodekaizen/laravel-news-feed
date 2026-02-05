@@ -863,8 +863,6 @@ div.selected-filter-group {
     position: relative;
 }
 
-
-
 .searchBarAndFilterCon {
     width: 90%;
     margin: 5px auto 5px;
@@ -1534,7 +1532,6 @@ button.sliderUserMessageBtn {
     pointer-events: none;
 }
 
-
 .slider-dots {
     display: flex;
     justify-content: center;
@@ -1811,7 +1808,6 @@ p.description {
     margin: 40px 0;
 }
 
-
 .kodereach-accordion-content .author-info .author-avatar img {
     width: 50px;
     height: 50px;
@@ -2076,7 +2072,6 @@ p.description {
 .feed_lp {
     padding: 60px 0pc;
 }
-
 
 .custom-select-dropdown .dropdown-menu {
     max-height: 200px;
@@ -2450,7 +2445,6 @@ p.description {
     margin-top: 10px;
 }
 
-
 .data_table_user .btn_flex {
     height: 60px;
     justify-content: start;
@@ -2502,8 +2496,6 @@ button.btn.btn-primary.viewAllBtn {
     border: 1px solid #b8c034;
     margin: auto;
 }
-
-
 
 .industries_sec .industry_box .industry_heading {
     font-size: 18px;
@@ -2722,8 +2714,6 @@ button.btn.btn-primary.viewAllBtn {
     font-weight: 300;
 }
 
-
-
 .select-wrapper {
     position: relative;
     display: inline-block;
@@ -2906,7 +2896,6 @@ button.btn.btn-primary.viewAllBtn {
     position: relative;
 }
 
-
 .industry-profile-card:hover::before {
     opacity: 1;
 }
@@ -2965,8 +2954,6 @@ button.btn.btn-primary.viewAllBtn {
     background-color: #273572;
     color: #b8c034;
 }
-
-
 
 /* Profile page new view */
 .profile-container {
@@ -3354,22 +3341,24 @@ button.btn.btn-primary.viewAllBtn {
     width: 47px;
 }
 .top_header_links ul li .notification-dropdown {
-    min-width: 350px;
-    max-width: 400px;
+    min-width: 440px;
+    max-width: 440px;
     max-height: 500px;
     overflow-y: auto;
     border-radius: 15px;
 }
 .top_header_links ul li .notification-dropdown .dropdown-header {
-    display: flex;
+      display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 12px 16px;
 }
 .top_header_links ul li .notification-dropdown .dropdown-header span {
-    font-size: 16px;
     font-family: "Inter", sans-serif;
-    font-weight: 400;
-    color: #333;
+    color: #1a1f36;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
 }
 
 .top_header_links
@@ -3378,13 +3367,12 @@ button.btn.btn-primary.viewAllBtn {
     .notification-dropdown
     .dropdown-header
     #markAllReadBtn {
-    font-size: 16px;
-    font-family: "Inter", sans-serif;
-    font-weight: 500;
-    color: #273572;
-    padding: 2px 5px !important;
-    background: #b8c035;
-    line-height: 1.3em;
+        font-family: "Inter", sans-serif;
+    color: #1A1F36;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0px;
 }
 .top_header_links ul li .notification-dropdown .dropdown-divider {
     margin: 0;
@@ -3560,7 +3548,6 @@ p.industryProfileRole {
         background-color 0.3s ease,
         color 0.3s ease;
 }
-
 
 @media (max-width: 1280px) {
     .industry_specialist .container .row.g-3 .col-md-4 {

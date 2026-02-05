@@ -29,9 +29,12 @@ use App\Models\Reference\BusinessType;
 use App\Models\Users\UserIcp;
 use App\Http\Resources\UserResource;
 use Illuminate\Validation\ValidationException;
+use App\Traits\FormatsUserData;
 
 class UserController extends Controller
 {
+
+    use FormatsUserData;
 
     /**
      * Return all users with their related objects for external API consumers.
@@ -53,23 +56,23 @@ class UserController extends Controller
             },
             'profileViews' => function ($query) {
                 $query->whereNotNull('viewer_id')
-                      ->with('viewer:id,first_name,last_name,slug,photo')
-                      ->orderBy('created_at', 'desc');
+                    ->with('viewer:id,first_name,last_name,slug,photo')
+                    ->orderBy('created_at', 'desc');
             },
             'viewedProfiles' => function ($query) {
                 $query->whereNotNull('viewed_user_id')
-                      ->with('viewedUser:id,first_name,last_name,slug,photo')
-                      ->orderBy('created_at', 'desc');
+                    ->with('viewedUser:id,first_name,last_name,slug,photo')
+                    ->orderBy('created_at', 'desc');
             },
             'posts' => function ($query) {
                 $query->where('status', 'active')
-                      ->whereNull('deleted_at')
-                      ->with([
-                          'media',
-                          'originalPost.user:id,first_name,last_name,slug,photo',
-                          'originalPost.media',
-                      ])
-                      ->orderBy('created_at', 'desc');
+                    ->whereNull('deleted_at')
+                    ->with([
+                        'media',
+                        'originalPost.user:id,first_name,last_name,slug,photo',
+                        'originalPost.media',
+                    ])
+                    ->orderBy('created_at', 'desc');
             },
         ])
             ->whereNull('deleted_at')
@@ -78,19 +81,19 @@ class UserController extends Controller
         // Load conversations manually for each user since the relationship uses two foreign keys
         // Also eager load messages for each conversation
         foreach ($users as $user) {
-            $userConversations = Conversation::where(function($query) use ($user) {
+            $userConversations = Conversation::where(function ($query) use ($user) {
                 $query->where('user_one_id', $user->id)
-                      ->orWhere('user_two_id', $user->id);
+                    ->orWhere('user_two_id', $user->id);
             })
-            ->with('messages')
-            ->get();
+                ->with('messages')
+                ->get();
             $user->setRelation('conversations', $userConversations);
 
             // Load user_mosque pivot table data
             $userMosques = DB::table('user_mosque')
                 ->where('user_id', $user->id)
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return (object) [
                         'id' => $item->id,
                         'user_id' => $item->user_id,
@@ -166,7 +169,7 @@ class UserController extends Controller
         // Send verification email
         try {
             Mail::to($request->email)->queue(new \App\Mail\EmailVerification($verificationToken));
-            
+
             \Log::info('Email verification queued successfully', ['email' => $request->email]);
         } catch (\Exception $e) {
             \Log::error('Email verification failed to queue', [
@@ -336,7 +339,7 @@ class UserController extends Controller
 
         try {
             Mail::queue(new \App\Mail\AdminNotification($user, $subscription));
-            
+
             \Log::info('Admin notification email queued successfully', ['user_id' => $user->id]);
         } catch (\Exception $e) {
             \Log::error('Admin notification email failed to queue', [
@@ -576,7 +579,7 @@ class UserController extends Controller
 
         if ($request->hasFile('photo')) {
             $s3Service = app(\App\Services\S3Service::class);
-            
+
             // Delete old photo from S3 if exists
             if ($user->photo) {
                 $oldPath = $s3Service->extractPathFromUrl($user->photo);
@@ -584,7 +587,7 @@ class UserController extends Controller
                     $s3Service->deleteMedia($oldPath);
                 }
             }
-            
+
             $uploadResult = $s3Service->uploadMedia($request->file('photo'), 'profile');
             $user->photo = $uploadResult['url']; // Store full S3 URL in database
         }
@@ -674,7 +677,7 @@ class UserController extends Controller
 
         if ($request->hasFile('company_logo')) {
             $s3Service = app(S3Service::class);
-            
+
             // Delete old logo from S3 if exists
             if ($company->company_logo) {
                 $oldPath = $s3Service->extractPathFromUrl($company->company_logo);
@@ -682,7 +685,7 @@ class UserController extends Controller
                     $s3Service->deleteMedia($oldPath);
                 }
             }
-            
+
             $uploadResult = $s3Service->uploadMedia($request->file('company_logo'), 'company');
             $company->company_logo = $uploadResult['url']; // Store full S3 URL
         }
@@ -889,7 +892,7 @@ class UserController extends Controller
 
         try {
             Mail::to($request->email)->queue(new \App\Mail\PasswordReset($token));
-            
+
             \Log::info('API password reset email queued successfully', ['email' => $request->email]);
         } catch (\Exception $e) {
             \Log::error('API password reset email failed to queue', [
@@ -897,7 +900,7 @@ class UserController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'status' => false,
                 'message' => 'Failed to send email. Please try again later or contact support.',
@@ -1197,7 +1200,7 @@ class UserController extends Controller
     public function getUsers(Request $request)
     {
         $perPage = $request->get('per_page', 10);
-        
+
         $users = User::where('status', 'complete')
             ->whereNull('deleted_at')
             ->with('company:id,user_id,company_name,company_position')
@@ -1255,7 +1258,7 @@ class UserController extends Controller
 
         try {
             $userId = Auth::id();
-            
+
             DeviceToken::registerToken(
                 $userId,
                 $request->fcm_token,
@@ -1299,7 +1302,7 @@ class UserController extends Controller
 
         try {
             $userId = Auth::id();
-            
+
             DeviceToken::removeToken($userId, $request->fcm_token);
 
             return response()->json([
@@ -1356,7 +1359,7 @@ class UserController extends Controller
                 if (is_string($data)) {
                     $data = json_decode($data, true) ?? [];
                 }
-                
+
                 // Collect all possible user IDs from notification data
                 $userKeyMap = ['reactor_id', 'commenter_id', 'sharer_id', 'sender_id', 'replier_id', 'owner_id', 'follower_id', 'viewer_id'];
                 foreach ($userKeyMap as $key) {
@@ -1365,10 +1368,10 @@ class UserController extends Controller
                     }
                 }
             }
-            
+
             // Eager load all users at once
             $users = User::whereIn('id', array_unique($userIds))->get()->keyBy('id');
-            
+
             // Format notifications with user photos
             $formattedArray = [];
             foreach ($notifications->getCollection() as $notification) {
@@ -1411,7 +1414,7 @@ class UserController extends Controller
 
     /**
      * Format notification with user photo (for web)
-     * 
+     *
      * @param Notification $notification
      * @param \Illuminate\Support\Collection|null $users Pre-loaded users collection
      * @return array
@@ -1420,15 +1423,17 @@ class UserController extends Controller
     {
         // Get data - it's already cast to array by the model
         $data = $notification->data ?? [];
-        
+
         // If data is a string (JSON), decode it
         if (is_string($data)) {
             $data = json_decode($data, true) ?? [];
         }
-        
+
         $userPhoto = null;
         $userName = null;
         $userId = null;
+        $userInitials = null;
+        $hasPhoto = false;
 
         // Extract user ID from notification data based on type
         $userKeyMap = [
@@ -1458,10 +1463,12 @@ class UserController extends Controller
                 } else {
                     $user = User::find($userId);
                 }
-                
+
                 if ($user) {
-                    $userPhoto = getImageUrl($user->photo);
+                    $hasPhoto = $this->hasUserPhoto($user->photo);
+                    $userPhoto = $this->formatUserPhoto($user->photo);
                     $userName = trim($user->first_name . ' ' . $user->last_name);
+                    $userInitials = $this->getUserInitials($user->first_name, $user->last_name ?? '');
                 }
             } catch (\Exception $e) {
                 Log::warning('Failed to load user for notification', [
@@ -1486,6 +1493,8 @@ class UserController extends Controller
             // User photo fields - ALWAYS included
             'user_photo' => $userPhoto,
             'user_name' => $userName,
+            'user_initials' => $userInitials,
+            'user_has_photo' => $hasPhoto,
             'trigger_user_id' => $userId,
         ];
     }
@@ -1497,7 +1506,7 @@ class UserController extends Controller
     {
         try {
             $userId = Auth::id();
-            
+
             $notification = Notification::where('id', $id)
                 ->where('user_id', $userId)
                 ->firstOrFail();
@@ -1529,7 +1538,7 @@ class UserController extends Controller
     {
         try {
             $userId = Auth::id();
-            
+
             Notification::where('user_id', $userId)
                 ->whereNull('read_at')
                 ->update(['read_at' => now()]);
@@ -1550,8 +1559,4 @@ class UserController extends Controller
             ], 500);
         }
     }
-
-
-
-
 }
