@@ -340,6 +340,37 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/our-community', [PageController::class, 'ourCommunity']);
     Route::get('/products', [PageController::class, 'getProducts']);
     Route::get('/services', [PageController::class, 'getServices']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Opportunity Routes (Mobile App APIs)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('opportunities')->group(function () {
+        // List opportunities
+        Route::get('/', [\App\Http\Controllers\API\OpportunityController::class, 'index'])->name('api.opportunities.index');
+        
+        // Get single opportunity
+        Route::get('/{slug}', [\App\Http\Controllers\API\OpportunityController::class, 'show'])->name('api.opportunities.show');
+        
+        // Create opportunity
+        Route::post('/', [\App\Http\Controllers\API\OpportunityController::class, 'store'])->name('api.opportunities.store');
+        
+        // Update opportunity
+        Route::put('/{id}', [\App\Http\Controllers\API\OpportunityController::class, 'update'])->name('api.opportunities.update');
+        
+        // Delete opportunity
+        Route::delete('/{id}', [\App\Http\Controllers\API\OpportunityController::class, 'destroy'])->name('api.opportunities.destroy');
+        
+        // User's opportunities
+        Route::get('/my/list', [\App\Http\Controllers\API\OpportunityController::class, 'myOpportunities'])->name('api.opportunities.my');
+        
+        // Save/unsave opportunity
+        Route::post('/{id}/save', [\App\Http\Controllers\API\OpportunityController::class, 'toggleSave'])->name('api.opportunities.save');
+        
+        // Saved opportunities
+        Route::get('/saved/list', [\App\Http\Controllers\API\OpportunityController::class, 'savedOpportunities'])->name('api.opportunities.saved');
+    });
     Route::get('/search-filters', [SearchController::class, 'getDropdownFilters']);
     Route::get('/search', [SearchController::class, 'searchUserCompany']);
     Route::get('/get-suggestions', [SearchController::class, 'getSuggestions']);

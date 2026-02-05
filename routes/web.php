@@ -269,6 +269,18 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/notifications', [APIUserController::class, 'getNotifications'])->name('notifications');
     Route::post('/notifications/{id}/read', [APIUserController::class, 'markNotificationAsRead'])->name('notification.read');
     Route::post('/notifications/read-all', [APIUserController::class, 'markAllNotificationsAsRead'])->name('notifications.read.all');
+
+    // Opportunities Routes
+    Route::get('/opportunities', [\App\Http\Controllers\User\OpportunityController::class, 'index'])->name('opportunities.index');
+    Route::get('/opportunities/create', [\App\Http\Controllers\User\OpportunityController::class, 'create'])->name('opportunities.create');
+    Route::post('/opportunities', [\App\Http\Controllers\User\OpportunityController::class, 'store'])->name('opportunities.store');
+    Route::get('/opportunities/{slug}', [\App\Http\Controllers\User\OpportunityController::class, 'show'])->name('opportunities.show');
+    Route::get('/opportunities/{id}/edit', [\App\Http\Controllers\User\OpportunityController::class, 'edit'])->name('opportunities.edit');
+    Route::put('/opportunities/{id}', [\App\Http\Controllers\User\OpportunityController::class, 'update'])->name('opportunities.update');
+    Route::delete('/opportunities/{id}', [\App\Http\Controllers\User\OpportunityController::class, 'destroy'])->name('opportunities.destroy');
+    Route::get('/my-opportunities', [\App\Http\Controllers\User\OpportunityController::class, 'myOpportunities'])->name('opportunities.my');
+    Route::post('/opportunities/{id}/save', [\App\Http\Controllers\User\OpportunityController::class, 'toggleSave'])->name('opportunities.save');
+    Route::get('/saved-opportunities', [\App\Http\Controllers\User\OpportunityController::class, 'savedOpportunities'])->name('opportunities.saved');
 });
 
 /*
@@ -346,6 +358,16 @@ Route::middleware(['auth', RoleMiddleware::class . ':1|2|3'])->group(function ()
     Route::get('/admin/scheduler-logs/{id}', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'show'])->name('admin.scheduler-logs.show');
     Route::delete('/admin/scheduler-logs/{id}', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'destroy'])->name('admin.scheduler-logs.destroy');
     Route::post('/admin/scheduler-logs/{id}/restore', [\App\Http\Controllers\Admin\SchedulerLogController::class, 'restore'])->name('admin.scheduler-logs.restore');
+
+    // Opportunities Management
+    Route::get('/admin/opportunities', [\App\Http\Controllers\Admin\OpportunityController::class, 'index'])->name('admin.opportunities');
+    Route::get('/admin/opportunities/{id}', [\App\Http\Controllers\Admin\OpportunityController::class, 'show'])->name('admin.opportunities.show');
+    Route::put('/admin/opportunities/{id}/status', [\App\Http\Controllers\Admin\OpportunityController::class, 'updateStatus'])->name('admin.opportunities.update-status');
+    Route::post('/admin/opportunities/{id}/toggle-featured', [\App\Http\Controllers\Admin\OpportunityController::class, 'toggleFeatured'])->name('admin.opportunities.toggle-featured');
+    Route::delete('/admin/opportunities/{id}', [\App\Http\Controllers\Admin\OpportunityController::class, 'destroy'])->name('admin.opportunities.destroy');
+    Route::post('/admin/opportunities/{id}/restore', [\App\Http\Controllers\Admin\OpportunityController::class, 'restore'])->name('admin.opportunities.restore');
+    Route::get('/admin/opportunities/{id}/proposals', [\App\Http\Controllers\Admin\OpportunityController::class, 'getProposals'])->name('admin.opportunities.proposals');
+    Route::get('/admin/opportunities/statistics', [\App\Http\Controllers\Admin\OpportunityController::class, 'getStatistics'])->name('admin.opportunities.statistics');
 
     // Products/Services Management
     Route::get('/admin/products-services', [AdminController::class, 'showProductsServices'])->name('admin.products-services');
