@@ -1174,11 +1174,12 @@
             const token = localStorage.getItem('sanctum-token');
             if (token) {
                 $.ajax({
-                    url: '/api/notifications?per_page=1&unread_only=true',
+                    url: '/notifications?per_page=1&unread_only=true',
                     method: 'GET',
                     headers: {
                         'Authorization': token,
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
                         if (response.status) {

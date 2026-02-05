@@ -1329,11 +1329,55 @@ class UserController extends Controller
 
             $notifications = $query->paginate($perPage);
 
+            // Get unread count
+            $unreadCount = Notification::where('user_id', $userId)->unread()->count();
+
+            // Eager load users to avoid N+1 queries
+            $userIds = [];
+            foreach ($notifications->getCollection() as $notification) {
+                $data = $notification->data ?? [];
+                if (is_string($data)) {
+                    $data = json_decode($data, true) ?? [];
+                }
+                
+                // Collect all possible user IDs from notification data
+                $userKeyMap = ['reactor_id', 'commenter_id', 'sharer_id', 'sender_id', 'replier_id', 'owner_id', 'follower_id', 'viewer_id'];
+                foreach ($userKeyMap as $key) {
+                    if (isset($data[$key]) && !empty($data[$key])) {
+                        $userIds[] = (int) $data[$key];
+                    }
+                }
+            }
+            
+            // Eager load all users at once
+            $users = User::whereIn('id', array_unique($userIds))->get()->keyBy('id');
+            
+            // Format notifications with user photos
+            $formattedArray = [];
+            foreach ($notifications->getCollection() as $notification) {
+                $formattedArray[] = $this->formatNotificationForWeb($notification, $users);
+            }
+
+            // Return in legacy format (for web backward compatibility)
             return response()->json([
                 'status' => true,
                 'message' => 'Notifications fetched successfully.',
-                'notifications' => $notifications,
-                'unread_count' => Notification::where('user_id', $userId)->unread()->count(),
+                'notifications' => [
+                    'current_page' => $notifications->currentPage(),
+                    'data' => $formattedArray,
+                    'first_page_url' => $notifications->url(1),
+                    'from' => $notifications->firstItem(),
+                    'last_page' => $notifications->lastPage(),
+                    'last_page_url' => $notifications->url($notifications->lastPage()),
+                    'links' => $notifications->linkCollection()->toArray(),
+                    'next_page_url' => $notifications->nextPageUrl(),
+                    'path' => $notifications->path(),
+                    'per_page' => $notifications->perPage(),
+                    'prev_page_url' => $notifications->previousPageUrl(),
+                    'to' => $notifications->lastItem(),
+                    'total' => $notifications->total(),
+                ],
+                'unread_count' => $unreadCount,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch notifications', [
@@ -1346,6 +1390,87 @@ class UserController extends Controller
                 'message' => 'Failed to fetch notifications.',
             ], 500);
         }
+    }
+
+    /**
+     * Format notification with user photo (for web)
+     * 
+     * @param Notification $notification
+     * @param \Illuminate\Support\Collection|null $users Pre-loaded users collection
+     * @return array
+     */
+    private function formatNotificationForWeb($notification, $users = null)
+    {
+        // Get data - it's already cast to array by the model
+        $data = $notification->data ?? [];
+        
+        // If data is a string (JSON), decode it
+        if (is_string($data)) {
+            $data = json_decode($data, true) ?? [];
+        }
+        
+        $userPhoto = null;
+        $userName = null;
+        $userId = null;
+
+        // Extract user ID from notification data based on type
+        $userKeyMap = [
+            'reactor_id',      // post_reaction, message_reaction
+            'commenter_id',    // post_comment
+            'sharer_id',       // post_share
+            'sender_id',       // new_message
+            'replier_id',      // comment_reply
+            'owner_id',        // new_service, new_product
+            'follower_id',     // new_follower
+            'viewer_id',       // profile_view
+        ];
+
+        foreach ($userKeyMap as $key) {
+            if (isset($data[$key]) && !empty($data[$key])) {
+                $userId = (int) $data[$key];
+                break;
+            }
+        }
+
+        // Get user photo and name if user ID found
+        if ($userId) {
+            try {
+                // Use pre-loaded users if available, otherwise load from database
+                if ($users && $users->has($userId)) {
+                    $user = $users->get($userId);
+                } else {
+                    $user = User::find($userId);
+                }
+                
+                if ($user) {
+                    $userPhoto = getImageUrl($user->photo);
+                    $userName = trim($user->first_name . ' ' . $user->last_name);
+                }
+            } catch (\Exception $e) {
+                Log::warning('Failed to load user for notification', [
+                    'notification_id' => $notification->id,
+                    'user_id' => $userId,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        // Build notification array with all fields including user photo
+        return [
+            'id' => $notification->id,
+            'user_id' => $notification->user_id,
+            'type' => $notification->type,
+            'title' => $notification->title,
+            'message' => $notification->message,
+            'data' => $data,
+            'read_at' => $notification->read_at?->toIso8601String(),
+            'created_at' => $notification->created_at?->toIso8601String(),
+            'updated_at' => $notification->updated_at?->toIso8601String(),
+            // User photo fields - ALWAYS included
+            'user_photo' => $userPhoto,
+            'user_name' => $userName,
+            'trigger_user_id' => $userId,
+        ];
     }
 
     /**
