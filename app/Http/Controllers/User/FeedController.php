@@ -363,7 +363,9 @@ class FeedController extends Controller
             'updated_at' => $post->updated_at,
             'likes_count' => $post->reactions_count ?? 0,
             'comments_count' => $post->comments_count ?? 0, // Cached count (includes replies)
-            'shares_count' => $post->shares_count ?? 0,
+            'shares_count' => $post->shares()->whereHas('sharedPost', function ($query) {
+                $query->whereNull('deleted_at');
+            })->count(), // Only count active shares (exclude deleted shared posts)
             'original_post_id' => $post->original_post_id,
             'comments_enabled' => (bool) $post->comments_enabled,
             'user' => [
@@ -981,7 +983,25 @@ class FeedController extends Controller
         try {
             $post = Post::findOrFail($postId);
 
+            // Get actual count from database (only active shares - exclude deleted shared posts)
+            // A share is considered active if the shared_post_id still exists and is not deleted
+            $actualCount = $post->shares()
+                ->whereHas('sharedPost', function ($query) {
+                    $query->whereNull('deleted_at');
+                })
+                ->count();
+            
+            // Update cached count if it's different (sync it)
+            if ($post->shares_count != $actualCount) {
+                $post->shares_count = $actualCount;
+                $post->save();
+            }
+
+            // Get shares with their shared posts (only active ones)
             $shares = $post->shares()
+                ->whereHas('sharedPost', function ($query) {
+                    $query->whereNull('deleted_at');
+                })
                 ->with('user:id,first_name,last_name,photo,user_position')
                 ->latest()
                 ->get()
@@ -1005,7 +1025,7 @@ class FeedController extends Controller
 
             return response()->json([
                 'success' => true,
-                'count' => $shares->count(),
+                'count' => $actualCount,
                 'shares' => $shares
             ]);
         } catch (\Exception $e) {
