@@ -296,8 +296,7 @@
                                                                                                     <td class="title-36 a-center pb-10"
                                                                                                         style="font-size:35px; line-height:40px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; text-align:center; padding-bottom: 10px;">
                                                                                                         <strong>Welcome
-                                                                                                            to Muslim
-                                                                                                            Lynk</strong>
+                                                                                                            to MuslimLynk</strong>
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr>
@@ -351,8 +350,7 @@
                                                                                                 <tr>
                                                                                                     <td class="title-36 a-center pb-10"
                                                                                                         style="font-size:18px; line-height:30px; color:#282828; font-family:'PT Sans', Arial, sans-serif; min-width:auto !important; padding-bottom: 10px; text-align:start;">
-                                                                                                        Product: Muslim
-                                                                                                        Lynk.
+                                                                                                        Product: MuslimLynk.
                                                                                                     </td>
                                                                                                 </tr>
                                                                                                 <tr>

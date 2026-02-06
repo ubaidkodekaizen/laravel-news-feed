@@ -339,8 +339,7 @@
 
                                                                                                         <strong>Subscription
                                                                                                             Information:</strong><br>
-                                                                                                        Product: Muslim
-                                                                                                        Lynk<br>
+                                                                                                        Product: MuslimLynk<br>
                                                                                                         Quantity: 1<br>
                                                                                                         Price:
                                                                                                         ${{ number_format($subscription['subscription_amount'], 2) }}<br>

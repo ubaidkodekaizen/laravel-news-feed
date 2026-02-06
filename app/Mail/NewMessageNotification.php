@@ -36,7 +36,7 @@ class NewMessageNotification extends Mailable
      */
     public function build()
     {
-        return $this->subject("New Message from {$this->sender->first_name} on Muslim Linker")
+        return $this->subject("New Message from {$this->sender->first_name} on MuslimLynk")
                     ->markdown('emails.new-message-notification')
                     ->with([
                         'senderName' => "{$this->sender->first_name} {$this->sender->last_name}",
