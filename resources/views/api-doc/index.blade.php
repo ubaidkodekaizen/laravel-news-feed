@@ -547,6 +547,65 @@
             <div class="api-endpoint">
                 <h3>
                     <span class="method-badge method-post">POST</span>
+                    Logout
+                    <span class="auth-badge auth-required">AUTH REQUIRED</span>
+                </h3>
+                <div class="endpoint-url">/logout</div>
+                <p>Logout user and revoke Sanctum access token</p>
+                
+                <h5>Request Headers:</h5>
+                <div class="code-block">
+                    <pre>Authorization: Bearer {token}</pre>
+                </div>
+                
+                <h5>Request Body (Optional):</h5>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>fcm_token</td>
+                            <td>string</td>
+                            <td><span class="optional">Optional</span></td>
+                            <td>FCM token to remove from device tokens (if provided, will be removed on logout)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Request Body Example:</h5>
+                <div class="code-block">
+                    <pre>{
+  "fcm_token": "f9z8fQiPGt-e35HJciB18K:APA91b..."
+}</pre>
+                </div>
+
+                <h5>Response:</h5>
+                <div class="code-block">
+                    <pre>{
+  "status": true,
+  "message": "Logged out successfully."
+}</pre>
+                </div>
+                
+                <h5>What happens on logout:</h5>
+                <ul>
+                    <li>Current Sanctum access token is revoked</li>
+                    <li>User's online status is set to offline (Firebase)</li>
+                    <li>FCM device token is removed (if provided in request)</li>
+                </ul>
+                
+                <p><strong>Note:</strong> After logout, the token becomes invalid and cannot be used for authenticated requests. User must login again to get a new token.</p>
+            </div>
+
+            <div class="api-endpoint">
+                <h3>
+                    <span class="method-badge method-post">POST</span>
                     Forget Password
                     <span class="auth-badge auth-public">PUBLIC</span>
                 </h3>

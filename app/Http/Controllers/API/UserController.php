@@ -511,6 +511,66 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Logout user and revoke Sanctum token
+     */
+    public function logout(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            if ($user) {
+                // Update user online status to offline
+                try {
+                    app(App\Services\FirebaseService::class)->updateUserOnlineStatus($user->id, false);
+                } catch (\Exception $e) {
+                    Log::warning('Failed to update user online status on logout', [
+                        'user_id' => $user->id,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+
+                // Remove FCM token if provided
+                if ($request->filled('fcm_token')) {
+                    try {
+                        DeviceToken::removeToken($user->id, $request->fcm_token);
+                        Log::info('FCM token removed on logout', [
+                            'user_id' => $user->id
+                        ]);
+                    } catch (\Exception $e) {
+                        Log::warning('Failed to remove FCM token on logout', [
+                            'user_id' => $user->id,
+                            'error' => $e->getMessage()
+                        ]);
+                        // Don't fail logout if token removal fails
+                    }
+                }
+
+                // Revoke the current access token
+                $request->user()->currentAccessToken()->delete();
+
+                Log::info('User logged out successfully', [
+                    'user_id' => $user->id
+                ]);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Logged out successfully.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Logout failed', [
+                'user_id' => $request->user()?->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to logout.',
+            ], 500);
+        }
+    }
 
     public function updatePersonal(Request $request)
     {

@@ -147,6 +147,12 @@ Route::post('/forget-password', [UserController::class, 'sendResetLink'])->middl
 Route::middleware('auth:sanctum')->group(function () {
     /*
     |--------------------------------------------------------------------------
+    | Authentication Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/logout', [UserController::class, 'logout'])->name('api.logout');
+    /*
+    |--------------------------------------------------------------------------
     | Chat & Messaging Routes
     |--------------------------------------------------------------------------
     */
