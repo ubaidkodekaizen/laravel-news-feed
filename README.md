@@ -296,7 +296,7 @@ laravel-news-feed/
 │   │   ├── System/              # Role, Permission models
 │   │   └── Users/               # User model
 │   ├── Services/                # Business logic services (S3Service)
-│   └── Helpers/                 # Helper functions (DropDownHelper, GeneralHelper, ImageHelper)
+│   └── Helpers/                 # Helper functions (GeneralHelper, ImageHelper)
 ├── database/
 │   ├── migrations/              # Database migrations
 │   │   ├── users table
