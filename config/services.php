@@ -35,31 +35,5 @@ return [
         ],
     ],
 
-    'google_play' => [
-        'package_name' => env('GOOGLE_PLAY_PACKAGE_NAME'),
-        'credentials_path' => env('GOOGLE_PLAY_CREDENTIALS_PATH', storage_path('app/google/google-play-service-account.json')),
-        'products' => [
-            'Premium_Monthly' => env('GOOGLE_PLAY_PREMIUM_MONTHLY_PRODUCT_ID'),
-            'Premium_Yearly' => env('GOOGLE_PLAY_PREMIUM_YEARLY_PRODUCT_ID'),
-        ],
-    ],
-
-    'muslimlynk' => [
-        'api_url' => env('MUSLIMLYNK_API_URL', 'https://muslimlynk.kodereach.com'),
-        'api_key' => env('MUSLIMLYNK_API_KEY'), // API key for accessing the system (used in ApiKeyMiddleware)
-        'api_key_ai' => env('MUSLIMLYNK_API_KEY_AI'), // API key for accessing external AI API
-    ],
-
-     'firebase' => [
-        'credentials' => env('FIREBASE_CREDENTIALS', storage_path('app/firebase-credentials.json')),
-        'database_url' => env('FIREBASE_DATABASE_URL'),
-        'project_id' => env('FIREBASE_PROJECT_ID'),
-    ],
-
-    'apple' => [
-        'shared_secret' => env('APPLE_SHARED_SECRET'), // App-specific shared secret from App Store Connect
-        'verify_receipt_url' => env('APPLE_VERIFY_RECEIPT_URL', 'https://buy.itunes.apple.com/verifyReceipt'), // Production
-        'verify_receipt_url_sandbox' => env('APPLE_VERIFY_RECEIPT_URL_SANDBOX', 'https://sandbox.itunes.apple.com/verifyReceipt'), // Sandbox
-    ],
 
 ];

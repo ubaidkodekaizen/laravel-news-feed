@@ -1,50 +1,15 @@
 <?php
 
 namespace App\Helpers;
-use App\Models\Content\Blog;
-use App\Models\Business\Company;
-use App\Models\Content\Event;
-use App\Models\Business\Product;
-use App\Models\Business\Service;
-use App\Models\Business\Subscription;
+
 use App\Models\Users\User;
-use App\Models\Users\UserEducation;
-use App\Models\Business\Plan;
-use App\Models\Business\ProductService;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class GeneralHelper
 {
-
     public static function getUserCount(): int
     {
         return User::where('role_id', 4)->whereNull('deleted_at')->count();
-    }
-
-    public static function getSubscriberCount(): int
-    {
-        return Subscription::whereIn('subscription_type', ['Monthly', 'Yearly'])->count();
-    }
-
-    public static function getBlogCount(): int
-    {
-        return Blog::count();
-    }
-
-    public static function getEventCount(): int
-    {
-        return Event::count();
-    }
-
-    public static function getProductCountbyAuth(): int
-    {
-        return Product::where('user_id', Auth::id())->count();
-    }
-
-    public static function getServiceCountbyAuth(): int
-    {
-        return Service::where('user_id', Auth::id())->count();
     }
 
     public static function defaultAvatar(): string
@@ -57,10 +22,8 @@ class GeneralHelper
         return Carbon::parse($date)->format($format);
     }
 
-     public static function timeAgo($date): string
+    public static function timeAgo($date): string
     {
         return Carbon::parse($date)->diffForHumans();
     }
-
-
 }

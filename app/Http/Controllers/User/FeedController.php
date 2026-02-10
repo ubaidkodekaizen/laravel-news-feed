@@ -18,9 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Traits\FormatsUserData;
-use App\Models\Reference\Industry as IndustryModel;
 use App\Models\Users\User;
-use App\Models\Users\ProfileView;
 use App\Traits\HasUserPhotoData;
 use Illuminate\Support\Arr;
 
@@ -55,25 +53,8 @@ class FeedController extends Controller
             $profileViews = 0;
         }
 
-        $authUser = Auth::user()->load('company');
+        $authUser = Auth::user();
         $authUserData = $this->formatUserData($authUser);
-
-        $company = $authUser->company;
-        if ($company) {
-            $companyLogoUrl = getImageUrl($company->company_logo) ?? null;
-            $authUserData['company'] = [
-                'id' => $company->id,
-                'name' => $company->company_name,
-                'slug' => $company->company_slug,
-                'email' => $company->company_email ?? null,
-                'web_url' => $company->company_web_url ?? null,
-                'position' => $company->company_position ?? null,
-                'logo' => $companyLogoUrl,
-                'has_logo' => (bool) $companyLogoUrl,
-            ];
-        } else {
-            $authUserData['company'] = null;
-        }
 
         $posts = Post::where('user_id', $userId)
             ->where('status', 'active')
@@ -85,122 +66,19 @@ class FeedController extends Controller
             return ($post->reactions_count ?? 0) + ($post->comments_count ?? 0);
         });
 
-        $recentProducts = \App\Models\Business\Product::select('id', 'title', 'short_description', 'original_price', 'discounted_price', 'product_image', 'user_id')
-            ->with('user:id,first_name,last_name,photo')
-            ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
+        $recentProducts = collect();
+        $recentServices = collect();
+        $recentIndustryExperts = collect();
+        $suggestedConnections = User::where('id', '!=', Auth::id())
+            ->where('status', 'active')
             ->whereNull('deleted_at')
-            ->latest()
-            ->limit(2)
-            ->get()
-            ->map(fn($product) => (object) [
-                'id' => $product->id,
-                'name' => $product->title,
-                'description' => $product->short_description,
-                'price' => $product->discounted_price ?? $product->original_price,
-                'image_url' => getImageUrl($product->product_image) ?? asset('assets/images/servicePlaceholderImg.png'),
-            ]);
-
-        $recentServices = \App\Models\Business\Service::select('id', 'title', 'short_description', 'original_price', 'discounted_price', 'service_image', 'user_id')
-            ->with('user:id,first_name,last_name,photo')
-            ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
-            ->whereNull('deleted_at')
-            ->latest()
-            ->limit(3)
-            ->get()
-            ->map(fn($service) => (object) [
-                'id' => $service->id,
-                'name' => $service->title,
-                'description' => $service->short_description,
-                'price' => $service->discounted_price ?? $service->original_price,
-                'image_url' => getImageUrl($service->service_image) ?? asset('assets/images/servicePlaceholderImg.png'),
-            ]);
-
-        $industryConsolidation = [
-            'Finance' => ['Finance', 'Financial Advisor', 'Financial Services', 'FinTech', 'Sharia Compliant Financial Services', 'Investment', 'Private Equity', 'Residential Mortgage', 'Payment Solution'],
-            'Healthcare' => ['Healthcare', 'Medical Practices', 'Medical Billing', 'MedTech', 'Mental Health Therapist', 'Biopharma', 'Pharmaceuticals', 'FemTech'],
-            'Technology' => ['Technology', 'Salesforce', 'Salesforce Consulting', 'Telecommunications', '3D Printing'],
-            'Marketing' => ['Marketing', 'Marketing Services', 'Digital Marketing', 'Advertising Services'],
-            'Construction' => ['Construction', 'Interior design'],
-            'Educational Services' => ['Educational Services', 'Coaching'],
-            'Legal' => ['Legal', 'Law Practice'],
-            'Non-profit' => ['Non Profit', 'Non-profit', 'Non-profit Organizations'],
-            'Business Consulting' => ['Business Consulting', 'Business Consulting and Services', 'Outsourcing and Offshoring Consulting'],
-            'Staffing' => ['Staffing', 'Head Hunter', 'Resource Augmentation'],
-            'Retail' => ['Retail', 'Restaurant', 'Halal Meat'],
-            'Real Estate and Rental and Leasing' => ['Real Estate and Rental and Leasing'],
-            'Administrative and Support and Waste Management and Remediation Services' => ['Administrative and Support and Waste Management and Remediation Services', 'Cleaning Services'],
-            'Professional, Scientific, and Technical Services' => ['Professional, Scientific, and Technical Services', 'Creative Design', 'Writing and Editing', 'Ideation'],
-            'Engineering' => ['Engineering', 'mechanical or industrial engineering'],
-            'Logistics' => ['Logistics'],
-            'Accounting' => ['Accounting'],
-            'Printing' => ['Printing'],
-            'InsurTech' => ['InsurTech'],
-        ];
-
-        $allIndustryVariations = collect($industryConsolidation)->flatten()->unique()->values();
-
-        $recentIndustryExperts = User::where('status', 'complete')
-            ->whereHas('company', function ($q) use ($allIndustryVariations) {
-                $q->where('status', 'complete')
-                    ->where(function ($sub) use ($allIndustryVariations) {
-                        foreach ($allIndustryVariations as $variation) {
-                            $sub->orWhere('company_industry', 'LIKE', "%{$variation}%");
-                        }
-                    });
-            })
-            ->with('company')
-            ->latest()
+            ->inRandomOrder()
             ->limit(2)
             ->get();
-
-        if (method_exists($this, 'addPhotoDataToCollection')) {
-            $recentIndustryExperts = $this->addPhotoDataToCollection($recentIndustryExperts);
-        }
-
-        $suggestedConnections = collect();
-        try {
-            if (Schema::hasTable('connections')) {
-                $suggestedConnections = \App\Models\Users\User::where('id', '!=', Auth::id())
-                    ->where('status', 'active')
-                    ->whereNull('deleted_at')
-                    ->whereNotIn('id', fn($q) => $q->select('connected_user_id')
-                        ->from('connections')
-                        ->where('user_id', Auth::id())
-                        ->where('status', 'accepted'))
-                    ->whereNotIn('id', fn($q) => $q->select('user_id')
-                        ->from('connections')
-                        ->where('connected_user_id', Auth::id())
-                        ->where('status', 'accepted'))
-                    ->inRandomOrder()
-                    ->limit(2)
-                    ->get();
-            } else {
-                $suggestedConnections = \App\Models\Users\User::where('id', '!=', Auth::id())
-                    ->where('status', 'active')
-                    ->whereNull('deleted_at')
-                    ->inRandomOrder()
-                    ->limit(2)
-                    ->get();
-            }
-        } catch (\Exception $e) {
-            Log::warning('Error fetching suggested connections: ' . $e->getMessage());
-        }
-
-        $ads = \App\Models\Ads\Ad::where('status', 'active')
-            ->orderBy('featured', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get()
-            ->map(fn($ad) => (object) [
-                'id' => $ad->id,
-                'media' => getImageUrl($ad->media) ?? asset('assets/images/ad-placeholder.png'),
-                'url' => $ad->url,
-                'featured' => $ad->featured,
-            ]);
+        $ads = collect();
 
         return view('pages.news-feed', [
             'posts' => [],
-            'profileViews' => $profileViews,
             'postImpressions' => $postImpressions,
             'recentProducts' => $recentProducts,
             'recentServices' => $recentServices,
@@ -1548,56 +1426,4 @@ class FeedController extends Controller
         }
     }
 
-    /**
-     * Get profile views for the authenticated user.
-     */
-    public function getProfileViews(Request $request)
-    {
-        try {
-            $userId = Auth::id();
-
-            // Check if profile_views table exists
-            if (!Schema::hasTable('profile_views')) {
-                return response()->json([
-                    'success' => true,
-                    'count' => 0,
-                    'views' => []
-                ]);
-            }
-
-            $profileViews = ProfileView::where('viewed_user_id', $userId)
-                ->whereNotNull('viewer_id')
-                ->with('viewer:id,first_name,last_name,photo,user_position,slug')
-                ->orderBy('created_at', 'desc')
-                ->get()
-                ->map(function ($view) {
-                    $userData = $this->formatUserData($view->viewer);
-                    return [
-                        'id' => $view->id,
-                        'viewed_at' => $view->created_at,
-                        'user' => [
-                            'id' => $userData['id'],
-                            'name' => trim($userData['first_name'] . ' ' . $userData['last_name']),
-                            'avatar' => $userData['photo'],
-                            'initials' => $userData['user_initials'],
-                            'has_photo' => $userData['user_has_photo'],
-                            'position' => $view->viewer->user_position ?? '',
-                            'slug' => $view->viewer->slug ?? '',
-                        ]
-                    ];
-                });
-
-            return response()->json([
-                'success' => true,
-                'count' => $profileViews->count(),
-                'views' => $profileViews
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error fetching profile views: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to load profile views.'
-            ], 500);
-        }
-    }
 }

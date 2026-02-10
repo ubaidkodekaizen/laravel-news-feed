@@ -20,57 +20,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'Delete Users', 'slug' => 'users.delete', 'group' => 'users', 'description' => 'Delete users'],
             ['name' => 'Restore Users', 'slug' => 'users.restore', 'group' => 'users', 'description' => 'Restore deleted users'],
             ['name' => 'View User Profile', 'slug' => 'users.profile', 'group' => 'users', 'description' => 'View user profile details'],
-            ['name' => 'Edit Company', 'slug' => 'users.company.edit', 'group' => 'users', 'description' => 'Edit user company details'],
             ['name' => 'Send Password Reset', 'slug' => 'users.password.reset', 'group' => 'users', 'description' => 'Send password reset link to users'],
-            
-            // Subscriptions Management
-            ['name' => 'View Subscriptions', 'slug' => 'subscriptions.view', 'group' => 'subscriptions', 'description' => 'View subscriptions list'],
-            ['name' => 'Filter Subscriptions', 'slug' => 'subscriptions.filter', 'group' => 'subscriptions', 'description' => 'Filter subscriptions by status, type, platform'],
-            
-            // Products/Services Management
-            ['name' => 'View Products/Services', 'slug' => 'products-services.view', 'group' => 'products-services', 'description' => 'View products and services list'],
-            ['name' => 'View Product', 'slug' => 'products.view', 'group' => 'products-services', 'description' => 'View product details'],
-            ['name' => 'View Service', 'slug' => 'services.view', 'group' => 'products-services', 'description' => 'View service details'],
-            ['name' => 'Edit Product', 'slug' => 'products.edit', 'group' => 'products-services', 'description' => 'Edit existing products'],
-            ['name' => 'Edit Service', 'slug' => 'services.edit', 'group' => 'products-services', 'description' => 'Edit existing services'],
-            ['name' => 'Delete Product', 'slug' => 'products.delete', 'group' => 'products-services', 'description' => 'Delete products'],
-            ['name' => 'Delete Service', 'slug' => 'services.delete', 'group' => 'products-services', 'description' => 'Delete services'],
-            ['name' => 'Restore Product', 'slug' => 'products.restore', 'group' => 'products-services', 'description' => 'Restore deleted products'],
-            ['name' => 'Restore Service', 'slug' => 'services.restore', 'group' => 'products-services', 'description' => 'Restore deleted services'],
-            
-            // Blogs Management
-            ['name' => 'View Blogs', 'slug' => 'blogs.view', 'group' => 'blogs', 'description' => 'View blogs list'],
-            ['name' => 'Add Blogs', 'slug' => 'blogs.create', 'group' => 'blogs', 'description' => 'Add new blogs'],
-            ['name' => 'Edit Blogs', 'slug' => 'blogs.edit', 'group' => 'blogs', 'description' => 'Edit existing blogs'],
-            ['name' => 'Delete Blogs', 'slug' => 'blogs.delete', 'group' => 'blogs', 'description' => 'Delete blogs'],
-            ['name' => 'Restore Blogs', 'slug' => 'blogs.restore', 'group' => 'blogs', 'description' => 'Restore deleted blogs'],
-            
-            // Events Management
-            ['name' => 'View Events', 'slug' => 'events.view', 'group' => 'events', 'description' => 'View events list'],
-            ['name' => 'Add Events', 'slug' => 'events.create', 'group' => 'events', 'description' => 'Add new events'],
-            ['name' => 'Edit Events', 'slug' => 'events.edit', 'group' => 'events', 'description' => 'Edit existing events'],
-            ['name' => 'Delete Events', 'slug' => 'events.delete', 'group' => 'events', 'description' => 'Delete events'],
-            ['name' => 'Restore Events', 'slug' => 'events.restore', 'group' => 'events', 'description' => 'Restore deleted events'],
-            
-            // Ads Management
-            ['name' => 'View Ads', 'slug' => 'ads.view', 'group' => 'ads', 'description' => 'View ads list'],
-            ['name' => 'Add Ads', 'slug' => 'ads.create', 'group' => 'ads', 'description' => 'Add new ads'],
-            ['name' => 'Edit Ads', 'slug' => 'ads.edit', 'group' => 'ads', 'description' => 'Edit existing ads'],
-            ['name' => 'Delete Ads', 'slug' => 'ads.delete', 'group' => 'ads', 'description' => 'Delete ads'],
-            ['name' => 'Restore Ads', 'slug' => 'ads.restore', 'group' => 'ads', 'description' => 'Restore deleted ads'],
-            
-            // Managers Management (Only for Admin)
-            ['name' => 'View Managers', 'slug' => 'managers.view', 'group' => 'managers', 'description' => 'View managers and editors list'],
-            ['name' => 'Add Managers', 'slug' => 'managers.create', 'group' => 'managers', 'description' => 'Add new managers/editors'],
-            ['name' => 'Edit Managers', 'slug' => 'managers.edit', 'group' => 'managers', 'description' => 'Edit managers/editors'],
-            ['name' => 'Delete Managers', 'slug' => 'managers.delete', 'group' => 'managers', 'description' => 'Delete managers/editors'],
-            ['name' => 'Restore Managers', 'slug' => 'managers.restore', 'group' => 'managers', 'description' => 'Restore deleted managers/editors'],
-            ['name' => 'Manage Permissions', 'slug' => 'managers.permissions', 'group' => 'managers', 'description' => 'Manage permissions for managers/editors'],
-            
-            // Scheduler Logs Management (Admin only)
-            ['name' => 'View Scheduler Logs', 'slug' => 'scheduler-logs.view', 'group' => 'scheduler-logs', 'description' => 'View scheduler logs list'],
-            ['name' => 'Delete Scheduler Logs', 'slug' => 'scheduler-logs.delete', 'group' => 'scheduler-logs', 'description' => 'Delete scheduler logs'],
-            ['name' => 'Restore Scheduler Logs', 'slug' => 'scheduler-logs.restore', 'group' => 'scheduler-logs', 'description' => 'Restore deleted scheduler logs'],
             
             // Feed Management
             ['name' => 'View Feed', 'slug' => 'feed.view', 'group' => 'feed', 'description' => 'View feed posts list and details'],

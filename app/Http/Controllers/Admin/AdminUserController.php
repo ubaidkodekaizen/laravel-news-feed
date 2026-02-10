@@ -3,12 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business\Company;
-use App\Models\Business\Subscription;
 use App\Models\Users\User;
-use App\Models\Reference\Designation;
-use App\Models\Reference\BusinessType;
-use App\Models\Reference\Industry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Services\S3Service;
@@ -34,9 +29,7 @@ class AdminUserController extends Controller
         
         $filter = $request->get('filter', 'all');
         
-        // Optimize: Only load company columns that are actually used in the view
-        // Note: Keeping all user columns as the view may access various fields
-        $query = User::where('role_id', 4)->with('company:id,user_id,company_name,company_industry,status');
+        $query = User::where('role_id', 4);
         
         // Apply filter
         switch ($filter) {
@@ -50,11 +43,7 @@ class AdminUserController extends Controller
                 $query->where('added_by', 'apple');
                 break;
             case 'amcob':
-                $query->where(function($q) {
-                    $q->where('added_by', 'Admin')
-                      ->orWhere('added_by', 'amcob-api')
-                      ->orWhere('is_amcob', 'Yes');
-                });
+                $query->where('added_by', 'Admin');
                 break;
             case 'deleted':
                 $query->onlyTrashed();
@@ -74,11 +63,7 @@ class AdminUserController extends Controller
             'web' => (clone $baseQuery)->where('added_by', 'web')->whereNull('deleted_at')->count(),
             'google' => (clone $baseQuery)->where('added_by', 'google')->whereNull('deleted_at')->count(),
             'apple' => (clone $baseQuery)->where('added_by', 'apple')->whereNull('deleted_at')->count(),
-            'amcob' => (clone $baseQuery)->where(function($q) {
-                $q->where('added_by', 'Admin')
-                  ->orWhere('added_by', 'amcob-api')
-                  ->orWhere('is_amcob', 'Yes');
-            })->whereNull('deleted_at')->count(),
+            'amcob' => (clone $baseQuery)->where('added_by', 'Admin')->whereNull('deleted_at')->count(),
             'deleted' => (clone $baseQuery)->onlyTrashed()->count(),
         ];
         
@@ -110,27 +95,8 @@ class AdminUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(), // Automatically verify email
-            'added_by' => 'admin',
-            'is_amcob' => $request->amcob_member ?? 'No',
-            'duration' => $request->duration ?? '',
-        ]);
-
-        // Create subscription for all admin-created users with 90 days free trial
-        $isAmcob = ($request->amcob_member ?? 'No') === 'Yes';
-        $renewalDate = now()->addDays(90); // 90 days free trial
-        Subscription::create([
-            'user_id' => $user->id,
-            'plan_id' => 1,
-            'subscription_type' => 'Free',
-            'subscription_amount' => 0.00,
-            'start_date' => now(),
-            'renewal_date' => $renewalDate,
-            'expires_at' => $renewalDate, // Also set expires_at for mobile app compatibility
+            'role_id' => 4, // Member role
             'status' => 'active',
-            'transaction_id' => null,
-            'receipt_data' => null,
-            'platform' => $isAmcob ? 'Amcob' : 'Admin',
-            'auto_renewing' => false, // Free subscriptions don't auto-renew
         ]);
 
         // Create password reset token for password setup
@@ -147,8 +113,6 @@ class AdminUserController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => $request->password, // Include password for email
-            'is_amcob' => $request->amcob_member ?? 'No',
-            'duration' => $request->duration ?? ''
         ];
         
         try {
@@ -169,24 +133,14 @@ class AdminUserController extends Controller
 
     public function showUserById($id)
     {
-        $user = User::where('id', $id)
-            ->with('company')
-            ->firstOrFail();
-
+        $user = User::where('id', $id)->firstOrFail();
         return view('admin.users.user-profile', compact('user'));
     }
 
     public function editUser($id)
     {
         $user = User::findOrFail($id);
-        $company = Company::where('user_id', $user->id)->first();
-        return view('admin.users.edit-user', compact('user', 'company'));
-    }
-
-    public function editCompany($id)
-    {
-        // Redirect to edit user page which includes company editing
-        return $this->editUser($id);
+        return view('admin.users.edit-user', compact('user'));
     }
 
     public function updateUserDetails(Request $request)
@@ -207,10 +161,9 @@ class AdminUserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $request->id,
             'phone' => 'nullable|string|max:20',
-            'linkedin_url' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:1000',
+            'location' => 'nullable|string|max:255',
+            'website' => 'nullable|url|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
         ]);
 
@@ -224,32 +177,9 @@ class AdminUserController extends Controller
         $user->last_name = $request->last_name;
         $user->email = $request->email;
         $user->phone = $request->phone ?? '';
-        $user->linkedin_url = $normalizeUrl($request->linkedin_url);
-        $user->x_url = $request->x_url ?? '';
-        $user->instagram_url = $request->instagram_url ?? '';
-        $user->facebook_url = $request->facebook_url ?? '';
-        $user->country = $request->country ?? '';
-        $user->state = $request->state ?? '';
-        $user->city = $request->city ?? '';
-        $user->county = $request->county ?? '';
-        $user->gender = $request->gender ?? '';
-        $user->age_group = $request->age_group ?? '';
-        $user->ethnicity = $request->ethnicity ?? $request->other_ethnicity;
-        $user->nationality = $request->nationality ?? '';
-        $user->marital_status = $request->marital_status ?? $request->other_marital_status;
-        $user->tiktok_url = $request->tiktok_url ?? '';
-        $user->youtube_url = $request->youtube_url ?? '';
-
-        $user->is_amcob = $request->amcob_member ?? 'No';
-        $user->duration = $request->duration ?? '';
-        if ($request->has('are_you') && !empty($request->are_you)) {
-            $user->user_position = implode(', ', $request->are_you);
-        } else {
-            $user->user_position = null;
-        }
-        $user->languages = $request->languages ?? '';
-        $user->email_public = $request->email_public ?? 'No';
-        $user->phone_public = $request->phone_public ?? 'No';
+        $user->bio = $request->bio ?? '';
+        $user->location = $request->location ?? '';
+        $user->website = $normalizeUrl($request->website);
 
         $slug = Str::slug($request->first_name . ' ' . $request->last_name);
         $originalSlug = $slug;
@@ -276,103 +206,10 @@ class AdminUserController extends Controller
             $uploadResult = $s3Service->uploadMedia($request->file('photo'), 'profile');
             $user->photo = $uploadResult['url']; // Store full S3 URL
         }
-        $user->status = 'complete';
+        $user->status = 'active';
         $user->save();
 
         return redirect()->back()->with('success', 'User details updated successfully!');
-    }
-
-    public function updateCompanyDetails(Request $request)
-    {
-        $normalizeUrl = function ($url) {
-            if (!$url) {
-                return null;
-            }
-            $url = trim($url);
-            if (!preg_match('~^https?://~i', $url)) {
-                $url = 'https://' . $url;
-            }
-            return $url;
-        };
-
-        $capitalize = function ($value) {
-            return $value ? ucwords(strtolower($value)) : null;
-        };
-
-        if ($request->company_position_other) {
-            $position = Designation::updateOrCreate(
-                ['name' => $capitalize($request->company_position_other)],
-                ['name' => $capitalize($request->company_position_other)]
-            );
-        }
-
-        if ($request->company_business_type_other) {
-            $businessType = BusinessType::updateOrCreate(
-                ['name' => $capitalize($request->company_business_type_other)],
-                ['name' => $capitalize($request->company_business_type_other)]
-            );
-            $companyBusinessType = $businessType->name;
-        } else {
-            $companyBusinessType = $request->company_business_type;
-        }
-
-        if ($request->company_industry_other) {
-            $industry = Industry::updateOrCreate(
-                ['name' => $capitalize($request->company_industry_other)],
-                ['name' => $capitalize($request->company_industry_other)]
-            );
-            $companyIndustry = $industry->name;
-        } else {
-            $companyIndustry = $request->company_industry;
-        }
-
-        $company = Company::updateOrCreate(
-            ['user_id' => $request->user_id],
-            [
-                'company_name' => $request->company_name ?? '',
-                'company_web_url' => $request->company_web_url ?? '',
-                'company_linkedin_url' => $normalizeUrl($request->company_linkedin_url),
-                'company_position' => $request->company_position ?? '',
-                'company_revenue' => $request->company_revenue ?? '',
-                'company_no_of_employee' => $request->company_no_of_employee ?? '',
-                'company_community_service' => $request->company_community_service ?? '',
-                'company_business_type' => $companyBusinessType ?? '',
-                'company_industry' => $companyIndustry ?? '',
-                'company_experience' => $request->company_experience ?? '',
-                'company_phone' => $request->company_phone ?? '',
-            ]
-        );
-
-        $companySlug = Str::slug($request->company_name);
-        $originalSlug = $companySlug;
-        $counter = 1;
-
-        while (Company::where('company_slug', $companySlug)->where('id', '!=', $company->id)->exists()) {
-            $companySlug = $originalSlug . '-' . $counter;
-            $counter++;
-        }
-        $company->company_slug = $companySlug;
-        $company->status = "complete";
-        $company->save();
-
-        if ($request->hasFile('company_logo')) {
-            $s3Service = app(S3Service::class);
-            
-            // Delete old logo from S3 if exists
-            if ($company->company_logo) {
-                $oldPath = $s3Service->extractPathFromUrl($company->company_logo);
-                if ($oldPath && str_starts_with($oldPath, 'media/')) {
-                    $s3Service->deleteMedia($oldPath);
-                }
-            }
-            
-            $uploadResult = $s3Service->uploadMedia($request->file('company_logo'), 'company');
-            $company->company_logo = $uploadResult['url']; // Store full S3 URL
-            $company->status = "complete";
-            $company->save();
-        }
-
-        return redirect()->back()->with('success', 'Professional details updated successfully!');
     }
 
     public function deleteUser($id)

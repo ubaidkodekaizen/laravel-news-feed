@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business\Product;
-use App\Models\Business\Service;
-use App\Models\Business\Subscription;
 use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -89,8 +86,6 @@ class AdminController extends Controller
         switch ($chartType) {
             case 'signups':
                 return $this->getSignupsData($startDate, $endDate);
-            case 'subscribers':
-                return $this->getSubscribersData($startDate, $endDate);
             case 'platforms':
                 return $this->getPlatformsData($startDate, $endDate);
             case 'account_creation':
@@ -133,44 +128,7 @@ class AdminController extends Controller
 
     private function getSubscribersData($startDate, $endDate)
     {
-        // Active subscriptions - use start_date (actual subscription start date) if available, otherwise created_at
-        // Only Monthly and Yearly subscriptions
-        $active = Subscription::where('status', 'active')
-            ->whereIn('subscription_type', ['Monthly', 'Yearly'])
-            ->whereRaw("COALESCE(start_date, DATE(created_at)) BETWEEN ? AND ?", [
-                $startDate, 
-                $endDate
-            ])
-            ->selectRaw('DATE(COALESCE(start_date, created_at)) as date, COUNT(*) as count')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get();
-
-        // Renewed subscriptions - use last_renewed_at (actual renewal date from platform)
-        // Only Monthly and Yearly subscriptions that are still active
-        $renewed = Subscription::where('status', 'active')
-            ->whereIn('subscription_type', ['Monthly', 'Yearly'])
-            ->whereNotNull('last_renewed_at')
-            ->whereBetween('last_renewed_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
-            ->selectRaw('DATE(last_renewed_at) as date, COUNT(*) as count')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get();
-
-        // Cancelled subscriptions - only Monthly and Yearly
-        // Use cancelled_at if available (actual cancellation date), otherwise fallback to updated_at
-        // COALESCE ensures we use cancelled_at (actual cancellation date) when available, otherwise updated_at
-        $cancelled = Subscription::where('status', 'cancelled')
-            ->whereIn('subscription_type', ['Monthly', 'Yearly'])
-            ->whereRaw("COALESCE(cancelled_at, updated_at) BETWEEN ? AND ?", [
-                $startDate . ' 00:00:00', 
-                $endDate . ' 23:59:59'
-            ])
-            ->selectRaw('DATE(COALESCE(cancelled_at, updated_at)) as date, COUNT(*) as count')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get();
-
+        // Subscriptions feature removed - return empty data
         $labels = [];
         $activeData = [];
         $renewedData = [];
@@ -180,18 +138,10 @@ class AdminController extends Controller
         $end = Carbon::parse($endDate);
 
         while ($currentDate <= $end) {
-            $dateStr = $currentDate->format('Y-m-d');
             $labels[] = $currentDate->format('M d');
-            
-            $activeCount = $active->firstWhere('date', $dateStr);
-            $activeData[] = $activeCount ? (int)$activeCount->count : 0;
-            
-            $renewedCount = $renewed->firstWhere('date', $dateStr);
-            $renewedData[] = $renewedCount ? (int)$renewedCount->count : 0;
-            
-            $cancelledCount = $cancelled->firstWhere('date', $dateStr);
-            $cancelledData[] = $cancelledCount ? (int)$cancelledCount->count : 0;
-            
+            $activeData[] = 0;
+            $renewedData[] = 0;
+            $cancelledData[] = 0;
             $currentDate->addDay();
         }
 
@@ -281,85 +231,4 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Show all products and services
-     */
-    public function showProductsServices(Request $request)
-    {
-        $user = Auth::user();
-        $isAdmin = $user && $user->role_id == 1;
-        
-        // Check if user has view permission
-        if (!$isAdmin && (!$user || !$user->hasPermission('products-services.view'))) {
-            abort(403, 'Unauthorized action.');
-        }
-        
-        $filter = $request->get('filter', 'all'); // all, products, services, deleted
-        
-        $productsQuery = Product::with('user');
-        $servicesQuery = Service::with('user');
-        $deletedProductsQuery = Product::onlyTrashed()->with('user');
-        $deletedServicesQuery = Service::onlyTrashed()->with('user');
-        
-        $productsCount = $productsQuery->count();
-        $servicesCount = $servicesQuery->count();
-        $deletedProductsCount = $deletedProductsQuery->count();
-        $deletedServicesCount = $deletedServicesQuery->count();
-        $allCount = $productsCount + $servicesCount;
-        $deletedCount = $deletedProductsCount + $deletedServicesCount;
-        
-        $counts = [
-            'all' => $allCount,
-            'products' => $productsCount,
-            'services' => $servicesCount,
-            'deleted' => $deletedCount,
-        ];
-        
-        // Get data based on filter
-        if ($filter === 'products') {
-            $items = $productsQuery->orderByDesc('id')->get();
-            // Add type indicator for products
-            $items->each(function($item) {
-                $item->item_type = 'product';
-            });
-        } elseif ($filter === 'services') {
-            $items = $servicesQuery->orderByDesc('id')->get();
-            // Add type indicator for services
-            $items->each(function($item) {
-                $item->item_type = 'service';
-            });
-        } elseif ($filter === 'deleted') {
-            // Show only deleted items
-            $deletedProducts = $deletedProductsQuery->orderByDesc('id')->get();
-            $deletedServices = $deletedServicesQuery->orderByDesc('id')->get();
-            
-            // Add type indicator
-            $deletedProducts->each(function($item) {
-                $item->item_type = 'product';
-            });
-            $deletedServices->each(function($item) {
-                $item->item_type = 'service';
-            });
-            
-            // Merge both collections and sort by ID descending
-            $items = $deletedProducts->concat($deletedServices)->sortByDesc('id')->values();
-        } else {
-            // Combine products and services for "All" tab
-            $products = $productsQuery->orderByDesc('id')->get();
-            $services = $servicesQuery->orderByDesc('id')->get();
-            
-            // Add type indicator to each item
-            $products->each(function($item) {
-                $item->item_type = 'product';
-            });
-            $services->each(function($item) {
-                $item->item_type = 'service';
-            });
-            
-            // Merge both collections and sort by ID descending
-            $items = $products->concat($services)->sortByDesc('id')->values();
-        }
-        
-        return view('admin.products-services.index', compact('items', 'counts', 'filter'));
-    }
 }

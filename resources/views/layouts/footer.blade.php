@@ -1,39 +1,6 @@
 @yield('scripts')
 <script>
-    var userTokenRoute = "{{ route('user.token') }}";
-    var getConversations = "{{ route('get.conversations') }}";
-    var blockUserRoute = "{{ route('block.user') }}";
-    var unblockUserRoute = "{{ route('unblock.user') }}";
-    var checkBlockStatusRoute = "{{ route('check.block.status') }}";
-    var getBlockedUsersRoute = "{{ route('blocked.users') }}";
-
-    function getMessageRoute(conversationId) {
-        return "{{ route('get.message', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);
-    }
-    var sendMsg = "{{ route('sendMessage') }}";
-    var createConversation = "{{ route('create.conversation') }}";
-
-    function getUserConversationRoute(conversationId) {
-        return "{{ route('get.user.conversation', ['conversation' => '__ID__']) }}".replace('__ID__', conversationId);
-    }
-    var userIsTyping = "{{ route('user.is.typing') }}";
-
-    function addReactionRoute(messageId) {
-        return "{{ route('add.reaction', ['message' => '__ID__']) }}".replace('__ID__', messageId);
-    }
-
-    function removeReactionRoute(messageId) {
-        return "{{ route('add.reaction', ['message' => '__ID__']) }}".replace('__ID__', messageId);
-    }
-    var userPing = "{{ route('user.ping') }}";
-    var userOffline = "{{ route('user.offline') }}";
-
-    window.updateMessageRoute = function(messageId) {
-        return "{{ url('api/messages') }}/" + messageId;
-    };
-    window.deleteMessageRoute = function(messageId) {
-        return "{{ url('api/messages') }}/" + messageId;
-    };
+    // var userTokenRoute = "{{ route('user.token') }}"; // Route removed
 
     // Auth user data for feed
     @auth
@@ -50,9 +17,11 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
+@if(env('GOOGLE_MAPS_API_KEY'))
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJmm5iuEx2gVM3qj9a1zAWI_Y_C4Judnc&libraries=places&callback=initCityAutocomplete">
+    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initCityAutocomplete">
 </script>
+@endif
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="{{ asset('assets/js/custom.js?v1') }}"></script>
 @auth
@@ -77,7 +46,6 @@
             "{{ strtoupper(substr(auth()->user()->first_name, 0, 1) . substr(auth()->user()->last_name, 0, 1)) }}";
         @endauth
     </script>
-    <div id="chat-container"></div>
 @endauth
 
 <script>

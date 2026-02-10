@@ -1857,7 +1857,7 @@
                                      aria-labelledby="flush-headingEleven" data-bs-parent="#faqSecAccordion2">
                                      <div class="accordion-body">You can join through the MuslimLynk mobile app on
                                          Android or iOS.
-                                         You can also sign up directly on muslimlynk.com.
+                                         You can also sign up directly on {{ parse_url(config('app.url'), PHP_URL_HOST) }}.
                                          Create your profile, choose your plan, and you’re all set. It takes less than
                                          two minutes.</div>
                                  </div>

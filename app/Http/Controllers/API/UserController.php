@@ -2,14 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Business\Company;
-use App\Models\Chat\Conversation;
-use App\Models\Business\Subscription;
 use App\Models\Users\User;
-use App\Models\Users\ProfileView;
-use App\Models\System\DeviceToken;
 use App\Models\Notifications\Notification;
-use App\Services\GooglePlayService;
 use App\Services\S3Service;
 use App\Services\NotificationService;
 use Auth;
@@ -17,16 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Users\UserEducation;
 use Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Reference\Designation;
-use App\Models\Reference\Industry;
-use App\Models\Reference\BusinessType;
-use App\Models\Users\UserIcp;
 use App\Http\Resources\UserResource;
 use Illuminate\Validation\ValidationException;
 use App\Traits\FormatsUserData;
@@ -43,26 +32,10 @@ class UserController extends Controller
     public function indexAllWithRelations(Request $request)
     {
         $users = User::with([
-            'company',
-            'products',
-            'services',
-            'subscriptions',
-            'userEducations',
-            'userIcp',
             'reactions',
             'postReactions',
             'postComments' => function ($query) {
                 $query->with('post:id,content,slug,user_id');
-            },
-            'profileViews' => function ($query) {
-                $query->whereNotNull('viewer_id')
-                    ->with('viewer:id,first_name,last_name,slug,photo')
-                    ->orderBy('created_at', 'desc');
-            },
-            'viewedProfiles' => function ($query) {
-                $query->whereNotNull('viewed_user_id')
-                    ->with('viewedUser:id,first_name,last_name,slug,photo')
-                    ->orderBy('created_at', 'desc');
             },
             'posts' => function ($query) {
                 $query->where('status', 'active')
@@ -77,40 +50,6 @@ class UserController extends Controller
         ])
             ->whereNull('deleted_at')
             ->get();
-
-        // Load conversations manually for each user since the relationship uses two foreign keys
-        // Also eager load messages for each conversation
-        foreach ($users as $user) {
-            $userConversations = Conversation::where(function ($query) use ($user) {
-                $query->where('user_one_id', $user->id)
-                    ->orWhere('user_two_id', $user->id);
-            })
-                ->with('messages')
-                ->get();
-            $user->setRelation('conversations', $userConversations);
-
-            // Load user_mosque pivot table data
-            $userMosques = DB::table('user_mosque')
-                ->where('user_id', $user->id)
-                ->get()
-                ->map(function ($item) {
-                    return (object) [
-                        'id' => $item->id,
-                        'user_id' => $item->user_id,
-                        'mosque_id' => $item->mosque_id,
-                        'amount' => $item->amount,
-                    ];
-                });
-            $user->setRelation('userMosques', $userMosques);
-
-            // Load profile views count (safe if table doesn't exist)
-            try {
-                $profileViewsCount = Schema::hasTable('profile_views') ? $user->profileViews()->count() : 0;
-                $user->setAttribute('profile_views_count', $profileViewsCount);
-            } catch (\Exception $e) {
-                $user->setAttribute('profile_views_count', 0);
-            }
-        }
 
         return response()->json([
             'status' => true,
@@ -440,10 +379,6 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string|min:8',
-            'fcm_token' => 'nullable|string', // FCM token from mobile app
-            'device_type' => 'nullable|string|in:ios,android,web',
-            'device_id' => 'nullable|string',
-            'device_name' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -479,28 +414,7 @@ class UserController extends Controller
 
         $token = $user->createToken('api_token')->plainTextToken;
 
-        // Register FCM token if provided
-        if ($request->filled('fcm_token')) {
-            try {
-                DeviceToken::registerToken(
-                    $user->id,
-                    $request->fcm_token,
-                    $request->device_type,
-                    $request->device_id,
-                    $request->device_name
-                );
-                \Log::info('FCM token registered on login', [
-                    'user_id' => $user->id,
-                    'device_type' => $request->device_type
-                ]);
-            } catch (\Exception $e) {
-                \Log::error('Failed to register FCM token on login', [
-                    'user_id' => $user->id,
-                    'error' => $e->getMessage()
-                ]);
-                // Don't fail login if token registration fails
-            }
-        }
+        // FCM token registration removed - newsfeed boilerplate doesn't use Firebase
 
         return response()->json([
             'status' => true,
@@ -520,31 +434,7 @@ class UserController extends Controller
             $user = $request->user();
 
             if ($user) {
-                // Update user online status to offline
-                try {
-                    app(App\Services\FirebaseService::class)->updateUserOnlineStatus($user->id, false);
-                } catch (\Exception $e) {
-                    Log::warning('Failed to update user online status on logout', [
-                        'user_id' => $user->id,
-                        'error' => $e->getMessage()
-                    ]);
-                }
-
-                // Remove FCM token if provided
-                if ($request->filled('fcm_token')) {
-                    try {
-                        DeviceToken::removeToken($user->id, $request->fcm_token);
-                        Log::info('FCM token removed on logout', [
-                            'user_id' => $user->id
-                        ]);
-                    } catch (\Exception $e) {
-                        Log::warning('Failed to remove FCM token on logout', [
-                            'user_id' => $user->id,
-                            'error' => $e->getMessage()
-                        ]);
-                        // Don't fail logout if token removal fails
-                    }
-                }
+                // Firebase and FCM token handling removed - newsfeed boilerplate
 
                 // Revoke the current access token
                 $request->user()->currentAccessToken()->delete();
@@ -590,10 +480,9 @@ class UserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . Auth::id(),
             'phone' => 'nullable|string|max:20',
-            'linkedin_url' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:1000',
+            'location' => 'nullable|string|max:255',
+            'website' => 'nullable|url|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
         ]);
 
@@ -602,32 +491,10 @@ class UserController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->linkedin_url = $normalizeUrl($request->linkedin_url);
-        $user->x_url = $request->x_url ?? '';
-        $user->instagram_url = $request->instagram_url ?? '';
-        $user->facebook_url = $request->facebook_url ?? '';
-        $user->country = $request->country ?? '';
-        $user->state = $request->state ?? '';
-        $user->city = $request->city ?? '';
-        $user->county = $request->county ?? '';
-        $user->gender = $request->gender ?? '';
-        $user->age_group = $request->age_group ?? '';
-        $user->ethnicity = $request->ethnicity ?? $request->other_ethnicity;
-        $user->nationality = $request->nationality ?? '';
-        $user->marital_status = $request->marital_status ?? $request->other_marital_status ?? '';
-        $user->tiktok_url = $request->tiktok_url ?? '';
-        $user->youtube_url = $request->youtube_url ?? '';
-        $user->languages = $request->languages ?? '';
-        // Handle checkbox: if checked, value is 'Yes', if unchecked, it's not in request so set to 'No'
-        $user->email_public = $request->has('email_public') && $request->email_public == 'Yes' ? 'Yes' : 'No';
-        $user->phone_public = $request->has('phone_public') && $request->phone_public == 'Yes' ? 'Yes' : 'No';
-
-        if ($request->has('are_you') && !empty($request->are_you)) {
-            $user->user_position = implode(', ', $request->are_you);
-        } else {
-            $user->user_position = null;
-        }
+        $user->phone = $request->phone ?? '';
+        $user->bio = $request->bio ?? '';
+        $user->location = $request->location ?? '';
+        $user->website = $normalizeUrl($request->website);
 
         $slug = Str::slug($request->first_name . ' ' . $request->last_name);
         $originalSlug = $slug;
@@ -652,7 +519,7 @@ class UserController extends Controller
             $user->photo = $uploadResult['url']; // Store full S3 URL in database
         }
 
-        $user->status = 'complete';
+        $user->status = 'active';
         $user->save();
 
         return response()->json([
@@ -667,109 +534,10 @@ class UserController extends Controller
      */
     public function updateProfessional(Request $request)
     {
-        $normalizeUrl = function ($url) {
-            if (!$url) {
-                return null;
-            }
-            $url = trim($url);
-            if (!preg_match('~^https?://~i', $url)) {
-                $url = 'https://' . $url;
-            }
-            return $url;
-        };
-
-        $capitalize = fn($value) => $value ? ucwords(strtolower($value)) : null;
-
-        if ($request->company_position_other) {
-            Designation::updateOrCreate(
-                ['name' => $capitalize($request->company_position_other)],
-                ['name' => $capitalize($request->company_position_other)]
-            );
-        }
-
-        if ($request->company_business_type_other) {
-            $businessType = BusinessType::updateOrCreate(
-                ['name' => $capitalize($request->company_business_type_other)],
-                ['name' => $capitalize($request->company_business_type_other)]
-            );
-            $companyBusinessType = $businessType->name;
-        } else {
-            $companyBusinessType = $request->company_business_type;
-        }
-
-        if ($request->company_industry_other) {
-            $industry = Industry::updateOrCreate(
-                ['name' => $capitalize($request->company_industry_other)],
-                ['name' => $capitalize($request->company_industry_other)]
-            );
-            $companyIndustry = $industry->name;
-        } else {
-            $companyIndustry = $request->company_industry;
-        }
-
-        $user = Auth::user();
-
-        $company = Company::updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'company_name' => $request->company_name ?? '',
-                'company_web_url' => $request->company_web_url ?? '',
-                'company_linkedin_url' => $normalizeUrl($request->company_linkedin_url),
-                'company_position' => $request->company_position ?? '',
-                'company_revenue' => $request->company_revenue ?? '',
-                'company_no_of_employee' => $request->company_no_of_employee ?? '',
-                'company_community_service' => $request->company_community_service ?? '',
-                'company_business_type' => $companyBusinessType ?? '',
-                'company_industry' => $companyIndustry ?? '',
-                'company_experience' => $request->company_experience ?? '',
-                'company_phone' => $request->company_phone ?? '',
-            ]
-        );
-
-        $companySlug = Str::slug($request->company_name);
-        $originalSlug = $companySlug;
-        $counter = 1;
-        while (Company::where('company_slug', $companySlug)->where('id', '!=', $company->id)->exists()) {
-            $companySlug = $originalSlug . '-' . $counter++;
-        }
-        $company->company_slug = $companySlug ?? '';
-        $company->status = "complete";
-
-        if ($request->hasFile('company_logo')) {
-            $s3Service = app(S3Service::class);
-
-            // Delete old logo from S3 if exists
-            if ($company->company_logo) {
-                $oldPath = $s3Service->extractPathFromUrl($company->company_logo);
-                if ($oldPath && str_starts_with($oldPath, 'media/')) {
-                    $s3Service->deleteMedia($oldPath);
-                }
-            }
-
-            $uploadResult = $s3Service->uploadMedia($request->file('company_logo'), 'company');
-            $company->company_logo = $uploadResult['url']; // Store full S3 URL
-        }
-
-        $company->save();
-
-        $userIcp = UserIcp::updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'business_location' => $request->business_location ?? null,
-                'is_decision_maker' => $request->is_decision_maker !== null ? ($request->is_decision_maker === 'Yes' || $request->is_decision_maker === '1' || $request->is_decision_maker === 1 || $request->is_decision_maker === true ? 1 : 0) : null,
-                'company_current_business_challenges' => $request->company_current_business_challenges ?? null,
-                'company_business_goals' => $request->company_business_goals ?? null,
-                'company_attributes' => $request->company_attributes ?? null,
-                'company_technologies_you_use' => $request->company_technologies_you_use ?? null,
-                'company_buying_process' => $request->company_buying_process ?? null,
-            ]
-        );
-
+        // Professional details feature removed - simplified for newsfeed
         return response()->json([
             'status' => true,
-            'message' => 'Professional details updated successfully!',
-            'company' => $company,
-            'user_icp' => $userIcp,
+            'message' => 'Professional details feature removed.',
         ]);
     }
 
@@ -777,16 +545,7 @@ class UserController extends Controller
 
     public function showUserBySlug($slug)
     {
-        $user = User::where('slug', $slug)
-            ->with([
-                'company',
-                'products',
-                'services',
-                'userEducations',
-                'userIcp',
-                'subscriptions', // Eager load subscriptions as array
-            ])
-            ->first();
+        $user = User::where('slug', $slug)->first();
 
         if (!$user) {
             return response()->json([
@@ -795,36 +554,10 @@ class UserController extends Controller
             ], 404);
         }
 
-        // Track profile view
-        $this->trackProfileView($user);
-
-        // Get profile views count (safe if table doesn't exist)
-        try {
-            $profileViewsCount = Schema::hasTable('profile_views') ? ($user->profile_views_count ?? 0) : 0;
-        } catch (\Exception $e) {
-            $profileViewsCount = 0;
-        }
-
-        // Format subscriptions and attach to user object (like company, products, etc.)
-        $user->subscriptions = $user->subscriptions->map(function ($subscription) {
-            return [
-                'id' => $subscription->id,
-                'subscription_type' => $subscription->subscription_type,
-                'status' => $subscription->status,
-                'renewal_date' => $subscription->renewal_date?->toDateString(),
-                'expires_at' => $subscription->expires_at?->toDateString(),
-                'platform' => $subscription->platform,
-                'start_date' => $subscription->start_date?->toDateString(),
-                'subscription_amount' => $subscription->subscription_amount,
-                'auto_renewing' => $subscription->auto_renewing,
-            ];
-        });
-
         return response()->json([
             'status' => true,
             'message' => 'User profile fetched successfully.',
             'user' => $user,
-            'profile_views_count' => $profileViewsCount,
         ]);
     }
 
@@ -1261,17 +994,15 @@ class UserController extends Controller
     {
         $perPage = $request->get('per_page', 10);
 
-        $users = User::where('status', 'complete')
+        $users = User::where('status', 'active')
             ->whereNull('deleted_at')
-            ->with('company:id,user_id,company_name,company_position')
             ->select([
                 'id',
                 'first_name',
                 'last_name',
                 'photo',
                 'phone',
-                'city',
-                'state',
+                'location',
             ])
             ->paginate($perPage);
 
@@ -1282,11 +1013,8 @@ class UserController extends Controller
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
                 'profile_pic' => getImageUrl($user->photo),
-                'designation' => $user->company->company_position ?? null,
-                'company' => $user->company->company_name ?? null,
                 'phone_number' => $user->phone,
-                'city' => $user->city,
-                'state' => $user->state,
+                'location' => $user->location,
             ];
         });
 
@@ -1297,90 +1025,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Register or update FCM device token
-     */
-    public function registerDeviceToken(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'fcm_token' => 'required|string',
-            'device_type' => 'nullable|string|in:ios,android,web',
-            'device_id' => 'nullable|string',
-            'device_name' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $userId = Auth::id();
-
-            DeviceToken::registerToken(
-                $userId,
-                $request->fcm_token,
-                $request->device_type,
-                $request->device_id,
-                $request->device_name
-            );
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Device token registered successfully.',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Failed to register device token', [
-                'user_id' => Auth::id(),
-                'error' => $e->getMessage()
-            ]);
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to register device token.',
-            ], 500);
-        }
-    }
-
-    /**
-     * Remove FCM device token
-     */
-    public function removeDeviceToken(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'fcm_token' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $userId = Auth::id();
-
-            DeviceToken::removeToken($userId, $request->fcm_token);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Device token removed successfully.',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Failed to remove device token', [
-                'user_id' => Auth::id(),
-                'error' => $e->getMessage()
-            ]);
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to remove device token.',
-            ], 500);
-        }
-    }
 
     /**
      * Get user notifications

@@ -1,23 +1,18 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Laravel Newsfeed Boilerplate - A clean, production-ready newsfeed application with user authentication, posts, reactions, comments, and admin panel.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "authorizenet/authorizenet": "^2.0",
         "aws/aws-sdk-php": "*",
-        "google/apiclient": "2.17",
-        "kreait/firebase-php": "^7.0",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.30",
         "nunomaduro/termwind": "^2.3",
-        "phpoffice/phpspreadsheet": "^3.6",
-        "predis/predis": "^2.3",
-        "spatie/laravel-sitemap": "^7.3"
+        "predis/predis": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -35,7 +30,6 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/DropDownHelper.php",
             "app/Helpers/ImageHelper.php"
         ]
     },

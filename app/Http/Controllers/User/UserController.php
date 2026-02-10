@@ -4,10 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Business\Company;
 use App\Models\Users\User;
-use App\Models\Users\ProfileView;
-use App\Models\System\DeviceToken;
 use App\Services\S3Service;
 use App\Services\NotificationService;
 use Auth;
@@ -79,10 +76,6 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:8',
-            'fcm_token' => 'nullable|string', // FCM token from web browser
-            'device_type' => 'nullable|string|in:ios,android,web',
-            'device_id' => 'nullable|string',
-            'device_name' => 'nullable|string',
         ]);
 
         if (Auth::attempt($request->only('email', 'password'))) {
@@ -98,43 +91,12 @@ class UserController extends Controller
                 ]);
             }
 
-            $token = $user->createToken('chat_app')->plainTextToken;
+            $token = $user->createToken('newsfeed_app')->plainTextToken;
 
             session(['sanctum_token' => $token]);
 
-            // Register FCM token if provided
-            if ($request->filled('fcm_token')) {
-                try {
-                    DeviceToken::registerToken(
-                        $user->id,
-                        $request->fcm_token,
-                        $request->device_type ?? 'web',
-                        $request->device_id,
-                        $request->device_name ?? (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Web Browser')
-                    );
-                    Log::info('FCM token registered on web login', [
-                        'user_id' => $user->id,
-                        'device_type' => $request->device_type ?? 'web'
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error('Failed to register FCM token on web login', [
-                        'user_id' => $user->id,
-                        'error' => $e->getMessage()
-                    ]);
-                    // Don't fail login if token registration fails
-                }
-            }
-
-            // Optimize: Eager load company to avoid N+1 query
             if ($user->role_id === 4) {
-                if (!$user->relationLoaded('company')) {
-                    $user->load('company');
-                }
-                if ($user->status === 'complete' && $user->company && $user->company->status === 'complete') {
-                    return redirect()->route('our.community');
-                } else {
-                    return redirect()->route('user.details.show');
-                }
+                return redirect()->route('news-feed');
             } else {
                 return redirect()->route('admin.dashboard');
             }
@@ -148,20 +110,12 @@ class UserController extends Controller
 
     public function showUserDetailsForm()
     {
-        $user = Auth::user()->load(['company', 'userIcp']);
+        $user = Auth::user();
 
         // Add photo data using the trait
         $this->addPhotoData($user);
 
-        // Use relationship instead of separate query
-        $company = $user->company;
-        $userIcp = $user->userIcp;
-
-        // Get dropdown data
-        $designations = \App\Helpers\DropDownHelper::getDesignationsArray();
-        $industries = \App\Helpers\DropDownHelper::getIndustriesArray();
-
-        return view('user.user-details', compact('user', 'company', 'userIcp', 'designations', 'industries'));
+        return view('user.user-details', compact('user'));
     }
 
     public function updateUserDetails(Request $request)
@@ -182,49 +136,21 @@ class UserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . Auth::id(),
             'phone' => 'nullable|string|max:20',
-            'linkedin_url' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:1000',
+            'location' => 'nullable|string|max:255',
+            'website' => 'nullable|url|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
         ]);
 
-        $capitalize = function ($value) {
-            return $value ? ucwords(strtolower($value)) : null;
-        };
-
         $user = User::find(Auth::id());
-
 
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->linkedin_url = $normalizeUrl($request->linkedin_url);
-        $user->x_url = $request->x_url ?? '';
-        $user->instagram_url = $request->instagram_url ?? '';
-        $user->facebook_url = $request->facebook_url ?? '';
-        $user->country = $request->country ?? '';
-        $user->state = $request->state ?? '';
-        $user->city = $request->city ?? '';
-        $user->county = $request->county ?? '';
-        $user->gender = $request->gender ?? '';
-        $user->age_group = $request->age_group ?? '';
-        $user->ethnicity = $request->ethnicity ?? $request->other_ethnicity;
-        $user->nationality = $request->nationality ?? '';
-        $user->marital_status = $request->marital_status ?? $request->other_marital_status;
-        $user->tiktok_url = $request->tiktok_url ?? '';
-        $user->youtube_url = $request->youtube_url ?? '';
-        if ($request->has('are_you') && !empty($request->are_you)) {
-            $user->user_position = implode(', ', $request->are_you);
-        } else {
-            $user->user_position = null;
-        }
-
-        $user->languages = $request->languages ?? '';
-        // Handle checkbox: if checked, value is 'Yes', if unchecked, it's not in request so set to 'No'
-        $user->email_public = $request->has('email_public') && $request->email_public == 'Yes' ? 'Yes' : 'No';
-        $user->phone_public = $request->has('phone_public') && $request->phone_public == 'Yes' ? 'Yes' : 'No';
+        $user->phone = $request->phone ?? '';
+        $user->bio = $request->bio ?? '';
+        $user->location = $request->location ?? '';
+        $user->website = $normalizeUrl($request->website);
 
 
         $slug = Str::slug($request->first_name . ' ' . $request->last_name);
@@ -252,7 +178,7 @@ class UserController extends Controller
             $uploadResult = $s3Service->uploadMedia($request->file('photo'), 'profile');
             $user->photo = $uploadResult['url']; // Store full S3 URL
         }
-        $user->status = 'complete';
+        $user->status = 'active';
         $user->save();
 
         return redirect()->back()->with('success', 'User details updated successfully!');
@@ -260,9 +186,7 @@ class UserController extends Controller
 
     public function showUserBySlug($slug)
     {
-        $user = User::where('slug', $slug)
-            ->with('company')
-            ->firstOrFail();
+        $user = User::where('slug', $slug)->firstOrFail();
 
         // Track profile view
         $this->trackProfileView($user);
@@ -270,14 +194,7 @@ class UserController extends Controller
         // Use trait to add photo data
         $this->addPhotoData($user);
 
-        // Get profile views count (safe if table doesn't exist)
-        try {
-            $profileViewsCount = Schema::hasTable('profile_views') ? ($user->profile_views_count ?? 0) : 0;
-        } catch (\Exception $e) {
-            $profileViewsCount = 0;
-        }
-
-        return view('user.user-profile', compact('user', 'profileViewsCount'));
+        return view('user.user-profile', compact('user'));
     }
 
     /**
@@ -285,176 +202,9 @@ class UserController extends Controller
      */
     protected function trackProfileView(User $viewedUser)
     {
-        try {
-            // Check if profile_views table exists
-            if (!\Illuminate\Support\Facades\Schema::hasTable('profile_views')) {
-                return;
-            }
-
-            // Don't track if user is viewing their own profile
-            if (Auth::check() && Auth::id() === $viewedUser->id) {
-                return;
-            }
-
-            // Get viewer ID (null if not authenticated)
-            $viewerId = Auth::check() ? Auth::id() : null;
-
-            // Check if we should track this view (avoid duplicate tracking within same session/day)
-            $shouldTrack = true;
-
-            if ($viewerId) {
-                // For authenticated users, check if they've viewed this profile today
-                $todayView = ProfileView::where('viewed_user_id', $viewedUser->id)
-                    ->where('viewer_id', $viewerId)
-                    ->whereDate('created_at', today())
-                    ->exists();
-
-                if ($todayView) {
-                    $shouldTrack = false;
-                }
-            } else {
-                // For anonymous users, check IP address within last hour
-                $ipAddress = request()->ip();
-                $recentView = ProfileView::where('viewed_user_id', $viewedUser->id)
-                    ->where('viewer_id', null)
-                    ->where('ip_address', $ipAddress)
-                    ->where('created_at', '>=', now()->subHour())
-                    ->exists();
-
-                if ($recentView) {
-                    $shouldTrack = false;
-                }
-            }
-
-            if ($shouldTrack) {
-                ProfileView::create([
-                    'viewed_user_id' => $viewedUser->id,
-                    'viewer_id' => $viewerId,
-                    'ip_address' => request()->ip(),
-                    'user_agent' => request()->userAgent(),
-                ]);
-
-                // Send notification to profile owner if viewer is authenticated
-                if ($viewerId) {
-                    try {
-                        $viewer = User::find($viewerId);
-                        if ($viewer) {
-                            $notificationService = app(NotificationService::class);
-                            $notificationService->sendProfileViewNotification($viewedUser->id, $viewer);
-                        }
-                    } catch (\Exception $e) {
-                        // Log but don't fail if notification fails
-                        if (config('app.debug')) {
-                            \Log::warning('Profile view notification failed: ' . $e->getMessage());
-                        }
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            // Silently fail if tracking fails (table doesn't exist, etc.)
-            // Log error in development
-            if (config('app.debug')) {
-                \Log::warning('Profile view tracking failed: ' . $e->getMessage());
-            }
-        }
+        // Profile view tracking removed - feature not needed for newsfeed
     }
 
 
 
-    public function searchMosque(Request $request)
-    {
-        $request->validate([
-            'zip' => 'nullable|string|max:20',
-            'city' => 'nullable|string|max:255',
-            // 'state' => 'nullable|string|max:2', // state is 2 alphabets
-        ]);
-
-        $mosques = collect();
-
-        // 1. Prioritize zip (exact match)
-        if ($request->filled('zip')) {
-            $mosques = DB::table('mosques')->where('zip', $request->zip)->get();
-        }
-
-        // 2. If not found, try city (case-insensitive)
-        if ($mosques->isEmpty() && $request->filled('city')) {
-            $mosques = DB::table('mosques')
-                ->whereRaw('LOWER(city) = ?', [strtolower($request->city)])
-                ->get();
-        }
-
-        // 3. If still not found, try state (2-letter exact match)
-        // if ($mosques->isEmpty() && $request->filled('state')) {
-        //     $mosques = DB::table('mosques')
-        //         ->where('state', strtoupper($request->state))
-        //         ->get();
-        // }
-
-        // 4. If still not found, return "please suggest"
-        if ($mosques->isEmpty()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'No mosque available, please suggest.',
-                'data' => [],
-            ]);
-        }
-
-        // ✅ Found mosques
-        return response()->json([
-            'status' => true,
-            'message' => 'Mosques found successfully.',
-            'data' => $mosques,
-        ]);
-    }
-
-
-
-    public function storeMosque(Request $request)
-    {
-        $request->validate([
-            'mosque_id' => 'nullable|exists:mosques,id',
-            'mosque' => 'nullable|string|max:255',
-            'amount' => 'nullable|numeric|min:0',
-        ]);
-
-        $userId = Auth::id();
-
-        // ✅ Case 1: If mosque_id is provided
-        if ($request->filled('mosque_id')) {
-            \DB::table('user_mosque')->updateOrInsert(
-                ['user_id' => $userId],
-                ['mosque_id' => $request->mosque_id, 'amount' => $request->amount]
-            );
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Mosque linked successfully.',
-            ]);
-        }
-
-        if ($request->filled('mosque')) {
-            // Create mosque entry
-            $mosqueId = \DB::table('mosques')->insertGetId([
-                'mosque' => $request->mosque,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // Add pivot entry
-            \DB::table('user_mosque')->updateOrInsert(
-                ['user_id' => $userId],
-                ['mosque_id' => $mosqueId, 'amount' => $request->amount]
-            );
-
-            return response()->json([
-                'status' => true,
-                'message' => 'New mosque created and linked successfully.',
-            ]);
-        }
-
-        return response()->json([
-            'status' => false,
-            'message' => 'Please provide either mosque_id or mosque name.',
-        ], 422);
-    }
 }

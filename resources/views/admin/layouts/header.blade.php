@@ -226,7 +226,7 @@
     </div>
     <div class="admin-panel">
         <aside id="dashboardSidebar" class="sidebar">
-            <button class="dashboardMenuCollapseBtn"><img id="dashboardMenuCollapseBtnImg" src="https://muslimlynk.com/assets/images/dashboard/sidebarCollapseIcon.svg" alt=""></button>
+            <button class="dashboardMenuCollapseBtn"><img id="dashboardMenuCollapseBtnImg" src="{{ asset('assets/images/dashboard/sidebarCollapseIcon.svg') }}" alt=""></button>
             <ul class="sidebar-menu">
                 @php
                     $user = auth()->user();
@@ -363,7 +363,7 @@
                 {{-- Subscriptions - Check both view and filter permissions --}}
                 @if($isAdmin || ($user && ($user->hasPermission('subscriptions.view') || $user->hasPermission('subscriptions.filter'))))
                 <li>
-                    <a href="{{ route('admin.subscriptions') }}"
+                    {{-- <a href="{{ route('admin.subscriptions') }}"
                         class="{{ request()->routeIs('admin.subscriptions') ? 'active' : '' }}">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <title>Subscriptions</title>
@@ -398,114 +398,7 @@
                 </li>
                 @endif
 
-                {{-- Products/Services - Check permission --}}
-                @if($isAdmin || ($user && $user->hasPermission('products-services.view')))
-                <li>
-                    <a href="{{ route('admin.products-services') }}"
-                        class="{{ request()->routeIs('admin.products-services*') ? 'active' : '' }}">
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <title>Products/Services</title>
-                            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#333"/>
-                            <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="#333"/>
-                        </svg>
-
-                         <span class="menu-text"> Products/Services</span>
-                    </a>
-                </li>
-                @endif
-
-                {{-- Blogs - Check permission --}}
-                @if($isAdmin || ($user && $user->hasPermission('blogs.view')))
-                <li>
-                    <a href="{{ route('admin.blogs') }}"
-                        class="{{ request()->routeIs('admin.blogs') ? 'active' : '' }}">
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <title>Blogs</title>
-                        <g id="style=fill">
-                        <g id="document">
-                        <path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M8 1.25C4.82436 1.25 2.25 3.82436 2.25 7V17C2.25 20.1756 4.82436 22.75 8 22.75H16C19.1756 22.75 21.75 20.1756 21.75 17V7C21.75 3.82436 19.1756 1.25 16 1.25H8ZM8 7.44995C7.58579 7.44995 7.25 7.78574 7.25 8.19995C7.25 8.61416 7.58579 8.94995 8 8.94995H16C16.4142 8.94995 16.75 8.61416 16.75 8.19995C16.75 7.78574 16.4142 7.44995 16 7.44995H8ZM7.25 12.2C7.25 11.7857 7.58579 11.45 8 11.45H16C16.4142 11.45 16.75 11.7857 16.75 12.2C16.75 12.6142 16.4142 12.95 16 12.95H8C7.58579 12.95 7.25 12.6142 7.25 12.2ZM9 15.45C8.58579 15.45 8.25 15.7857 8.25 16.2C8.25 16.6142 8.58579 16.95 9 16.95H15C15.4142 16.95 15.75 16.6142 15.75 16.2C15.75 15.7857 15.4142 15.45 15 15.45H9Z" fill="#333"/>
-                        </g>
-                        </g>
-                        </svg>
-                        <span class="menu-text">Blogs</span>
-
-                    </a>
-                </li>
-                @endif
-
-                {{-- Events - Check permission --}}
-                @if($isAdmin || ($user && $user->hasPermission('events.view')))
-                <li>
-                    <a href="{{ route('admin.events') }}"
-                        class="{{ request()->routeIs('admin.events') ? 'active' : '' }}">
-                        <svg style="margin-left: -5px; margin-right: 0px;" fill="#333" xmlns="http://www.w3.org/2000/svg"  width="30px" height="30px"
-                            viewBox="0 0 100 100" xml:space="preserve">
-                            <title>Events</title>
-
-                        <g>
-                            <g>
-                                <path d="M76,42H24c-1.1,0-2,0.9-2,2v30c0,3.3,2.7,6,6,6h44c3.3,0,6-2.7,6-6V44C78,42.9,77.1,42,76,42z M40,70
-                                    c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V70z M40,56c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4
-                                    c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V56z M54,70c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V70z
-                                    M54,56c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V56z M68,70c0,1.1-0.9,2-2,2h-4
-                                    c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V70z M68,56c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4
-                                    c1.1,0,2,0.9,2,2V56z"/>
-                            </g>
-                            <g>
-                                <path d="M72,26h-5v-2c0-2.2-1.8-4-4-4s-4,1.8-4,4v2H41v-2c0-2.2-1.8-4-4-4s-4,1.8-4,4v2h-5c-3.3,0-6,2.7-6,6v2
-                                    c0,1.1,0.9,2,2,2h52c1.1,0,2-0.9,2-2v-2C78,28.7,75.3,26,72,26z"/>
-                            </g>
-                        </g>
-                        </svg>
-
-                        <span class="menu-text">Events</span>
-                    </a>
-                </li>
-                @endif
-
-                {{-- Ads - Check permission --}}
-                @if($isAdmin || ($user && $user->hasPermission('ads.view')))
-                <li>
-                    <a href="{{ route('admin.ads') }}"
-                        class="{{ request()->routeIs('admin.ads*') ? 'active' : '' }}">
-                        <svg fill="#333" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <title>Ads</title>
-                            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
-                        </svg>
-                        <span class="menu-text">Ads</span>
-
-                    </a>
-                </li>
-                @endif
-
-                {{-- Scheduler Logs - Admin only --}}
-                @if($isAdmin)
-                <li>
-                    <a href="{{ route('admin.scheduler-logs') }}"
-                        class="{{ request()->routeIs('admin.scheduler-logs*') ? 'active' : '' }}">
-                        <svg id="schedulerIcon" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <title>Scheduler</title>
-                            <circle cx="12" cy="12" r="10" stroke="#333" stroke-width="2" fill="none" style="fill: none !important;"/>
-                            <path style="fill: none !important;" d="M12 6V12L16 14" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span class="menu-text">Scheduler</span>
-                    </a>
-                </li>
-                @endif
-
-                {{-- User Access - Only Admin can see --}}
-                @if($isAdmin || ($user && $user->hasPermission('managers.view')))
-                <li>
-                    <a href="{{ route('admin.managers') }}"
-                        class="{{ request()->routeIs('admin.managers*') ? 'active' : '' }}">
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <title>User Access</title>
-                            <path d="M17 8H16V6C16 3.79 14.21 2 12 2S8 3.79 8 6V8H7C5.9 8 5 8.9 5 10V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V10C19 8.9 18.1 8 17 8ZM10 6C10 4.9 10.9 4 12 4S14 4.9 14 6V8H10V6ZM17 20H7V10H17V20Z" fill="#333"/>
-                        </svg>
-                        <span class="menu-text">User Access</span>
-                    </a>
-                </li>
-                @endif
+                {{-- Products/Services, Blogs, Events, Ads, Scheduler, Managers - Removed for newsfeed boilerplate --}}
 
             </ul>
 
