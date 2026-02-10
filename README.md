@@ -78,21 +78,6 @@ Visit `http://localhost:8000` and login with:
 - Report users and posts
 - Admin moderation tools
 
-> **Note**: This boilerplate does **not** include:
-> - Real-time chat
-> - Push notifications
-> - Firebase integration
-> - Subscriptions/payments
-> - Company profiles
-> - Products/Services
-> - Education tracking
-> - Profile views tracking
-> - Complex user demographics (gender, age group, ethnicity, nationality, marital status)
-> - Social media links (LinkedIn, Facebook, Twitter, Instagram, etc.)
-> - Location details (city, county, state, zip code, country - only simple "location" field)
-> 
-> It is intentionally focused on a classic newsfeed + auth + admin use case with a clean, minimal user profile.
-
 ## 📋 Requirements
 
 Before you begin, ensure you have the following installed:
@@ -489,12 +474,6 @@ php artisan key:generate
 php artisan migrate:fresh --seed
 ```
 
-### Issue: Build errors with Firebase/chat components
-
-**Solution**: All Firebase and chat components have been removed. If you see build errors, make sure you've run:
-```bash
-npm run build
-```
 
 ## 🧪 Testing
 
@@ -544,27 +523,3 @@ Or using PHPUnit directly:
 ## 📝 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📞 Support
-
-For support, open an issue in the [GitHub repository](https://github.com/ubaidkodekaizen/laravel-news-feed/issues).
-
-## 🙏 Acknowledgments
-
-- Built with [Laravel](https://laravel.com)
-- Modern UI components and styling
-- Community contributors
-
----
-
-**Made with ❤️ for developers and students**
