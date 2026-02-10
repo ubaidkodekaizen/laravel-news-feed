@@ -1,192 +1,29 @@
-<header class="modern-header">
-    <style>
-        .modern-header {
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 12px 0;
-        }
-        
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-        }
-        
-        .header-logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary);
-            gap: 12px;
-        }
-        
-        .header-logo img {
-            height: 40px;
-            width: auto;
-        }
-        
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-            justify-content: center;
-        }
-        
-        .header-nav a {
-            padding: 10px 20px;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 15px;
-            border-radius: var(--border-radius-sm);
-            transition: all 0.2s ease;
-        }
-        
-        .header-nav a:hover,
-        .header-nav a.active {
-            color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-        }
-        
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .header-search {
-            position: relative;
-            max-width: 400px;
-            width: 100%;
-        }
-        
-        .header-search input {
-            width: 100%;
-            padding: 10px 16px 10px 44px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .header-search input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-            outline: none;
-        }
-        
-        .header-search i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-tertiary);
-        }
-        
-        .user-profile-menu {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .user-avatar:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .avatar-initials {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .avatar-initials:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-        }
-        
-        /* Notification styles removed - not part of newsfeed boilerplate */
-        .notification-badge {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: var(--danger);
-            color: white;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: 10px;
-            min-width: 18px;
-            text-align: center;
-        }
-        
-        @media (max-width: 768px) {
-            .header-nav {
-                display: none;
-            }
-            
-            .header-search {
-                max-width: 200px;
-            }
-        }
-    </style>
-    
-    <div class="header-container">
-        <a href="{{ route('home') }}" class="header-logo">
+<header style="background: var(--color-bg-primary); border-bottom: 1px solid var(--color-border); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: var(--z-sticky);">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between; padding: 12px var(--spacing-lg); gap: var(--spacing-lg);">
+        <a href="{{ route('home') }}" style="display: flex; align-items: center; text-decoration: none; font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-primary); gap: var(--spacing-sm);">
             <span>{{ config('app.name', 'NewsFeed') }}</span>
         </a>
         
         @auth
-        <nav class="header-nav">
-            <a href="{{ route('news-feed') }}" class="{{ request()->routeIs('news-feed*') ? 'active' : '' }}">
+        <nav style="display: flex; align-items: center; gap: var(--spacing-sm); flex: 1; justify-content: center;">
+            <a href="{{ route('news-feed') }}" 
+               style="padding: 10px 20px; text-decoration: none; color: {{ request()->routeIs('news-feed*') ? 'var(--color-primary)' : 'var(--color-text-secondary)' }}; font-weight: var(--font-weight-medium); font-size: var(--font-size-sm); border-radius: var(--radius-md); transition: all var(--transition-base); background: {{ request()->routeIs('news-feed*') ? 'var(--color-primary-50)' : 'transparent' }};">
                 <i class="fas fa-home"></i> Feed
             </a>
-            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}" 
+               style="padding: 10px 20px; text-decoration: none; color: {{ request()->routeIs('dashboard') ? 'var(--color-primary)' : 'var(--color-text-secondary)' }}; font-weight: var(--font-weight-medium); font-size: var(--font-size-sm); border-radius: var(--radius-md); transition: all var(--transition-base); background: {{ request()->routeIs('dashboard') ? 'var(--color-primary-50)' : 'transparent' }};">
                 <i class="fas fa-chart-line"></i> Dashboard
             </a>
         </nav>
         
-        <div class="header-actions">
-            <div class="header-search">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search..." id="headerSearch">
+        <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+            <div style="position: relative; max-width: 400px; width: 100%;">
+                <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--color-text-tertiary);"></i>
+                <input type="text" placeholder="Search..." id="headerSearch" 
+                       style="width: 100%; padding: 10px 16px 10px 44px; border: 1px solid var(--color-border); border-radius: var(--radius-lg); font-size: var(--font-size-sm); transition: all var(--transition-base);">
             </div>
             
-                  <!-- Notification button removed - not part of newsfeed boilerplate -->
-            
-            <div class="user-profile-menu">
+            <div style="display: flex; align-items: center; gap: var(--spacing-sm); position: relative;">
                 @php
                     $user = Auth::user();
                     $photo = $user->photo;
@@ -194,13 +31,16 @@
                 @endphp
                 
                 @if($photo)
-                    <img src="{{ getImageUrl($photo) }}" alt="{{ $user->first_name }}" class="user-avatar" id="userAvatar">
+                    <img src="{{ getImageUrl($photo) }}" alt="{{ $user->first_name }}" 
+                         style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-border); cursor: pointer; transition: all var(--transition-base);">
                 @else
-                    <div class="avatar-initials">{{ $initials }}</div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); border: 2px solid var(--color-border); cursor: pointer;">
+                        {{ $initials }}
+                    </div>
                 @endif
                 
                 <div class="dropdown">
-                    <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                    <button class="btn btn-link text-decoration-none p-0" type="button" data-bs-toggle="dropdown" style="color: var(--color-text-secondary);">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -213,10 +53,22 @@
             </div>
         </div>
         @else
-        <div class="header-actions">
+        <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
             <a href="{{ route('login.form') }}" class="btn btn-outline-primary">Login</a>
             <a href="{{ route('register.form') }}" class="btn btn-primary">Sign Up</a>
         </div>
         @endauth
     </div>
 </header>
+
+<style>
+    @media (max-width: 768px) {
+        header nav {
+            display: none !important;
+        }
+        
+        header input[type="text"] {
+            max-width: 200px;
+        }
+    }
+</style>

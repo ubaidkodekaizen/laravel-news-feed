@@ -3,18 +3,31 @@
 @section('title', config('app.name', 'NewsFeed'))
 
 @section('content')
-    <div class="container py-5">
+<div style="min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);">
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card-modern p-4">
-                    <h1 class="h4 mb-3">Welcome to {{ config('app.name', 'NewsFeed') }}</h1>
-                    <p class="text-muted mb-4">Sign in or create an account to continue.</p>
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('login.form') }}" class="btn btn-primary w-50">Login</a>
-                        <a href="{{ route('register.form') }}" class="btn btn-outline-primary w-50">Sign Up</a>
+            <div class="col-md-6 col-lg-5">
+                <div class="card" style="padding: var(--spacing-3xl); text-align: center;">
+                    <div style="width: 80px; height: 80px; margin: 0 auto var(--spacing-xl); background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 36px;">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h1 style="font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); margin-bottom: var(--spacing-md);">
+                        Welcome to {{ config('app.name', 'NewsFeed') }}
+                    </h1>
+                    <p style="font-size: var(--font-size-lg); color: var(--color-text-secondary); margin-bottom: var(--spacing-2xl);">
+                        Connect, share, and engage with your community
+                    </p>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                        <a href="{{ route('login.form') }}" class="btn btn-primary" style="min-width: 140px;">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
+                        </a>
+                        <a href="{{ route('register.form') }}" class="btn btn-outline-primary" style="min-width: 140px;">
+                            <i class="fas fa-user-plus me-2"></i> Sign Up
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection

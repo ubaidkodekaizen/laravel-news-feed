@@ -45,11 +45,12 @@
                 <span class="reaction-label">Like</span>
             </div>
             <div class="reaction-panel d-none" onmouseenter="cancelHide()" onmouseleave="hideReactions(this)">
-                <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Like')" title="Like">👍</span>
-                <span class="reaction-emoji" onclick="applyReaction(this, '👏', 'Celebrate')" title="Celebrate">👏</span>
-                <span class="reaction-emoji" onclick="applyReaction(this, '💖', 'Love')" title="Love">💖</span>
-                <span class="reaction-emoji" onclick="applyReaction(this, '💡', 'Insightful')" title="Insightful">💡</span>
-                <span class="reaction-emoji" onclick="applyReaction(this, '😂', 'Funny')" title="Funny">😂</span>
+                <span class="reaction-emoji" onclick="applyReaction(this, '👍', 'Appreciate', 'appreciate')" title="Appreciate">👍</span>
+                <span class="reaction-emoji" onclick="applyReaction(this, '🎉', 'Cheers', 'cheers')" title="Cheers">🎉</span>
+                <span class="reaction-emoji" onclick="applyReaction(this, '🤝', 'Support', 'support')" title="Support">🤝</span>
+                <span class="reaction-emoji" onclick="applyReaction(this, '💡', 'Insight', 'insight')" title="Insight">💡</span>
+                <span class="reaction-emoji" onclick="applyReaction(this, '🤔', 'Curious', 'curious')" title="Curious">🤔</span>
+                <span class="reaction-emoji" onclick="applyReaction(this, '😊', 'Smile', 'smile')" title="Smile">😊</span>
             </div>
         </div>
 

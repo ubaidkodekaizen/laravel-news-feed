@@ -4,25 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') | {{ config('app.name', 'NewsFeed') }}</title>
-    <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/design-system.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --bg-tertiary: #f3f4f6;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-color: #e5e7eb;
-            --border-radius: 12px;
             --sidebar-width: 260px;
         }
         
@@ -33,9 +24,8 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
+            background: var(--color-bg-secondary);
+            color: var(--color-text-primary);
             -webkit-font-smoothing: antialiased;
         }
         
@@ -46,23 +36,23 @@
         
         .admin-sidebar {
             width: var(--sidebar-width);
-            background: var(--bg-primary);
-            border-right: 1px solid var(--border-color);
+            background: var(--color-bg-primary);
+            border-right: 1px solid var(--color-border);
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-md);
             z-index: 100;
         }
         
         .admin-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
             color: white;
-            padding: 16px 24px;
+            padding: var(--spacing-md) var(--spacing-lg);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
             z-index: 50;
@@ -71,13 +61,13 @@
         .admin-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
         }
         
         .admin-logo i {
-            font-size: 24px;
+            font-size: var(--font-size-2xl);
         }
         
         .admin-content {
@@ -87,14 +77,14 @@
         }
         
         .admin-main {
-            padding: 32px;
+            padding: var(--spacing-xl);
             max-width: 1400px;
             margin: 0 auto;
         }
         
         .sidebar-menu {
             list-style: none;
-            padding: 20px 0;
+            padding: var(--spacing-lg) 0;
         }
         
         .sidebar-menu li {
@@ -104,26 +94,26 @@
         .sidebar-menu a {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 24px;
-            color: var(--text-secondary);
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            color: var(--color-text-secondary);
             text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: all 0.3s ease;
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-base);
+            transition: all var(--transition-base);
             border-left: 3px solid transparent;
         }
         
         .sidebar-menu a:hover {
-            background: var(--bg-tertiary);
-            color: var(--primary);
-            border-left-color: var(--primary);
+            background: var(--color-bg-tertiary);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
         }
         
         .sidebar-menu a.active {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-            border-left-color: var(--primary);
+            background: var(--color-primary-50);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
         }
         
         .sidebar-menu a i {
@@ -134,7 +124,7 @@
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--spacing-sm);
         }
         
         .user-avatar {
@@ -154,39 +144,39 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-sm);
         }
         
         .card-modern {
-            background: var(--bg-primary);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 24px;
-            margin-bottom: 24px;
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
         }
         
         .page-header {
-            margin-bottom: 32px;
+            margin-bottom: var(--spacing-xl);
         }
         
         .page-header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-sm);
         }
         
         .page-header p {
-            color: var(--text-secondary);
-            font-size: 16px;
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
         }
         
         @media (max-width: 768px) {
             .admin-sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
+                transition: transform var(--transition-base);
             }
             
             .admin-sidebar.open {

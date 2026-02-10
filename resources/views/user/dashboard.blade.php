@@ -1,199 +1,128 @@
-<!-- resources/views/dashboard.blade.php -->
-
 @extends('layouts.dashboard-layout')
 
+@section('styles')
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-    .custom_card .icon_name_flex {
-        border: 2px solid #F2F2F2;
-        background: #FFFFFF;
-        justify-content: space-between;
-        padding: 0 30px;
-        transition: 0.2s ease-in-out;
+    .main-content {
+        padding: var(--spacing-2xl) var(--spacing-xl) !important;
+        background: var(--color-bg-secondary);
     }
-
-    .custom_card.active .icon_name_flex{
-        background: #273572;
-        border: 2px solid #273572;
+    
+    .dashboard-header {
+        margin-bottom: var(--spacing-2xl);
     }
-
-    .custom_card .icon_name_flex:hover{
-        background: #273572;
-        border: 2px solid #273572;
+    
+    .dashboard-header h1 {
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin-bottom: var(--spacing-sm);
     }
-
-    .custom_card .icon_name_flex:hover .heading,
-    .custom_card .icon_name_flex:hover .card_num{
-        color: #FFF !important;
+    
+    .stat-card {
+        background: var(--color-bg-primary);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--color-border);
+        box-shadow: var(--shadow-sm);
+        padding: var(--spacing-lg);
+        transition: all var(--transition-base);
+        height: 100%;
     }
-
-    .custom_card .icon_name_flex:hover .icon {
-        background: #fff !important;
+    
+    .stat-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+        border-color: var(--color-primary);
     }
-
-    .custom_card .icon_name_flex:hover .icon img{
-      filter: invert(87%) sepia(75%) saturate(2400%) hue-rotate(215deg) brightness(90%) contrast(95%);
+    
+    .stat-card.active {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        border-color: var(--color-primary);
+        color: white;
     }
-
-    .custom_card .icon_name_flex .card_data .heading{
-        font-size: 20px;
-        font-weight: 500;
-        font-family: "Inter";
-        margin-top: 13px;
-        color: #333;
-        transition: color 0.2s ease;
+    
+    .stat-card.active .stat-value,
+    .stat-card.active .stat-label {
+        color: white;
     }
-
-    .custom_card.active .icon_name_flex .card_data .heading{
-        color: #FFF;
+    
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: var(--spacing-md);
+        background: var(--color-primary-50);
+        color: var(--color-primary);
     }
-
-    .custom_card .icon_name_flex .card_data .card_num{
-        font-size: 30px;
-        font-weight: 600;
-        font-family: "Inter";
-        margin-top: 13px;
-        color: #333;
-        transition: color 0.2s ease;
+    
+    .stat-card.active .stat-icon {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
     }
-
-    .custom_card.active .icon_name_flex .card_data .card_num{
-        color: #FFF;
+    
+    .stat-value {
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin-bottom: var(--spacing-xs);
     }
-
-    .custom_card .icon {
-        background: #273572;
-        padding: 16px;
-        border-radius: 50%;
-        transition: background 0.2s ease;
+    
+    .stat-label {
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-secondary);
     }
-
-    .custom_card.active .icon {
-        background: #fff;
-    }
-
-    .custom_card .icon img{
-        filter: none;
-    }
-        
-    .custom_card.active .icon img{
-        
-      filter: invert(87%) sepia(75%) saturate(2400%) hue-rotate(215deg) brightness(90%) contrast(95%);
-    }
-
-    .dashboardBtns button img{
-        margin-right: 8px;
-        margin-top: -2px;
-    } 
-
-    button.filterButton {
-        border: 1px solid #E9EBF0;
-        background: #fff;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-size: 18px;
-        font-weight: 300;
-        font-family: "Inter";
-        color: #02253A;
-        text-transform: capitalize;
-    }
-
-    button.exportButton {
-        border: 1px solid #E9EBF0;
-        background: #273572;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-size: 18px;
-        font-family: "Inter";
-        color: #fff;
-        font-weight: 300;
-        text-transform: capitalize;
-    }
-
 </style>
-
+@endsection
 
 @section('dashboard-content') 
-    <div class="row mb-3">
-        <div class="col-lg-12">
-             <h5 class="filter_heading top_filter_heading">Dashboard</h5>
-        </div>
-        <!-- <div class="col-lg-6 dashboardBtns">
-            <button class="filterButton"> <img src="assets/images/dashboard/filterIcon.svg" alt=""> filter</button>
-            <button class="exportButton"> <img src="assets/images/dashboard/exportDownloadIcon.svg" alt=""> Export</button>
-        </div> -->
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p style="color: var(--color-text-secondary);">Overview of your newsfeed activity</p>
     </div>
+    
     <div class="row">
-        <div class="col-lg-3 mb-3">
-           <div class="custom_card active">
-                <div class="icon_name_flex">
-                     <div class="card_data">
-                         <div class="card_num">
-                            {{ \App\Helpers\GeneralHelper::getServiceCountbyAuth() }}
-                         </div>
-                         <div class="heading">
-                         Total Services
-                         </div>
-                     </div>
-                     
-                     <div class="icon">
-                         <img class="iconTotalServices" src="assets/images/dashboard/TotalServiceIcon.svg" alt="">
-                     </div>
-                 </div>
-           </div>
-        </div>
-        <div class="col-lg-3 mb-3">
-            <div class="custom_card">
-                <div class="icon_name_flex">
-                    <div class="card_data">
-                        <div class="card_num">
-                            {{ \App\Helpers\GeneralHelper::getProductCountbyAuth() }}
-                        </div>
-                        <div class="heading">
-                        Total Products
-                        </div>
-                    </div>
-                    <div class="icon">
-                        <img class="iconTotalProducts" src="assets/images/dashboard/TotalProductIcon.svg" alt="">
-                    </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card active">
+                <div class="stat-icon">
+                    <i class="fas fa-newspaper"></i>
                 </div>
+                <div class="stat-value">{{ $stats['total_posts'] ?? 0 }}</div>
+                <div class="stat-label">Total Posts</div>
             </div>
-         </div>
-         <!-- <div class="col-lg-3 mb-3">
-           <div class="custom_card">
-                <div class="icon_name_flex">
-                    <div class="card_data">
-                        <div class="card_num">
-                            {{ \App\Helpers\GeneralHelper::getProductCountbyAuth() }}
-                        </div>
-                        <div class="heading">
-                        Total Members
-                        </div>
-                    </div>
-                    <div class="icon">
-                         <img class="iconTotalMembers" src="assets/images/dashboard/TotalMembersIcon.svg" alt="">
-                    </div>
-                </div>
-           </div>
         </div>
-        <div class="col-lg-3 mb-3">
-            <div class="custom_card">
-                 <div class="icon_name_flex">
-                     <div class="card_data">
-                         <div class="card_num">
-                            {{ \App\Helpers\GeneralHelper::getServiceCountbyAuth() }}
-                         </div>
-                         <div class="heading">
-                         Total Industries
-                         </div>
-                     </div>
-                     <div class="icon">
-                         <img class="iconTotalIndustries" src="assets/images/dashboard/TotalIndustriesIcon.svg" alt="">
-                     </div>
-                 </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="stat-value">{{ $stats['total_comments'] ?? 0 }}</div>
+                <div class="stat-label">Total Comments</div>
             </div>
-         </div> -->
-       
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-value">{{ $stats['total_reactions'] ?? 0 }}</div>
+                <div class="stat-label">Total Reactions</div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-share"></i>
+                </div>
+                <div class="stat-value">{{ $stats['total_shares'] ?? 0 }}</div>
+                <div class="stat-label">Total Shares</div>
+            </div>
+        </div>
     </div>
 @endsection

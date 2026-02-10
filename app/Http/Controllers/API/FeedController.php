@@ -38,7 +38,7 @@ class FeedController extends Controller
 
         $query = Post::withCount(['reactions', 'comments', 'shares'])
             ->with([
-                'user:id,first_name,last_name,slug,photo,user_position',
+                'user:id,first_name,last_name,slug,photo',
                 'user.company:id,user_id,company_name,company_logo',
                 'media',
                 'reactions' => function ($query) use ($userId) {
@@ -46,7 +46,7 @@ class FeedController extends Controller
                 },
                 // Remove comments from feed - should be fetched separately via GET /feed/posts/{postId}/comments
                 // This reduces response size significantly (10 posts × 100 comments × 10 replies = huge payload)
-                'originalPost.user:id,first_name,last_name,slug,photo,user_position',
+                'originalPost.user:id,first_name,last_name,slug,photo',
                 'originalPost.media', // Load original post media to include thumbnails
             ])
             ->where('status', 'active')
@@ -92,7 +92,7 @@ class FeedController extends Controller
 
         $post = Post::withCount(['reactions', 'comments', 'shares'])
             ->with([
-                'user:id,first_name,last_name,slug,photo,user_position',
+                'user:id,first_name,last_name,slug,photo',
                 'user.company:id,user_id,company_name,company_logo',
                 'media',
                 'reactions' => function ($query) use ($userId) {
@@ -100,7 +100,7 @@ class FeedController extends Controller
                 },
                 // Remove comments from getPost - should be fetched separately via GET /feed/posts/{postId}/comments
                 // This reduces response size significantly
-                'originalPost.user:id,first_name,last_name,slug,photo,user_position',
+                'originalPost.user:id,first_name,last_name,slug,photo',
                 'originalPost.media'
             ])
             ->where('slug', $slug)
@@ -230,7 +230,7 @@ class FeedController extends Controller
 
             $post->loadCount(['reactions', 'comments', 'shares'])
                 ->load([
-                    'user:id,first_name,last_name,slug,photo,user_position',
+                    'user:id,first_name,last_name,slug,photo',
                     'user.company:id,user_id,company_name,company_logo',
                     'media',
                     'reactions' => function ($query) {
@@ -365,13 +365,13 @@ class FeedController extends Controller
 
         $post->loadCount(['reactions', 'comments', 'shares'])
             ->load([
-                'user:id,first_name,last_name,slug,photo,user_position',
+                'user:id,first_name,last_name,slug,photo',
                 'user.company:id,user_id,company_name,company_logo',
                 'media',
                 'reactions' => function ($query) {
                     $query->where('user_id', Auth::id());
                 },
-                'originalPost.user:id,first_name,last_name,slug,photo,user_position',
+                'originalPost.user:id,first_name,last_name,slug,photo',
                 'originalPost.media'
             ]);
 
@@ -544,38 +544,7 @@ class FeedController extends Controller
         $comment->status = 'active';
         $comment->save();
 
-        // Send notification if comment is on someone else's post (not a reply)
         // Notifications removed - not part of newsfeed boilerplate
-        if (false) { // Keep structure but disable
-            try {
-                Log::error('Failed to send post comment notification', [
-                    'error' => $e->getMessage()
-                ]);
-                // Don't fail the request if notification fails
-            }
-        }
-
-        // Send notification if this is a reply to a comment
-        if ($request->parent_id) {
-            try {
-                $parentComment = PostComment::with('user')->find($request->parent_id);
-                if ($parentComment && $parentComment->user_id !== Auth::id()) {
-                    $replier = Auth::user();
-                    $this->notificationService->sendCommentReplyNotification(
-                        $parentComment->user_id,
-                        $replier,
-                        $post,
-                        $comment,
-                        $parentComment
-                    );
-                }
-            } catch (\Exception $e) {
-                Log::error('Failed to send comment reply notification', [
-                    'error' => $e->getMessage()
-                ]);
-                // Don't fail the request if notification fails
-            }
-        }
 
         $comment->load([
             'user:id,first_name,last_name,slug,photo',
@@ -846,14 +815,6 @@ class FeedController extends Controller
 
             // Send notification if sharing someone else's post
             // Notifications removed - not part of newsfeed boilerplate
-            if (false) { // Keep structure but disable
-                try {
-                    Log::error('Notifications disabled', [
-                        'error' => $e->getMessage()
-                    ]);
-                    // Don't fail the request if notification fails
-                }
-            }
 
             DB::commit();
 
@@ -890,7 +851,7 @@ class FeedController extends Controller
 
         $posts = Post::withCount(['reactions', 'comments', 'shares'])
             ->with([
-                'user:id,first_name,last_name,slug,photo,user_position',
+                'user:id,first_name,last_name,slug,photo',
                 'user.company:id,user_id,company_name,company_logo',
                 'media',
                 'reactions' => function ($query) use ($userId) {
@@ -1006,7 +967,7 @@ class FeedController extends Controller
         $post = Post::findOrFail($postId);
 
         $reactions = $post->reactions()
-            ->with('user:id,first_name,last_name,photo,user_position')
+            ->with('user:id,first_name,last_name,photo')
             ->get()
             ->map(function ($reaction) {
                 if (!$reaction->user) {
@@ -1023,7 +984,7 @@ class FeedController extends Controller
                         'avatar' => $userData['photo'],
                         'initials' => $userData['user_initials'],
                         'has_photo' => $userData['user_has_photo'],
-                        'position' => $reaction->user->user_position ?? '',
+                        'position' => '',
                     ]
                 ];
             })->filter(); // Filter out null reactions
@@ -1043,7 +1004,7 @@ class FeedController extends Controller
         $post = Post::findOrFail($postId);
 
         $shares = $post->shares()
-            ->with('user:id,first_name,last_name,photo,user_position')
+            ->with('user:id,first_name,last_name,photo')
             ->latest()
             ->get()
             ->map(function ($share) {
@@ -1062,7 +1023,7 @@ class FeedController extends Controller
                         'avatar' => $userData['photo'],
                         'initials' => $userData['user_initials'],
                         'has_photo' => $userData['user_has_photo'],
-                        'position' => $share->user->user_position ?? '',
+                        'position' => '',
                     ]
                 ];
             })->filter(); // Filter out null shares
@@ -1082,7 +1043,7 @@ class FeedController extends Controller
         $post = Post::findOrFail($postId);
 
         $reactions = $post->reactions()
-            ->with('user:id,first_name,last_name,photo,user_position,city,state')
+            ->with('user:id,first_name,last_name,photo')
             ->get()
             ->map(function ($reaction) {
                 if (!$reaction->user) {
@@ -1101,7 +1062,7 @@ class FeedController extends Controller
                         'avatar' => $userData['photo'],
                         'initials' => $userData['user_initials'],
                         'has_photo' => $userData['user_has_photo'],
-                        'position' => $reaction->user->user_position ?? '',
+                        'position' => '',
                         'city' => $userData['city'] ?? null,
                         'state' => $userData['state'] ?? null,
                     ]
@@ -1166,7 +1127,7 @@ class FeedController extends Controller
                 'name' => trim($userData['first_name'] . ' ' . $userData['last_name']) ?: 'Unknown User',
                 'first_name' => $userData['first_name'],
                 'last_name' => $userData['last_name'],
-                'position' => $post->user->user_position ?? $post->user->position ?? '',
+                'position' => '',
                 'avatar' => $userData['photo'],
                 'initials' => $userData['user_initials'],
                 'has_photo' => $userData['user_has_photo'],
@@ -1221,7 +1182,7 @@ class FeedController extends Controller
                 'user' => [
                     'id' => $originalUserData['id'],
                     'name' => trim($originalUserData['first_name'] . ' ' . $originalUserData['last_name']),
-                    'position' => $post->originalPost->user->user_position ?? '',
+                    'position' => '',
                     'avatar' => $originalUserData['photo'],
                     'initials' => $originalUserData['user_initials'],
                     'has_photo' => $originalUserData['user_has_photo'],

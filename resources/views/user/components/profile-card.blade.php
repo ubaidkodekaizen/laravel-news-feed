@@ -1,10 +1,5 @@
 <div class="card" id="feedProfileCard">
-    <div class="profile_cover_bg"
-        style="
-        {{ !empty($authUserData['company']['logo'])
-            ? "background-image: url('{$authUserData['company']['logo']}');"
-            : 'background: #b8c034;' }}
-    ">
+    <div class="profile_cover_bg" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
     </div>
 
 
@@ -31,19 +26,9 @@
                 {{ auth()->user()->name ?? (auth()->user()->first_name ?? '') . ' ' . (auth()->user()->last_name ?? '') }}
             </a>
         </h6>
-        <p>{{ auth()->user()->bio ?? (auth()->user()->headline ?? 'Welcome to MuslimLynk - your gateway to empowerment, collaboration, and success within the Muslim community.') }}
-        </p>
-
-        <div class="profile_card_details_inner">
-            <div class="profile_card_details_inner_box" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#profileViewsModal">
-                <h4>Profile views</h4>
-                <p>{{ $profileViews ?? 0 }}</p>
-            </div>
-            <div class="profile_card_details_inner_box">
-                <h4>Post Engagements</h4>
-                <p>{{ $postImpressions ?? 0 }}</p>
-            </div>
-        </div>
+        @if(auth()->user()->bio)
+        <p>{{ auth()->user()->bio }}</p>
+        @endif
     </div>
 </div>
 

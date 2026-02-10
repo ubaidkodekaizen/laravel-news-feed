@@ -1,10 +1,8 @@
-<!-- resources/views/partials/dashboard-sidebar.blade.php -->
-
 <style>
     .sidebar {
         width: 16% !important;
-        background-color: #F4F5FB !important;
-        border-right: 1px solid #E9EBF0 !important;
+        background-color: var(--color-bg-secondary) !important;
+        border-right: 1px solid var(--color-border) !important;
         height: -webkit-fill-available !important;
         overflow: visible;
     }
@@ -19,10 +17,12 @@
         right: -13px;
         outline: none;
         border: none;
-        background: #00000000;
+        background: transparent;
         rotate: 0deg;
         padding: 0;
         border-radius: 50%;
+        color: var(--color-text-secondary);
+        cursor: pointer;
     }
 
     #dashboardSidebar.collapsed .dashboardMenuCollapseBtn {
@@ -31,7 +31,7 @@
 
     body {
         overflow-y: unset !important;
-        background: #fafbff;
+        background: var(--color-bg-secondary);
     }
 
     .header {
@@ -49,7 +49,7 @@
         display: flex;
         width: 100% !important;
         max-width: 277px;
-        transition: width 0.3s ease;
+        transition: width var(--transition-base);
         flex-direction: column;
         justify-content: space-between;
         position: fixed;
@@ -83,7 +83,7 @@
 
     #dashboardSidebar.collapsed .menu-text {
         display: inline;
-        transition: display 0.3s ease;
+        transition: display var(--transition-base);
     }
 
     #dashboardSidebar.collapsed .menu-text {
@@ -94,41 +94,62 @@
         padding: 12px 12px;
     }
 
-
-
     .nav-items a {
-        transition: all 0.3s ease;
+        transition: all var(--transition-base);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        text-decoration: none;
+        color: var(--color-text-secondary);
+        border-radius: var(--radius-md);
+        margin: var(--spacing-xs) var(--spacing-md);
+    }
+    
+    .nav-items a:hover {
+        background: var(--color-primary-50);
+        color: var(--color-primary);
+    }
+    
+    .nav-items a.active {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        color: white;
+    }
+    
+    .nav-items a i {
+        width: 20px;
+        text-align: center;
     }
 
     .appSection {
-        padding: 20px;
+        padding: var(--spacing-lg);
     }
 
     .appSection .appSecInner {
-        background: #b8c034;
-        padding: 30px 20px;
-        border-radius: 10px;
-        font-family: "Inter";
-        color: #333;
+        background: var(--color-primary);
+        padding: var(--spacing-xl) var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        font-family: var(--font-family);
+        color: white;
     }
 
     .appSection .appSecInner h3 {
-        font-size: 26px;
-        font-weight: 600;
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-semibold);
     }
 
     .appSection .appSecInner button {
         width: 100%;
         border: none;
         outline: none;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
     }
 
     .appSection .appSecInner button a {
         text-decoration: none;
-        color: #333;
-        font-size: 18px;
-        font-weight: 500;
+        color: white;
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-medium);
         line-height: 55px;
     }
 
@@ -147,12 +168,12 @@
         #dashboardSidebar {
             left: -100%;
             width: 50% !important;
-            transition: left 0.3s ease;
+            transition: left var(--transition-base);
         }
 
         #dashboardSidebar.open {
             left: 0%;
-            transition: left 0.3s ease;
+            transition: left var(--transition-base);
         }
 
         body {
@@ -174,7 +195,6 @@
             width: 100% !important;
             max-width: 100% !important;
         }
-
     }
 
     @media (max-width: 768px) {
@@ -190,60 +210,24 @@
 
 <div class="sidebar" id="dashboardSidebar">
     <div id="dashboardMenu">
-        <button class="dashboardMenuCollapseBtn"><img src="{{ asset('assets/images/dashboard/sidebarCollapseIcon.svg') }}"
-                alt=""></button>
+        <button class="dashboardMenuCollapseBtn"><i class="fas fa-chevron-left"></i></button>
         <ul class="nav-list">
             <li class="nav-items">
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-
-                    <img src="{{ asset('assets/images/dashboard/sidebarDashboardIcon.svg') }}" alt="">
+                    <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
             </li>
             <li class="nav-items">
                 <a href="{{ route('user.details.show') }}"
                     class="{{ request()->routeIs('user.details.show') ? 'active' : '' }}">
-
-                    <img src="{{ asset('assets/images/dashboard/sidebarMyProfileIcon.svg') }}" alt="">
-                    <!-- My Profile -->
+                    <i class="fas fa-user"></i>
                     <span class="menu-text">My Profile</span>
                 </a>
             </li>
-            <li class="nav-items">
-                <a href="{{ route('user.products') }}"
-                    class="{{ request()->routeIs('user.products') ? 'active' : '' }}">
-
-                    <img src="{{ asset('assets/images/dashboard/sidebarProductIcon.svg') }}" alt="">
-
-                    <span class="menu-text">Products</span>
-                </a>
-            </li>
-            <li class="nav-items">
-                <a href="{{ route('user.services') }}"
-                    class="{{ request()->routeIs('user.services') ? 'active' : '' }}">
-
-                    <img src="{{ asset('assets/images/dashboard/sidebarServiceIcon.svg') }}" alt="">
-
-
-                    <span class="menu-text">Services</span>
-                </a>
-            </li>
-            <li class="nav-items">
-                <a href="{{ route('user.qualifications') }}"
-                    class="{{ request()->routeIs('user.qualifications') ? 'active' : '' }}">
-
-                    <img src="{{ asset('assets/images/dashboard/sidebarQualificationIcon.svg') }}" alt="">
-
-                    <span class="menu-text">Education</span>
-                </a>
-            </li>
-
-            <!-- Subscriptions menu item removed - not part of newsfeed boilerplate -->
-
-
+            <!-- Products, Services, and Education removed - not part of newsfeed boilerplate -->
         </ul>
     </div>
-
 </div>
 
 <script>

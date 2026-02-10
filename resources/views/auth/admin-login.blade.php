@@ -7,20 +7,9 @@
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/design-system.css') }}">
     
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-color: #e5e7eb;
-            --border-radius: 12px;
-        }
         
         * {
             margin: 0;
@@ -29,8 +18,7 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            background: linear-gradient(135deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -39,9 +27,9 @@
         }
         
         .auth-container {
-            background: var(--bg-primary);
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             max-width: 450px;
             width: 100%;
             padding: 48px;

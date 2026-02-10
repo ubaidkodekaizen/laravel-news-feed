@@ -2,18 +2,20 @@
 
 @extends('layouts.main')
 
+@section('styles')
 <style>
     .main-content {
-        padding: 46px 40px !important;
-        background: #fafbff;
+        padding: var(--spacing-2xl) var(--spacing-xl) !important;
+        background: var(--color-bg-secondary);
     }
+    
     .col-lg-6.dashboardBtns {
         display: flex;
         justify-content: end;
-        gap: 10px;
+        gap: var(--spacing-sm);
     }
-    
 </style>
+@endsection
 
 @section('content')
     <div class="navbar_d_flex">

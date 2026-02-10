@@ -628,67 +628,11 @@ class UserController extends Controller
 
         $designations = DB::table('designations')->pluck('name');
         $industries = DB::table('industries')->pluck('name');
-        $business_types = DB::table('bussiness_types')->pluck('name');
+        // Business types removed - not part of newsfeed boilerplate
 
-        $employee_sizes = [
-            '1-10' => '1-10 employees',
-            '11-50' => '11-50 employees',
-            '51-200' => '51-200 employees',
-            '201-500' => '201-500 employees',
-            '501-1000' => '501-1000 employees',
-            '1001-5000' => '1001-5000 employees',
-            '5001-10,000' => '5001-10,000 employees',
-            '10,001+' => '10,001+ employees',
-        ];
-
-        $revenue_ranges = [
-            '< 1M' => '< $1M',
-            '1-5M' => '$1M -$5M',
-            '5-25M' => '$5M - $25M',
-            '25-100M' => '$25M - $100M',
-            '100M +' => '$100M+',
-        ];
-
-        $company_experiences = [
-            'Under 1',
-            '1-5 years',
-            '5-10 years',
-            '10-20 years',
-            '20+ years',
-        ];
-
-        $genders = ['Male', 'Female', 'Prefer not to disclose', 'Other'];
-        $age_groups = ['20-30', '31-40', '41-50', '51-60', '60+', 'Prefer not to disclose'];
-        $marital_statuses = ['Single', 'Married', 'Divorced', 'Prefer not to disclose', 'Other'];
-
-        $business_locations = \App\Helpers\DropDownHelper::getBusinessLocationsArray();
-        $business_challenges = \App\Helpers\DropDownHelper::getCurrentBusinessChallengesArray();
-        $business_goals = \App\Helpers\DropDownHelper::getBusinessGoalsArray();
-        $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
-        $technologies = \App\Helpers\DropDownHelper::getTechnologiesArray();
-        $buying_process = \App\Helpers\DropDownHelper::getBuyingProcessArray();
-        $categories = \App\Helpers\DropDownHelper::getParentCategoriesArray();
-
-        // Ethnicity options - flattened array of all options
-        $ethnicities = [
-            'North African (e.g., Arab, Berber, Nubian)',
-            'Sub-Saharan African (e.g., Hausa, Yoruba, Somali, Zulu)',
-            'Afro-Caribbean',
-            'African-American',
-            'South Asian (e.g., Indian, Pakistani, Bangladeshi, Sri Lankan, Nepali)',
-            'East Asian (e.g., Chinese, Japanese, Korean)',
-            'Southeast Asian (e.g., Malay, Filipino, Indonesian, Thai, Burmese)',
-            'Central Asian (e.g., Kazakh, Uzbek, Turkmen, Tajik, Kyrgyz)',
-            'West Asian/Middle Eastern (e.g., Arab, Persian, Kurdish, Turkish, Assyrian)',
-            'Eastern European (e.g., Russian, Polish, Ukrainian, Romanian)',
-            'Western European (e.g., British, French, German, Dutch)',
-            'Southern European (e.g., Italian, Spanish, Greek, Portuguese)',
-            'Balkan (e.g., Bosnian, Albanian)',
-            'Latino/Hispanic (e.g., Mexican, Brazilian, Colombian, Cuban)',
-            'Multiracial/Mixed Heritage',
-            'Other',
-            'Prefer not to disclose'
-        ];
+        // Company-related dropdowns (employee_sizes, revenue_ranges, company_experiences, 
+        // business_locations, business_challenges, business_goals, company_attributes, 
+        // technologies, buying_process, categories, ethnicities) removed - not part of newsfeed boilerplate
 
         return response()->json([
             'status' => true,
@@ -696,21 +640,7 @@ class UserController extends Controller
                 'nationalities' => $nationalities,
                 'designations' => $designations,
                 'industries' => $industries,
-                'employee_sizes' => $employee_sizes,
-                'business_types' => $business_types,
-                'revenue_ranges' => $revenue_ranges,
-                'company_experiences' => $company_experiences,
-                'genders' => $genders,
-                'age_groups' => $age_groups,
-                'marital_statuses' => $marital_statuses,
-                'ethnicity' => $ethnicities,
-                'business_locations' => $business_locations,
-                'business_challenges' => $business_challenges,
-                'business_goals' => $business_goals,
-                'company_attributes' => $company_attributes,
-                'technologies' => $technologies,
-                'buying_process' => $buying_process,
-                'categories' => $categories,
+                // Company-related dropdowns removed - not part of newsfeed boilerplate
             ],
         ]);
     }

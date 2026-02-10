@@ -1,8 +1,9 @@
 # Laravel Newsfeed Boilerplate
 
-A clean, production-ready Laravel newsfeed application boilerplate with user authentication, posts, reactions, comments, shares, and a comprehensive admin panel.
+A clean, production-ready Laravel newsfeed application boilerplate with user authentication, posts, reactions, comments, shares, and a lightweight admin panel.  
+Designed as a **teaching boilerplate** so students can quickly clone, run, and extend a basic social newsfeed.
 
-## 🚀 Quick Start
+## 🚀 Quick Start (TL;DR)
 
 ```bash
 # Clone the repository
@@ -17,9 +18,10 @@ npm install
 cp .env.example .env
 php artisan key:generate
 
-# Configure database in .env file
-# Then run migrations and seeders
-php artisan migrate --seed
+# Configure ONLY your database in .env (DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+
+# Run migrations + seeders (fresh)
+php artisan migrate:fresh --seed
 
 # Build assets
 npm run build
@@ -34,33 +36,62 @@ Visit `http://localhost:8000` and login with:
 
 ## ✨ Features
 
-- **User Authentication**
-  - Registration and login
-  - Email verification
-  - Password reset
-  - Role-based access control (Admin, Manager, Editor, Member)
+### User Authentication
+- Registration and login
+- Email verification
+- Password reset
+- Role-based access control (Admin, Manager, Editor, Member)
+- User profile management (first name, last name, email, phone, bio, photo, location, website)
 
-- **Newsfeed Functionality**
+### Newsfeed Functionality
+- **Posts**
   - Create, edit, and delete posts
-  - Upload media (images/videos) to posts
-  - React to posts with emoji reactions
-  - Comment on posts and reply to comments
-  - Share posts
+  - Upload images to posts (via S3 or local storage)
   - Post visibility settings (public/private)
-  - User profiles with bio, location, website
+  - Post sharing/reposting
+  - Infinite scroll feed with sorting (latest, popular, oldest)
+  
+- **Reactions**
+  - 6 reaction types: Appreciate (👍), Cheers (🎉), Support (🤝), Insight (💡), Curious (🤔), Smile (😊)
+  - View reaction counts and lists
+  - Update or remove reactions
+  
+- **Comments**
+  - Comment on posts
+  - Reply to comments (nested comments)
+  - Edit and delete comments
+  - Like comments
+  
+- **User Profiles**
+  - Public user profiles with slug-based URLs
+  - Display user posts
+  - Profile information: first name, last name, bio, photo, location, website, email, phone
+  - Edit profile with photo upload (S3 or local storage)
 
-- **Admin Panel**
-  - User management (view, create, edit, delete, restore)
-  - Feed management (view, delete, restore posts and comments)
-  - Dashboard with statistics
+### Admin Panel
+- User management (view, create, edit, soft-delete, restore)
+- Feed management (view, delete, restore posts and comments)
+- Dashboard with basic statistics
+- Report management
 
-- **Notifications**
-  - In-app notifications for reactions, comments, shares, and replies
-  - Notification management (mark as read, delete)
+### Reporting System
+- Report users and posts
+- Admin moderation tools
 
-- **Reporting System**
-  - Report users and posts
-  - Admin moderation tools
+> **Note**: This boilerplate does **not** include:
+> - Real-time chat
+> - Push notifications
+> - Firebase integration
+> - Subscriptions/payments
+> - Company profiles
+> - Products/Services
+> - Education tracking
+> - Profile views tracking
+> - Complex user demographics (gender, age group, ethnicity, nationality, marital status)
+> - Social media links (LinkedIn, Facebook, Twitter, Instagram, etc.)
+> - Location details (city, county, state, zip code, country - only simple "location" field)
+> 
+> It is intentionally focused on a classic newsfeed + auth + admin use case with a clean, minimal user profile.
 
 ## 📋 Requirements
 
@@ -126,6 +157,29 @@ Generate application key:
 php artisan key:generate
 ```
 
+The boilerplate expects a **minimal `.env`**:
+
+- **Required**:
+  - `APP_NAME` (default: "NewsFeed")
+  - `APP_ENV` (default: "local")
+  - `APP_KEY` (generated with `php artisan key:generate`)
+  - `APP_URL` (default: "http://localhost:8000")
+  - `DB_CONNECTION` (default: "mysql")
+  - `DB_HOST` (default: "127.0.0.1")
+  - `DB_PORT` (default: "3306")
+  - `DB_DATABASE` (your database name)
+  - `DB_USERNAME` (your database username)
+  - `DB_PASSWORD` (your database password)
+
+- **Optional** (for S3 storage):
+  - `AWS_ACCESS_KEY_ID`
+  - `AWS_SECRET_ACCESS_KEY`
+  - `AWS_DEFAULT_REGION`
+  - `AWS_BUCKET`
+  - `AWS_USE_PATH_STYLE_ENDPOINT`
+
+Everything else can be left as defaults or empty.
+
 ### Step 5: Configure Database
 
 Open the `.env` file and update the database configuration:
@@ -169,26 +223,12 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 php artisan storage:link
 ```
 
-### Step 7: Run Migrations
+### Step 7: Run Migrations + Seeders
 
-Create all database tables:
-
-```bash
-php artisan migrate
-```
-
-### Step 8: Seed Database (Recommended)
-
-This will create default roles, permissions, and test users:
+Recommended for a fresh start (drops all tables, recreates them, and seeds):
 
 ```bash
-php artisan db:seed
-```
-
-Or run migrations and seeders together:
-
-```bash
-php artisan migrate --seed
+php artisan migrate:fresh --seed
 ```
 
 This creates:
@@ -196,7 +236,7 @@ This creates:
 - ✅ Admin user: `admin@newsfeed.com` / `12345678`
 - ✅ Regular users: `user@newsfeed.com`, `user1@newsfeed.com`, etc. / `12345678`
 
-### Step 9: Build Frontend Assets
+### Step 8: Build Frontend Assets
 
 For production:
 
@@ -210,7 +250,7 @@ For development with hot-reloading:
 npm run dev
 ```
 
-### Step 10: Start Development Server
+### Step 9: Start Development Server
 
 ```bash
 php artisan serve
@@ -246,47 +286,85 @@ laravel-news-feed/
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── Admin/          # Admin panel controllers
-│   │   │   ├── API/             # API controllers
+│   │   │   ├── API/             # API controllers (FeedController, UserController)
 │   │   │   ├── Auth/            # Authentication controllers
-│   │   │   └── User/            # User-facing controllers
-│   │   └── Middleware/          # Custom middleware
+│   │   │   └── User/            # User-facing controllers (FeedController, UserController)
+│   │   └── Middleware/          # Custom middleware (RoleMiddleware)
 │   ├── Models/
-│   │   ├── Feed/                # Post, Comment, Reaction, Share models
-│   │   ├── Notifications/       # Notification model
+│   │   ├── Feed/                # Post, PostComment, PostShare, Reaction models
 │   │   ├── Reports/             # Report model
 │   │   ├── System/              # Role, Permission models
-│   │   └── Users/                # User model
-│   ├── Services/                # Business logic services
-│   └── Helpers/                 # Helper functions
+│   │   └── Users/               # User model
+│   ├── Services/                # Business logic services (S3Service)
+│   └── Helpers/                 # Helper functions (DropDownHelper, GeneralHelper, ImageHelper)
 ├── database/
 │   ├── migrations/              # Database migrations
-│   └── seeders/                 # Database seeders
+│   │   ├── users table
+│   │   ├── posts table
+│   │   ├── post_comments table
+│   │   ├── post_shares table
+│   │   ├── feed_reactions table
+│   │   ├── post_media table
+│   │   ├── roles table
+│   │   └── reports table
+│   └── seeders/                 # Database seeders (UserSeeder, AdminSeeder)
 ├── resources/
 │   ├── views/
 │   │   ├── admin/               # Admin panel views
-│   │   ├── auth/                # Authentication views
-│   │   ├── pages/               # Public pages
-│   │   └── user/                # User-facing views
-│   └── js/                      # JavaScript/React components
+│   │   ├── auth/                # Authentication views (login/register/reset)
+│   │   ├── layouts/             # Main layouts (main.blade.php, header.blade.php)
+│   │   ├── pages/               # Public pages (home, news-feed)
+│   │   └── user/                # User dashboard and profile views
+│   ├── js/                      # JavaScript files (App.jsx, bootstrap.js)
+│   └── css/                     # CSS files (app.css)
 ├── routes/
 │   ├── web.php                  # Web routes
 │   └── api.php                  # API routes
-└── public/                      # Public assets
+└── public/                      # Public assets (CSS, JS, images)
+    └── assets/                  # Static assets
 ```
 
-## 🔌 API Documentation
+## 🔌 API Overview
 
-The application provides RESTful API endpoints for:
+The application provides RESTful API endpoints for integration:
 
-- **Authentication**: `/api/register`, `/api/login`, `/api/logout`
-- **User Management**: `/api/user/profile/{slug}`, `/api/user/update/personal`
-- **Feed Operations**: 
-  - Posts: `/api/feed/posts` (GET, POST, PUT, DELETE)
-  - Reactions: `/api/feed/reactions` (POST, DELETE)
-  - Comments: `/api/feed/posts/{id}/comments` (GET, POST, PUT, DELETE)
-  - Shares: `/api/feed/posts/{id}/share` (POST)
-- **Notifications**: `/api/notifications` (GET, POST, DELETE)
-- **Reports**: `/api/report/user`, `/api/report/post`
+### Authentication
+- `POST /api/register` - Register new user
+- `POST /api/login` - Login user
+- `POST /api/logout` - Logout user
+
+### User Management
+- `GET /api/user/profile/{slug}` - Get user profile
+- `PUT /api/user/update/personal` - Update personal details
+- `DELETE /api/user/delete` - Delete user account
+
+### Feed Operations
+- **Posts**:
+  - `GET /api/feed/posts` - Get feed posts (with pagination and sorting)
+  - `POST /api/feed/posts` - Create new post
+  - `GET /api/feed/posts/{id}` - Get single post
+  - `PUT /api/feed/posts/{id}` - Update post
+  - `DELETE /api/feed/posts/{id}` - Delete post
+  
+- **Reactions**:
+  - `POST /api/feed/reactions` - Add/update reaction
+  - `DELETE /api/feed/reactions` - Remove reaction
+  - `GET /api/feed/posts/{id}/reactions-count` - Get reaction count
+  - `GET /api/feed/posts/{id}/reactions-list` - Get reactions list
+  
+- **Comments**:
+  - `GET /api/feed/posts/{id}/comments` - Get post comments
+  - `POST /api/feed/posts/{id}/comments` - Add comment
+  - `PUT /api/feed/comments/{id}` - Update comment
+  - `DELETE /api/feed/comments/{id}` - Delete comment
+  
+- **Shares**:
+  - `POST /api/feed/posts/{id}/share` - Share post
+  - `GET /api/feed/posts/{id}/shares-list` - Get shares list
+
+### Reports
+- `POST /api/report/user` - Report a user
+- `POST /api/report/post` - Report a post
 
 All protected API endpoints require Sanctum authentication. Include the token in the `Authorization` header:
 
@@ -309,17 +387,17 @@ The application uses a role-based access control (RBAC) system:
 
 ### Running in Development Mode
 
-For development with hot-reloading and all services:
+For development with hot-reloading:
 
 ```bash
-composer dev
+npm run dev
 ```
 
-This command starts:
-- Laravel development server (port 8000)
-- Queue worker
-- Log viewer (Pail)
-- Vite dev server (port 5173)
+In another terminal, start the Laravel server:
+
+```bash
+php artisan serve
+```
 
 ### Common Artisan Commands
 
@@ -404,6 +482,20 @@ php artisan config:clear
 php artisan key:generate
 ```
 
+### Issue: "Column not found" errors
+
+**Solution**: Make sure you've run migrations:
+```bash
+php artisan migrate:fresh --seed
+```
+
+### Issue: Build errors with Firebase/chat components
+
+**Solution**: All Firebase and chat components have been removed. If you see build errors, make sure you've run:
+```bash
+npm run build
+```
+
 ## 🧪 Testing
 
 Run the test suite:
@@ -421,11 +513,23 @@ Or using PHPUnit directly:
 ## 📚 Technologies Used
 
 - **Backend**: Laravel 11
-- **Frontend**: Blade templates, React 18, Vite
+- **Frontend**: Blade templates, modern CSS/JS, React (minimal, for compatibility)
 - **Database**: MySQL/MariaDB
-- **Storage**: AWS S3 (optional, can use local storage)
+- **Storage**: Local disk by default, AWS S3 optional
 - **Authentication**: Laravel Sanctum
-- **Queue**: Redis (optional, for background jobs)
+- **Queue**: Optional (used only if you enable queued emails / background jobs)
+
+## 🗄️ Database Schema
+
+### Core Tables
+- `users` - User accounts (first_name, last_name, email, password, phone, bio, photo, location, website, slug, role_id, status)
+- `roles` - User roles (Admin, Manager, Editor, Member)
+- `posts` - Newsfeed posts (content, visibility, status, user_id)
+- `post_media` - Post images/videos (post_id, media_type, media_url)
+- `post_comments` - Comments on posts (with parent_id for nested replies)
+- `post_shares` - Shared/reposted posts (post_id, user_id, original_post_id)
+- `feed_reactions` - Reactions on posts and comments (reactionable_type, reactionable_id, user_id, type)
+- `reports` - User and post reports (reporter_id, reportable_type, reportable_id, reason, status)
 
 ## 🔒 Security
 
@@ -435,6 +539,7 @@ Or using PHPUnit directly:
 - XSS protection via Blade templating
 - Rate limiting on authentication endpoints
 - Role-based access control
+- Soft deletes for data recovery
 
 ## 📝 License
 
@@ -452,14 +557,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📞 Support
 
-For support, email support@example.com or open an issue in the [GitHub repository](https://github.com/ubaidkodekaizen/laravel-news-feed/issues).
+For support, open an issue in the [GitHub repository](https://github.com/ubaidkodekaizen/laravel-news-feed/issues).
 
 ## 🙏 Acknowledgments
 
 - Built with [Laravel](https://laravel.com)
-- UI components and styling
+- Modern UI components and styling
 - Community contributors
 
 ---
 
-**Made with ❤️ for developers**
+**Made with ❤️ for developers and students**

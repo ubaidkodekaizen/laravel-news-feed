@@ -7,20 +7,9 @@
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/design-system.css') }}">
     
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-color: #e5e7eb;
-            --border-radius: 12px;
-        }
         
         * {
             margin: 0;
@@ -29,8 +18,7 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -39,9 +27,9 @@
         }
         
         .auth-container {
-            background: var(--bg-primary);
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             max-width: 500px;
             width: 100%;
             padding: 48px;
@@ -56,26 +44,26 @@
             width: 60px;
             height: 60px;
             margin: 0 auto 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 16px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 28px;
-            font-weight: 700;
+            font-weight: var(--font-weight-bold);
         }
         
         .auth-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
             margin-bottom: 8px;
         }
         
         .auth-header p {
-            color: var(--text-secondary);
-            font-size: 15px;
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
         }
         
         .form-group {
@@ -83,23 +71,23 @@
         }
         
         .form-label {
-            font-weight: 500;
-            color: var(--text-primary);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-primary);
             margin-bottom: 8px;
-            font-size: 14px;
+            font-size: var(--font-size-sm);
         }
         
         .form-control {
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
             padding: 12px 16px;
-            font-size: 15px;
-            transition: all 0.3s ease;
+            font-size: var(--font-size-base);
+            transition: all var(--transition-base);
         }
         
         .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-50);
             outline: none;
         }
         
@@ -112,7 +100,7 @@
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-secondary);
+            color: var(--color-text-secondary);
             z-index: 10;
         }
         
@@ -121,33 +109,33 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
             border: none;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-md);
             padding: 14px;
-            font-weight: 600;
-            font-size: 15px;
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-base);
             width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-md);
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
         
         .auth-footer {
             text-align: center;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border-color);
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--color-border);
         }
         
         .auth-footer a {
-            color: var(--primary);
+            color: var(--color-primary);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: var(--font-weight-medium);
         }
         
         .auth-footer a:hover {
@@ -155,7 +143,7 @@
         }
         
         .alert {
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-md);
             border: none;
             padding: 12px 16px;
             margin-bottom: 20px;
@@ -168,13 +156,13 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--text-secondary);
+            color: var(--color-text-secondary);
             cursor: pointer;
             z-index: 10;
         }
         
         .password-toggle:hover {
-            color: var(--primary);
+            color: var(--color-primary);
         }
         
         .row {
@@ -295,7 +283,7 @@
         </form>
         
         <div class="auth-footer">
-            <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+            <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin: 0;">
                 Already have an account? 
                 <a href="{{ route('login.form') }}">Sign in here</a>
             </p>

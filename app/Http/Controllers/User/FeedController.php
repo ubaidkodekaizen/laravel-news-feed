@@ -36,14 +36,7 @@ class FeedController extends Controller
         }
 
         $userId = Auth::id();
-        // Get profile views count (safe if table doesn't exist)
-        try {
-            $profileViews = \Illuminate\Support\Facades\Schema::hasTable('profile_views') 
-                ? (Auth::user()->profile_views_count ?? 0) 
-                : 0;
-        } catch (\Exception $e) {
-            $profileViews = 0;
-        }
+        // Profile views removed - not part of newsfeed boilerplate
 
         $authUser = Auth::user();
         $authUserData = $this->formatUserData($authUser);
@@ -58,26 +51,19 @@ class FeedController extends Controller
             return ($post->reactions_count ?? 0) + ($post->comments_count ?? 0);
         });
 
-        $recentProducts = collect();
-        $recentServices = collect();
-        $recentIndustryExperts = collect();
+        // Products, Services, and Industry Experts removed - not part of newsfeed boilerplate
         $suggestedConnections = User::where('id', '!=', Auth::id())
             ->where('status', 'active')
             ->whereNull('deleted_at')
             ->inRandomOrder()
             ->limit(2)
             ->get();
-        $ads = collect();
 
         return view('pages.news-feed', [
             'posts' => [],
             'postImpressions' => $postImpressions,
-            'recentProducts' => $recentProducts,
-            'recentServices' => $recentServices,
-            'recentIndustryExperts' => $recentIndustryExperts,
             'suggestedConnections' => $suggestedConnections,
             'authUserData' => $authUserData,
-            'ads' => $ads,
         ]);
     }
 
@@ -156,22 +142,23 @@ class FeedController extends Controller
         $sort = $request->get('sort', 'latest');
         $userId = Auth::id();
 
-        $query = Post::with([
-            'user:id,first_name,last_name,slug,photo,user_position',
-            'media',
-            'reactions' => fn($q) => $q->where('user_id', $userId),
-            'comments' => fn($q) => $q->where('status', 'active')
-                ->whereNull('parent_id')
-                ->with([
-                    'user:id,first_name,last_name,slug,photo',
-                    'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')
-                ])
-                ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')])
-                ->orderBy('created_at', 'asc')
-                ->limit(2),
-            'originalPost.user:id,first_name,last_name,slug,photo,user_position',
-            'originalPost.media',
-        ])
+        $query = Post::withCount(['reactions', 'comments', 'shares'])
+            ->with([
+                'user:id,first_name,last_name,slug,photo',
+                'media',
+                'reactions' => fn($q) => $q->where('user_id', $userId),
+                'comments' => fn($q) => $q->where('status', 'active')
+                    ->whereNull('parent_id')
+                    ->with([
+                        'user:id,first_name,last_name,slug,photo',
+                        'reactions' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')
+                    ])
+                    ->withCount(['reactions as user_has_reacted' => fn($r) => $r->where('user_id', $userId)->where('reaction_type', 'appreciate')])
+                    ->orderBy('created_at', 'asc')
+                    ->limit(2),
+                'originalPost.user:id,first_name,last_name,slug,photo',
+                'originalPost.media',
+            ])
             ->where('status', 'active')
             ->whereNull('deleted_at');
 
@@ -233,9 +220,7 @@ class FeedController extends Controller
             'updated_at' => $post->updated_at,
             'likes_count' => $post->reactions_count ?? 0,
             'comments_count' => $post->comments_count ?? 0, // Cached count (includes replies)
-            'shares_count' => $post->shares()->whereHas('sharedPost', function ($query) {
-                $query->whereNull('deleted_at');
-            })->count(), // Only count active shares (exclude deleted shared posts)
+            'shares_count' => $post->shares_count ?? 0, // Count from withCount
             'original_post_id' => $post->original_post_id,
             'comments_enabled' => (bool) $post->comments_enabled,
             'user' => [
@@ -243,7 +228,7 @@ class FeedController extends Controller
                 'name' => trim($userData['first_name'] . ' ' . $userData['last_name']) ?: 'Unknown User',
                 'first_name' => $userData['first_name'],
                 'last_name' => $userData['last_name'],
-                'position' => $post->user->user_position ?? $post->user->position ?? '',
+                'position' => '',
                 'avatar' => $userData['photo'],
                 'initials' => $userData['user_initials'],
                 'has_photo' => $userData['user_has_photo'],
@@ -312,7 +297,7 @@ class FeedController extends Controller
                 'user' => [
                     'id' => $originalUserData['id'],
                     'name' => trim($originalUserData['first_name'] . ' ' . $originalUserData['last_name']),
-                    'position' => $post->originalPost->user->user_position ?? '',
+                    'position' => '',
                     'avatar' => $originalUserData['photo'],
                     'initials' => $originalUserData['user_initials'],
                     'has_photo' => $originalUserData['user_has_photo'],
@@ -353,7 +338,7 @@ class FeedController extends Controller
             $userId = Auth::id();
 
             $post = Post::with([
-                'user:id,first_name,last_name,slug,photo,user_position',
+                'user:id,first_name,last_name,slug,photo',
                 'media',
                 'reactions' => fn($q) => $q->where('user_id', $userId),
                 'comments' => fn($q) => $q->where('status', 'active')
@@ -803,7 +788,7 @@ class FeedController extends Controller
             }
 
             $reactions = $post->reactions()
-                ->with('user:id,first_name,last_name,photo,user_position')
+                ->with('user:id,first_name,last_name,photo')
                 ->get()
                 ->map(function ($reaction) {
                     $userData = $this->formatUserData($reaction->user);
@@ -817,7 +802,7 @@ class FeedController extends Controller
                             'avatar' => $userData['photo'],
                             'initials' => $userData['user_initials'],
                             'has_photo' => $userData['user_has_photo'],
-                            'position' => $reaction->user->user_position ?? '',
+                            'position' => '',
                         ]
                     ];
                 });
@@ -863,7 +848,7 @@ class FeedController extends Controller
                 ->whereHas('sharedPost', function ($query) {
                     $query->whereNull('deleted_at');
                 })
-                ->with('user:id,first_name,last_name,photo,user_position')
+                ->with('user:id,first_name,last_name,photo')
                 ->latest()
                 ->get()
                 ->map(function ($share) {
@@ -879,7 +864,7 @@ class FeedController extends Controller
                             'avatar' => $userData['photo'],
                             'initials' => $userData['user_initials'],
                             'has_photo' => $userData['user_has_photo'],
-                            'position' => $share->user->user_position ?? '',
+                            'position' => '',
                         ]
                     ];
                 });
@@ -977,27 +962,7 @@ class FeedController extends Controller
             $comment->status = 'active';
             $comment->save();
 
-            // Send notification if comment is on someone else's post (not a reply)
             // Notifications removed - not part of newsfeed boilerplate
-            if (false) { // Keep structure but disable
-                try {
-                    Log::error('Failed to send post comment notification', [
-                        'error' => $e->getMessage()
-                    ]);
-                    // Don't fail the request if notification fails
-                }
-            }
-
-            // Send notification if this is a reply to a comment
-            // Notifications removed - not part of newsfeed boilerplate
-            if (false) { // Keep structure but disable
-                try {
-                    Log::error('Failed to send comment reply notification', [
-                        'error' => $e->getMessage()
-                    ]);
-                    // Don't fail the request if notification fails
-                }
-            }
 
             $comment->load(['user:id,first_name,last_name,slug,photo']);
 
@@ -1240,16 +1205,7 @@ class FeedController extends Controller
             $share->share_type = $shareType;
             $share->save();
 
-            // Send notification if sharing someone else's post
             // Notifications removed - not part of newsfeed boilerplate
-            if (false) { // Keep structure but disable
-                try {
-                    Log::error('Notifications disabled', [
-                        'error' => $e->getMessage()
-                    ]);
-                    // Don't fail the request if notification fails
-                }
-            }
 
             DB::commit();
 
@@ -1282,7 +1238,7 @@ class FeedController extends Controller
             $perPage = $request->get('per_page', 15);
 
             $posts = Post::with([
-                'user:id,first_name,last_name,slug,photo,user_position',
+                'user:id,first_name,last_name,slug,photo',
                 'media',
                 'reactions' => fn($q) => $q->where('user_id', Auth::id()),
                 'comments' => fn($q) => $q->where('status', 'active')

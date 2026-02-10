@@ -11,7 +11,7 @@ use App\Models\Feed\Post;
 use App\Models\Feed\PostComment;
 use App\Models\Feed\PostShare;
 use App\Models\Feed\Reaction;
-use App\Models\Notifications\Notification;
+// Notification model removed - not part of newsfeed boilerplate
 use App\Models\Reports\Report;
 use App\Models\System\Role;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,13 +69,7 @@ class User extends Authenticatable
         return $this->hasMany(PostShare::class);
     }
 
-    /**
-     * Get all notifications for this user
-     */
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
-    }
+    // Notifications relationship removed - not part of newsfeed boilerplate
 
     /**
      * Get all reports made by this user

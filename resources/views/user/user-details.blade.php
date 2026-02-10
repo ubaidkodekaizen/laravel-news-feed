@@ -538,11 +538,7 @@
                             data-bs-target="#user-details-pane" type="button" role="tab"
                             aria-controls="user-details-pane" aria-selected="true">Personal</button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link " id="company-details-tab" data-bs-toggle="tab"
-                            data-bs-target="#company-details-tab-pane" type="button" role="tab"
-                            aria-controls="company-details-tab-pane" aria-selected="false">Professional</button>
-                    </li>
+                    <!-- Professional/Company tab removed - not part of newsfeed boilerplate -->
                 </ul>
 
                 @if (session('success'))
@@ -609,323 +605,61 @@
 
 
                                         <div class="new_user_details_inner_box">
-                                            <h4>Profile Overview</h4>
-
-                                            <div class="new_user_details_inner_box_form_group_row">
-                                                <div class="new_user_details_inner_box_form_group_box fullWidth">
-                                                    <label for="list_check_flex">Are You?<span class="text-danger">*</span>
-                                                        (Select
-                                                        all
-                                                        that Apply)</label>
-                                                    <ul class="list_check_flex">
-                                                        @php
-                                                            $selectedAreYou = explode(', ', $user->user_position ?? ''); // Split stored values into an array
-                                                        @endphp
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check"
-                                                                id="accredited_investor" name="are_you[]"
-                                                                value="Accredited Investor"
-                                                                {{ in_array('Accredited Investor', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="accredited_investor">Accredited Investor</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check" id="business_owner"
-                                                                name="are_you[]" value="Business Owner"
-                                                                {{ in_array('Business Owner', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="business_owner">Business Owner</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check"
-                                                                id="board_member_advisor" name="are_you[]"
-                                                                value="Board Member / Advisor"
-                                                                {{ in_array('Board Member / Advisor', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="board_member_advisor">Board Member / Advisor</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check"
-                                                                id="corporate_executive" name="are_you[]"
-                                                                value="Corporate Executive"
-                                                                {{ in_array('Corporate Executive', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="corporate_executive">Corporate Executive</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check"
-                                                                id="educator_academia" name="are_you[]"
-                                                                value="Educator / Academia"
-                                                                {{ in_array('Educator / Academia', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="educator_academia">Educator / Academia</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check"
-                                                                id="govt_public_sector_leader" name="are_you[]"
-                                                                value="Govt/Public Sector Leader"
-                                                                {{ in_array('Govt/Public Sector Leader', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="govt_public_sector_leader">Govt/Public Sector
-                                                                Leader</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check" id="industry_expert"
-                                                                name="are_you[]" value="Industry Expert"
-                                                                {{ in_array('Industry Expert', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="industry_expert">Industry Expert</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check" id="job_seeker"
-                                                                name="are_you[]" value="Job Seeker"
-                                                                {{ in_array('Job Seeker', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="job_seeker">Job
-                                                                Seeker</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check"
-                                                                id="non_profit_leader" name="are_you[]"
-                                                                value="Non-Profit Leader"
-                                                                {{ in_array('Non-Profit Leader', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="non_profit_leader">Non-Profit Leader</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check"
-                                                                id="investment_seeker" name="are_you[]"
-                                                                value="Investment Seeker"
-                                                                {{ in_array('Investment Seeker', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="investment_seeker">Investment Seeker</label>
-                                                        </li>
-                                                        <li>
-                                                            <input type="checkbox" class="btn-check" id="student_intern"
-                                                                name="are_you[]" value="Student / Intern"
-                                                                {{ in_array('Student / Intern', $selectedAreYou) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary custom_btn"
-                                                                for="student_intern">Student / Intern</label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-
-                                            </div>
+                                            <h4>Profile Information</h4>
                                             <div class="new_user_details_inner_box_form_group_row">
                                                 <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="first_name">First Name<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="first_name" id="first_name"
-                                                        class="form-control"
-                                                        value="{{ old('first_name', $user->first_name) }}">
-
-
+                                                    <label for="first_name">First Name<span class="text-danger">*</span></label>
+                                                    <input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name', $user->first_name) }}" required>
                                                 </div>
                                                 <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="last_name">Last Name<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="last_name" id="last_name"
-                                                        class="form-control"
-                                                        value="{{ old('last_name', $user->last_name) }}">
+                                                    <label for="last_name">Last Name<span class="text-danger">*</span></label>
+                                                    <input type="text" name="last_name" id="last_name" class="form-control" value="{{ old('last_name', $user->last_name) }}" required>
                                                 </div>
                                             </div>
-
+                                            <!-- 'Are You?' section removed - user_position field doesn't exist in users table -->
                                         </div>
                                         <div class="new_user_details_inner_box">
                                             <h4>Contact Information</h4>
-
                                             <div class="new_user_details_inner_box_form_group_row">
                                                 <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="phone" class="toggle_flex">Cell / Mobile<span
-                                                            class="text-danger">* </span>
-                                                        <div class="cont">
-                                                            <div class="toggle">
-                                                                <input type="checkbox" id="mobile_public"
-                                                                    class="toggle__input" name="phone_public"
-                                                                    value="Yes"
-                                                                    @if ($user->phone_public == 'Yes') checked @endif>
-                                                                <label for="mobile_public" class="toggle__label mt-0">
-                                                                    <span>Private</span>
-                                                                    <span>Public</span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                    <input type="tel" name="phone" id="phone"
-                                                        class="form-control phone_number w-100"
-                                                        value="{{ old('phone', $user->phone) }}">
+                                                    <label for="phone">Phone<span class="text-danger">*</span></label>
+                                                    <input type="tel" name="phone" id="phone" class="form-control phone_number" value="{{ old('phone', $user->phone) }}" required>
+                                                    <!-- phone_public toggle removed - field doesn't exist in users table -->
                                                 </div>
-
                                                 <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="email">Email<span class="text-danger">*</span>
-                                                        <div class="cont">
-
-                                                            <div class="toggle">
-                                                                <input type="checkbox" id="email_public"
-                                                                    class="toggle__input" name="email_public"
-                                                                    value="Yes"
-                                                                    @if ($user->email_public == 'Yes') checked @endif>
-                                                                <label for="email_public" class="toggle__label mt-0">
-                                                                    <span>Private</span>
-                                                                    <span>Public</span>
-                                                                </label>
-                                                            </div>
-
-
-                                                        </div>
-                                                    </label>
-                                                    <input type="email" name="email" id="email"
-                                                        class="form-control" value="{{ old('email', $user->email) }}">
+                                                    <label for="email">Email<span class="text-danger">*</span></label>
+                                                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                                                    <!-- email_public toggle removed - field doesn't exist in users table -->
                                                 </div>
                                             </div>
-
                                         </div>
 
                                         <div class="new_user_details_inner_box">
-                                            <h4>Location Details</h4>
-
+                                            <h4>About & Location</h4>
                                             <div class="new_user_details_inner_box_form_group_row">
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="city">City<span class="text-danger">*</span></label>
-                                                    <input type="text" name="city" id="city"
-                                                        class="form-control" value="{{ old('city', $user->city) }}">
-                                                    {{-- {!! \App\Helpers\DropDownHelper::renderCityDropdownForUser($user->state, $user->city) !!} --}}
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="county">County</label>
-                                                    <input type="text" name="county" id="county"
-                                                        class="form-control" value="{{ old('county', $user->county) }}">
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="state">State</label>
-                                                    <input type="text" name="state" id="state"
-                                                        class="form-control" value="{{ old('state', $user->state) }}">
-                                                    {{-- {!! \App\Helpers\DropDownHelper::renderStateDropdownForUser($user->country, $user->state) !!} --}}
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="zip_code">Zip Code</label>
-                                                    <input type="text" name="zip_code" id="zip_code"
-                                                        class="form-control"
-                                                        value="{{ old('zip_code', $user->zip_code) }}">
-                                                    {{-- {!! \App\Helpers\DropDownHelper::renderStateDropdownForUser($user->country, $user->state) !!} --}}
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="country">Country<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="country" id="country"
-                                                        class="form-control"
-                                                        value="{{ old('country', $user->country) }}">
-                                                    {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!} --}}
+                                                <div class="new_user_details_inner_box_form_group_box" style="width: 100%;">
+                                                    <label for="bio">Bio</label>
+                                                    <textarea name="bio" id="bio" class="form-control" rows="4" placeholder="Tell us about yourself...">{{ old('bio', $user->bio) }}</textarea>
                                                 </div>
                                             </div>
-
+                                            <div class="new_user_details_inner_box_form_group_row">
+                                                <div class="new_user_details_inner_box_form_group_box">
+                                                    <label for="location">Location</label>
+                                                    <input type="text" name="location" id="location" class="form-control" value="{{ old('location', $user->location) }}" placeholder="City, Country">
+                                                </div>
+                                                <div class="new_user_details_inner_box_form_group_box">
+                                                    <label for="website">Website</label>
+                                                    <input type="url" name="website" id="website" class="form-control" value="{{ old('website', $user->website) }}" placeholder="https://example.com">
+                                                </div>
+                                            </div>
                                         </div>
 
 
-                                        <div class="new_user_details_inner_box">
-                                            <h4>Personal Details</h4>
-
-                                            <div class="new_user_details_inner_box_form_group_row">
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="gender">Gender</label>
-                                                    {!! \App\Helpers\DropDownHelper::renderGenderDropdown($user->gender) !!}
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="age_group">Age Group</label>
-                                                    {!! \App\Helpers\DropDownHelper::renderAgeGroupDropdown($user->age_group) !!}
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="ethnicity">Ethnicity</label>
-                                                    <fieldset>
-                                                        {!! \App\Helpers\DropDownHelper::renderEthnicityDropdown($user->ethnicity) !!}
-                                                    </fieldset>
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box"
-                                                    id="other-ethnicity-div"
-                                                    style="{{ $user->ethnicity === 'Other' ? '' : 'display: none;' }}">
-                                                    <label for="other-ethnicity">Please specify your ethnicity</label>
-                                                    <input type="text" class="form-control" id="other-ethnicity"
-                                                        name="other_ethnicity" placeholder="Enter ethnicity"
-                                                        value="{{ $user->other_ethnicity }}">
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="nationality">Nationality</label>
-                                                    {!! \App\Helpers\DropDownHelper::nationalityDropdown($user->nationality) !!}
-                                                </div>
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="languages">Languages</label>
-                                                    <div class="languages-input-container">
-                                                        <input type="text" id="language-input" name="language-input"
-                                                            class="form-control"
-                                                            placeholder="Type a language and press Enter">
-                                                        <input type="hidden" name="languages" id="languages-hidden"
-                                                            value="{{ $user->languages }}">
-                                                        <!-- This is where the selected languages will go -->
-
-                                                        <div id="languages-list" class="mt-2">
-                                                            <!-- Added languages will appear here as tags -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="marital_status">Marital Status</label>
-                                                    {!! \App\Helpers\DropDownHelper::renderMaritalStatusDropdown($user->marital_status) !!}
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box"
-                                                    id="other-marital-status-div"
-                                                    style="{{ $user->marital_status === 'Other' ? '' : 'display: none;' }}">
-                                                    <label for="other-marital-status">Please specify your marital
-                                                        status</label>
-                                                    <input type="text" class="form-control" id="other-marital-status"
-                                                        name="other_marital_status" placeholder="Enter marital status"
-                                                        value="{{ $user->other_marital_status }}">
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                        <!-- Personal Details section removed - fields (gender, age_group, ethnicity, nationality, marital_status, languages) don't exist in users table -->
 
 
 
-                                        <div class="new_user_details_inner_box">
-                                            <h4>Community & Giving</h4>
-                                            <div class="new_user_details_inner_box_form_group_row">
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="mosque_id">Mosque</label>
-                                                    <select name="mosque_id" id="mosque_id" class="form-select">
-                                                        <option value="">Select Mosque</option>
-                                                    </select>
-
-
-                                                </div>
-
-                                                <div class="new_user_details_inner_box_form_group_box newMosqueCol d-none">
-                                                    <label for="mosque">Suggest New Mosque</label>
-                                                    <input type="text" name="mosque" id="mosque"
-                                                        class="form-control" value="{{ old('mosque', $user->mosque) }}">
-                                                    {{-- {!! \App\Helpers\DropDownHelper::renderCountryDropdownForUser($user->country) !!} --}}
-                                                </div>
-
-                                                <div class="noticeText">
-                                                    <strong>Why we ask this:</strong>
-                                                    <p>
-                                                        Based on your location, you can select a nearby mosque. A
-                                                        portion of your subscription amount will be donated to the
-                                                        mosque you choose—at no extra cost to you.
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                        <!-- Community & Giving section removed - not part of newsfeed boilerplate -->
                                         <div class="new_user_details_inner_box">
                                             <h4>Social Details</h4>
                                             <div class="new_user_details_inner_box_form_group_row">
@@ -990,11 +724,10 @@
                         </div>
 
                     </div>
-                    <div class="tab-pane fade " id="company-details-tab-pane" role="tabpanel"
-                        aria-labelledby="company-details-tab" tabindex="0">
-                        <div class="new_user_details">
-                            <form action="{{ route('user.company.update') }}" method="POST"
-                                enctype="multipart/form-data" id="user_company">
+                    <!-- Company tab removed - not part of newsfeed boilerplate -->
+                    <div class="tab-pane fade d-none" id="company-details-tab-pane" role="tabpanel"
+                        aria-labelledby="company-details-tab" tabindex="0" style="display: none !important;">
+                        <!-- Company form removed -->
                                 @csrf
 
                                 <div class="new_user_details_inner">
@@ -1331,12 +1064,7 @@
     </section>
 @endsection
 @section('scripts')
-    @php
-        $business_locations = \App\Helpers\DropDownHelper::getBusinessLocationsArray();
-        $business_challenges = \App\Helpers\DropDownHelper::getCurrentBusinessChallengesArray();
-        $business_goals = \App\Helpers\DropDownHelper::getBusinessGoalsArray();
-        $company_attributes = \App\Helpers\DropDownHelper::getCompanyAttributesArray();
-    @endphp
+    {{-- Company-related dropdown arrays removed - not part of newsfeed boilerplate --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -1405,29 +1133,12 @@
                         required: true,
                         email: true
                     },
-                    city: {
-                        required: true
-                    },
-                    country: {
-                        required: true
-                    },
-                    mosque_id: {
-                        required: false
-                    },
-                    mosque: {
-                        required: function() {
-                            return $('#mosque_id').val() === 'other';
-                        }
-                    },
-                    linkedin_url: {
-                        required: true,
-                        linkedinUrl: true
-                    }
+                    // city, country validation removed - fields don't exist in users table (only 'location' exists)
+                    // Mosque validation rules removed - not part of newsfeed boilerplate
+                    // linkedin_url validation removed - field doesn't exist in users table
                 },
                 messages: {
-                    'are_you[]': {
-                        required: "Please select at least one option"
-                    },
+                    // 'are_you[]' validation message removed - field doesn't exist in users table
                     first_name: {
                         required: "First name is required",
                         minlength: "First name must be at least 2 characters"
@@ -1443,13 +1154,9 @@
                         required: "Email is required",
                         email: "Please enter a valid email address"
                     },
-                    city: "City is required",
-                    country: "Country is required",
-                    mosque_id: "Please select a mosque",
-                    mosque: "Please suggest a mosque name",
-                    linkedin_url: {
-                        required: "LinkedIn URL is required"
-                    }
+                    // city, country validation messages removed - fields don't exist in users table
+                    // Mosque validation messages removed - not part of newsfeed boilerplate
+                    // linkedin_url validation message removed - field doesn't exist in users table
                 },
                 errorPlacement: function(error, element) {
                     if (element.attr("name") === "are_you[]") {
@@ -1488,55 +1195,20 @@
             // FORM VALIDATION - COMPANY DETAILS
             // ============================================
 
-            $("#user_company").validate({
-                rules: {
-                    company_industry: {
-                        select2Required: true
+            // Company form validation removed - not part of newsfeed boilerplate
+            if (false && $("#user_company").length) {
+                $("#user_company").validate({
+                    rules: {},
+                    messages: {},
+                    errorPlacement: function(error, element) {
+                        if (element.attr("type") === "radio") {
+                            error.insertAfter(element.closest('.form-check-row'));
+                        } else if (element.hasClass('select2-hidden-accessible')) {
+                            error.insertAfter(element.next('.select2-container'));
+                        } else {
+                            error.insertAfter(element);
+                        }
                     },
-                    business_location: {
-                        select2Required: true
-                    },
-                    company_no_of_employee: {
-                        required: true
-                    },
-                    is_decision_maker: {
-                        required: true
-                    },
-                    company_current_business_challenges: {
-                        select2Required: true
-                    },
-                    company_business_goals: {
-                        select2Required: true
-                    },
-                    company_phone: {
-                        validPhone: true
-                    },
-                    company_linkedin_url: {
-                        linkedinUrl: true
-                    },
-                    company_web_url: {
-                        validUrl: true
-                    }
-                },
-                messages: {
-                    company_industry: "Please select at least one industry",
-                    business_location: "Please select business location",
-                    company_no_of_employee: "Please select company size",
-                    is_decision_maker: "Please select an option",
-                    company_current_business_challenges: "Please select at least one challenge",
-                    company_business_goals: "Please select at least one goal",
-                    company_linkedin_url: "Please enter a valid LinkedIn URL",
-                    company_web_url: "Please enter a valid URL"
-                },
-                errorPlacement: function(error, element) {
-                    if (element.attr("type") === "radio") {
-                        error.insertAfter(element.closest('.form-check-row'));
-                    } else if (element.hasClass('select2-hidden-accessible')) {
-                        error.insertAfter(element.next('.select2-container'));
-                    } else {
-                        error.insertAfter(element);
-                    }
-                },
                 highlight: function(element) {
                     $(element).addClass('error');
                     if ($(element).hasClass('select2-hidden-accessible')) {
@@ -1569,125 +1241,7 @@
                 $(this).valid();
             });
 
-            // --- Search Mosque API ---
-            function searchMosque() {
-                let zip_code = $("#zip_code").val();
-                let city = $("#city").val();
-
-                $.ajax({
-                    url: "{{ route('user.mosque.search') }}",
-                    method: "GET",
-                    data: {
-                        zip: zip_code,
-                        city: city,
-                    },
-                    success: function(data) {
-                        let $mosqueSelect = $("#mosque_id");
-                        $mosqueSelect.empty();
-
-                        if (data.status && data.data.length > 0) {
-                            $mosqueSelect.append('<option value="">-- Select Mosque --</option>');
-                            $.each(data.data, function(index, mosque) {
-                                $mosqueSelect.append(
-                                    '<option value="' + mosque.id + '">' +
-                                    mosque.mosque + '</option>'
-                                );
-                            });
-                            $mosqueSelect.append('<option value="other">-- Other --</option>');
-                        } else {
-                            $mosqueSelect.append('<option value="">No mosques found</option>');
-                            $mosqueSelect.append('<option value="other">-- Other --</option>');
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error("Error:", xhr.responseText);
-                        $("#mosque_id").empty().append(
-                            '<option value="">Error loading mosques</option>'
-                        );
-                    }
-                });
-            }
-
-            // --- Store Mosque API ---
-            function storeMosque({
-                mosqueId = null,
-                newMosque = null
-            }) {
-                let amount = 100;
-
-                $.ajax({
-                    url: "{{ route('user.mosque.store') }}",
-                    method: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        mosque_id: mosqueId,
-                        mosque: newMosque,
-                        amount: amount,
-                    },
-                    success: function(response) {
-                        console.log("Stored:", response);
-                        Swal.fire({
-                            icon: response.status ? "success" : "error",
-                            title: response.message,
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                    },
-                    error: function(xhr) {
-                        console.error("Error saving mosque:", xhr.responseText);
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error saving mosque",
-                            text: xhr.responseJSON?.message || "Something went wrong",
-                            confirmButtonText: "OK"
-                        });
-                    }
-                });
-            }
-
-            // --- Debounce for zip & city ---
-            $("#zip_code, #city").on("input", function() {
-                clearTimeout(typingTimer);
-                typingTimer = setTimeout(searchMosque, typingDelay);
-            });
-
-            // --- Dropdown change ---
-            $("#mosque_id").on("change", function() {
-                let selected = $(this).val();
-
-                if (selected === "other") {
-                    $(".newMosqueCol").removeClass("d-none");
-                    $("#mosque").rules("add", {
-                        required: true
-                    });
-                } else if (selected) {
-                    $(".newMosqueCol").addClass("d-none");
-                    $("#mosque").rules("remove", "required");
-                    storeMosque({
-                        mosqueId: selected
-                    });
-                } else {
-                    $(".newMosqueCol").addClass("d-none");
-                    $("#mosque").rules("remove", "required");
-                }
-            });
-
-            // --- Free-text mosque field ---
-            $("#mosque").on("input", function() {
-                clearTimeout(typingTimer);
-                let newMosque = $(this).val();
-
-                typingTimer = setTimeout(function() {
-                    if (newMosque.length > 2) {
-                        storeMosque({
-                            newMosque: newMosque
-                        });
-                    }
-                }, typingDelay);
-            });
-
-            // Run search once on page load
-            searchMosque();
+            // Mosque-related JavaScript completely removed - not part of newsfeed boilerplate
 
             $('#search_form').on('submit', function() {
                 $(this).find('input').each(function() {
@@ -1716,385 +1270,11 @@
                 phoneInput.data('iti', iti);
             });
 
-            // ============================================
-            // SELECT2 INITIALIZATION FOR DESIGNATION
-            // ============================================
-
-            const designations = @json($designations ?? []);
-
-            let designationOptions = '<option value="">Select Title/Designation</option>';
-            designations.forEach(function(item) {
-                designationOptions += `<option value="${item}">${item}</option>`;
-            });
-            designationOptions += '<option value="Other">Other</option>';
-
-            $('#company_position').html(designationOptions);
-
-            $('#company_position').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Select or type Title/Designation',
-                multiple: true,
-                tags: true,
-                tokenSeparators: [','],
-                width: '100%',
-                templateSelection: function(data, container) {
-                    const selectedValues = $('#company_position').val();
-
-                    if (!selectedValues || selectedValues.length === 0) {
-                        return data.text;
-                    }
-
-                    if (data.id === selectedValues[0]) {
-                        const moreCount = selectedValues.length - 1;
-                        if (moreCount > 0) {
-                            const $selection = $('<span></span>');
-                            $selection.append(data.text + ' ');
-                            $selection.append(
-                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
-                                    moreCount + ' more</span>')
-                            );
-                            return $selection;
-                        }
-                        return data.text;
-                    }
-
-                    $(container).css('display', 'none');
-                    return data.text;
-                }
-            });
-
-            let existingDesignation = $('#company_position_hidden').val();
-            if (existingDesignation) {
-                let designationArray = existingDesignation.split(', ').filter(v => v.trim());
-                $('#company_position').val(designationArray).trigger('change');
-            }
-
-            $('#company_position').on('change', function() {
-                let selectedValues = $(this).val();
-                $('#company_position_hidden').val(selectedValues ? selectedValues.join(', ') : '');
-
-                if (selectedValues && selectedValues.includes('Other')) {
-                    $('.company_position_other_div').removeClass('d-none');
-                } else {
-                    $('.company_position_other_div').addClass('d-none');
-                }
-            });
-
-            // ============================================
-            // SELECT2 INITIALIZATION FOR INDUSTRY
-            // ============================================
-
-            const industries = @json($industries ?? []);
-
-            let industryOptions = '<option value="">Select Industry</option>';
-            industries.forEach(function(item) {
-                industryOptions += `<option value="${item}">${item}</option>`;
-            });
-            industryOptions += '<option value="Other">Other</option>';
-
-            $('#company_industry').html(industryOptions);
-
-            $('#company_industry').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Select or type Industry',
-                multiple: true,
-                tags: true,
-                tokenSeparators: [','],
-                width: '100%',
-                templateSelection: function(data, container) {
-                    const selectedValues = $('#company_industry').val();
-
-                    if (!selectedValues || selectedValues.length === 0) {
-                        return data.text;
-                    }
-
-                    if (data.id === selectedValues[0]) {
-                        const moreCount = selectedValues.length - 1;
-                        if (moreCount > 0) {
-                            const $selection = $('<span></span>');
-                            $selection.append(data.text + ' ');
-                            $selection.append(
-                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
-                                    moreCount + ' more</span>')
-                            );
-                            return $selection;
-                        }
-                        return data.text;
-                    }
-
-                    $(container).css('display', 'none');
-                    return data.text;
-                }
-            });
-
-            let existingIndustry = $('#company_industry_hidden').val();
-            if (existingIndustry) {
-                let industryArray = existingIndustry.split(', ').filter(v => v.trim());
-                $('#company_industry').val(industryArray).trigger('change');
-            }
-
-            $('#company_industry').on('change', function() {
-                let selectedValues = $(this).val();
-                $('#company_industry_hidden').val(selectedValues ? selectedValues.join(', ') : '');
-
-                if (selectedValues && selectedValues.includes('Other')) {
-                    $('.company_industry_other_div').removeClass('d-none');
-                } else {
-                    $('.company_industry_other_div').addClass('d-none');
-                }
-            });
-
-            // ============================================
-            // SELECT2 INITIALIZATION FOR BUSINESS LOCATION
-            // ============================================
-
-            const businessLocations = @json($business_locations ?? []);
-
-            let locationOptions = '<option value="">Select Business Location</option>';
-            businessLocations.forEach(function(item) {
-                locationOptions += `<option value="${item}">${item}</option>`;
-            });
-
-            $('#business_location').html(locationOptions);
-
-            $('#business_location').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Select Business Location',
-                width: '100%'
-            });
-
-            let existingLocation = $('#business_location_hidden').val();
-            if (existingLocation) {
-                $('#business_location').val(existingLocation).trigger('change');
-            }
-
-            $('#business_location').on('change', function() {
-                let selectedValue = $(this).val();
-                $('#business_location_hidden').val(selectedValue || '');
-            });
-
-            // ============================================
-            // SELECT2 INITIALIZATION FOR BUSINESS CHALLENGES
-            // ============================================
-
-            const businessChallenges = @json($business_challenges ?? []);
-
-            let challengesOptions = '<option value="">Select Current Business Challenges</option>';
-            businessChallenges.forEach(function(item) {
-                challengesOptions += `<option value="${item}">${item}</option>`;
-            });
-
-            $('#company_current_business_challenges').html(challengesOptions);
-
-            $('#company_current_business_challenges').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Select Current Business Challenges',
-                multiple: true,
-                tags: true,
-                tokenSeparators: [','],
-                width: '100%',
-                templateSelection: function(data, container) {
-                    const selectedValues = $('#company_current_business_challenges').val();
-
-                    if (!selectedValues || selectedValues.length === 0) {
-                        return data.text;
-                    }
-
-                    if (data.id === selectedValues[0]) {
-                        const moreCount = selectedValues.length - 1;
-                        if (moreCount > 0) {
-                            const $selection = $('<span></span>');
-                            $selection.append(data.text + ' ');
-                            $selection.append(
-                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
-                                    moreCount + ' more</span>')
-                            );
-                            return $selection;
-                        }
-                        return data.text;
-                    }
-
-                    $(container).css('display', 'none');
-                    return data.text;
-                }
-            });
-
-            let existingChallenges = $('#company_current_business_challenges_hidden').val();
-            if (existingChallenges) {
-                let challengesArray = existingChallenges.split(', ').filter(v => v.trim());
-                $('#company_current_business_challenges').val(challengesArray).trigger('change');
-            }
-
-            $('#company_current_business_challenges').on('change', function() {
-                let selectedValues = $(this).val();
-                $('#company_current_business_challenges_hidden').val(selectedValues ? selectedValues.join(
-                    ', ') : '');
-            });
-
-            // ============================================
-            // SELECT2 INITIALIZATION FOR BUSINESS GOALS
-            // ============================================
-
-            const businessGoals = @json($business_goals ?? []);
-
-            let goalsOptions = '<option value="">Select Business Goals</option>';
-            businessGoals.forEach(function(item) {
-                goalsOptions += `<option value="${item}">${item}</option>`;
-            });
-
-            $('#company_business_goals').html(goalsOptions);
-
-            $('#company_business_goals').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Select Business Goals',
-                multiple: true,
-                tags: true,
-                tokenSeparators: [','],
-                width: '100%',
-                templateSelection: function(data, container) {
-                    const selectedValues = $('#company_business_goals').val();
-
-                    if (!selectedValues || selectedValues.length === 0) {
-                        return data.text;
-                    }
-
-                    if (data.id === selectedValues[0]) {
-                        const moreCount = selectedValues.length - 1;
-                        if (moreCount > 0) {
-                            const $selection = $('<span></span>');
-                            $selection.append(data.text + ' ');
-                            $selection.append(
-                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
-                                    moreCount + ' more</span>')
-                            );
-                            return $selection;
-                        }
-                        return data.text;
-                    }
-
-                    $(container).css('display', 'none');
-                    return data.text;
-                }
-            });
-
-            let existingGoals = $('#company_business_goals_hidden').val();
-            if (existingGoals) {
-                let goalsArray = existingGoals.split(', ').filter(v => v.trim());
-                $('#company_business_goals').val(goalsArray).trigger('change');
-            }
-
-            $('#company_business_goals').on('change', function() {
-                let selectedValues = $(this).val();
-                $('#company_business_goals_hidden').val(selectedValues ? selectedValues.join(', ') : '');
-            });
-
-            // ============================================
-            // SELECT2 INITIALIZATION FOR COMPANY ATTRIBUTES
-            // ============================================
-
-            const companyAttributes = @json($company_attributes ?? []);
-
-            let attributesOptions = '<option value="">Select Company Attributes</option>';
-            companyAttributes.forEach(function(item) {
-                attributesOptions += `<option value="${item}">${item}</option>`;
-            });
-
-            $('#company_attributes').html(attributesOptions);
-
-            $('#company_attributes').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Select Company Attributes',
-                multiple: true,
-                tags: true,
-                tokenSeparators: [','],
-                width: '100%',
-                templateSelection: function(data, container) {
-                    const selectedValues = $('#company_attributes').val();
-
-                    if (!selectedValues || selectedValues.length === 0) {
-                        return data.text;
-                    }
-
-                    if (data.id === selectedValues[0]) {
-                        const moreCount = selectedValues.length - 1;
-                        if (moreCount > 0) {
-                            const $selection = $('<span></span>');
-                            $selection.append(data.text + ' ');
-                            $selection.append(
-                                $('<span class="badge bg-secondary ms-1" style="font-size: 0.75em;">+' +
-                                    moreCount + ' more</span>')
-                            );
-                            return $selection;
-                        }
-                        return data.text;
-                    }
-
-                    $(container).css('display', 'none');
-                    return data.text;
-                }
-            });
-
-            let existingAttributes = $('#company_attributes_hidden').val();
-            if (existingAttributes) {
-                let attributesArray = existingAttributes.split(', ').filter(v => v.trim());
-                $('#company_attributes').val(attributesArray).trigger('change');
-            }
-
-            $('#company_attributes').on('change', function() {
-                let selectedValues = $(this).val();
-                $('#company_attributes_hidden').val(selectedValues ? selectedValues.join(', ') : '');
-            });
-
-            // ============================================
-            // SELECT2 FOR OTHER SINGLE DROPDOWNS
-            // ============================================
-            $('#mosque_id, #gender, #age_group, #ethnicity, #nationality, #marital_status, #company_experience, #company_business_type, #company_revenue, #company_no_of_employee')
-                .select2({
-                    theme: 'bootstrap-5',
-                    width: '100%'
-                });
-
-            // ============================================
-            // HANDLE "OTHER" OPTIONS
-            // ============================================
-
-            $('#ethnicity').on('change', function() {
-                const otherEthnicityDiv = $('#other-ethnicity-div');
-                const otherEthnicityInput = $('#other-ethnicity');
-
-                if ($(this).val() === 'Other') {
-                    otherEthnicityDiv.show();
-                    otherEthnicityInput.prop('required', true);
-                } else {
-                    otherEthnicityDiv.hide();
-                    otherEthnicityInput.prop('required', false).val('');
-                }
-            });
-
-            $('#marital_status').on('change', function() {
-                const otherMaritalStatusDiv = $('#other-marital-status-div');
-                const otherMaritalStatusInput = $('#other-marital-status');
-
-                if ($(this).val() === 'Other') {
-                    otherMaritalStatusDiv.show();
-                    otherMaritalStatusInput.prop('required', true);
-                } else {
-                    otherMaritalStatusDiv.hide();
-                    otherMaritalStatusInput.prop('required', false).val('');
-                }
-            });
-
-            $('#company_business_type').on('change', function() {
-                const otherField = $('#business_type_other_field');
-                const otherInput = otherField.find('input');
-
-                if ($(this).val() && $(this).val().toLowerCase() === 'other') {
-                    otherField.show();
-                } else {
-                    otherField.hide();
-                    otherInput.val('');
-                }
-            });
+            // Company-related JavaScript removed - not part of newsfeed boilerplate:
+            // SELECT2 initialization for company_position, company_industry, business_location,
+            // company_current_business_challenges, company_business_goals, company_attributes
+            // Ethnicity and marital status handlers removed - fields don't exist in users table
+            // Company business type handler removed
 
         });
     </script>

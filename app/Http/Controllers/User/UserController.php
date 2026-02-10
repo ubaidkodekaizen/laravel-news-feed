@@ -59,7 +59,24 @@ class UserController extends Controller
         if ($user->role_id !== 4) {
             abort(403, 'Unauthorized action.');
         }
-        return view('user.dashboard');
+
+        // Get user's newsfeed stats
+        $userId = $user->id;
+        $stats = [
+            'total_posts' => \App\Models\Feed\Post::where('user_id', $userId)
+                ->where('status', 'active')
+                ->whereNull('deleted_at') // posts table uses soft deletes
+                ->count(),
+            'total_comments' => \App\Models\Feed\PostComment::where('user_id', $userId)
+                ->where('status', 'active')
+                ->whereNull('deleted_at') // post_comments table uses soft deletes
+                ->count(),
+            'total_reactions' => \App\Models\Feed\Reaction::where('user_id', $userId)->count(),
+            // post_shares table does NOT use soft deletes, so no deleted_at filter
+            'total_shares' => \App\Models\Feed\PostShare::where('user_id', $userId)->count(),
+        ];
+
+        return view('user.dashboard', compact('stats'));
     }
 
     public function showLoginForm()
@@ -192,6 +209,8 @@ class UserController extends Controller
 
         // Use trait to add photo data
         $this->addPhotoData($user);
+
+        // Removed features (products, services, education) no longer needed
 
         return view('user.user-profile', compact('user'));
     }
