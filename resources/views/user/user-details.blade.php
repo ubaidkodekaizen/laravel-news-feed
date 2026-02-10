@@ -801,16 +801,7 @@
                                                 </div>
 
 
-                                                <div class="new_user_details_inner_box_form_group_box">
-                                                    <label for="company_business_type">Company Type</label>
-                                                    {!! \App\Helpers\DropDownHelper::renderBusinessTypeDropdown($company->company_business_type ?? '') !!}
-                                                    <div id="business_type_other_field" style="display: none;">
-                                                        <label for="business_type_other">Other Company Type</label>
-                                                        <input type="text" name="company_business_type_other"
-                                                            id="business_type_other" class="form-control"
-                                                            placeholder="Enter other business type">
-                                                    </div>
-                                                </div>
+                                                <!-- Company fields removed - not part of newsfeed boilerplate -->
 
 
                                             </div>
@@ -839,12 +830,7 @@
                                                         id="company_position_other" class="form-control" value="">
                                                 </div>
 
-                                                <div
-                                                    class="new_user_details_inner_box_form_group_box custom-select-dropdown">
-                                                    <label for="company_experience">Years of Experience</label>
-                                                    {!! \App\Helpers\DropDownHelper::renderCompanyExperienceDropdown($company->company_experience ?? '') !!}
-
-                                                </div>
+                                                <!-- Company experience field removed - not part of newsfeed boilerplate -->
 
                                                 <div class="new_user_details_inner_box_form_group_box">
                                                     <label for="work_phone_num">Work Phone Number</label>
@@ -912,18 +898,7 @@
                                                 </div>
 
                                                 <div class="new_user_details_inner_box_form_group_box mb-3">
-                                                    <label for="company_no_of_employee">Company Size <span
-                                                            class="text-danger">*</span>
-                                                        <div class="profileTooltip">
-                                                            <div class="profileTooltipText">
-                                                                Choose the approximate size of your organization.
-                                                                <div class="profileTooltipTextCurve"></div>
-                                                            </div>
-                                                            <img src="{{ asset('assets/images/noticeIcon.png') }}"
-                                                                class="img-fluid" alt="">
-                                                        </div>
-                                                    </label>
-                                                    {!! \App\Helpers\DropDownHelper::renderEmployeeSizeDropdown($company->company_no_of_employee ?? '') !!}
+                                                    <!-- Company size field removed - not part of newsfeed boilerplate -->
                                                 </div>
 
                                                 <div class="new_user_details_inner_box_form_group_box mb-3">
@@ -962,10 +937,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="new_user_details_inner_box_form_group_box mb-3">
-                                                    <label for="company_revenue">Company Revenue:</label>
-                                                    {!! \App\Helpers\DropDownHelper::renderRevenueDropdown($company->company_revenue ?? '') !!}
-                                                </div>
+                                                <!-- Company revenue field removed - not part of newsfeed boilerplate -->
 
 
 

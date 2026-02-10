@@ -204,67 +204,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-3">
-                    <a href="{{ route('admin.blogs') }}" class="card card-modern" style="text-decoration: none; color: inherit;">
-                        <div class="card-body">
-                            <div class="cardCounting">
-                                <h2 class="card-numbers">
-                                    {{ \App\Helpers\GeneralHelper::getBlogCount() }}
-                                </h2>
-                                <h1 class="card-title">Blogs</h1>
-                            </div>
-
-                            <div class="cardSvg">
-                                <div class="cardSvgCon">
-                                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <title>Blogs</title>
-                                    <g id="style=fill">
-                                    <g id="document">
-                                    <path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M8 1.25C4.82436 1.25 2.25 3.82436 2.25 7V17C2.25 20.1756 4.82436 22.75 8 22.75H16C19.1756 22.75 21.75 20.1756 21.75 17V7C21.75 3.82436 19.1756 1.25 16 1.25H8ZM8 7.44995C7.58579 7.44995 7.25 7.78574 7.25 8.19995C7.25 8.61416 7.58579 8.94995 8 8.94995H16C16.4142 8.94995 16.75 8.61416 16.75 8.19995C16.75 7.78574 16.4142 7.44995 16 7.44995H8ZM7.25 12.2C7.25 11.7857 7.58579 11.45 8 11.45H16C16.4142 11.45 16.75 11.7857 16.75 12.2C16.75 12.6142 16.4142 12.95 16 12.95H8C7.58579 12.95 7.25 12.6142 7.25 12.2ZM9 15.45C8.58579 15.45 8.25 15.7857 8.25 16.2C8.25 16.6142 8.58579 16.95 9 16.95H15C15.4142 16.95 15.75 16.6142 15.75 16.2C15.75 15.7857 15.4142 15.45 15 15.45H9Z" fill="#333"/>
-                                    </g>
-                                    </g>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-3">
-                    <a href="{{ route('admin.events') }}" class="card card-modern" style="text-decoration: none; color: inherit;">
-                        <div class="card-body">
-                            <div class="cardCounting">
-                                <h2 class="card-numbers">
-                                    {{ \App\Helpers\GeneralHelper::getEventCount() }}
-                                </h2>
-                                <h1 class="card-title">Events</h1>
-                            </div>
-
-                            <div class="cardSvg">
-                                <div class="cardSvgCon">
-                                    <svg  fill="#333" xmlns="http://www.w3.org/2000/svg"  width="40px" height="40px"
-                                        viewBox="0 0 100 100" xml:space="preserve">
-                                        <title>Events</title>
-
-                                    <g>
-                                        <g>
-                                            <path d="M76,42H24c-1.1,0-2,0.9-2,2v30c0,3.3,2.7,6,6,6h44c3.3,0,6-2.7,6-6V44C78,42.9,77.1,42,76,42z M40,70
-                                                c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V70z M40,56c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4
-                                                c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V56z M54,70c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V70z
-                                                M54,56c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V56z M68,70c0,1.1-0.9,2-2,2h-4
-                                                c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4c1.1,0,2,0.9,2,2V70z M68,56c0,1.1-0.9,2-2,2h-4c-1.1,0-2-0.9-2-2v-4c0-1.1,0.9-2,2-2h4
-                                                c1.1,0,2,0.9,2,2V56z"/>
-                                        </g>
-                                        <g>
-                                            <path d="M72,26h-5v-2c0-2.2-1.8-4-4-4s-4,1.8-4,4v2H41v-2c0-2.2-1.8-4-4-4s-4,1.8-4,4v2h-5c-3.3,0-6,2.7-6,6v2
-                                                c0,1.1,0.9,2,2,2h52c1.1,0,2-0.9,2-2v-2C78,28.7,75.3,26,72,26z"/>
-                                        </g>
-                                    </g>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                <!-- Blogs and Events cards removed - not part of newsfeed boilerplate -->
             </div>
 
             <!-- Charts Section -->

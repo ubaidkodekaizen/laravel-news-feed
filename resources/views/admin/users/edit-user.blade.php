@@ -600,10 +600,7 @@
                                         </div>
 
 
-                                        <div class="col-lg-6">
-                                            <label for="nationality">Nationality</label>
-                                            {!! \App\Helpers\DropDownHelper::nationalityDropdown($user->nationality) !!}
-                                        </div>
+                                        <!-- Nationality field removed - not part of newsfeed boilerplate -->
 
                                         <div class="col-lg-6">
                                             <label for="languages">Languages</label>
@@ -777,7 +774,7 @@
                                             </div>
                                             <input type="hidden" id="company_position_hidden" name="company_position"
                                                 value="{{ old('company_position', $company->company_position ?? '') }}" />
-                                            {!! \App\Helpers\DropDownHelper::designationDropdown($company->company_position ?? '') !!}
+                                            <!-- Company designation field removed - not part of newsfeed boilerplate -->
 
                                         </div>
 
@@ -839,7 +836,7 @@
                                             </div>
                                             <input type="hidden" id="company_industry_hidden" name="company_industry"
                                                 value="{{ old('company_industry', $company->company_industry ?? '') }}" />
-                                            {!! \App\Helpers\DropDownHelper::industryDropdown($company->company_industry ?? '') !!}
+                                            <!-- Company industry field removed - not part of newsfeed boilerplate -->
                                         </div>
 
                                         <div class="col-lg-6 company_industry_other_div d-none">
@@ -854,7 +851,7 @@
                                         <!-- Business Type Dropdown -->
                                         <div class="col-lg-6">
                                             <label for="company_business_type">Company Type</label>
-                                            {!! \App\Helpers\DropDownHelper::renderBusinessTypeDropdown($company->company_business_type ?? '') !!}
+                                            <!-- Company business type field removed - not part of newsfeed boilerplate -->
                                             <div id="business_type_other_field" style="display: none;">
                                                 <label for="business_type_other">Other Company Type</label>
                                                 <input type="text" name="company_business_type_other"
@@ -866,13 +863,13 @@
                                         <!-- Company Revenue -->
                                         <div class="col-lg-6">
                                             <label for="company_revenue">Company Revenue:</label>
-                                            {!! \App\Helpers\DropDownHelper::renderRevenueDropdown($company->company_revenue ?? '') !!}
+                                            <!-- Company revenue field removed - not part of newsfeed boilerplate -->
                                         </div>
 
                                         <!-- Number of Employees Dropdown -->
                                         <div class="col-lg-6">
                                             <label for="company_no_of_employee">Company No. of Employees</label>
-                                            {!! \App\Helpers\DropDownHelper::renderEmployeeSizeDropdown($company->company_no_of_employee ?? '') !!}
+                                            <!-- Company employee size field removed - not part of newsfeed boilerplate -->
                                         </div>
 
 
