@@ -204,23 +204,10 @@ class UserController extends Controller
     {
         $user = User::where('slug', $slug)->firstOrFail();
 
-        // Track profile view
-        $this->trackProfileView($user);
-
         // Use trait to add photo data
         $this->addPhotoData($user);
 
-        // Removed features (products, services, education) no longer needed
-
         return view('user.user-profile', compact('user'));
-    }
-
-    /**
-     * Track a profile view
-     */
-    protected function trackProfileView(User $viewedUser)
-    {
-        // Profile view tracking removed - feature not needed for newsfeed
     }
 
 

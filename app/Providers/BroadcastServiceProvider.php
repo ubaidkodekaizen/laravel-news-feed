@@ -20,7 +20,7 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Broadcasting disabled - using Firebase for real-time messaging
+        // Broadcasting is not used in this newsfeed boilerplate
         // Broadcast::routes();
 
         // if (file_exists(base_path('routes/channels.php'))) {

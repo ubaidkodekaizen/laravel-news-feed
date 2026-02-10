@@ -44,7 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::post('/user/update/personal', [UserController::class, 'updatePersonal']);
-    Route::post('/user/update/professional', [UserController::class, 'updateProfessional']);
     Route::get('/user/profile/{slug}', [UserController::class, 'showUserBySlug']);
     Route::delete('/user/delete', [UserController::class, 'deleteUser']);
 

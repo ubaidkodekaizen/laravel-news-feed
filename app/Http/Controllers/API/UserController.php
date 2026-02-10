@@ -329,20 +329,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Update Professional Details
-     */
-    public function updateProfessional(Request $request)
-    {
-        // Professional details feature removed - simplified for newsfeed
-        return response()->json([
-            'status' => true,
-            'message' => 'Professional details feature removed.',
-        ]);
-    }
-
-
-
     public function showUserBySlug($slug)
     {
         $user = User::where('slug', $slug)->first();
@@ -360,15 +346,6 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
-
-    /**
-     * Track a profile view (removed - not part of newsfeed boilerplate)
-     */
-    protected function trackProfileView(User $viewedUser)
-    {
-        // Profile view tracking removed - not needed for newsfeed boilerplate
-    }
-
 
 
 
