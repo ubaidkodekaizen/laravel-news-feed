@@ -16,6 +16,55 @@
     <link rel="stylesheet" href="{{ asset('assets/css/components/share-repost.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/stats-layout.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components/lightbox.css') }}">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --border-radius: 12px;
+        }
+        
+        .newFeedSec {
+            background: var(--bg-secondary);
+            min-height: calc(100vh - 80px);
+            padding: 32px 20px;
+        }
+        
+        .newFeedSecInner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 24px;
+        }
+        
+        @media (max-width: 1200px) {
+            .newFeedSecInner {
+                grid-template-columns: 280px 1fr;
+            }
+            
+            .newFeedSecInnerColLast {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .newFeedSecInner {
+                grid-template-columns: 1fr;
+            }
+            
+            .newFeedSecInnerColFirst {
+                display: none;
+            }
+        }
+    </style>
 @endsection
 
 <section class="newFeedSec">

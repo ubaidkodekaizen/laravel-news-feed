@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Users\User;
 use App\Services\S3Service;
-use App\Services\NotificationService;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +19,7 @@ use App\Traits\HasUserPhotoData;
 class UserController extends Controller
 {
     use HasUserPhotoData;
-    public function showRegistrationForm()
+    public function showRegisterForm()
     {
         if (Auth::check()) {
             return redirect()->route('user.details.show');

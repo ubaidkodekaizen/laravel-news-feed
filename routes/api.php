@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\FeedController;
-use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\ReportController;
 
 /*
@@ -38,25 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     */
     Route::post('/report/user', [ReportController::class, 'reportUser'])->name('api.report.user');
     Route::post('/report/post', [ReportController::class, 'reportPost'])->name('api.report.post');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Notification Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('notifications')->group(function () {
-        Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('api.notifications.unread-count');
-        Route::get('/types', [NotificationController::class, 'getTypes'])->name('api.notifications.types');
-        Route::get('/list', [NotificationController::class, 'index'])->name('api.notifications.list');
-        Route::get('/', [NotificationController::class, 'index'])->name('api.notifications.index');
-        Route::post('/read-multiple', [NotificationController::class, 'markMultipleAsRead'])->name('api.notifications.read-multiple');
-        Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('api.notifications.read-all');
-        Route::delete('/delete/multiple', [NotificationController::class, 'destroyMultiple'])->name('api.notifications.destroy-multiple');
-        Route::delete('/delete/all', [NotificationController::class, 'destroyAll'])->name('api.notifications.destroy-all');
-        Route::get('/{id}', [NotificationController::class, 'show'])->name('api.notifications.show');
-        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('api.notifications.read');
-        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('api.notifications.destroy');
-    });
 
     /*
     |--------------------------------------------------------------------------

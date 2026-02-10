@@ -1,397 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | MuslimLynk</title>
+    <title>Sign Up | {{ config('app.name', 'NewsFeed') }}</title>
     <link rel="icon" href="{{ asset('assets/images/logo_bg.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            background: #b8c034;
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --border-radius: 12px;
+        }
+        
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-
-        .input-box {
-            position: relative;
-            width: 100%;
-            height: 50px;
-            border-bottom: 2px solid #fff;
-            margin: 0px 0px 50px 0px;
-        }
-
-        .input-box label:last-child {
-            position: absolute;
-            top: 50%;
-            left: 5px;
-            transform: translateY(-50%);
-            color: #fff;
-            font-weight: 500;
-            pointer-events: none;
-            transition: .5s;
-        }
-
-        .input-box input:focus~label,
-        .input-box input:valid~label {
-            top: -5px;
-        }
-
-        .input-box input {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-size: 1em;
-            color: #fff;
-            font-weight: 600;
-            padding: 0 35px 0 5px;
-        }
-
-        .input-box .icon {
-            position: absolute;
-            right: 8px;
-            font-size: 1.2rem;
-            color: #fff;
-            line-height: 57px;
-        }
-
-        .form_container {
-            max-width: 1000px;
-            margin: 0 auto;
-
-        }
-
-        .form_flex {
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            height: 100svh;
-        }
-
-        .form_container .row:first-child {
-            align-items: stretch;
-            /* height: 80vh; */
-            border-radius: 50px;
-            overflow: hidden;
-        }
-
-        .form_container .row:first-child>.col-lg-6 {
-            padding: 0;
-            margin: 0;
-        }
-
-        .form-section {
-            background: #273572;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             padding: 20px;
-            color: #fff;
-            height: 100%;
-            min-width: 450px;
         }
-
-        .custom-btn {
-            width: 130px;
-            height: 40px;
-            color: #fff;
-            border-radius: 5px;
-            padding: 10px 25px;
-            font-family: 'Lato', sans-serif;
-            font-weight: 600;
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            display: inline-block;
-            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
-                7px 7px 20px 0px rgba(0, 0, 0, .1),
-                4px 4px 5px 0px rgba(0, 0, 0, .1);
-            outline: none;
-        }
-
-        .btn-14 {
-            background: #b8c034;
-            border: none;
-            z-index: 1;
-        }
-
-        .btn-14:after {
-            position: absolute;
-            content: "";
+        
+        .auth-container {
+            background: var(--bg-primary);
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 500px;
             width: 100%;
-            height: 0;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            border-radius: 5px;
-            background-color: rgb(243 104 31);
-            background-image: linear-gradient(315deg, #273572 0%, #273572 74%);
-            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5);
-            transition: all 0.3s ease;
+            padding: 48px;
         }
-
-        .btn-14:hover:after {
-            top: auto;
-            bottom: 0;
-            height: 100%;
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
         }
-
-        .btn-14:active {
-            top: 2px;
-        }
-
-        .forget_pass {
-            display: flex;
-            justify-content: end;
-            margin-bottom: 20px;
-        }
-
-        .forget_pass a {
-            color: #b8c034;
-        }
-
-        .account_signup {
-            margin-top: 10px;
-        }
-
-        .account_signup a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .theme-color {
-            color: #b8c034;
-        }
-
-        @media only screen and (max-width: 600px) {
-            .mobile_hide {
-                display: none;
-            }
-        }
-
-        .img_side_width {
-            width: 530px;
+        
+        .auth-logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fff;
-            height: 100%;
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .auth-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .auth-header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 12px 16px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+        
+        .input-group {
             position: relative;
-            max-width: 100%;
         }
-
-        .img_side_width img {
-            max-width: 200px;
-            height: auto;
+        
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            z-index: 10;
         }
-
-        .account_signup span {
+        
+        .input-group .form-control {
+            padding-left: 44px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 14px;
             font-weight: 600;
-            font-size: 18px;
+            font-size: 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-
-        .account_signup a:hover span {
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-footer a:hover {
             text-decoration: underline;
         }
-
-        /* Disable default autofill styling */
-        input:-webkit-autofill,
-        input:-webkit-autofill:focus,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0px 0 #273572 inset !important;
-            box-shadow: 0px 6px 0px 30px #273572 inset !important;
-            color: #fff !important;
+        
+        .alert {
+            border-radius: var(--border-radius);
+            border: none;
+            padding: 12px 16px;
+            margin-bottom: 20px;
         }
-
-        input:-webkit-autofill {
-            -webkit-text-fill-color: #fff !important;
+        
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            z-index: 10;
         }
-
-        .error {
-            width: 100%;
-            text-align: start;
-            display: block;
-            padding-top: 5px;
-            color: #b8c034;
+        
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+        
+        .row {
+            margin: 0 -10px;
+        }
+        
+        .row > div {
+            padding: 0 10px;
         }
     </style>
 </head>
-
 <body>
-    <div class="form_container">
-        <div class="form_flex">
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1>Create Account</h1>
+            <p>Join us and start sharing your thoughts</p>
+        </div>
+        
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
+        <form action="{{ route('register') }}" method="POST" id="registerForm">
+            @csrf
+            
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="img_side_width">
-                        <img src="{{ asset('assets/images/logo.png') }}" alt="" class="img-fluid">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <div class="input-group">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" 
+                                   class="form-control @error('first_name') is-invalid @enderror" 
+                                   id="first_name" 
+                                   name="first_name" 
+                                   value="{{ old('first_name') }}" 
+                                   placeholder="John"
+                                   required 
+                                   autofocus>
+                        </div>
                     </div>
-                    {{-- <img src="https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-83.jpg" alt="" class="img-fluid"> --}}
                 </div>
-                <div class="col-lg-6">
-                    <div class="form-section w-100">
-                        <h2 class="heading">Sign Up</h2>
-                        <p class="subheading">Sign Un to continue to your application. </p>
-                        <form action="{{ route('register') }}" method="POST" id="user_register" autocomplete="off"
-                            class="form">
-                            @csrf
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input type="text" name="first_name" id="first_name" autocomplete="off"
-                                            required>
-                                        <label>First Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon"><i class='bx bx-user'></i></span>
-                                        <input type="text" id="last_name" name="last_name" autocomplete="off"
-                                            required>
-                                        <label>Last Name</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="input-box">
-                                <span class="icon"><i class='bx bx-envelope'></i></span>
-                                <input type="email" id="email" name="email" autocomplete="off" required>
-                                <label>Email</label>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon">
-                                            <i class='bx bx-show' id="togglePassword"></i>
-                                        </span>
-                                        <input type="password" id="password" name="password" autocomplete="off"
-                                            required>
-                                        <label>Password</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="input-box">
-                                        <span class="icon">
-                                            <i class='bx bx-show' id="togglePasswordConfirmation"></i>
-                                        </span>
-                                        <input type="password" id="password_confirmation" name="password_confirmation"
-                                            autocomplete="off" required>
-                                        <label>Confirm Password</label>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <button type="submit" class="custom-btn btn-14">Register</button>
-                            <div class="account_signup">
-                                <a href="{{ route('login.form') }}">Already have an account? <span
-                                        class="theme-color">Sign
-                                        In</span> </a>
-                            </div>
-                        </form>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <div class="input-group">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" 
+                                   class="form-control @error('last_name') is-invalid @enderror" 
+                                   id="last_name" 
+                                   name="last_name" 
+                                   value="{{ old('last_name') }}" 
+                                   placeholder="Doe"
+                                   required>
+                        </div>
                     </div>
                 </div>
             </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" 
+                           class="form-control @error('email') is-invalid @enderror" 
+                           id="email" 
+                           name="email" 
+                           value="{{ old('email') }}" 
+                           placeholder="john@example.com"
+                           required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" 
+                           class="form-control @error('password') is-invalid @enderror" 
+                           id="password" 
+                           name="password" 
+                           placeholder="At least 8 characters"
+                           required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                        <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" 
+                           class="form-control" 
+                           id="password_confirmation" 
+                           name="password_confirmation" 
+                           placeholder="Confirm your password"
+                           required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('password_confirmation')">
+                        <i class="fas fa-eye" id="passwordConfirmationToggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-user-plus me-2"></i> Create Account
+            </button>
+        </form>
+        
+        <div class="auth-footer">
+            <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+                Already have an account? 
+                <a href="{{ route('login.form') }}">Sign in here</a>
+            </p>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Toggle visibility for Password
-            $('#togglePassword').on('click', function() {
-                const passwordField = $('#password');
-                const icon = $(this);
-
-                if (passwordField.attr('type') === 'password') {
-                    passwordField.attr('type', 'text'); // Show password
-                    icon.removeClass('bx-show').addClass('bx-hide'); // Change to 'eye open' icon
-                } else {
-                    passwordField.attr('type', 'password'); // Hide password
-                    icon.removeClass('bx-hide').addClass('bx-show'); // Change back to 'eye closed' icon
-                }
-            });
-
-            // Toggle visibility for Confirm Password
-            $('#togglePasswordConfirmation').on('click', function() {
-                const passwordConfirmationField = $('#password_confirmation');
-                const icon = $(this);
-
-                if (passwordConfirmationField.attr('type') === 'password') {
-                    passwordConfirmationField.attr('type', 'text'); // Show confirm password
-                    icon.removeClass('bx-show').addClass('bx-hide'); // Change to 'eye open' icon
-                } else {
-                    passwordConfirmationField.attr('type', 'password'); // Hide confirm password
-                    icon.removeClass('bx-hide').addClass('bx-show'); // Change back to 'eye closed' icon
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('#user_register').validate({
-                rules: {
-                    first_name: {
-                        required: true,
-                        minlength: 2
-                    },
-                    last_name: {
-                        required: true,
-                        minlength: 2
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8
-                    },
-                    password_confirmation: {
-                        required: true,
-                        minlength: 8,
-                        equalTo: '[name="password"]' // Password confirmation must match the password field
-                    }
-                },
-                messages: {
-                    first_name: {
-                        required: "Please enter your first name",
-                        minlength: "First name must be at least 2 characters"
-                    },
-                    last_name: {
-                        required: "Please enter your last name",
-                        minlength: "Last name must be at least 2 characters"
-                    },
-                    email: {
-                        required: "Please enter your email",
-                        email: "Please enter a valid email address"
-                    },
-                    password: {
-                        required: "Please provide a password",
-                        minlength: "Password must be at least 8 characters"
-                    },
-                    password_confirmation: {
-                        required: "Please confirm your password",
-                        minlength: "Password confirmation must be at least 8 characters",
-                        equalTo: "Password confirmation does not match the password"
-                    }
-                },
-                // errorElement: "span",
-                // errorPlacement: function (error, element) {
-                //     error.addClass("text-danger");
-                //     element.closest(".form-floating").append(error);
-                // }
-            });
-        });
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const toggleIcon = document.getElementById(fieldId === 'password' ? 'passwordToggleIcon' : 'passwordConfirmationToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
     </script>
 </body>
-
 </html>

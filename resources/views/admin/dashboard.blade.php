@@ -176,12 +176,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-3">
-                    <a href="{{ route('admin.subscriptions') }}" class="card card-modern" style="text-decoration: none; color: inherit;">
-                        <div class="card-body">
-                            <div class="cardCounting">
-                                <h2 class="card-numbers">
-                                    {{ \App\Helpers\GeneralHelper::getSubscriberCount() }}
+                <!-- Subscriptions card removed - not part of newsfeed boilerplate -->
                                 </h2>
                                 <h1 class="card-title">Subscribers</h1>
                             </div>
@@ -293,26 +288,7 @@
                     </div>
                 </div>
 
-                <!-- Chart 2: Subscription Activity Bar Chart -->
-                <div class="col-lg-6">
-                    <div class="card" style="border: 2px solid #F2F2F2; border-radius: 20px; box-shadow: none;">
-                        <div class="card-header" style="background: #fafbff; border: none;">
-                            <h4 class="card-title" style="font-family: 'Inter'; font-weight: 500; font-size: 20px; color: #333;">Subscription Activity</h4>
-                            <div class="d-flex gap-2 mt-2 align-items-center">
-                                <label class="mb-0" style="font-size: 14px; color: #666;">From:</label>
-                                <input type="date" id="subscribers-start-date" class="form-control form-control-sm" style="max-width: 150px;">
-                                <label class="mb-0" style="font-size: 14px; color: #666;">To:</label>
-                                <input type="date" id="subscribers-end-date" class="form-control form-control-sm" style="max-width: 150px;">
-                                <button onclick="loadSubscribersChart()" style="padding: 4px 30px;" class="btn btn-primary btn-sm">Apply</button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="height: 400px;">
-                            <canvas id="subscribersChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chart 3: Users by Platform Pie Chart -->
+                <!-- Chart 2: Users by Platform Pie Chart -->
                 <div class="col-lg-6">
                     <div class="card" style="border: 2px solid #F2F2F2; border-radius: 20px; box-shadow: none;">
                         <div class="card-header" style="background: #fafbff; border: none;">

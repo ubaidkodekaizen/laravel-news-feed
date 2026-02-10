@@ -23,19 +23,6 @@ Route::get('/', function () {
     return view('pages.home');
 })->name('home');
 
-// Legal Pages
-Route::get('/terms', function () {
-    return view('legal.terms-of-service');
-})->name('terms.of.service');
-
-Route::get('/privacy-policy', function () {
-    return view('legal.privacy-policy');
-})->name('privacy.policy');
-
-Route::get('/child-safety-standard', function () {
-    return view('legal.child-safety-standard');
-})->name('child-safety-standard');
-
 /*
 |--------------------------------------------------------------------------
 | Guest Routes (Authentication)
@@ -124,10 +111,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':4'])->group(function () {
     Route::get('/user/details', [UserController::class, 'showUserDetailsForm'])->name('user.details.show');
     Route::post('/user/details/update', [UserController::class, 'updateUserDetails'])->name('user.details.update');
 
-    // Notifications
-    Route::get('/notifications', [APIUserController::class, 'getNotifications'])->name('notifications');
-    Route::post('/notifications/{id}/read', [APIUserController::class, 'markNotificationAsRead'])->name('notification.read');
-    Route::post('/notifications/read-all', [APIUserController::class, 'markAllNotificationsAsRead'])->name('notifications.read.all');
 });
 
 /*

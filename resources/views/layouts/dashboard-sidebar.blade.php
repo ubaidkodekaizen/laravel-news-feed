@@ -238,15 +238,7 @@
                 </a>
             </li>
 
-            <li class="nav-items">
-                <a href="{{ route('user.subscriptions') }}"
-                    class="{{ request()->routeIs('user.subscriptions') ? 'active' : '' }}">
-
-                    <img src="{{ asset('assets/images/dashboard/sidebarQualificationIcon.svg') }}" alt="">
-
-                    <span class="menu-text">Subscriptions</span>
-                </a>
-            </li>
+            <!-- Subscriptions menu item removed - not part of newsfeed boilerplate -->
 
 
         </ul>

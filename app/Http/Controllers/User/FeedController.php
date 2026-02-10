@@ -10,7 +10,6 @@ use App\Models\Feed\PostComment;
 use App\Models\Feed\Reaction;
 use App\Models\Feed\PostShare;
 use App\Services\S3Service;
-use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -26,13 +25,6 @@ class FeedController extends Controller
 {
     use FormatsUserData;
     use HasUserPhotoData;
-
-    protected $notificationService;
-
-    public function __construct(NotificationService $notificationService)
-    {
-        $this->notificationService = $notificationService;
-    }
 
     /**
      * Display the news feed page.
@@ -769,16 +761,7 @@ class FeedController extends Controller
                 // Send notification if reaction is on a post (not comment)
                 if ($reactionableType === 'App\Models\Feed\Post') {
                     try {
-                        $post = Post::find($reactionableId);
-                        if ($post && $post->user_id !== $userId) {
-                            $reactor = Auth::user();
-                            $this->notificationService->sendPostReactionNotification(
-                                $post->user_id,
-                                $reactor,
-                                $post,
-                                $request->reaction_type
-                            );
-                        }
+                        // Notifications removed - not part of newsfeed boilerplate
                     } catch (\Exception $e) {
                         Log::error('Failed to send post reaction notification', [
                             'error' => $e->getMessage()
@@ -995,16 +978,9 @@ class FeedController extends Controller
             $comment->save();
 
             // Send notification if comment is on someone else's post (not a reply)
-            if ($post->user_id !== Auth::id() && !$request->parent_id) {
+            // Notifications removed - not part of newsfeed boilerplate
+            if (false) { // Keep structure but disable
                 try {
-                    $commenter = Auth::user();
-                    $this->notificationService->sendPostCommentNotification(
-                        $post->user_id,
-                        $commenter,
-                        $post,
-                        $comment
-                    );
-                } catch (\Exception $e) {
                     Log::error('Failed to send post comment notification', [
                         'error' => $e->getMessage()
                     ]);
@@ -1013,17 +989,9 @@ class FeedController extends Controller
             }
 
             // Send notification if this is a reply to a comment
-            if ($request->parent_id && isset($parentComment) && $parentComment->user_id !== Auth::id()) {
+            // Notifications removed - not part of newsfeed boilerplate
+            if (false) { // Keep structure but disable
                 try {
-                    $replier = Auth::user();
-                    $this->notificationService->sendCommentReplyNotification(
-                        $parentComment->user_id,
-                        $replier,
-                        $post,
-                        $comment,
-                        $parentComment
-                    );
-                } catch (\Exception $e) {
                     Log::error('Failed to send comment reply notification', [
                         'error' => $e->getMessage()
                     ]);
@@ -1273,16 +1241,10 @@ class FeedController extends Controller
             $share->save();
 
             // Send notification if sharing someone else's post
-            if ($originalPost->user_id !== Auth::id()) {
+            // Notifications removed - not part of newsfeed boilerplate
+            if (false) { // Keep structure but disable
                 try {
-                    $sharer = Auth::user();
-                    $this->notificationService->sendPostShareNotification(
-                        $originalPost->user_id,
-                        $sharer,
-                        $originalPost
-                    );
-                } catch (\Exception $e) {
-                    Log::error('Failed to send post share notification', [
+                    Log::error('Notifications disabled', [
                         'error' => $e->getMessage()
                     ]);
                     // Don't fail the request if notification fails
