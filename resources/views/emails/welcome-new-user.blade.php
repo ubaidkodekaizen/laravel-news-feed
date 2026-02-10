@@ -320,10 +320,6 @@
                                                                                                                 <td>{{ $password }}</td>
                                                                                                             </tr>
                                                                                                             <tr>
-                                                                                                                <td>AMCOB Member:</td>
-                                                                                                                <td>{{ $is_amcob }}</td>
-                                                                                                            </tr>
-                                                                                                            <tr>
                                                                                                                 <td>Membership Duration:</td>
                                                                                                                 <td>{{ $duration }}</td>
                                                                                                             </tr>

@@ -32,6 +32,10 @@ Route::get('/privacy-policy', function () {
     return view('legal.privacy-policy');
 })->name('privacy.policy');
 
+Route::get('/child-safety-standard', function () {
+    return view('legal.child-safety-standard');
+})->name('child-safety-standard');
+
 /*
 |--------------------------------------------------------------------------
 | Guest Routes (Authentication)

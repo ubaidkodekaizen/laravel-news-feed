@@ -112,7 +112,7 @@ class AdminUserController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => $request->password, // Include password for email
+            'password' => $request->password, // Include password for email (admin-created users only)
         ];
         
         try {

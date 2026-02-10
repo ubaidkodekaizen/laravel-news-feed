@@ -31,7 +31,7 @@ class WelcomeNewUser extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('Welcome to MuslimLynk - Your Account Credentials')
+        return $this->subject('Welcome to ' . config('app.name', 'NewsFeed') . ' - Your Account Credentials')
                     ->view('emails.welcome-new-user')
                     ->with($this->emailData);
     }

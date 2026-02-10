@@ -17,9 +17,9 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
-@if(env('GOOGLE_MAPS_API_KEY'))
+@if(config('services.google_maps.api_key'))
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initCityAutocomplete">
+    src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.api_key') }}&libraries=places&callback=initCityAutocomplete">
 </script>
 @endif
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
@@ -151,98 +151,7 @@
 
 
 
-        $('#header_search').on('keyup', function(e) {
-            var searchTerm = $(this).val();
-
-            // Handle Enter key
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                if (searchTerm) {
-                    $('#product1').val(searchTerm);
-                    $('#search_form').submit();
-                }
-                return;
-            }
-
-            // Avoid suggestions for empty or short search terms
-            if (searchTerm.length < 2) {
-                $('#suggestion_box').hide();
-                return;
-            }
-
-            $.ajax({
-                url: "{{ route('search.suggestion') }}",
-                method: 'GET',
-                data: {
-                    term: searchTerm,
-                },
-                success: function(response) {
-                    var suggestionBox = $('#suggestion_box');
-                    suggestionBox.empty();
-
-                    // Only show suggestions if there's valid data
-                    if (response.products.length || response.services.length || response
-                        .company_industries
-                        .length || response.first_name
-                        .length) {
-                        suggestionBox.show();
-                        response.products.forEach(function(item) {
-                            suggestionBox.append(
-                                '<div class="suggestion-item" data-type="product" data-value="' +
-                                item.title + '">' + item
-                                .title + '</div>');
-                        });
-                        response.services.forEach(function(item) {
-                            suggestionBox.append(
-                                '<div class="suggestion-item" data-type="service" data-value="' +
-                                item.title + '">' + item
-                                .title + '</div>');
-                        });
-                        response.first_name.forEach(function(item) {
-                            suggestionBox.append(
-                                '<div class="suggestion-item" data-type="name" data-value="' +
-                                item.first_name + '">' +
-                                item.first_name + ' ' + item.last_name +
-                                '</div>');
-                        });
-                        response.company_industries.forEach(function(item) {
-                            suggestionBox.append(
-                                '<div class="suggestion-item" data-type="company_industry" data-value="' +
-                                item + '">' + item + '</div>');
-                        });
-                    } else {
-                        suggestionBox.hide();
-                    }
-                }
-            });
-        });
-
-        $('#suggestion_box').on('click', '.suggestion-item', function() {
-            var selectedValue = $(this).data('value');
-            var dataType = $(this).data('type');
-
-            if (dataType === 'product') {
-                $('#product1').val(selectedValue);
-            } else if (dataType === 'service') {
-                $('#service1').val(selectedValue);
-            } else if (dataType === 'company_industry') {
-                $('#company_industry1').val(selectedValue);
-            } else if (dataType === 'name') {
-                $('#first_name1').val(selectedValue);
-            }
-
-            $('#header_search').val(selectedValue);
-
-            // Hide the suggestion box
-            $('#suggestion_box').hide();
-        });
-
-        // Close suggestion box when clicking outside
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.search_area').length) {
-                $('#suggestion_box').hide();
-            }
-        });
+        // Search functionality removed - newsfeed boilerplate doesn't include product/service search
 
 
 
@@ -251,11 +160,8 @@
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     $('#imagePreview img').attr('src', e.target.result);
-                    $('#imagePreviewCompany img').attr('src', e.target.result);
                     $('#imagePreview img').hide();
-                    $('#imagePreviewCompany img').hide();
                     $('#imagePreview img').fadeIn(650);
-                    $('#imagePreviewCompany img').fadeIn(650);
                 }
                 reader.readAsDataURL(input.files[0]);
             }
@@ -264,19 +170,7 @@
         $("#imageUpload").change(function() {
             readURL(this);
         });
-        $("#imageUploadCompany").change(function() {
-            readURL(this);
-        });
-
-        $('.personalProfilePicBtn').on('click', function(e) {
-            e.preventDefault();
-            $('#imageUpload').trigger('click');
-        });
-
-        $('.companyProfilePicBtn').on('click', function(e) {
-            e.preventDefault();
-            $('#imageUploadCompany').trigger('click');
-        });
+        // Company profile pic upload removed - newsfeed boilerplate doesn't include company features
 
 
 

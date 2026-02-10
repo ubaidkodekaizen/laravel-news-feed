@@ -5,13 +5,13 @@
          <meta charset="UTF-8">
          <meta name="viewport" content="width=device-width, initial-scale=1.0">
          <meta http-equiv="X-UA-Compatible" content="ie=edge">
-         <title>MuslimLynk | Empowering Connections, Amplifying Impact</title>
-         <meta name="description"
-             content="Join MuslimLynk to connect, collaborate, and grow. A dynamic network for Muslim professionals and entrepreneurs, driving success and community impact.">
-         <meta property="og:type" content="website">
-         <meta property="og:title" content="MuslimLynk – Where Connections Create Impact">
-         <meta property="og:description"
-             content="Discover opportunities, build powerful networks, and strengthen our community’s economic future. Join the movement and let’s grow together!">
+        <title>{{ config('app.name', 'NewsFeed') }} | Connect, Share, Engage</title>
+        <meta name="description"
+            content="Join {{ config('app.name', 'NewsFeed') }} to connect, share, and engage with your community. A modern social newsfeed platform for meaningful connections.">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="{{ config('app.name', 'NewsFeed') }} – Connect, Share, Engage">
+        <meta property="og:description"
+            content="Discover a modern social newsfeed platform. Share your thoughts, connect with others, and engage with meaningful content. Join us today!">
          <meta property="og:url" content="{{ url('/') }}">
          <meta property="og:image" content="{{ asset('assets/images/logo_bg.png') }}">
          <meta property="og:site_name" content="{{ config('app.name') }}">
@@ -423,11 +423,11 @@
                  letter-spacing: 1.7px;
              }
 
-             #homeHeroSec .homeHeroSecInnerActionBtns .homeHeroSecInnerActionBtn.active {
-                 background: #B8C034;
-                 border: 1px solid #B8C034;
-                 color: #273572;
-             }
+            #homeHeroSec .homeHeroSecInnerActionBtns .homeHeroSecInnerActionBtn.active {
+                background: #3b82f6;
+                border: 1px solid #3b82f6;
+                color: #ffffff;
+            }
 
              .homeHeroSecInnerMobileStoreActionBtns {
                  display: flex;
@@ -460,18 +460,18 @@
                  padding: 120px 20px;
              }
 
-             #advantageSec .advantageSecInnerHeading {
-                 font-family: "Bebas Neue", sans-serif;
-                 font-weight: 400;
-                 font-size: 64px;
-                 text-align: center;
-                 text-transform: capitalize;
-                 color: #273572;
-             }
+            #advantageSec .advantageSecInnerHeading {
+                font-family: "Bebas Neue", sans-serif;
+                font-weight: 400;
+                font-size: 64px;
+                text-align: center;
+                text-transform: capitalize;
+                color: #1f2937;
+            }
 
-             #advantageSec .advantageSecInnerHeading span {
-                 color: #B8C034;
-             }
+            #advantageSec .advantageSecInnerHeading span {
+                color: #3b82f6;
+            }
 
              #advantageSec .advantageSecInner {
                  max-width: 1516px;
@@ -520,32 +520,32 @@
 
              }
 
-             #advantageSec .advantageSecInnerBoxes h4 {
-                 font-family: "Bebas Neue", sans-serif;
-                 font-weight: 400;
-                 font-size: 42.15px;
-                 text-transform: capitalize;
-                 color: #273572;
-                 transition: .3s ease-in-out;
-             }
+            #advantageSec .advantageSecInnerBoxes h4 {
+                font-family: "Bebas Neue", sans-serif;
+                font-weight: 400;
+                font-size: 42.15px;
+                text-transform: capitalize;
+                color: #1f2937;
+                transition: .3s ease-in-out;
+            }
 
-             #advantageSec .advantageSecInnerBoxes p {
-                 font-family: "Inter", sans-serif;
-                 font-weight: 400;
-                 font-size: 15.61px;
-                 text-transform: capitalize;
-                 color: #273572;
-                 transition: .3s ease-in-out;
-             }
+            #advantageSec .advantageSecInnerBoxes p {
+                font-family: "Inter", sans-serif;
+                font-weight: 400;
+                font-size: 15.61px;
+                text-transform: capitalize;
+                color: #1f2937;
+                transition: .3s ease-in-out;
+            }
 
              #advantageSec .advantageSecInnerBoxes:last-child {
                  max-width: 100%;
              }
 
-             #advantageSec .advantageSecInnerBoxes.active {
-                 background: #273572;
-                 transition: .3s ease-in-out;
-             }
+            #advantageSec .advantageSecInnerBoxes.active {
+                background: #3b82f6;
+                transition: .3s ease-in-out;
+            }
 
              #advantageSec .advantageSecInnerBoxes.active span,
              #advantageSec .advantageSecInnerBoxes.active h4,
@@ -554,10 +554,10 @@
                  transition: .3s ease-in-out;
              }
 
-             #advantageSec .advantageSecInnerBoxes:hover {
-                 background: #273572;
-                 transition: .3s ease-in-out;
-             }
+            #advantageSec .advantageSecInnerBoxes:hover {
+                background: #3b82f6;
+                transition: .3s ease-in-out;
+            }
 
              /* #advantageSec .advantageSecInnerBoxes:hover span, */
              #advantageSec .advantageSecInnerBoxes:hover h4,
@@ -698,18 +698,18 @@
                  padding: 120px 20px;
              }
 
-             #faqSec .faqSecInnerHeading {
-                 font-family: "Bebas Neue", sans-serif;
-                 font-weight: 400;
-                 font-size: 64px;
-                 text-align: center;
-                 text-transform: capitalize;
-                 color: #273572;
-             }
+            #faqSec .faqSecInnerHeading {
+                font-family: "Bebas Neue", sans-serif;
+                font-weight: 400;
+                font-size: 64px;
+                text-align: center;
+                text-transform: capitalize;
+                color: #1f2937;
+            }
 
-             #faqSec .faqSecInnerHeading span {
-                 color: #B8C034;
-             }
+            #faqSec .faqSecInnerHeading span {
+                color: #3b82f6;
+            }
 
              #faqSec .faqSecInner {
                  max-width: 1516px;
@@ -1475,45 +1475,25 @@
          </nav> --}}
          <div id="homeHeroSec">
              <div class="homeHeroSecInner">
-                 <h2>Connecting Muslims Worldwide</h2>
-                 <p><strong>MuslimLynk</strong> is your gateway to empowerment, collaboration, and success within the
-                     Muslim
-                     community.
-                     Whether you’re an educator, student, entrepreneur, or professional, we are here to unlock a world
-                     of
-                     opportunity for you. Built on the trusted foundation of AMCOB’s network, MuslimLynk is more than a
-                     platform – it’s a movement to help you thrive in your career, business, and life.</p>
-                 <p>
-                     Together, we can ensure that every dollar spent in our community multiplies its impact at least
-                     sevenfold before it leaves. By connecting, collaborating, and supporting one another, we can foster
-                     economic empowerment and strengthen our shared values.
-                 </p>
-                 <div class="homeHeroSecInnerActionBtns">
-                     <a href="{{ route('login.form') }}" class="homeHeroSecInnerActionBtn active">Login</a>
-                     <a href="{{ route('register.form') }}" class="homeHeroSecInnerActionBtn">Sign Up</a>
-                 </div>
-                 <div class="homeHeroSecInnerMobileStoreActionBtns">
-                     <h4>Download the MuslimLynk App</h4>
-                     <div class="homeHeroSecInnerMobileStoreActionBtnsInner">
-                         <a href="https://play.google.com/store/apps/details?id=com.MuslimLynk"
-                             class="homeHeroSecInnerMobileStoreActionBtn">
-                             <img src="{{ asset('assets/images/playStoreIcon.png') }}" class="img-fluid"
-                                 alt="">
-                         </a>
-                         <a href="https://apps.apple.com/pk/app/muslimlynk/id6746872077"
-                             class="homeHeroSecInnerMobileStoreActionBtn">
-                             <img src="{{ asset('assets/images/appleStoreIcon.png') }}" class="img-fluid"
-                                 alt="">
-                         </a>
-                     </div>
-                 </div>
+                <h2>Connect, Share, Engage</h2>
+                <p><strong>{{ config('app.name', 'NewsFeed') }}</strong> is your modern social platform for meaningful connections and engaging content. 
+                    Whether you're sharing your thoughts, discovering new ideas, or connecting with your community, 
+                    we provide a clean and intuitive experience for all your social interactions.</p>
+                <p>
+                    Join thousands of users who are already sharing, reacting, and commenting on content that matters. 
+                    Create posts, engage with others, and build your network in a safe and welcoming environment.
+                </p>
+                <div class="homeHeroSecInnerActionBtns">
+                    <a href="{{ route('login.form') }}" class="homeHeroSecInnerActionBtn active">Login</a>
+                    <a href="{{ route('register.form') }}" class="homeHeroSecInnerActionBtn">Sign Up</a>
+                </div>
 
              </div>
          </div>
 
          <div id="advantageSec">
              <div class="advantageSecInner">
-                 <h4 class="advantageSecInnerHeading">The MuslimLynk <span>Advantage</span></h4>
+                 <h4 class="advantageSecInnerHeading">The <span>{{ config('app.name', 'NewsFeed') }}</span> Advantage</h4>
                  <div class="advantageSecInnerBoxOuterRow">
                      <div class="advantageSecInnerBoxRow">
                          <div class="advantageSecInnerBoxes active"
@@ -1975,7 +1955,7 @@
              </div>
          </div>
 
-         @include('layouts.home-footer')
+         @include('layouts.footer')
 
          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
              integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">

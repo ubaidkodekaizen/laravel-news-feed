@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import ChatBox from './components/ChatBox.jsx';
 import UnreadCountBadge from './components/UnreadCountBadge.jsx';
-import { authenticateFirebase, setupPresence, requestNotificationPermission, setupForegroundMessageListener } from './firebase.js';
+// Firebase removed - newsfeed boilerplate doesn't use Firebase
+// import { authenticateFirebase, setupPresence, requestNotificationPermission, setupForegroundMessageListener } from './firebase.js';
 
 const App = () => {
   const [isTokenAvailable, setIsTokenAvailable] = useState(false);

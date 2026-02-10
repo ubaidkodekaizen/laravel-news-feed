@@ -7,9 +7,9 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('admin-assets/js/custom.js?v1') }}"></script>
-@if(env('GOOGLE_MAPS_API_KEY'))
+@if(config('services.google_maps.api_key'))
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initCityAutocomplete">
+    src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.api_key') }}&libraries=places&callback=initCityAutocomplete">
 </script>
 @endif
 @yield('scripts')
